@@ -8,8 +8,9 @@ db.serialize(function() {
 
     db.run('CREATE TABLE IF NOT EXISTS User_Info (LoginName VARCHAR(50), Password VARCHAR(50), Salt VARCHAR(50))');
     db.run('CREATE UNIQUE INDEX User_Info_LoginName ON User_Info (LoginName)');
+    db.run('CREATE TABLE IF NOT EXISTS App_Config (LoginName VARCHAR(50), Name VARCHAR(50), Parameter VARCHAR(500))');
 
-    var stmt = db.prepare('INSERT INTO user_info VALUES (?, ?, ?)');
+    var stmt = db.prepare('INSERT INTO User_Info VALUES (?, ?, ?)');
 
     var salt = 'ef38c628449c5102';
 
@@ -21,8 +22,7 @@ db.serialize(function() {
 
     stmt.finalize();
 
-    db.run('CREATE TABLE IF NOT EXISTS Token_Info (Token VARCHAR(500), CreationDate DATETIME, ExpDate DATETIME, IP VARCHAR(50))');
-    db.run('CREATE UNIQUE INDEX Token_Info_Token ON Token_Info (Token)');
+    db.run('INSERT INTO App_Config VALUES (NULL, \'TokenSecret\', \'fe1a1915a379f3be5394b64d14794932\')');
 
     db.each('SELECT rowid AS id, Password, Salt FROM user_info', function(err, row) {
         console.log(row.id + ': ' + row.Password + ', ' + row.Salt);
