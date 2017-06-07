@@ -14,9 +14,9 @@ var app = express();
 
 var db;
 
-app.post('/BeginSession', function(req, res) {
+app.post('/BeginSession', (req, res) => {
     var body = '';
-    req.on('data', function(data) {
+    req.on('data', data => {
         body += data;
         if (body.length > 1e6) { 
             // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
@@ -24,17 +24,17 @@ app.post('/BeginSession', function(req, res) {
         }
     });
 
-    req.on('end', function() {
+    req.on('end', () => {
         var data = JSON.parse(body);
 
         var token = '';
         var tokenExpiration = moment().add(1, 'days').valueOf();
 
         // if user is found and password is correct create a token
-        db.serialize(function() {
+        db.serialize(() => {
 
             db.get('SELECT Password, Salt FROM User_Info WHERE LoginName = (?)', data.login,
-                function(err, row) {
+                (err, row) => {
                     if (err) {
                         console.log(err);
                     }
@@ -63,9 +63,9 @@ app.post('/BeginSession', function(req, res) {
     });
 });
 
-app.post('/RichTextEditor', function(req, res) {
+app.post('/RichTextEditor', (req, res) => {
     var body = '';
-    req.on('data', function(data) {
+    req.on('data', data => {
         body += data;
         if (body.length > 1e6) { 
             // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
@@ -73,7 +73,7 @@ app.post('/RichTextEditor', function(req, res) {
         }
     });
 
-    req.on('end', function() {
+    req.on('end', () => {
         var data = JSON.parse(body);
 
         // check token
@@ -87,7 +87,7 @@ app.post('/RichTextEditor', function(req, res) {
                 var url = '/editor.html?fileid=' + uuid + '&locale=' + data.locale;
 
                 var decodedData = base64.decode(data.text);
-                fs.writeFile('data/' + uuid, decodedData, 'binary', function(err) {
+                fs.writeFile('data/' + uuid, decodedData, 'binary', err => {
                     if (err) {
                         console.log(err);
                     }
@@ -105,10 +105,10 @@ app.post('/RichTextEditor', function(req, res) {
                 });
             }
             else {
-                console.log('Session is ended with token [%s]', data.token);
+                console.log('Session is expired for the token [%s]', data.token);
                 res.end(JSON.stringify({
                     token: data.token,
-                    editorUrl: editorUrl 
+                    editorUrl: '' 
                 }));
             }
         }
@@ -117,15 +117,15 @@ app.post('/RichTextEditor', function(req, res) {
 
             res.end(JSON.stringify({
                 token: data.token,
-                editorUrl: editorUrl 
+                editorUrl: '' 
             }));
         }
     });
 });
 
-app.post('/PDFEditor', function(req, res) {
+app.post('/PDFEditor', (req, res) => {
     var body = '';
-    req.on('data', function(data) {
+    req.on('data', data => {
         body += data;
         if (body.length > 1e6) { 
             // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
@@ -133,7 +133,7 @@ app.post('/PDFEditor', function(req, res) {
         }
     });
 
-    req.on('end', function() {
+    req.on('end', () => {
         var data = JSON.parse(body);
 
         // check token
@@ -145,9 +145,9 @@ app.post('/PDFEditor', function(req, res) {
             if (moment() <= decoded.exp) {
                 var url = '/pdf.js/web/viewer.html';
 
-                if (data.type === 'application/pdf' && data.mode === 'view' && moment() <= decoded.exp) {
+                if (data.type === 'application/pdf' && data.mode === 'view') {
                     var decodedData = base64.decode(data.content);
-                    fs.writeFile('pdf.js/web/form.pdf', decodedData, 'binary', function(err) {
+                    fs.writeFile('pdf.js/web/form.pdf', decodedData, 'binary', err => {
                         if (err) {
                             console.log(err);
                         }
@@ -165,12 +165,19 @@ app.post('/PDFEditor', function(req, res) {
                     });
                 }
                 else {
-                    console.log('Session is ended with token [%s]', data.token);
+                    console.log('Wrong conbination of the type [%s] and mode [%s]', data.type, data.mode);
                     res.end(JSON.stringify({
                         token: data.token,
-                        editorUrl: editorUrl 
+                        editorUrl: '' 
                     }));
                 }
+            }
+            else {
+                console.log('Session is expired for the token [%s]', data.token);
+                res.end(JSON.stringify({
+                    token: data.token,
+                    editorUrl: '' 
+                }));
             }
         }
         catch (err) {
@@ -178,18 +185,18 @@ app.post('/PDFEditor', function(req, res) {
 
             res.end(JSON.stringify({
                 token: data.token,
-                editorUrl: editorUrl 
+                editorUrl: '' 
             }));
         }
     });
 });
 
-app.get('/GetTemplateList', function(req, res) {
+app.get('/GetTemplateList', (req, res) => {
     res.end();
 });
 
-app.get('/GetFileContent', function(req, res) {
-    fs.readFile('data/' + req.query.fileid, function(err, data) {
+app.get('/GetFileContent', (req, res) => {
+    fs.readFile('data/' + req.query.fileid, (err, data) => {
         if (err) {
             console.log(err);
             res.end(JSON.stringify({
@@ -204,7 +211,7 @@ app.get('/GetFileContent', function(req, res) {
     });    
 });
 
-var server = app.listen(305, function() {
+var server = app.listen(305, () => {
     db = new sqlite3.Database('db/database.db');
 
     fs.emptyDir('data');
@@ -216,9 +223,9 @@ var server = app.listen(305, function() {
     app.use('/editor.html', express.static(path.join(__dirname, 'editor.html')));
     app.set('tokenAlg', 'HS512');
 
-    db.serialize(function() {
+    db.serialize(() => {
         db.get('SELECT Parameter FROM App_Config WHERE Name = (?)', 'TokenSecret',
-            function(err, row) {
+            (err, row) => {
                 if (err) {
                     console.log(err);
                 }

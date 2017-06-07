@@ -4,7 +4,7 @@ var sqlite3 = require('sqlite3').verbose();
 var crypto = require('crypto');
 
 var db = new sqlite3.Database('db/database.db');
-db.serialize(function() {
+db.serialize(() => {
 
     db.run('CREATE TABLE IF NOT EXISTS User_Info (LoginName VARCHAR(50), Password VARCHAR(50), Salt VARCHAR(50))');
     db.run('CREATE UNIQUE INDEX User_Info_LoginName ON User_Info (LoginName)');
@@ -24,9 +24,7 @@ db.serialize(function() {
 
     db.run('INSERT INTO App_Config VALUES (NULL, \'TokenSecret\', \'fe1a1915a379f3be5394b64d14794932\')');
 
-    db.each('SELECT rowid AS id, Password, Salt FROM user_info', function(err, row) {
-        console.log(row.id + ': ' + row.Password + ', ' + row.Salt);
-    });
+    db.each('SELECT rowid AS id, Password, Salt FROM user_info', (err, row) => console.log(row.id + ': ' + row.Password + ', ' + row.Salt));
 });
 
 db.close();
