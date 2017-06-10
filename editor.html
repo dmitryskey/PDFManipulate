@@ -8,7 +8,6 @@
   <script src="ckeditor/ckeditor.js"></script>
   <script src="jquery/jquery-3.2.1.min.js"></script>
   <script src="jquery/url.min.js"></script>
-  <script src="jquery/jquery.base64.js"></script>
 </head>
 
 <body>
@@ -26,13 +25,10 @@
         CKEDITOR.config.language = $.url('?locale');
       }
 
-      $.ajax({
-        url: '/GetFileContent?fileid=' + $.url('?fileid'),
-        async: true,
-        cache: false,
-        timeout: 300000,
-        success: function (data) { CKEDITOR.instances.txtEditor.setData($.base64.decode(JSON.parse(data).content)); $('#divLoading').hide(); $('#txtEditor').show(); },
-        error: function (xhr, ajaxOptions, thrownError) { alert(thrownError); $('#divLoading').hide(); $('#txtEditor').show(); }
+      $.get('/data/' + $.url('?fileid'), function(data) {
+        CKEDITOR.instances.txtEditor.setData(data);
+        $('#divLoading').hide();
+        $('#txtEditor').show();
       });
     });
   </script>

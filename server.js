@@ -143,11 +143,12 @@ app.post('/PDFEditor', (req, res) => {
             var decoded = jwt.decode(data.token, app.get('jwtTokenSecret'), false, app.get('tokenAlg'));
 
             if (moment() <= decoded.exp) {
-                var url = '/pdf.js/web/viewer.html';
+                var uuid = uuidV4();
+                var url = '/pdf.js/web/editor.html?file=../../data/' + uuid + '&locale=' + data.locale;
 
-                if (data.type === 'application/pdf' && data.mode === 'view') {
+                if (data.type === 'application/pdf' && data.mode in ['view', 'design', 'edit']) {
                     var decodedData = base64.decode(data.content);
-                    fs.writeFile('pdf.js/web/form.pdf', decodedData, 'binary', err => {
+                    fs.writeFile('data/' + uuid, decodedData, 'binary', err => {
                         if (err) {
                             console.log(err);
                         }
@@ -155,7 +156,7 @@ app.post('/PDFEditor', (req, res) => {
                             var host = server.address().address;
                             var port = server.address().port;
             
-                            editorUrl = 'http://' + (host !== '::' ? host : '127.0.0.1') + ':' + port + url;
+                            editorUrl = 'http://' + (host !== '::' ? host : '127.0.0.1') + ':' + port + url + '&mode=' + data.mode;
                         }
 
                         res.end(JSON.stringify({
@@ -220,6 +221,7 @@ var server = app.listen(305, () => {
     app.use('/pdf.js', express.static(path.join(__dirname, 'pdf.js')));
     app.use('/ckeditor', express.static(path.join(__dirname, 'ckeditor')));
     app.use('/jquery', express.static(path.join(__dirname, 'jquery')));
+    app.use('/data', express.static(path.join(__dirname, 'data')));
     app.use('/editor.html', express.static(path.join(__dirname, 'editor.html')));
     app.set('tokenAlg', 'HS512');
 
