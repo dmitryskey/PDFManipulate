@@ -1,25 +1,27 @@
 {
-	"name": "PDFManipulate",
-	"version": "0.0.1",
-	"description": "Document Edit-on-Demand.",
-	"dependencies": {
-		"express": "",
-		"fs-extra": "",
-		"path": "",
-		"base-64": "",
-		"moment": "",
-		"sqlite3": "",
-		"crypto": "",
-		"uuid": "",
-		"jwt-simple": "",
-		"eslint": ""
-	},
-	"author": "???",
-	"license": "??",
-	"bugs": "???",
-	"homepage": "???",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/cinderjav/PDFManipulate.git"
-	}
+    "name": "PDFManipulate",
+    "version": "0.0.1",
+    "description": "Document Edit-on-Demand.",
+    "dependencies": {
+        "express": "",
+        "fs-extra": "",
+        "path": "",
+        "base-64": "",
+        "moment": "",
+        "sqlite3": "",
+        "crypto": "",
+        "uuid": "",
+        "jwt-simple": "",
+        "eslint": "",
+        "assert": "",
+        "asposepdfcloud": ""
+    },
+    "author": "???",
+    "license": "??",
+    "bugs": "???",
+    "homepage": "???",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/cinderjav/PDFManipulate.git"
+    }
 }

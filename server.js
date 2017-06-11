@@ -9,6 +9,9 @@ const sqlite3 = require('sqlite3').verbose();
 const crypto = require('crypto');
 const uuidV4 = require('uuid/v4');
 const jwt = require('jwt-simple'); // used to create, sign, and verify tokens
+const assert = require('assert');
+const pdfApi = require('asposepdfcloud');
+const storageApi = require('asposestoragecloud');
 
 var app = express();
 
@@ -87,7 +90,7 @@ app.post('/RichTextEditor', (req, res) => {
                 var url = '/editor.html?fileid=' + uuid + '&locale=' + data.locale;
 
                 var decodedData = base64.decode(data.text);
-                fs.writeFile('data/' + uuid, decodedData, 'binary', err => {
+                fs.writeFile('data/' + uuid, decodedData, err => {
                     if (err) {
                         console.log(err);
                     }
@@ -141,21 +144,20 @@ app.post('/PDFEditor', (req, res) => {
 
         try {
             var decoded = jwt.decode(data.token, app.get('jwtTokenSecret'), false, app.get('tokenAlg'));
+            var host = server.address().address;
+            var port = server.address().port;
 
             if (moment() <= decoded.exp) {
                 var uuid = uuidV4();
                 var url = '/pdf.js/web/editor.html?file=../../data/' + uuid + '&locale=' + data.locale;
+                var decodedData = base64.decode(data.content);
 
-                if (data.type === 'application/pdf' && data.mode in ['view', 'design', 'edit']) {
-                    var decodedData = base64.decode(data.content);
+                if (data.type === 'application/pdf' && ['view', 'design', 'edit'].includes(data.mode)) {
                     fs.writeFile('data/' + uuid, decodedData, 'binary', err => {
                         if (err) {
                             console.log(err);
                         }
                         else {
-                            var host = server.address().address;
-                            var port = server.address().port;
-            
                             editorUrl = 'http://' + (host !== '::' ? host : '127.0.0.1') + ':' + port + url + '&mode=' + data.mode;
                         }
 
@@ -163,6 +165,58 @@ app.post('/PDFEditor', (req, res) => {
                             token: data.token,
                             editorUrl: editorUrl 
                         }));
+                    });
+                }
+                else if (data.type === 'application/html' && ['view', 'edit'].includes(data.mode)) {
+                    fs.writeFile('data/' + uuid + '.html', decodedData, err => {
+                        if (err) {
+                            console.log(err);
+                        }
+                        else {
+                            var config = {'appSid': app.get('appSID'), 'apiKey': app.get('apiKey'), 'debug': true};
+
+                            // Instantiate Aspose Storage API SDK
+                            var sApi = new storageApi(config);
+                            // Instantiate Aspose.Pdf API SDK
+                            var pApi = new pdfApi(config);
+
+                            // Upload file to aspose cloud storage
+                            sApi.PutCreate(uuid + '.html', null, null, 'data/' + uuid + '.html', responseMessage => {
+                                assert.equal(responseMessage.status, 'OK');
+
+                                // Invoke Aspose.Pdf Cloud SDK API to create PDF file from HTML
+                                pApi.PutCreateDocument(uuid + '.pdf', uuid + '.html', null, 'html', null, null, responseMessage => {
+                                    assert.equal(responseMessage.status, 'OK');
+
+                                    // Download pdf from cloud storage
+                                    sApi.GetDownload(uuid + '.pdf', null, null, responseMessage => {
+                                        assert.equal(responseMessage.status, 'OK');
+
+                                        fs.writeFile('data/' + uuid, responseMessage.body, 'binary', err => {
+                                            if (err) {
+                                                console.log(err);
+                                            }
+                                            else {
+                                                editorUrl = 'http://' + (host !== '::' ? host : '127.0.0.1') + ':' + port + url + '&mode=' + data.mode;
+                                            }
+
+                                            sApi.DeleteFile(uuid + '.html', null, null, responseMessage => {
+                                                assert.equal(responseMessage.status, 'OK');
+                                            });
+
+                                            sApi.DeleteFile(uuid + '.pdf', null, null, responseMessage => {
+                                                assert.equal(responseMessage.status, 'OK');
+                                            });
+
+                                            res.end(JSON.stringify({
+                                                token: data.token,
+                                                editorUrl: editorUrl 
+                                            }));
+                                        });
+                                    });
+                                });
+                            });
+                        }
                     });
                 }
                 else {
@@ -196,22 +250,6 @@ app.get('/GetTemplateList', (req, res) => {
     res.end();
 });
 
-app.get('/GetFileContent', (req, res) => {
-    fs.readFile('data/' + req.query.fileid, (err, data) => {
-        if (err) {
-            console.log(err);
-            res.end(JSON.stringify({
-                content: ''
-            }));
-        }
-        else {
-            res.end(JSON.stringify({
-                content: base64.encode(data)
-            }));
-        }
-    });    
-});
-
 var server = app.listen(305, () => {
     db = new sqlite3.Database('db/database.db');
 
@@ -224,6 +262,10 @@ var server = app.listen(305, () => {
     app.use('/data', express.static(path.join(__dirname, 'data')));
     app.use('/editor.html', express.static(path.join(__dirname, 'editor.html')));
     app.set('tokenAlg', 'HS512');
+
+    // Aspose credentials for dmitryskey@gmail.com/dmitryskataev
+    app.set('appSID', '7a0214bb-4866-4686-a6b0-e933234c1886');
+    app.set('apiKey', '7ee74818ff99046cd6c10f3cb719c2f0');
 
     db.serialize(() => {
         db.get('SELECT Parameter FROM App_Config WHERE Name = (?)', 'TokenSecret',
