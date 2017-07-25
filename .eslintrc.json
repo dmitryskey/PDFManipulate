@@ -1,6 +1,7 @@
 {
     "env": {
         "es6": true,
+        "browser": true,
         "node": true
     },
     "extends": "eslint:recommended",
@@ -10,6 +11,9 @@
         },
         "sourceType": "module"
     },
+    "plugins": [
+        "jquery"
+    ],
     "rules": {
         "indent": [
             "error",
@@ -17,7 +21,7 @@
         ],
         "linebreak-style": [
             "error",
-            "windows"
+            "unix"
         ],
         "quotes": [
             "error",

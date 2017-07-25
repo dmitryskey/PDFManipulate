@@ -149,11 +149,25 @@ app.post('/PDFEditor', (req, res) => {
 
             if (moment() <= decoded.exp) {
                 var uuid = uuidV4();
-                var url = '/pdf.js/web/editor.html?file=../../data/' + uuid + '&locale=' + data.locale;
-                var decodedData = base64.decode(data.content);
+                var url = '/pdf.js/web/viewer.html?file=../../data/' + uuid + '#locale=' + data.locale;
 
-                if (data.type === 'application/pdf' && ['view', 'design', 'edit'].includes(data.mode)) {
-                    fs.writeFile('data/' + uuid, decodedData, 'binary', err => {
+                if (data.type === 'application/pdf' && ['view', 'design'].includes(data.mode)) {
+                    fs.writeFile('data/' + uuid, base64.decode(data.content), 'binary', err => {
+                        if (err) {
+                            console.log(err);
+                        }
+                        else {
+                            editorUrl = 'http://' + (host !== '::' ? host : '127.0.0.1') + ':' + port + url + '&mode=' + data.mode;
+                        }
+
+                        res.end(JSON.stringify({
+                            token: data.token,
+                            editorUrl: editorUrl 
+                        }));
+                    });
+                }
+                else if (data.type === 'application/pdf' && data.mode === 'edit') {
+                    fs.copy('templates/' + data.templateid + '.pdf', 'data/' + uuid, err => {
                         if (err) {
                             console.log(err);
                         }
@@ -168,7 +182,7 @@ app.post('/PDFEditor', (req, res) => {
                     });
                 }
                 else if (data.type === 'application/html' && ['view', 'edit'].includes(data.mode)) {
-                    fs.writeFile('data/' + uuid + '.html', decodedData, err => {
+                    fs.writeFile('data/' + uuid + '.html', base64.decode(data.content), err => {
                         if (err) {
                             console.log(err);
                         }
@@ -250,7 +264,7 @@ app.get('/GetTemplateList', (req, res) => {
     res.end();
 });
 
-var server = app.listen(305, () => {
+var server = app.listen(8305, () => {
     db = new sqlite3.Database('db/database.db');
 
     fs.emptyDir('data');
@@ -260,6 +274,7 @@ var server = app.listen(305, () => {
     app.use('/ckeditor', express.static(path.join(__dirname, 'ckeditor')));
     app.use('/jquery', express.static(path.join(__dirname, 'jquery')));
     app.use('/data', express.static(path.join(__dirname, 'data')));
+    app.use('/templates', express.static(path.join(__dirname, 'templates/lib')));
     app.use('/editor.html', express.static(path.join(__dirname, 'editor.html')));
     app.set('tokenAlg', 'HS512');
 
