@@ -149,7 +149,7 @@ app.post('/PDFEditor', (req, res) => {
 
             if (moment() <= decoded.exp) {
                 var uuid = uuidV4();
-                var url = '/pdf.js/web/viewer.html?file=../../data/' + uuid + '#locale=' + data.locale;
+                var url = '/pdf.js/web/viewer.html?file=/data/' + uuid + '#locale=' + data.locale;
 
                 if (data.type === 'application/pdf' && ['view', 'design'].includes(data.mode)) {
                     fs.writeFile('data/' + uuid, base64.decode(data.content), 'binary', err => {
@@ -172,7 +172,8 @@ app.post('/PDFEditor', (req, res) => {
                             console.log(err);
                         }
                         else {
-                            editorUrl = 'http://' + (host !== '::' ? host : '127.0.0.1') + ':' + port + url + '&mode=' + data.mode;
+                            editorUrl = 'http://' + (host !== '::' ? host : '127.0.0.1') + ':' + port + url + '&mode=' + data.mode + 
+                            '&templateid=' + data.templateid;
                         }
 
                         res.end(JSON.stringify({
@@ -276,6 +277,8 @@ var server = app.listen(8305, () => {
     app.use('/data', express.static(path.join(__dirname, 'data')));
     app.use('/templates', express.static(path.join(__dirname, 'templates/lib')));
     app.use('/editor.html', express.static(path.join(__dirname, 'editor.html')));
+    app.use('/jquery/jquery.js', express.static(path.join(__dirname, 'jquery/jquery-3.2.1.min.js')));
+    app.use('/jquery/jquery-ui.js', express.static(path.join(__dirname, 'jquery/jquery-ui-1.12.1.min.js')));
     app.set('tokenAlg', 'HS512');
 
     // Aspose credentials for dmitryskey@gmail.com/dmitryskataev
