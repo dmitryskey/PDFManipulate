@@ -1,6 +1,20 @@
 var $ = require(['jQuery', 'jQueryUI']);
 
 class USI9 {
+    get _() {
+        return document.webL10n.get;
+    }
+
+    get States() {
+        return ['AK', 'AL', 'AR', 'AS', 'AZ', 'CA',
+            'CO', 'CT', 'DC', 'DE', 'FL', 'FM', 'GA', 'GU', 'HI', 
+            'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD',
+            'ME', 'MH', 'MI', 'MN', 'MO', 'MP', 'MS', 'MT', 'NC',
+            'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH', 'OK',
+            'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT',
+            'VA', 'VI', 'VT', 'WA', 'WI', 'WV', 'WY'];
+    }
+
     constructor() {
         this.nameFormat = /^[A-Za-z ']+$/;
         this.zipFormat = /^[\d-]+$/;
@@ -11,11 +25,20 @@ class USI9 {
         this.phoneNumber = /^[(]{0,1}\d{3}[ )-]{0,1}\d{3}[ -]{0,1}\d{4}$/;
     }
 
-    renderPage1(lastName, firstName, middleInitial, 
+    renderPage1(dialog,
+        lastName, lastNameHelp, firstName, firstNameHelp,
+        middleInitial, 
         otherNames, address, apptNumber, city,
         state, zip, dob, ssn11, ssn12, ssn13,
         ssn21, ssn22, ssn31, ssn32, ssn33, ssn34,
-        email, phone, citizen, national, lpr, alien) {
+        email, phone, citizen, national, lpr, alien,
+        lpruscisNum, lpruscisNumType, alienWorkAuthDate,
+        alienuscisNum, alienuscisNumType, admissionNum,
+        passportNum, countryOfIssuance) {
+
+        dialog.dialog({
+            autoOpen: false
+        });
 
         // E-Verify requirements
         this._lastName = lastName;
@@ -23,11 +46,27 @@ class USI9 {
         this._lastName.keypress(e =>
             this.nameFormat.test(String.fromCharCode(e.which)));
 
+        this._lastNameHelp = lastNameHelp;
+        this.renderHelpIcon(
+            this._lastNameHelp,
+            this._('lastnamehelp.caption'),
+            dialog,
+            this._('lastnamehelp.text')
+        );
+
         // E-Verify requirements
         this._firstName = firstName;
         this._firstName.prop('maxLength', 25);
         this._firstName.keypress(e =>
             this.nameFormat.test(String.fromCharCode(e.which)));
+
+        this._firstNameHelp = firstNameHelp;
+        this.renderHelpIcon(
+            this._firstNameHelp,
+            this._('firstnamehelp.caption'),
+            dialog,
+            this._('firstnamehelp.text')
+        );
 
         // E-Verify requirements
         this._middleInitial = middleInitial;
@@ -45,16 +84,9 @@ class USI9 {
         this._apptNumber = apptNumber;
         this._city = city;
 
-        var stateCodes = ['AK', 'AL', 'AR', 'AS', 'AZ', 'CA',
-            'CO', 'CT', 'DC', 'DE', 'FL', 'FM', 'GA', 'GU', 'HI', 
-            'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD',
-            'ME', 'MH', 'MI', 'MN', 'MO', 'MP', 'MS', 'MT', 'NC',
-            'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH', 'OK',
-            'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT',
-            'VA', 'VI', 'VT', 'WA', 'WI', 'WV', 'WY'];
         this._state = state;
         this._state.empty();
-        for (let stateCode of stateCodes) {
+        for (let stateCode of this.States) {
             this._state.append('<option>' + stateCode + '</option>');
         }
 
@@ -124,37 +156,66 @@ class USI9 {
         var arr = [citizen, national, lpr, alien];
 
         this._citizen = citizen;
-        this._citizen.click(() => this.selectCheckmark(this._citizen, arr));
+        this._citizen.click(() => {
+            this.selectCheckmark(this._citizen, arr);
+            this.processLPR(this._citizen.prop('checked'));
+            this.processAlien(this._citizen.prop('checked'));
+        });
 
         this._national = national;
-        this._national.click(() => this.selectCheckmark(this._national, arr));
+        this._national.click(() => {
+            this.selectCheckmark(this._national, arr);
+            this.processLPR(this._national.prop('checked'));
+            this.processAlien(this._national.prop('checked'));
+        });
 
         this._lpr = lpr;
-        this._lpr.click(() => this.selectCheckmark(this._lpr, arr));
+        this._lpr.click(() => {
+            this.selectCheckmark(this._lpr, arr);
+            this.processAlien(this._lpr.prop('checked'));
+        });
 
         this._alien = alien;
-        this._alien.click(() => this.selectCheckmark(this._alien, arr));
+        this._alien.click(() => {
+            this.selectCheckmark(this._alien, arr);
+            this.processLPR(this._alien.prop('checked'));
+            this._countryOfIssuance.empty();
+            var countries = JSON.parse(this._('countries'));
+            for (var c in countries) {
+                this._countryOfIssuance.append('<option value="' + c + '">' + countries[c] + '</option>');
+            }
+        });
+
+        this._lpruscisNum = lpruscisNum;
+        this._lpruscisNumType = lpruscisNumType;
+        this._alienWorkAuthDate = alienWorkAuthDate;
+        this._alienuscisNum = alienuscisNum;
+        this._alienuscisNumType = alienuscisNumType;
+
+        this._admissionNum = admissionNum;
+        this._passportNum = passportNum;
+        this._countryOfIssuance = countryOfIssuance;
     }
 
     validateFields() {
         var errorMessage = '';
 
         if (this._lastName.val() === '') {
-            errorMessage += '- Please enter the Last Name\r\n';
+            errorMessage += '- ' + this._('lastname.exists') + '\r\n';
         } else if (this.nameFormat.test(this._lastName.val())) {
-            errorMessage += '- Please use valid characters for the Last Name\r\n';
+            errorMessage += '- ' + this._('lastname.format') + '\r\n';
         }
 
         if (this._firstName.val() === '') {
-            errorMessage += '- Please enter the First Name\r\n';
+            errorMessage += '- ' + this._('firstname.exists') + '\r\n';
         } else if (this.nameFormat.test(this._firstName.val())) {
-            errorMessage += '- Please use valid characters for the First Name\r\n';
+            errorMessage += '- ' + this._('firstname.format') + '\r\n';
         }
 
         if (this._dob.val() === '') {
-            errorMessage += '- Please enter the Date Of Birth\r\n';
+            errorMessage += '- ' + this._('dateofbirth.exists') + '\r\n';
         } else if (this._dob.val() === '' || this.dateFormat.test(this._dob.val())) {
-            errorMessage += '- Please enter the Date of Birth in the format mm/dd/yyyy\r\n';
+            errorMessage += '- ' + this._('dateofbirth.format') + '\r\n';
         }
 
         if (errorMessage !== '') {
@@ -183,15 +244,68 @@ class USI9 {
 
         return true;
     }
+
+    processLPR(flag) {
+        var na = this._('NA');
+        if (flag) {
+            this._lpruscisNum.val(na);
+            this._lpruscisNumType.empty();
+            this._lpruscisNumType.append('<option>' + na + '</option>');
+        }
+        else {
+            this._lpruscisNum.val('');
+            this._lpruscisNumType.empty();
+        }
+    }
+
+    processAlien(flag) {
+        if (flag) {
+            var na = this._('NA');
+            this._alienWorkAuthDate.val(na);
+            this._alienuscisNum.val(na);
+            this._alienuscisNumType.empty();
+            this._alienuscisNumType.append('<option>' + na + '</option>');
+            this._admissionNum.val(na);
+            this._passportNum.val(na);
+            this._countryOfIssuance.empty();
+            this._countryOfIssuance.append('<option>' + na + '</option>');
+        }
+        else {
+            this._alienWorkAuthDate.val('');
+            this._alienuscisNum.val('');
+            this._alienuscisNumType.empty();
+            this._admissionNum.val('');
+            this._passportNum.val('');
+            this._countryOfIssuance.empty();
+        }
+    }
+
+    renderHelpIcon(ctrl, title, dialog, text) {
+        ctrl.prop('disabled', true);
+        ctrl.prop('title', title);
+        ctrl.val(String.fromCodePoint(0xFFFD));
+        ctrl.parent().toggleClass('noHighlight');
+        ctrl.parent().click(() => {
+            dialog.text('');
+            dialog.append(text);
+            dialog.dialog('open');
+        });
+    }
 }
 
-document.addEventListener('pagerendered', function (e) {
-    var form = new USI9();
+var form = new USI9();
 
+document.addEventListener('pagerendered', function (e) {
     if (e.detail.pageNumber === 1) {
+        $('body').append('<div id="dialogPage' + e.detail.pageNumber + '"></div>');
+        $(document).tooltip();
+
         form.renderPage1(
+            $('#dialogPage' + e.detail.pageNumber),
             $('[name=LastName]'),
+            $('[name=LastNameHelp]'),
             $('[name=FirstName]'),
+            $('[name=FirstNameHelp]'),
             $('[name=MiddleInitial]'),
             $('[name=OtherNames]'),
             $('[name=Address]'),
@@ -214,7 +328,15 @@ document.addEventListener('pagerendered', function (e) {
             $('[name=Citizen]'),
             $('[name=NonCitizenNational]'),
             $('[name=LawfulPermanentResident]'),
-            $('[name=AlienAuthorizedToWork]')
+            $('[name=AlienAuthorizedToWork]'),
+            $('[name=LPRUSCISNumber]'),
+            $('[name=LPRUSCISNumberType]'),
+            $('[name=AlienWorkAuthorizationDate]'),
+            $('[name=AlienUSCISNumber]'),
+            $('[name=AlienUSCISNumberType]'),     
+            $('[name=AdmissionNumber]'),
+            $('[name=ForeignPassportNumber]'),
+            $('[name=CountryOfIssuance]')
         );
     }
 }, true);
