@@ -7,7 +7,8 @@ require.config({
     baseUrl: '/jquery',
     paths: {
         jQuery: 'jquery',
-        jQueryUI: 'jquery-ui'
+        jQueryUI: 'jquery-ui',
+        jQueryUIi18n: 'jquery-ui-i18n'
     }
 });
 
