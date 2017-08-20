@@ -1,5 +1,4 @@
 var $ = require(['jQueryUI', 'jQuery']);
-// require(['jQueryUIi18n']);
 
 class USI9 {
     get _() {
@@ -27,12 +26,16 @@ class USI9 {
         ssn32, ssn33, ssn34, ssnHelp,
         email, emailHelp, phone, phoneHelp,
         citizen, citizenHelp, national, nationalHelp,
-        lpr, lprHelp, alien,
+        lpr, lprHelp, alien, alienHelp, uscisNumberHelp,
         lpruscisNumPrefix, lpruscisNum, lpruscisNumType,
-        alienWorkAuthDate, alienuscisNum, alienuscisNumType,
-        admissionNum, passportNum, countryOfIssuance) {
+        alienWorkAuthDate, alienuscisNumPrefix, alienuscisNum, alienuscisNumType,
+        admissionNum, admissionNumHelp, passportNum, passportNumHelp,
+        countryOfIssuance, countryOfIssuanceHelp) {
 
         dialog.dialog({
+            title: this._('help'),
+            minHeight: 50,
+            minWidth: 50,
             autoOpen: false
         });
 
@@ -40,7 +43,7 @@ class USI9 {
 
         // E-Verify requirements
         this._lastName = lastName;
-        this._lastName.prop('title', this.removeTags(this._('lastnamehelp.text')));
+        this._lastName.prop('title', this._('lastnamehelp.tooltip'));
         this._lastName.prop('maxLength', 40);
         this._lastName.keypress(e =>
             this.nameFormat.test(String.fromCharCode(e.which)));
@@ -58,7 +61,7 @@ class USI9 {
 
         // E-Verify requirements
         this._firstName = firstName;
-        this._firstName.prop('title', this.removeTags(this._('firstnamehelp.text')));
+        this._firstName.prop('title', this._('firstnamehelp.tooltip'));
         this._firstName.prop('maxLength', 25);
         this._firstName.keypress(e =>
             this.nameFormat.test(String.fromCharCode(e.which)));
@@ -76,7 +79,7 @@ class USI9 {
 
         // E-Verify requirements + N/A option
         this._middleInitial = middleInitial;
-        this._middleInitial.prop('title', this.removeTags(this._('middleinitialhelp.text')));
+        this._middleInitial.prop('title', this._('middleinitialhelp.tooltip'));
         this._middleInitial.prop('maxLength', 3);
         this._middleInitial.keypress(e =>
             this.nameFormat.test(String.fromCharCode(e.which)) ||
@@ -95,7 +98,7 @@ class USI9 {
 
         // E-Verify requirements
         this._otherNames = otherNames;
-        this._otherNames.prop('title', this.removeTags(this._('othernameshelp.text')));
+        this._otherNames.prop('title', this._('othernameshelp.tooltip'));
         this._otherNames.prop('maxLength', 40);
         this._otherNames.keypress(e =>
             this.nameFormat.test(String.fromCharCode(e.which)) ||
@@ -110,7 +113,7 @@ class USI9 {
         );
 
         this._address = address;
-        this._address.prop('title', this.removeTags(this._('addresshelp.text')));
+        this._address.prop('title', this._('addresshelp.tooltip'));
         this._addressHelp = addressHelp;
         this.renderHelpIcon(
             this._addressHelp,
@@ -120,7 +123,7 @@ class USI9 {
         );
 
         this._apptNumber = apptNumber;
-        this._apptNumber.prop('title', this.removeTags(this._('apartmentnumberhelp.text')));
+        this._apptNumber.prop('title', this._('apartmentnumberhelp.tooltip'));
         this._apptNumberHelp = apptNumberHelp;
         this.renderHelpIcon(
             this._apptNumberHelp,
@@ -130,7 +133,7 @@ class USI9 {
         );
 
         this._city = city;
-        this._city.prop('title', this.removeTags(this._('cityhelp.text')));
+        this._city.prop('title', this._('cityhelp.caption'));
         this._cityHelp = cityHelp;
         this.renderHelpIcon(
             this._cityHelp,
@@ -140,8 +143,7 @@ class USI9 {
         );
 
         this._state = state;
-        this._state.prop('title', this.removeTags(this._('statehelp.text')));
-        // this._state.parent().children().filter('.combo-content').children().first().hide();
+        this._state.prop('title', this._('statehelp.tooltip'));
 
         this._stateHelp = stateHelp;
         this.renderHelpIcon(
@@ -152,7 +154,7 @@ class USI9 {
         );
 
         this._zip = zip;
-        this._zip.prop('title', this.removeTags(this._('ziphelp.text')));
+        this._zip.prop('title', this._('ziphelp.tooltip'));
         this._zip.keypress(e =>
             this.zipFormat.test(String.fromCharCode(e.which)));
 
@@ -166,7 +168,7 @@ class USI9 {
 
         // E-Verify requirements
         this._dob = dob;
-        this._dob.prop('title', this.removeTags(this._('dobhelp.text')));
+        this._dob.prop('title', this._('dobhelp.tooltip'));
         this._dob.datepicker();
 
         this._dobHelp = dobHelp;
@@ -178,55 +180,55 @@ class USI9 {
         );
 
         this._ssn11 = ssn11;
-        this._ssn11.prop('title', this.removeTags(this._('ssnhelp.text')));
+        this._ssn11.prop('title', this._('ssnhelp.tooltip'));
         this._ssn11.prop('maxLength', 1);
         this._ssn11.keypress(e => 
             this.autoFocus(e, this.numberFormat, 1, this._ssn12));
 
         this._ssn12 = ssn12;
-        this._ssn12.prop('title', this.removeTags(this._('ssnhelp.text')));
+        this._ssn12.prop('title', this._('ssnhelp.tooltip'));
         this._ssn12.prop('maxLength', 1);
         this._ssn12.keypress(e =>
             this.autoFocus(e, this.numberFormat, 1, this._ssn13));
 
         this._ssn13 = ssn13;
-        this._ssn13.prop('title', this.removeTags(this._('ssnhelp.text')));
+        this._ssn13.prop('title', this._('ssnhelp.tooltip'));
         this._ssn13.prop('maxLength', 1);
         this._ssn13.keypress(e =>
             this.autoFocus(e, this.numberFormat, 1, this._ssn21));
 
         this._ssn21 = ssn21;
-        this._ssn21.prop('title', this.removeTags(this._('ssnhelp.text')));
+        this._ssn21.prop('title', this._('ssnhelp.tooltip'));
         this._ssn21.prop('maxLength', 1);
         this._ssn21.keypress(e =>
             this.autoFocus(e, this.numberFormat, 1, this._ssn22));
 
         this._ssn22 = ssn22;
-        this._ssn22.prop('title', this.removeTags(this._('ssnhelp.text')));
+        this._ssn22.prop('title', this._('ssnhelp.tooltip'));
         this._ssn22.prop('maxLength', 1);
         this._ssn22.keypress(e =>
             this.autoFocus(e, this.numberFormat, 1, this._ssn31));
 
         this._ssn31 = ssn31;
-        this._ssn31.prop('title', this.removeTags(this._('ssnhelp.text')));
+        this._ssn31.prop('title', this._('ssnhelp.tooltip'));
         this._ssn31.prop('maxLength', 1);
         this._ssn31.keypress(e =>
             this.autoFocus(e, this.numberFormat, 1, this._ssn32));
 
         this._ssn32 = ssn32;
-        this._ssn32.prop('title', this.removeTags(this._('ssnhelp.text')));
+        this._ssn32.prop('title', this._('ssnhelp.tooltip'));
         this._ssn32.prop('maxLength', 1);
         this._ssn32.keypress(e =>
             this.autoFocus(e, this.numberFormat, 1, this._ssn33));
 
         this._ssn33 = ssn33;
-        this._ssn33.prop('title', this.removeTags(this._('ssnhelp.text')));
+        this._ssn33.prop('title', this._('ssnhelp.tooltip'));
         this._ssn33.prop('maxLength', 1);
         this._ssn33.keypress(e =>
             this.autoFocus(e, this.numberFormat, 1, this._ssn34));
 
         this._ssn34 = ssn34;
-        this._ssn34.prop('title', this.removeTags(this._('ssnhelp.text')));
+        this._ssn34.prop('title', this._('ssnhelp.tooltip'));
         this._ssn34.prop('maxLength', 1);
         this._ssn34.keypress(e =>
             this.numberFormat.test(String.fromCharCode(e.which)));
@@ -236,14 +238,13 @@ class USI9 {
             this._ssnHelp,
             this._('ssnhelp.caption'),
             dialog,
-            this._('ssnhelp.text')
+            this._('ssnhelp.text'),
+            400
         );
 
         this._email = email;
-        this._email.prop('title', this.removeTags(this._('emailhelp.text')));
+        this._email.prop('title', this._('emailhelp.tooltip'));
         this._email.prop('maxLength', 60);
-        this._email.keypress(e =>
-            this.numberFormat.test(String.fromCharCode(e.which)));
 
         this._emailHelp = emailHelp;
         this.renderHelpIcon(
@@ -254,7 +255,7 @@ class USI9 {
         );
 
         this._phone = phone;
-        this._phone.prop('title', this.removeTags(this._('phonehelp.text')));
+        this._phone.prop('title', this._('phonehelp.tooltip'));
         this._phone.prop('maxLength', 13);
         this._phone.keypress(e =>
             this.phoneFormat.test(String.fromCharCode(e.which)));
@@ -271,7 +272,7 @@ class USI9 {
         var na = this._('NA');
 
         this._citizen = citizen;
-        this._citizen.prop('title', this.removeTags(this._('citizenhelp.text')));
+        this._citizen.prop('title', this._('citizenhelp.tooltip'));
         this._citizen.click(() => {
             this.selectCheckmark(this._citizen, arr);
             this.processLPR(this._citizen.prop('checked'));
@@ -280,7 +281,7 @@ class USI9 {
 
             this.filterCombolist(this._listADoc, {0:na});
             if (this._citizen.prop('checked')) {
-                this.filterCombolist(this._listADoc, {0:na, 1:this._('uspassport'), 2:this._('uspassportcard')});
+                this.filterCombolist(this._listADoc, {0:na, 1:this._('uspassport'), 2:this._('uspassportcard')}, na);
             }
         });
 
@@ -293,7 +294,7 @@ class USI9 {
         );
 
         this._national = national;
-        this._national.prop('title', this.removeTags(this._('nationalhelp.text')));
+        this._national.prop('title', this._('nationalhelp.tooltip'));
         this._national.click(() => {
             this.selectCheckmark(this._national, arr);
             this.processLPR(this._national.prop('checked'));
@@ -301,7 +302,7 @@ class USI9 {
             this._immigrationStatus.val(this._national.prop('checked') ? 2 : 0);
             this.filterCombolist(this._listADoc, {0:na});
             if (this._national.prop('checked')) {
-                this.filterCombolist(this._listADoc, {0:na, 1:this._('uspassport'), 2:this._('uspassportcard')});
+                this.filterCombolist(this._listADoc, {0:na, 1:this._('uspassport'), 2:this._('uspassportcard')}, na);
             }
         });
 
@@ -314,7 +315,7 @@ class USI9 {
         );
 
         this._lpr = lpr;
-        this._lpr.prop('title', this.removeTags(this._('lprhelp.text')));
+        this._lpr.prop('title', this._('lprhelp.tooltip'));
         this._lpr.click(() => {
             this.selectCheckmark(this._lpr, arr);
             this.processAlien(this._lpr.prop('checked'));
@@ -329,7 +330,7 @@ class USI9 {
 
             this._immigrationStatus.val(this._lpr.prop('checked') ? 3 : 0);
 
-            this.filterCombolist(this._listADoc, {0:na});
+            this.filterCombolist(this._listADoc, {});
             if (this._lpr.prop('checked')) {
                 this.filterCombolist(this._listADoc, {
                     0:na,
@@ -338,7 +339,7 @@ class USI9 {
                     5:this._('foreignpassport'),
                     10:this._('I551I94receipt'),
                     12:this._('I551receipt')
-                });
+                }, na);
             }
         });
 
@@ -351,6 +352,7 @@ class USI9 {
         );
 
         this._alien = alien;
+        this._alien.prop('title', this._('alienhelp.tooltip'));
         this._alien.click(() => {
             this.selectCheckmark(this._alien, arr);
             this.processLPR(this._alien.prop('checked'));
@@ -365,15 +367,19 @@ class USI9 {
                 this._alienuscisNum.prop('disabled', false);
                 this._alienuscisNumType.prop('disabled', false);
 
+                this.filterCombolist(this._alienuscisNumType, {'A':this._('aliennumber'), 'U':this._('uscisnumber')});
+
                 this._admissionNum.prop('disabled', false);
                 this._passportNum.prop('disabled', false);
 
                 this._countryOfIssuance.prop('disabled', false);
+
+                this.filterCombolist(this._countryOfIssuance, JSON.parse(this._('countries')));
             }
 
             this._immigrationStatus.val(this._alien.prop('checked') ? 4 : 0);
 
-            this.filterCombolist(this._listADoc, [na], true);
+            this.filterCombolist(this._listADoc, {});
             if (this._alien.prop('checked')) {
                 this.filterCombolist(this._listADoc, {
                     0:na,
@@ -387,40 +393,67 @@ class USI9 {
                     14:this._('foreinpassportnonimmigrantreceipt'),
                     15:this._('FSMpassportreceipt'),
                     16:this._('RMIpassportreceipt')
-                });
+                }, na);
             }
         });
+
+        this._alienHelp = alienHelp;
+        this.renderHelpIcon(
+            this._alienHelp,
+            this._('alienhelp.caption'),
+            dialog,
+            this._('alienhelp.text'),
+            500
+        );
+
+        this._uscisNumberHelp = uscisNumberHelp;
+
+        this.renderHelpIcon(
+            this._uscisNumberHelp,
+            this._('uscisnumberhelp.caption'),
+            dialog,
+            this._('uscisnumberhelp.text')
+        );
 
         this._lpruscisNumPrefix = lpruscisNumPrefix;
 
         this._lpruscisNum = lpruscisNum;
+        this._lpruscisNum.prop('title', this._('uscisnumber.tooltip'));
         this._lpruscisNum.prop('maxLength', 9);
         this._lpruscisNum.keypress(e =>
             this.numberFormat.test(String.fromCharCode(e.which)));
 
         this._lpruscisNumType = lpruscisNumType;
+        this._lpruscisNumType.prop('title', this._('uscisnumbertype.tooltip'));
         this.assignCombolistEventHandler(this._lpruscisNumType, (e) => 
             this._lpruscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : ''));
 
         this._alienWorkAuthDate = alienWorkAuthDate;
+        this._alienWorkAuthDate.prop('title', this._('alienworkauthdate.tooltip'));
         this._alienWorkAuthDate.datepicker();
         this._alienWorkAuthDate.unbind('keypress');
-        this._alienWorkAuthDate.keypress((e) =>
+        this._alienWorkAuthDate.keypress(e =>
             /[\d/]/g.test(String.fromCharCode(e.which)) ||
             this.NAFormat.test(String.fromCharCode(e.which))
         );
 
+        this._alienuscisNumPrefix = alienuscisNumPrefix;
+
+        // E-Verify requirements
         this._alienuscisNum = alienuscisNum;
+        this._alienuscisNum.prop('title', this._('uscisnumber.tooltip'));
         this._alienuscisNum.prop('maxLength', 9);
         this._alienuscisNum.keypress(e =>
             this.numberFormat.test(String.fromCharCode(e.which)));
         this._alienuscisNum.blur(() => {
             if (this._alienuscisNum.val() !== '') {
-                this.filterCombolist(this._alienuscisNumType, {'A':this._('aliennumber'), 'U':this._('uscisnumber')});
+                if (this._alienuscisNumType.val() === '') {
+                    this.filterCombolist(this._alienuscisNumType, {'A':this._('aliennumber'), 'U':this._('uscisnumber')});
+                }
 
                 this._admissionNum.val(na);
                 this._passportNum.val(na);
-                this.filterCombolist(this._countryOfIssuance, {0:na});
+                this.filterCombolist(this._countryOfIssuance, {0:na}, na);
             }
             else {
                 this.filterCombolist(this._alienuscisNumType, {});
@@ -431,18 +464,23 @@ class USI9 {
         });
 
         this._alienuscisNumType = alienuscisNumType;
+        this._alienuscisNumType.prop('title', this._('uscisnumbertype.tooltip'));
+        this.assignCombolistEventHandler(this._alienuscisNumType, e => 
+            this._alienuscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : ''));
 
+        // E-Verify requirements
         this._admissionNum = admissionNum;
+        this._admissionNum.prop('title', this._('admissionnumber.tooltip'));
         this._admissionNum.prop('maxLength', 11);
         this._admissionNum.keypress(e =>
             this.numberFormat.test(String.fromCharCode(e.which)));
         this._admissionNum.blur(() => {
             if (this._admissionNum.val() !== '') {
                 this._alienuscisNum.val(na);
-                this.filterCombolist(this._alienuscisNumType, {0:na});
+                this.filterCombolist(this._alienuscisNumType, {0:na}, na);
 
                 this._passportNum.val(na);
-                this.filterCombolist(this._countryOfIssuance, {0:na});
+                this.filterCombolist(this._countryOfIssuance, {0:na}, na);
             }
             else {
                 this._alienuscisNum.val('');
@@ -452,17 +490,29 @@ class USI9 {
             }
         });
 
+        this._admissionNumHelp = admissionNumHelp;
+
+        this.renderHelpIcon(
+            this._admissionNumHelp,
+            this._('admissionnumberhelp.caption'),
+            dialog,
+            this._('admissionnumberhelp.text')
+        );
+
         // E-Verify requirements
         this._passportNum = passportNum;
+        this._passportNum.prop('title', this._('passportnumber.tooltip'));
         this._passportNum.prop('maxLength', 12);
         this._passportNum.blur(() => {
             if (this._passportNum.val() !== '') {
                 this._alienuscisNum.val(na);
-                this.filterCombolist(this._alienuscisNumType, {0:na});
+                this.filterCombolist(this._alienuscisNumType, {0:na}, na);
 
                 this._admissionNum.val(na);
-
-                this.filterCombolist(this._countryOfIssuance, JSON.parse(this._('countries')));
+                
+                if (this._countryOfIssuance.val() === '') {
+                    this.filterCombolist(this._countryOfIssuance, JSON.parse(this._('countries')));
+                }
             }
             else {
                 this._alienuscisNum.val('');
@@ -471,7 +521,26 @@ class USI9 {
             }
         });
 
+        this._passportNumHelp = passportNumHelp;
+        
+        this.renderHelpIcon(
+            this._passportNumHelp,
+            this._('passportnumberhelp.caption'),
+            dialog,
+            this._('passportnumberhelp.text')
+        );
+
         this._countryOfIssuance = countryOfIssuance;
+        this._countryOfIssuance.prop('title', this._('coi.tooltip'));
+
+        this._countryOfIssuanceHelp = countryOfIssuanceHelp;
+        
+        this.renderHelpIcon(
+            this._countryOfIssuanceHelp,
+            this._('coihelp.caption'),
+            dialog,
+            this._('coihelp.text')
+        );
 
         this.processLPR(false);
         this.processAlien(false);
@@ -481,9 +550,13 @@ class USI9 {
         lastName, lastNameHelp, firstName, firstNameHelp,
         middleInitial, middleInitialHelp,
         immigrationStatus, immigrationStatusHelp,
-        listADoc, listAIssuingAuthority, listBDoc, listCDoc) {
+        listADoc, listAIssuingAuthority, listADocNumber, listADocExpDate,
+        listADoc2, listAIssuingAuthority2, listADocNumber2, listADocExpDate2,
+        listADoc3, listAIssuingAuthority3, listADocNumber3, listADocExpDate3,
+        listBDoc, listCDoc) {
 
         dialog.dialog({
+            title: this._('help'),
             autoOpen: false
         });
 
@@ -493,6 +566,23 @@ class USI9 {
         this._immigrationStatus = immigrationStatus;
 
         this._listADoc = listADoc;
+        this._listAIssuingAuthority = listAIssuingAuthority;
+        this._listADocNumber = listADocNumber;
+        this._listADocExpDate = listADocExpDate;
+        this._listADocExpDate.datepicker();
+
+        this._listADoc2 = listADoc2;
+        this._listAIssuingAuthority2 = listAIssuingAuthority2;
+        this._listADocNumber2 = listADocNumber2;
+        this._listADocExpDate2 = listADocExpDate2;
+        this._listADocExpDate2.datepicker();
+
+        this._listADoc3 = listADoc3;
+        this._listAIssuingAuthority3 = listAIssuingAuthority3;
+        this._listADocNumber3 = listADocNumber3;
+        this._listADocExpDate3 = listADocExpDate3;
+        this._listADocExpDate3.datepicker();
+
         this._listBDoc = listBDoc;
         this._listCDoc = listCDoc;
     }
@@ -535,15 +625,6 @@ class USI9 {
         return res;
     }
 
-    removeTags(t) {
-        var tags = [/<p>/g, /<\/p>/g, /<b>/g, /<\/b>/g, /<i>/g, /<\/i>/g, /<ol>/g, /<\/ol>/g, /<li>/g, /<\/li>/g, /<br \/>/g];
-        for (var i in tags) {
-            t = t.replace(tags[i], '');
-        }
-
-        return t;
-    }
-
     selectCheckmark(ctrl, arr) {
         for (var c in arr) {
             if (arr[c] !== ctrl) {
@@ -554,8 +635,8 @@ class USI9 {
         return true;
     }
 
-    filterCombolist(ctrl, items) {
-        ctrl.val('');
+    filterCombolist(ctrl, items, defaultValue) {
+        ctrl.val(defaultValue ? defaultValue : '');
 
         var options = ctrl.parent().children().filter('.combo-content');
         for (let index in items) {
@@ -563,16 +644,16 @@ class USI9 {
         }
 
         options.children().show();
-        options.children().each((code) => {
-            if (!(code in items)) {
-                options.children().filter('[value="' + code + '"]').hide();
+        options.children().each((code, item) => {
+            var val = item.getAttribute('value');
+            if (!(val in items)) {
+                options.children().filter('[value="' + val + '"]').hide();
             }
         });
 
-        options.children().on('click', e => {
-            console.log(e);
+        options.children().click(e => {
             this.processListABC(
-                e.parentNode.getElementsByTagName('input')[0].getAttribute('name'),
+                e.target.parentNode.parentNode.getElementsByTagName('input')[0].getAttribute('name'),
                 e.target.getAttribute('value'));
         });
     }
@@ -582,51 +663,66 @@ class USI9 {
     }
 
     processListABC(ddl, code) {
-        // 1 - U.S. Passport
-        // 2 - U.S. Passport Card
-        if (ddl === 'ListADocTitle' && code in [1, 2]) {
-            this.filterCombolist();
+        switch(ddl)
+        {
+        case 'ListADocTitle':
+            var na = this._('NA');
+            var issuingAuthList = {0: na};
+            var issuingAuth = issuingAuthList[0];
+
+            // 1 - U.S. Passport
+            // 2 - U.S. Passport Card
+            if (code === '1' || code === '2') {
+                issuingAuthList = {1:this._('USDS')};
+                issuingAuth = issuingAuthList[1];
+
+                this.filterCombolist(this._listADoc2, {0: na}, na);
+                this.filterCombolist(this._listAIssuingAuthority2, {0: na}, na);
+                this._listADocNumber2.attr('readOnly', true).val(na);
+                this._listADocExpDate2.attr('readOnly', true).datepicker('option', 'showOn', 'off').val(na);
+
+                this.filterCombolist(this._listADoc3, {0: na}, na);
+                this.filterCombolist(this._listAIssuingAuthority3, {0: na}, na);
+                this._listADocNumber3.attr('readOnly', true).val(na);
+                this._listADocExpDate3.attr('readOnly', true).datepicker('option', 'showOn', 'off').val(na);
+            }
+
+            this.filterCombolist(this._listAIssuingAuthority, issuingAuthList, issuingAuth);
+
+            break;
         }
     }
 
     processLPR(flag) {
         var na = flag ? this._('NA') : '';
         this._lpruscisNumPrefix.val('');
-        this._lpruscisNum.val(na);
-        this._lpruscisNum.prop('disabled', true);
+        this._lpruscisNum.prop('disabled', true).val(na);
         this._lpruscisNumType.prop('disabled', true);
 
-        this.filterCombolist(this._lpruscisNumType, flag ? {0:na} : {});
+        this.filterCombolist(this._lpruscisNumType, flag ? {0:na} : {}, flag ? na : '');
     }
 
     processAlien(flag) {
         var na = flag ? this._('NA') : '';
-        this._alienWorkAuthDate.val(na);
-        this._alienWorkAuthDate.prop('disabled', true);
-        this._alienuscisNum.val(na);
-        this._alienuscisNum.prop('disabled', true);
+        this._alienWorkAuthDate.prop('disabled', true).val(na);
+        this._alienuscisNumPrefix.val('');
+        this._alienuscisNum.prop('disabled', true).val(na);
         this._alienuscisNumType.prop('disabled', true);
-        this._admissionNum.val(na);
-        this._admissionNum.prop('disabled', true);
-        this._passportNum.val(na);
-        this._passportNum.prop('disabled', true);
+        this._admissionNum.prop('disabled', true).val(na);
+        this._passportNum.prop('disabled', true).val(na);
         this._countryOfIssuance.prop('disabled', true);
 
-        this.filterCombolist(this._alienuscisNumType, flag ? {0:na} : {});
-        this.filterCombolist(this._countryOfIssuance, flag ? {0:na} : {});
+        this.filterCombolist(this._alienuscisNumType, flag ? {0:na} : {}, flag ? na : '');
+        this.filterCombolist(this._countryOfIssuance, flag ? {0:na} : {}, flag ? na : '');
     }
 
-    renderHelpIcon(ctrl, title, dialog, text) {
-        ctrl.prop('title', title);
-        ctrl.attr('icon', true);
-        ctrl.val(String.fromCodePoint(0xFFFD));
-        ctrl.toggleClass('noHighlight');
-        ctrl.parent().click(() => {
-            ctrl.blur();
-            dialog.text('');
-            dialog.append(text);
-            dialog.dialog('open');
-        });
+    renderHelpIcon(ctrl, title, dialog, text, minWidth) {
+        ctrl.prop('title', title).attr('icon', true).val(String.fromCodePoint(0xFFFD)).
+            toggleClass('noHighlight').parent().click(() => {
+                ctrl.blur();
+                dialog.text('').append(text).
+                    dialog('option', 'minWidth', minWidth ? minWidth : 50).dialog('open');              
+            });
     }
 }
 
@@ -634,16 +730,39 @@ var form = new USI9();
 
 document.addEventListener('pagerendered', function (e) {
     $(document).tooltip({
+        show: {
+            delay: 200
+        },
+        open: (event, ui) => setTimeout(() => $(ui.tooltip).hide('fadeOut'), 5000),
         position: {
             my: 'center bottom', // the "anchor point" in the tooltip element
             at: 'center top', // the position of that anchor point relative to selected element
         }
     });
 
+    /* Inicialización en español para la extensión 'UI date picker' para jQuery. */
+    /* Traducido por Vester (xvester@gmail.com). */
+    $.datepicker.regional.es = {
+        closeText: 'Cerrar',
+        prevText: '&#x3C;Ant',
+        nextText: 'Sig&#x3E;',
+        currentText: 'Hoy',
+        monthNames: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
+        monthNamesShort: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
+        dayNames: ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'],
+        dayNamesShort: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],
+        dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
+        weekHeader: 'Sm',
+        dateFormat: 'mm/dd/yy', // I-9 should use mm/dd/yyyy format 
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: '' };
+    $.datepicker.setDefaults($.datepicker.regional.es);
+
     $.datepicker.setDefaults(
         $.extend(
-            {'dateFormat':'mm/dd/yy'},
-            $.datepicker.regional[form._('locale')]
+            $.datepicker.regional[form._('jquery.locale')]
         )
     );
 
@@ -693,15 +812,21 @@ document.addEventListener('pagerendered', function (e) {
             $('[name=LawfulPermanentResident]'),
             $('[name=LawfulPermanentResidentHelp]'),
             $('[name=AlienAuthorizedToWork]'),
+            $('[name=AlienAuthorizedToWorkHelp]'),
+            $('[name=USCISNumberHelp]'),
             $('[name=LPRUSCISNumberPrefix]'),
             $('[name=LPRUSCISNumber]'),
             $('[name=LPRUSCISNumberType]'),
             $('[name=AlienWorkAuthorizationDate]'),
+            $('[name=AlienUSCISNumberPrefix]'),
             $('[name=AlienUSCISNumber]'),
-            $('[name=AlienUSCISNumberType]'),     
+            $('[name=AlienUSCISNumberType]'),
             $('[name=AdmissionNumber]'),
+            $('[name=AdmissionNumberHelp]'),
             $('[name=ForeignPassportNumber]'),
-            $('[name=CountryOfIssuance]')
+            $('[name=ForeignPassportNumberHelp]'),
+            $('[name=CountryOfIssuance]'),
+            $('[name=CountryOfIssuanceHelp]')
         );
     }
 
@@ -720,6 +845,16 @@ document.addEventListener('pagerendered', function (e) {
             $('[name=ImmigrationStatusHelp]'),
             $('[name=ListADocTitle]'),
             $('[name=ListAIssuingAuthority]'),
+            $('[name=ListADocNumber]'),
+            $('[name=ListAExpDate]'),
+            $('[name=ListADocTitle2]'),
+            $('[name=ListAIssuingAuthority2]'),
+            $('[name=ListADocNumber2]'),
+            $('[name=ListAExpDate2]'),
+            $('[name=ListADocTitle3]'),
+            $('[name=ListAIssuingAuthority3]'),
+            $('[name=ListADocNumber3]'),
+            $('[name=ListAExpDate3]'),
             $('[name=ListBDocTitle]'),
             $('[name=ListCDocTitle]')
         );
