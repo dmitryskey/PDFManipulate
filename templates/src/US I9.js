@@ -42,374 +42,351 @@ class USI9 {
         $('a').prop('target', '_blank');
 
         // E-Verify requirements
-        this._lastName = lastName;
-        this._lastName.prop('title', this._('lastnamehelp.tooltip'));
-        this._lastName.prop('maxLength', 40);
-        this._lastName.keypress(e =>
-            this.nameFormat.test(String.fromCharCode(e.which)));
-        this._lastName.blur(() => 
-            this._lastNameSection2.val(this._lastName.val())
-        );
+        this._lastName = lastName
+            .prop('title', this._('lastnamehelp.tooltip'))
+            .prop('maxLength', 40)
+            .keypress(e =>
+                this.nameFormat.test(String.fromCharCode(e.which)))
+            .blur(() => 
+                this._lastNameSection2.val(this._lastName.val()));
 
-        this._lastNameHelp = lastNameHelp;
-        this.renderHelpIcon(
-            this._lastNameHelp,
+        this._lastNameHelp = this.renderHelpIcon(
+            lastNameHelp,
             this._('lastnamehelp.caption'),
             dialog,
             this._('lastnamehelp.text')
         );
 
         // E-Verify requirements
-        this._firstName = firstName;
-        this._firstName.prop('title', this._('firstnamehelp.tooltip'));
-        this._firstName.prop('maxLength', 25);
-        this._firstName.keypress(e =>
-            this.nameFormat.test(String.fromCharCode(e.which)));
-        this._firstName.blur(() => 
-            this._firstNameSection2.val(this._firstName.val())
-        );
+        this._firstName = firstName
+            .prop('title', this._('firstnamehelp.tooltip'))
+            .prop('maxLength', 25)
+            .keypress(e =>
+                this.nameFormat.test(String.fromCharCode(e.which)))
+            .blur(() => 
+                this._firstNameSection2.val(this._firstName.val()));
 
-        this._firstNameHelp = firstNameHelp;
-        this.renderHelpIcon(
-            this._firstNameHelp,
+        this._firstNameHelp = this.renderHelpIcon(
+            firstNameHelp,
             this._('firstnamehelp.caption'),
             dialog,
             this._('firstnamehelp.text')
         );
 
         // E-Verify requirements + N/A option
-        this._middleInitial = middleInitial;
-        this._middleInitial.prop('title', this._('middleinitialhelp.tooltip'));
-        this._middleInitial.prop('maxLength', 3);
-        this._middleInitial.keypress(e =>
-            this.nameFormat.test(String.fromCharCode(e.which)) ||
-            this.NAFormat.test(String.fromCharCode(e.which)));
-        this._middleInitial.blur(() => 
-            this._middleInitialSection2.val(this._middleInitial.val())
-        );
+        this._middleInitial = middleInitial
+            .prop('title', this._('middleinitialhelp.tooltip'))
+            .prop('maxLength', 3)
+            .keypress(e =>
+                this.nameFormat.test(String.fromCharCode(e.which)) ||
+                this.NAFormat.test(String.fromCharCode(e.which)))
+            .blur(() => 
+                this._middleInitialSection2.val(this._middleInitial.val()));
 
-        this._middleInitialHelp = middleInitialHelp;
-        this.renderHelpIcon(
-            this._middleInitialHelp,
+        this._middleInitialHelp = this.renderHelpIcon(
+            middleInitialHelp,
             this._('middleinitialhelp.caption'),
             dialog,
             this._('middleinitialhelp.text')
         );
 
         // E-Verify requirements
-        this._otherNames = otherNames;
-        this._otherNames.prop('title', this._('othernameshelp.tooltip'));
-        this._otherNames.prop('maxLength', 40);
-        this._otherNames.keypress(e =>
-            this.nameFormat.test(String.fromCharCode(e.which)) ||
-            this.NAFormat.test(String.fromCharCode(e.which)));
+        this._otherNames = otherNames
+            .prop('title', this._('othernameshelp.tooltip'))
+            .prop('maxLength', 40)
+            .keypress(e =>
+                this.nameFormat.test(String.fromCharCode(e.which)) ||
+                this.NAFormat.test(String.fromCharCode(e.which)));
 
-        this._otherNamesHelp = otherNamesHelp;
-        this.renderHelpIcon(
-            this._otherNamesHelp,
+        this._otherNamesHelp = this.renderHelpIcon(
+            otherNamesHelp,
             this._('othernameshelp.caption'),
             dialog,
             this._('othernameshelp.text')
         );
 
-        this._address = address;
-        this._address.prop('title', this._('addresshelp.tooltip'));
-        this._addressHelp = addressHelp;
-        this.renderHelpIcon(
-            this._addressHelp,
+        this._address = address.prop('title', this._('addresshelp.tooltip'));
+
+        this._addressHelp = this.renderHelpIcon(
+            addressHelp,
             this._('addresshelp.caption'),
             dialog,
             this._('addresshelp.text')
         );
 
-        this._apptNumber = apptNumber;
-        this._apptNumber.prop('title', this._('apartmentnumberhelp.tooltip'));
-        this._apptNumberHelp = apptNumberHelp;
-        this.renderHelpIcon(
-            this._apptNumberHelp,
+        this._apptNumber = apptNumber
+            .prop('title', this._('apartmentnumberhelp.tooltip'));
+
+        this._apptNumberHelp = this.renderHelpIcon(
+            apptNumberHelp,
             this._('apartmentnumberhelp.caption'),
             dialog,
             this._('apartmentnumberhelp.text')
         );
 
-        this._city = city;
-        this._city.prop('title', this._('cityhelp.caption'));
-        this._cityHelp = cityHelp;
-        this.renderHelpIcon(
-            this._cityHelp,
+        this._city = city.prop('title', this._('cityhelp.caption'));
+
+        this._cityHelp = this.renderHelpIcon(
+            cityHelp,
             this._('cityhelp.caption'),
             dialog,
             this._('cityhelp.text')
         );
 
-        this._state = state;
-        this._state.prop('title', this._('statehelp.tooltip'));
+        this._state = state.prop('title', this._('statehelp.tooltip'));
 
-        this._stateHelp = stateHelp;
-        this.renderHelpIcon(
-            this._stateHelp,
+        this._stateHelp = this.renderHelpIcon(
+            stateHelp,
             this._('statehelp.caption'),
             dialog,
             this._('statehelp.text')
         );
 
-        this._zip = zip;
-        this._zip.prop('title', this._('ziphelp.tooltip'));
-        this._zip.keypress(e =>
-            this.zipFormat.test(String.fromCharCode(e.which)));
+        this._zip = zip
+            .prop('title', this._('ziphelp.tooltip'))
+            .keypress(e =>
+                this.zipFormat.test(String.fromCharCode(e.which)));
 
-        this._zipHelp = zipHelp;
-        this.renderHelpIcon(
-            this._zipHelp,
+        this._zipHelp = this.renderHelpIcon(
+            zipHelp,
             this._('ziphelp.caption'),
             dialog,
             this._('ziphelp.text')
         );
 
         // E-Verify requirements
-        this._dob = dob;
-        this._dob.prop('title', this._('dobhelp.tooltip'));
-        this._dob.datepicker();
+        this._dob = dob.prop('title', this._('dobhelp.tooltip')).datepicker();
 
-        this._dobHelp = dobHelp;
-        this.renderHelpIcon(
-            this._dobHelp,
+        this._dobHelp = this.renderHelpIcon(
+            dobHelp,
             this._('dobhelp.caption'),
             dialog,
             this._('dobhelp.text')
         );
 
-        this._ssn11 = ssn11;
-        this._ssn11.prop('title', this._('ssnhelp.tooltip'));
-        this._ssn11.prop('maxLength', 1);
-        this._ssn11.keypress(e => 
-            this.autoFocus(e, this.numberFormat, 1, this._ssn12));
+        this._ssn11 = ssn11
+            .prop('title', this._('ssnhelp.tooltip'))
+            .prop('maxLength', 1)
+            .keypress(e => 
+                this.autoFocus(e, this.numberFormat, 1, this._ssn12));
 
-        this._ssn12 = ssn12;
-        this._ssn12.prop('title', this._('ssnhelp.tooltip'));
-        this._ssn12.prop('maxLength', 1);
-        this._ssn12.keypress(e =>
-            this.autoFocus(e, this.numberFormat, 1, this._ssn13));
+        this._ssn12 = ssn12
+            .prop('title', this._('ssnhelp.tooltip'))
+            .prop('maxLength', 1)
+            .keypress(e =>
+                this.autoFocus(e, this.numberFormat, 1, this._ssn13));
 
-        this._ssn13 = ssn13;
-        this._ssn13.prop('title', this._('ssnhelp.tooltip'));
-        this._ssn13.prop('maxLength', 1);
-        this._ssn13.keypress(e =>
-            this.autoFocus(e, this.numberFormat, 1, this._ssn21));
+        this._ssn13 = ssn13
+            .prop('title', this._('ssnhelp.tooltip'))
+            .prop('maxLength', 1)
+            .keypress(e =>
+                this.autoFocus(e, this.numberFormat, 1, this._ssn21));
 
-        this._ssn21 = ssn21;
-        this._ssn21.prop('title', this._('ssnhelp.tooltip'));
-        this._ssn21.prop('maxLength', 1);
-        this._ssn21.keypress(e =>
-            this.autoFocus(e, this.numberFormat, 1, this._ssn22));
+        this._ssn21 = ssn21
+            .prop('title', this._('ssnhelp.tooltip'))
+            .prop('maxLength', 1)
+            .keypress(e =>
+                this.autoFocus(e, this.numberFormat, 1, this._ssn22));
 
-        this._ssn22 = ssn22;
-        this._ssn22.prop('title', this._('ssnhelp.tooltip'));
-        this._ssn22.prop('maxLength', 1);
-        this._ssn22.keypress(e =>
-            this.autoFocus(e, this.numberFormat, 1, this._ssn31));
+        this._ssn22 = ssn22
+            .prop('title', this._('ssnhelp.tooltip'))
+            .prop('maxLength', 1)
+            .keypress(e =>
+                this.autoFocus(e, this.numberFormat, 1, this._ssn31));
 
-        this._ssn31 = ssn31;
-        this._ssn31.prop('title', this._('ssnhelp.tooltip'));
-        this._ssn31.prop('maxLength', 1);
-        this._ssn31.keypress(e =>
-            this.autoFocus(e, this.numberFormat, 1, this._ssn32));
+        this._ssn31 = ssn31
+            .prop('title', this._('ssnhelp.tooltip'))
+            .prop('maxLength', 1)
+            .keypress(e =>
+                this.autoFocus(e, this.numberFormat, 1, this._ssn32));
 
-        this._ssn32 = ssn32;
-        this._ssn32.prop('title', this._('ssnhelp.tooltip'));
-        this._ssn32.prop('maxLength', 1);
-        this._ssn32.keypress(e =>
-            this.autoFocus(e, this.numberFormat, 1, this._ssn33));
+        this._ssn32 = ssn32
+            .prop('title', this._('ssnhelp.tooltip'))
+            .prop('maxLength', 1)
+            .keypress(e =>
+                this.autoFocus(e, this.numberFormat, 1, this._ssn33));
 
-        this._ssn33 = ssn33;
-        this._ssn33.prop('title', this._('ssnhelp.tooltip'));
-        this._ssn33.prop('maxLength', 1);
-        this._ssn33.keypress(e =>
-            this.autoFocus(e, this.numberFormat, 1, this._ssn34));
+        this._ssn33 = ssn33
+            .prop('title', this._('ssnhelp.tooltip'))
+            .prop('maxLength', 1)
+            .keypress(e =>
+                this.autoFocus(e, this.numberFormat, 1, this._ssn34));
 
-        this._ssn34 = ssn34;
-        this._ssn34.prop('title', this._('ssnhelp.tooltip'));
-        this._ssn34.prop('maxLength', 1);
-        this._ssn34.keypress(e =>
-            this.numberFormat.test(String.fromCharCode(e.which)));
+        this._ssn34 = ssn34
+            .prop('title', this._('ssnhelp.tooltip'))
+            .prop('maxLength', 1)
+            .keypress(e =>
+                this.numberFormat.test(String.fromCharCode(e.which)));
 
-        this._ssnHelp = ssnHelp;
-        this.renderHelpIcon(
-            this._ssnHelp,
+        this._ssnHelp = this.renderHelpIcon(
+            ssnHelp,
             this._('ssnhelp.caption'),
             dialog,
             this._('ssnhelp.text'),
             400
         );
 
-        this._email = email;
-        this._email.prop('title', this._('emailhelp.tooltip'));
-        this._email.prop('maxLength', 60);
+        this._email = email
+            .prop('title', this._('emailhelp.tooltip'))
+            .prop('maxLength', 60);
 
-        this._emailHelp = emailHelp;
-        this.renderHelpIcon(
-            this._emailHelp,
+        this._emailHelp = this.renderHelpIcon(
+            emailHelp,
             this._('emailhelp.caption'),
             dialog,
             this._('emailhelp.text')
         );
 
-        this._phone = phone;
-        this._phone.prop('title', this._('phonehelp.tooltip'));
-        this._phone.prop('maxLength', 13);
-        this._phone.keypress(e =>
-            this.phoneFormat.test(String.fromCharCode(e.which)));
+        this._phone = phone
+            .prop('title', this._('phonehelp.tooltip'))
+            .prop('maxLength', 13)
+            .keypress(e =>
+                this.phoneFormat.test(String.fromCharCode(e.which)));
 
-        this._phoneHelp = phoneHelp;
-        this.renderHelpIcon(
-            this._phoneHelp,
+        this._phoneHelp = this.renderHelpIcon(
+            phoneHelp,
             this._('phonehelp.caption'),
             dialog,
             this._('phonehelp.text')
         );
 
-        var arr = [citizen, national, lpr, alien];
+        var citizenships = [citizen, national, lpr, alien];
         var na = this._('NA');
 
-        this._citizen = citizen;
-        this._citizen.prop('title', this._('citizenhelp.tooltip'));
-        this._citizen.click(() => {
-            this.selectCheckmark(this._citizen, arr);
-            this.processLPR(this._citizen.prop('checked'));
-            this.processAlien(this._citizen.prop('checked'));
-            this._immigrationStatus.val(this._citizen.prop('checked') ? 1 : 0);
+        this._citizen = citizen
+            .prop('title', this._('citizenhelp.tooltip'))
+            .click(() => {
+                this.selectCheckmark(this._citizen, citizenships);
+                this.processLPR(this._citizen.prop('checked'));
+                this.processAlien(this._citizen.prop('checked'));
+                this._immigrationStatus.val(this._citizen.prop('checked') ? 1 : 0);
 
-            this.filterCombolist(this._listADoc, {0:na});
-            if (this._citizen.prop('checked')) {
-                this.filterCombolist(this._listADoc, {0:na, 1:this._('uspassport'), 2:this._('uspassportcard')}, na);
-            }
-        });
+                this.filterCombolist(this._listADoc, {0:na});
+                if (this._citizen.prop('checked')) {
+                    this.filterCombolist(this._listADoc, 
+                        {0:na, 1:this._('uspassport'), 2:this._('uspassportcard')}, na);
+                }});
 
-        this._citizenHelp = citizenHelp;
-        this.renderHelpIcon(
-            this._citizenHelp,
+        this._citizenHelp = this.renderHelpIcon(
+            citizenHelp,
             this._('citizenhelp.caption'),
             dialog,
             this._('citizenhelp.text')
         );
 
-        this._national = national;
-        this._national.prop('title', this._('nationalhelp.tooltip'));
-        this._national.click(() => {
-            this.selectCheckmark(this._national, arr);
-            this.processLPR(this._national.prop('checked'));
-            this.processAlien(this._national.prop('checked'));
-            this._immigrationStatus.val(this._national.prop('checked') ? 2 : 0);
-            this.filterCombolist(this._listADoc, {0:na});
-            if (this._national.prop('checked')) {
-                this.filterCombolist(this._listADoc, {0:na, 1:this._('uspassport'), 2:this._('uspassportcard')}, na);
-            }
-        });
+        this._national = national
+            .prop('title', this._('nationalhelp.tooltip'))
+            .click(() => {
+                this.selectCheckmark(this._national, citizenships);
+                this.processLPR(this._national.prop('checked'));
+                this.processAlien(this._national.prop('checked'));
+                this._immigrationStatus.val(this._national.prop('checked') ? 2 : 0);
+                this.filterCombolist(this._listADoc, {0:na});
+                if (this._national.prop('checked')) {
+                    this.filterCombolist(this._listADoc, {0:na, 1:this._('uspassport'), 2:this._('uspassportcard')}, na);
+                }
+            });
 
-        this._nationalHelp = nationalHelp;
-        this.renderHelpIcon(
-            this._nationalHelp,
+        this._nationalHelp = this.renderHelpIcon(
+            nationalHelp,
             this._('nationalhelp.caption'),
             dialog,
             this._('nationalhelp.text')
         );
 
-        this._lpr = lpr;
-        this._lpr.prop('title', this._('lprhelp.tooltip'));
-        this._lpr.click(() => {
-            this.selectCheckmark(this._lpr, arr);
-            this.processAlien(this._lpr.prop('checked'));
-            this._lpruscisNum.val('');
-            this.filterCombolist(this._lpruscisNumType, {});
+        this._lpr = lpr
+            .prop('title', this._('lprhelp.tooltip'))
+            .click(() => {
+                this.selectCheckmark(this._lpr, citizenships);
+                this.processAlien(this._lpr.prop('checked'));
+                this._lpruscisNum.val('');
+                this.filterCombolist(this._lpruscisNumType, {});
 
-            if (this._lpr.prop('checked')) {
-                this._lpruscisNum.prop('disabled', false);
-                this._lpruscisNumType.prop('disabled', false);
-                this.filterCombolist(this._lpruscisNumType, {'A':this._('aliennumber'), 'U':this._('uscisnumber')});
-            }
+                if (this._lpr.prop('checked')) {
+                    this._lpruscisNum.prop('disabled', false);
+                    this._lpruscisNumType.prop('disabled', false);
+                    this.filterCombolist(this._lpruscisNumType, {'A':this._('aliennumber'), 'U':this._('uscisnumber')});
+                }
 
-            this._immigrationStatus.val(this._lpr.prop('checked') ? 3 : 0);
+                this._immigrationStatus.val(this._lpr.prop('checked') ? 3 : 0);
 
-            this.filterCombolist(this._listADoc, {});
-            if (this._lpr.prop('checked')) {
-                this.filterCombolist(this._listADoc, {
-                    0:na,
-                    3:this._('permanentresidentcard'),
-                    4:this._('alienresidentcard'),
-                    5:this._('foreignpassport'),
-                    10:this._('I551I94receipt'),
-                    12:this._('I551receipt')
-                }, na);
-            }
-        });
+                this.filterCombolist(this._listADoc, {});
+                if (this._lpr.prop('checked')) {
+                    this.filterCombolist(this._listADoc, {
+                        0:na,
+                        3:this._('permanentresidentcard'),
+                        4:this._('alienresidentcard'),
+                        5:this._('foreignpassport'),
+                        10:this._('I551I94receipt'),
+                        12:this._('I551receipt')
+                    }, na);
+                }
+            });
 
-        this._lprHelp = lprHelp;
-        this.renderHelpIcon(
-            this._lprHelp,
+        this._lprHelp = this.renderHelpIcon(
+            lprHelp,
             this._('lprhelp.caption'),
             dialog,
             this._('lprhelp.text')
         );
 
-        this._alien = alien;
-        this._alien.prop('title', this._('alienhelp.tooltip'));
-        this._alien.click(() => {
-            this.selectCheckmark(this._alien, arr);
-            this.processLPR(this._alien.prop('checked'));
-            this._alienWorkAuthDate.val('');
-            this._alienuscisNum.val('');
-            this.filterCombolist(this._alienuscisNumType, {});
-            this._admissionNum.val('');
-            this._passportNum.val('');
-            this.filterCombolist(this._countryOfIssuance, {});
-            if (this._alien.prop('checked')) {
-                this._alienWorkAuthDate.prop('disabled', false);
-                this._alienuscisNum.prop('disabled', false);
-                this._alienuscisNumType.prop('disabled', false);
+        this._alien = alien
+            .prop('title', this._('alienhelp.tooltip'))
+            .click(() => {
+                this.selectCheckmark(this._alien, citizenships);
+                this.processLPR(this._alien.prop('checked'));
+                this._alienWorkAuthDate.val('');
+                this._alienuscisNum.val('');
+                this.filterCombolist(this._alienuscisNumType, {});
+                this._admissionNum.val('');
+                this._passportNum.val('');
+                this.filterCombolist(this._countryOfIssuance, {});
+                if (this._alien.prop('checked')) {
+                    this._alienWorkAuthDate.prop('disabled', false);
+                    this._alienuscisNum.prop('disabled', false);
+                    this._alienuscisNumType.prop('disabled', false);
 
-                this.filterCombolist(this._alienuscisNumType, {'A':this._('aliennumber'), 'U':this._('uscisnumber')});
+                    this.filterCombolist(this._alienuscisNumType, 
+                        {'A':this._('aliennumber'), 'U':this._('uscisnumber')});
 
-                this._admissionNum.prop('disabled', false);
-                this._passportNum.prop('disabled', false);
+                    this._admissionNum.prop('disabled', false);
+                    this._passportNum.prop('disabled', false);
 
-                this._countryOfIssuance.prop('disabled', false);
+                    this._countryOfIssuance.prop('disabled', false);
 
-                this.filterCombolist(this._countryOfIssuance, JSON.parse(this._('countries')));
-            }
+                    this.filterCombolist(this._countryOfIssuance, JSON.parse(this._('countries')));
+                }
 
-            this._immigrationStatus.val(this._alien.prop('checked') ? 4 : 0);
+                this._immigrationStatus.val(this._alien.prop('checked') ? 4 : 0);
 
-            this.filterCombolist(this._listADoc, {});
-            if (this._alien.prop('checked')) {
-                this.filterCombolist(this._listADoc, {
-                    0:na,
-                    6:this._('eadI766'),
-                    5:this._('foreignpassport'),
-                    7:this._('foreinpassportnonimmigrant'),
-                    8:this._('FSMpassport'),
-                    9:this._('RMIpassport'),
-                    11:this._('I94refugeestampreceipt'),
-                    13:this._('I766receipt'),
-                    14:this._('foreinpassportnonimmigrantreceipt'),
-                    15:this._('FSMpassportreceipt'),
-                    16:this._('RMIpassportreceipt')
-                }, na);
-            }
-        });
+                this.filterCombolist(this._listADoc, {});
+                if (this._alien.prop('checked')) {
+                    this.filterCombolist(this._listADoc, {
+                        0:na,
+                        6:this._('eadI766'),
+                        5:this._('foreignpassport'),
+                        7:this._('foreinpassportnonimmigrant'),
+                        8:this._('FSMpassport'),
+                        9:this._('RMIpassport'),
+                        11:this._('I94refugeestampreceipt'),
+                        13:this._('I766receipt'),
+                        14:this._('foreinpassportnonimmigrantreceipt'),
+                        15:this._('FSMpassportreceipt'),
+                        16:this._('RMIpassportreceipt')
+                    }, na);
+                }
+            });
 
-        this._alienHelp = alienHelp;
-        this.renderHelpIcon(
-            this._alienHelp,
+        this._alienHelp = this.renderHelpIcon(
+            alienHelp,
             this._('alienhelp.caption'),
             dialog,
             this._('alienhelp.text'),
             500
         );
 
-        this._uscisNumberHelp = uscisNumberHelp;
-
-        this.renderHelpIcon(
-            this._uscisNumberHelp,
+        this._uscisNumberHelp = this.renderHelpIcon(
+            uscisNumberHelp,
             this._('uscisnumberhelp.caption'),
             dialog,
             this._('uscisnumberhelp.text')
@@ -417,126 +394,120 @@ class USI9 {
 
         this._lpruscisNumPrefix = lpruscisNumPrefix;
 
-        this._lpruscisNum = lpruscisNum;
-        this._lpruscisNum.prop('title', this._('uscisnumber.tooltip'));
-        this._lpruscisNum.prop('maxLength', 9);
-        this._lpruscisNum.keypress(e =>
-            this.numberFormat.test(String.fromCharCode(e.which)));
+        this._lpruscisNum = lpruscisNum
+            .prop('title', this._('uscisnumber.tooltip'))
+            .prop('maxLength', 9)
+            .keypress(e =>
+                this.numberFormat.test(String.fromCharCode(e.which)));
 
-        this._lpruscisNumType = lpruscisNumType;
-        this._lpruscisNumType.prop('title', this._('uscisnumbertype.tooltip'));
+        this._lpruscisNumType = lpruscisNumType
+            .prop('title', this._('uscisnumbertype.tooltip'));
         this.assignCombolistEventHandler(this._lpruscisNumType, (e) => 
             this._lpruscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : ''));
 
-        this._alienWorkAuthDate = alienWorkAuthDate;
-        this._alienWorkAuthDate.prop('title', this._('alienworkauthdate.tooltip'));
-        this._alienWorkAuthDate.datepicker();
-        this._alienWorkAuthDate.unbind('keypress');
-        this._alienWorkAuthDate.keypress(e =>
-            /[\d/]/g.test(String.fromCharCode(e.which)) ||
-            this.NAFormat.test(String.fromCharCode(e.which))
-        );
+        this._alienWorkAuthDate = alienWorkAuthDate
+            .prop('title', this._('alienworkauthdate.tooltip'))
+            .datepicker()
+            .unbind('keypress')
+            .keypress(e =>
+                /[\d/]/g.test(String.fromCharCode(e.which)) ||
+                this.NAFormat.test(String.fromCharCode(e.which))
+            );
 
         this._alienuscisNumPrefix = alienuscisNumPrefix;
 
         // E-Verify requirements
-        this._alienuscisNum = alienuscisNum;
-        this._alienuscisNum.prop('title', this._('uscisnumber.tooltip'));
-        this._alienuscisNum.prop('maxLength', 9);
-        this._alienuscisNum.keypress(e =>
-            this.numberFormat.test(String.fromCharCode(e.which)));
-        this._alienuscisNum.blur(() => {
-            if (this._alienuscisNum.val() !== '') {
-                if (this._alienuscisNumType.val() === '') {
-                    this.filterCombolist(this._alienuscisNumType, {'A':this._('aliennumber'), 'U':this._('uscisnumber')});
+        this._alienuscisNum = alienuscisNum
+            .prop('title', this._('uscisnumber.tooltip'))
+            .prop('maxLength', 9)
+            .keypress(e =>
+                this.numberFormat.test(String.fromCharCode(e.which)))
+            .blur(() => {
+                if (this._alienuscisNum.val() !== '') {
+                    if (this._alienuscisNumType.val() === '') {
+                        this.filterCombolist(this._alienuscisNumType, 
+                            {'A':this._('aliennumber'), 'U':this._('uscisnumber')});
+                    }
+
+                    this._admissionNum.val(na);
+                    this._passportNum.val(na);
+                    this.filterCombolist(this._countryOfIssuance, {0:na}, na);
                 }
+                else {
+                    this.filterCombolist(this._alienuscisNumType, {});
+                    this._admissionNum.val('');
+                    this._passportNum.val('');
+                    this.filterCombolist(this._countryOfIssuance, {});
+                }
+            });
 
-                this._admissionNum.val(na);
-                this._passportNum.val(na);
-                this.filterCombolist(this._countryOfIssuance, {0:na}, na);
-            }
-            else {
-                this.filterCombolist(this._alienuscisNumType, {});
-                this._admissionNum.val('');
-                this._passportNum.val('');
-                this.filterCombolist(this._countryOfIssuance, {});
-            }
-        });
-
-        this._alienuscisNumType = alienuscisNumType;
-        this._alienuscisNumType.prop('title', this._('uscisnumbertype.tooltip'));
+        this._alienuscisNumType = alienuscisNumType
+            .prop('title', this._('uscisnumbertype.tooltip'));
         this.assignCombolistEventHandler(this._alienuscisNumType, e => 
             this._alienuscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : ''));
 
         // E-Verify requirements
-        this._admissionNum = admissionNum;
-        this._admissionNum.prop('title', this._('admissionnumber.tooltip'));
-        this._admissionNum.prop('maxLength', 11);
-        this._admissionNum.keypress(e =>
-            this.numberFormat.test(String.fromCharCode(e.which)));
-        this._admissionNum.blur(() => {
-            if (this._admissionNum.val() !== '') {
-                this._alienuscisNum.val(na);
-                this.filterCombolist(this._alienuscisNumType, {0:na}, na);
+        this._admissionNum = admissionNum
+            .prop('title', this._('admissionnumber.tooltip'))
+            .prop('maxLength', 11)
+            .keypress(e =>
+                this.numberFormat.test(String.fromCharCode(e.which)))
+            .blur(() => {
+                if (this._admissionNum.val() !== '') {
+                    this._alienuscisNum.val(na);
+                    this.filterCombolist(this._alienuscisNumType, {0:na}, na);
 
-                this._passportNum.val(na);
-                this.filterCombolist(this._countryOfIssuance, {0:na}, na);
-            }
-            else {
-                this._alienuscisNum.val('');
-                this.filterCombolist(this._alienuscisNumType, {});
-                this._passportNum.val('');
-                this.filterCombolist(this._countryOfIssuance, {});
-            }
-        });
+                    this._passportNum.val(na);
+                    this.filterCombolist(this._countryOfIssuance, {0:na}, na);
+                }
+                else {
+                    this._alienuscisNum.val('');
+                    this.filterCombolist(this._alienuscisNumType, {});
+                    this._passportNum.val('');
+                    this.filterCombolist(this._countryOfIssuance, {});
+                }
+            });
 
-        this._admissionNumHelp = admissionNumHelp;
-
-        this.renderHelpIcon(
-            this._admissionNumHelp,
+        this._admissionNumHelp = this.renderHelpIcon(
+            admissionNumHelp,
             this._('admissionnumberhelp.caption'),
             dialog,
             this._('admissionnumberhelp.text')
         );
 
         // E-Verify requirements
-        this._passportNum = passportNum;
-        this._passportNum.prop('title', this._('passportnumber.tooltip'));
-        this._passportNum.prop('maxLength', 12);
-        this._passportNum.blur(() => {
-            if (this._passportNum.val() !== '') {
-                this._alienuscisNum.val(na);
-                this.filterCombolist(this._alienuscisNumType, {0:na}, na);
+        this._passportNum = passportNum
+            .prop('title', this._('passportnumber.tooltip'))
+            .prop('maxLength', 12)
+            .blur(() => {
+                if (this._passportNum.val() !== '') {
+                    this._alienuscisNum.val(na);
+                    this.filterCombolist(this._alienuscisNumType, {0:na}, na);
 
-                this._admissionNum.val(na);
+                    this._admissionNum.val(na);
                 
-                if (this._countryOfIssuance.val() === '') {
-                    this.filterCombolist(this._countryOfIssuance, JSON.parse(this._('countries')));
+                    if (this._countryOfIssuance.val() === '') {
+                        this.filterCombolist(this._countryOfIssuance, JSON.parse(this._('countries')));
+                    }
                 }
-            }
-            else {
-                this._alienuscisNum.val('');
-                this.filterCombolist(this._alienuscisNumType, {});
-                this._admissionNum.val('');
-            }
-        });
+                else {
+                    this._alienuscisNum.val('');
+                    this.filterCombolist(this._alienuscisNumType, {});
+                    this._admissionNum.val('');
+                }
+            });
 
-        this._passportNumHelp = passportNumHelp;
-        
-        this.renderHelpIcon(
-            this._passportNumHelp,
+        this._passportNumHelp = this.renderHelpIcon(
+            passportNumHelp,
             this._('passportnumberhelp.caption'),
             dialog,
             this._('passportnumberhelp.text')
         );
 
-        this._countryOfIssuance = countryOfIssuance;
-        this._countryOfIssuance.prop('title', this._('coi.tooltip'));
+        this._countryOfIssuance = countryOfIssuance.prop('title', this._('coi.tooltip'));
 
-        this._countryOfIssuanceHelp = countryOfIssuanceHelp;
-        
-        this.renderHelpIcon(
-            this._countryOfIssuanceHelp,
+        this._countryOfIssuanceHelp = this.renderHelpIcon(
+            countryOfIssuanceHelp,
             this._('coihelp.caption'),
             dialog,
             this._('coihelp.text')
@@ -544,6 +515,146 @@ class USI9 {
 
         this.processLPR(false);
         this.processAlien(false);
+    }
+
+    renderTranslatorSection(dialog,
+        translatorNo, translatorYes, translatorHelp,
+        sgnTranslator, sgnTranslatorHelp,
+        translatorDate, translatorDateHelp,
+        translatorLastName, translatorLastNameHelp,
+        translatorFirstName, translatorFirstNameHelp,
+        translatorAddress, translatorAddressHelp,
+        translatorCity, translatorCityHelp,
+        translatorState, translatorStateHelp,
+        translatorZip, translatorZipHelp) {
+
+        var translator = [translatorYes, translatorNo];
+            
+        this._translatorYes = translatorYes
+            .prop('title', this._('translator.tooltip'))
+            .click(() => { 
+                this.selectCheckmark(this._translatorYes, translator);
+
+                this._sgnTranslator.prop('disabled', false);
+                this._translatorDate.prop('disabled', false);
+                this._translatorLastName.prop('disabled', false);
+                this._translatorFirstName.prop('disabled', false);
+                this._translatorAddress.prop('disabled', false);
+                this._translatorCity.prop('disabled', false);
+                this._translatorState.prop('disabled', false);
+                this._translatorZip.prop('disabled', false);
+            });
+            
+        this._translatorNo = translatorNo
+            .prop('title', this._('translator.tooltip'))
+            .click(() => {
+                this.selectCheckmark(this._translatorNo, translator);
+                
+                this._sgnTranslator.val('').prop('disabled', true);
+                this._translatorDate.val('').prop('disabled', true);
+                this._translatorLastName.val('').prop('disabled', true);
+                this._translatorFirstName.val('').prop('disabled', true);
+                this._translatorAddress.val('').prop('disabled', true);
+                this._translatorCity.val('').prop('disabled', true);
+                this._translatorState.val('').prop('disabled', true);
+                this._translatorZip.val('').prop('disabled', true);
+            });
+            
+        this._translatorHelp = this.renderHelpIcon(
+            translatorHelp,
+            this._('translatorhelp.caption'),
+            dialog,
+            this._('translatorhelp.text'),
+            500
+        );
+            
+        this._sgnTranslator = sgnTranslator
+            .prop('title', this._('sgntranslator.tooltip'));
+
+        this._sgnTranslatorHelp = this.renderHelpIcon(
+            sgnTranslatorHelp,
+            this._('sgntranslatorhelp.caption'),
+            dialog,
+            this._('sgntranslatorhelp.text')
+        );
+            
+        this._translatorDate = translatorDate.datepicker()
+            .prop('title', this._('translatordate.tooltip'));
+
+        this._translatorDateHelp = this.renderHelpIcon(
+            translatorDateHelp,
+            this._('translatordatehelp.caption'),
+            dialog,
+            this._('translatordatehelp.text')
+        );
+            
+        this._translatorLastName = translatorLastName
+            .prop('title', this._('translatorlastname.tooltip'))
+            .prop('maxLength', 40)
+            .keypress(e =>
+                this.nameFormat.test(String.fromCharCode(e.which)));
+
+        this._translatorLastNameHelp = this.renderHelpIcon(
+            translatorLastNameHelp,
+            this._('translatorlastnamehelp.caption'),
+            dialog,
+            this._('translatorlastnamehelp.text')
+        );
+            
+        this._translatorFirstName = translatorFirstName
+            .prop('title', this._('translatorfirstname.tooltip'))
+            .prop('maxLength', 25)
+            .keypress(e =>
+                this.nameFormat.test(String.fromCharCode(e.which)));
+
+        this._translatorFirstNameHelp = this.renderHelpIcon(
+            translatorFirstNameHelp,
+            this._('translatorfirstnamehelp.caption'),
+            dialog,
+            this._('translatorfirstnamehelp.text')
+        );
+            
+        this._translatorAddress = translatorAddress
+            .prop('title', this._('translatoraddress.tooltip'));
+
+        this._translatorAddressHelp = this.renderHelpIcon(
+            translatorAddressHelp,
+            this._('translatoraddresshelp.caption'),
+            dialog,
+            this._('translatoraddresshelp.text')
+        );
+            
+        this._translatorCity = translatorCity
+            .prop('title', this._('translatorcity.tooltip'));
+
+        this._translatorCityHelp = this.renderHelpIcon(
+            translatorCityHelp,
+            this._('translatorcityhelp.caption'),
+            dialog,
+            this._('translatorcityhelp.text')
+        );
+            
+        this._translatorState = translatorState
+            .prop('title', this._('translatorstate.tooltip'));
+
+        this._translatorStateHelp = this.renderHelpIcon(
+            translatorStateHelp,
+            this._('translatorstatehelp.caption'),
+            dialog,
+            this._('translatorstatehelp.text')
+        );
+            
+        this._translatorZip = translatorZip
+            .prop('title', this._('translatorzip.tooltip'))
+            .keypress(e =>
+                this.zipFormat.test(String.fromCharCode(e.which)));
+
+        this._translatorZipHelp = this.renderHelpIcon(
+            translatorZipHelp,
+            this._('translatorziphelp.caption'),
+            dialog,
+            this._('translatorziphelp.text')
+        );
     }
 
     renderSection2(dialog,
@@ -636,8 +747,6 @@ class USI9 {
     }
 
     filterCombolist(ctrl, items, defaultValue) {
-        ctrl.val(defaultValue ? defaultValue : '');
-
         var options = ctrl.parent().children().filter('.combo-content');
         for (let index in items) {
             options.children().filter('[value="' + index + '"]').text(items[index]);
@@ -656,6 +765,12 @@ class USI9 {
                 e.target.parentNode.parentNode.getElementsByTagName('input')[0].getAttribute('name'),
                 e.target.getAttribute('value'));
         });
+
+        options.children().filter('[value="' + (defaultValue ? defaultValue : '') + '"]').click();
+
+        if (defaultValue === null) {
+            ctrl.val('');
+        }
     }
 
     assignCombolistEventHandler(ctrl, f) {
@@ -670,19 +785,58 @@ class USI9 {
             var issuingAuthList = {0: na};
             var issuingAuth = issuingAuthList[0];
 
+            // US Citizens & Non-citizen nationals
             // 1 - U.S. Passport
             // 2 - U.S. Passport Card
-            if (code === '1' || code === '2') {
+            if (['1', '2'].includes(code)) {
                 issuingAuthList = {1:this._('USDS')};
-                issuingAuth = issuingAuthList[1];
+                issuingAuth = 1;
+            }
 
-                this.filterCombolist(this._listADoc2, {0: na}, na);
-                this.filterCombolist(this._listAIssuingAuthority2, {0: na}, na);
+            // LPR
+            // 3 - Perm. Resident Card (Form I-551)
+            if (code === '3') {
+                issuingAuthList = {2:this._('USCIS'), 3:this._('DOJINS')};
+                issuingAuth = 0;
+            }
+
+            // 4 - Alien Reg. Receipt Card (Form I-551)
+            if (code === '4') {
+                issuingAuthList = {3:this._('DOJINS')};
+                issuingAuth = 3;
+            }
+
+            // 5 - Foreign Passport
+            if (code === '5') {
+                issuingAuthList = JSON.parse(this._('countries'));
+                issuingAuth = null;
+
+                this.filterCombolist(this._listADoc2, {1: this._('temporaryI551stamp'), 2: this._('mrivstamp')}, 1);
+                this.filterCombolist(this._listAIssuingAuthority2, {0: na}, 0);
+            }
+
+            // 10 - Receipt: Form I-94/I-94A w/I-551 stamp, photo
+            if (code === '10') {
+                issuingAuthList = {4:this._('DHS')};
+                issuingAuth = 4;
+            }
+
+            // 12 - Receipt replacement Perm. Res. Card (Form I-551)
+            if (code === '12') {
+                issuingAuthList = {2:this._('USCIS')};
+                issuingAuth = 2;
+            }
+
+            if (['1', '2', '3', '4', '10', '12'].includes(code)) {
+                this.filterCombolist(this._listADoc2, {0: na}, 0);
+                this.filterCombolist(this._listAIssuingAuthority2, {0: na}, 0);
                 this._listADocNumber2.attr('readOnly', true).val(na);
                 this._listADocExpDate2.attr('readOnly', true).datepicker('option', 'showOn', 'off').val(na);
+            }
 
-                this.filterCombolist(this._listADoc3, {0: na}, na);
-                this.filterCombolist(this._listAIssuingAuthority3, {0: na}, na);
+            if (['1', '2', '3', '4', '5', '10', '12'].includes(code)) {
+                this.filterCombolist(this._listADoc3, {0: na}, 0);
+                this.filterCombolist(this._listAIssuingAuthority3, {0: na}, 0);
                 this._listADocNumber3.attr('readOnly', true).val(na);
                 this._listADocExpDate3.attr('readOnly', true).datepicker('option', 'showOn', 'off').val(na);
             }
@@ -699,7 +853,7 @@ class USI9 {
         this._lpruscisNum.prop('disabled', true).val(na);
         this._lpruscisNumType.prop('disabled', true);
 
-        this.filterCombolist(this._lpruscisNumType, flag ? {0:na} : {}, flag ? na : '');
+        this.filterCombolist(this._lpruscisNumType, flag ? {0:na} : {}, flag ? 0 : null);
     }
 
     processAlien(flag) {
@@ -712,12 +866,13 @@ class USI9 {
         this._passportNum.prop('disabled', true).val(na);
         this._countryOfIssuance.prop('disabled', true);
 
-        this.filterCombolist(this._alienuscisNumType, flag ? {0:na} : {}, flag ? na : '');
-        this.filterCombolist(this._countryOfIssuance, flag ? {0:na} : {}, flag ? na : '');
+        this.filterCombolist(this._alienuscisNumType, flag ? {0:na} : {}, flag ? 0 : null);
+        this.filterCombolist(this._countryOfIssuance, flag ? {0:na} : {}, flag ? 0 : null);
     }
 
     renderHelpIcon(ctrl, title, dialog, text, minWidth) {
-        ctrl.prop('title', title).attr('icon', true).val(String.fromCodePoint(0xFFFD)).
+        return ctrl.prop('title', title).attr('icon', true).
+            val(String.fromCodePoint(0xFFFD)).
             toggleClass('noHighlight').parent().click(() => {
                 ctrl.blur();
                 dialog.text('').append(text).
@@ -827,6 +982,29 @@ document.addEventListener('pagerendered', function (e) {
             $('[name=ForeignPassportNumberHelp]'),
             $('[name=CountryOfIssuance]'),
             $('[name=CountryOfIssuanceHelp]')
+        );
+
+        form.renderTranslatorSection(
+            $('#dialogPage' + e.detail.pageNumber),
+            $('[name=PreparerOrTranslatorNo]'),
+            $('[name=PreparerOrTranslatorYes]'),
+            $('[name=PreparerOrTranslatorHelp]'),
+            $('[name=sgnTranslator]'),
+            $('[name=sgnTranslatorHelp]'),
+            $('[name=TranslatorDate]'),
+            $('[name=TranslatorDateHelp]'),
+            $('[name=TranslatorLastName]'),
+            $('[name=TranslatorLastNameHelp]'),
+            $('[name=TranslatorFirstName]'),
+            $('[name=TranslatorFirstNameHelp]'),
+            $('[name=TranslatorAddress]'),
+            $('[name=TranslatorAddressHelp]'),
+            $('[name=TranslatorCity]'),
+            $('[name=TranslatorCityHelp]'),
+            $('[name=TranslatorState]'),
+            $('[name=TranslatorStateHelp]'),
+            $('[name=TranslatorZip]'),
+            $('[name=TranslatorZipHelp]')
         );
     }
 

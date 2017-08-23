@@ -300,5 +300,5 @@ var server = app.listen(8305, () => {
             });
     });
 
-    console.log('Document Edit-on-Demand service listening at http://%s:%s', server.address().address, server.address().port);
+    console.log('Smart Form-on-Demand service listening at http://%s:%s', server.address().address, server.address().port);
 });
