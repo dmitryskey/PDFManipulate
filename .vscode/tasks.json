@@ -1,0 +1,14 @@
+{
+	"version": "0.1.0",
+	"command": "${workspaceRoot}/node_modules/.bin/babel",
+	"isShellCommand": true,
+	"tasks": [
+		{
+			"args": ["templates/src", "--out-dir", "templates/lib", "-w"],
+			"taskName": "watch",
+			"suppressTaskName": true,
+			"isBuildCommand": true, // make this the F1 > Task: Run Build Task gesture
+			"isBackground": true // tell VS Code not wait for this task to finish
+		}
+	]
+}

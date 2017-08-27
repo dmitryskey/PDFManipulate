@@ -30,7 +30,8 @@ class USI9 {
         lpruscisNumPrefix, lpruscisNum, lpruscisNumType,
         alienWorkAuthDate, alienuscisNumPrefix, alienuscisNum, alienuscisNumType,
         admissionNum, admissionNumHelp, passportNum, passportNumHelp,
-        countryOfIssuance, countryOfIssuanceHelp) {
+        countryOfIssuance, countryOfIssuanceHelp,
+        sgnEmployee, sgnEmployeeHelp, sgnEmployeeDate, sgnEmployeeDateHelp) {
 
         dialog.dialog({
             title: this._('help'),
@@ -155,7 +156,13 @@ class USI9 {
         );
 
         // E-Verify requirements
-        this._dob = dob.prop('title', this._('dobhelp.tooltip')).datepicker();
+        this._dob = dob.prop('title', this._('dobhelp.tooltip'))
+            .datepicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: '1908:' + (new Date()).getFullYear()})
+            .change((e) =>
+                this.filterCombolist(this._listBDoc, this.getListBContent(e.target.value), na));
 
         this._dobHelp = this.renderHelpIcon(
             dobHelp,
@@ -259,8 +266,12 @@ class USI9 {
                 this.selectCheckmark(this._citizen, citizenships);
                 this.processLPR(this._citizen.prop('checked'));
                 this.processAlien(this._citizen.prop('checked'));
-                this._immigrationStatus.val(this._citizen.prop('checked') ? 1 : 0);
 
+                this.filterCombolist(
+                    this._listCDoc,
+                    this.getListCContent(this._immigrationStatus.val(this._citizen.prop('checked') ? 1 : 0).val()),
+                    na);
+                
                 this.filterCombolist(this._listADoc, {0:na});
                 if (this._citizen.prop('checked')) {
                     this.filterCombolist(this._listADoc, 
@@ -280,7 +291,12 @@ class USI9 {
                 this.selectCheckmark(this._national, citizenships);
                 this.processLPR(this._national.prop('checked'));
                 this.processAlien(this._national.prop('checked'));
-                this._immigrationStatus.val(this._national.prop('checked') ? 2 : 0);
+
+                this.filterCombolist(
+                    this._listCDoc,
+                    this.getListCContent(this._immigrationStatus.val(this._national.prop('checked') ? 2 : 0).val()),
+                    na);
+
                 this.filterCombolist(this._listADoc, {0:na});
                 if (this._national.prop('checked')) {
                     this.filterCombolist(this._listADoc, {0:na, 1:this._('uspassport'), 2:this._('uspassportcard')}, na);
@@ -308,7 +324,10 @@ class USI9 {
                     this.filterCombolist(this._lpruscisNumType, {'A':this._('aliennumber'), 'U':this._('uscisnumber')});
                 }
 
-                this._immigrationStatus.val(this._lpr.prop('checked') ? 3 : 0);
+                this.filterCombolist(
+                    this._listCDoc,
+                    this.getListCContent(this._immigrationStatus.val(this._lpr.prop('checked') ? 3 : 0).val()),
+                    na);
 
                 this.filterCombolist(this._listADoc, {});
                 if (this._lpr.prop('checked')) {
@@ -357,7 +376,10 @@ class USI9 {
                     this.filterCombolist(this._countryOfIssuance, JSON.parse(this._('countries')));
                 }
 
-                this._immigrationStatus.val(this._alien.prop('checked') ? 4 : 0);
+                this.filterCombolist(
+                    this._listCDoc,
+                    this.getListCContent(this._immigrationStatus.val(this._alien.prop('checked') ? 4 : 0).val()),
+                    na);
 
                 this.filterCombolist(this._listADoc, {});
                 if (this._alien.prop('checked')) {
@@ -513,6 +535,23 @@ class USI9 {
             this._('coihelp.text')
         );
 
+        this._sgnEmployee = sgnEmployee.prop('title', this._('employee.tooltip'));
+        
+        this._sgnEmployeeHelp = this.renderHelpIcon(
+            sgnEmployeeHelp,
+            this._('employeehelp.caption'),
+            dialog,
+            this._('employeehelp.text'),
+            700);
+    
+        this._sgnEmployeeDate = sgnEmployeeDate.prop('title', this._('employeedate.tooltip')).datepicker();
+    
+        this._sgnEmployeeDateHelp = this.renderHelpIcon(
+            sgnEmployeeDateHelp,
+            this._('employeedatehelp.caption'),
+            dialog,
+            this._('employeedatehelp.text'));        
+
         this.processLPR(false);
         this.processAlien(false);
     }
@@ -658,6 +697,7 @@ class USI9 {
     }
 
     renderSection2(dialog,
+        employeeInfoHelp,
         lastName, lastNameHelp, firstName, firstNameHelp,
         middleInitial, middleInitialHelp,
         immigrationStatus, immigrationStatusHelp,
@@ -666,15 +706,48 @@ class USI9 {
         listADoc3, listAIssuingAuthority3, listADocNumber3, listADocExpDate3,
         listBDoc, listCDoc) {
 
-        dialog.dialog({
-            title: this._('help'),
-            autoOpen: false
-        });
+        this._employeeInfoSection2Help = this.renderHelpIcon(
+            employeeInfoHelp,
+            this._('employeeinfosection2help.caption'),
+            dialog,
+            this._('employeeinfosection2help.text')
+        );            
 
         this._lastNameSection2 = lastName;
+
+        this._lastNameSection2Help = this.renderHelpIcon(
+            lastNameHelp,
+            this._('lastnamesection2help.caption'),
+            dialog,
+            this._('lastnamesection2help.text')
+        );
+
         this._firstNameSection2 = firstName;
+
+        this._firstNameSection2Help = this.renderHelpIcon(
+            firstNameHelp,
+            this._('firstnamesection2help.caption'),
+            dialog,
+            this._('firstnamesection2help.text')
+        );
+        
         this._middleInitialSection2 = middleInitial;
+
+        this._middleInitialSection2Help = this.renderHelpIcon(
+            middleInitialHelp,
+            this._('middleinitialsection2help.caption'), 
+            dialog,
+            this._('middleinitialsection2help.text')
+        );
+        
         this._immigrationStatus = immigrationStatus;
+
+        this._immigrationStatusHelp = this.renderHelpIcon(
+            immigrationStatusHelp,
+            this._('immigrationstatushelp.caption'),
+            dialog,
+            this._('immigrationstatushelp.text')
+        );        
 
         this._listADoc = listADoc;
         this._listAIssuingAuthority = listAIssuingAuthority;
@@ -695,7 +768,12 @@ class USI9 {
         this._listADocExpDate3.datepicker();
 
         this._listBDoc = listBDoc;
+
+        this.filterCombolist(this._listBDoc, this.getListBContent(null));
+
         this._listCDoc = listCDoc;
+
+        this.filterCombolist(this._listCDoc, this.getListCContent(null));
     }
 
     validateFields() {
@@ -879,6 +957,96 @@ class USI9 {
                     dialog('option', 'minWidth', minWidth ? minWidth : 50).dialog('open');              
             });
     }
+
+    getListBContent(dob) {
+        var isMinorUnderAge18 = false;
+        var ms = Date.parse(dob);
+        if (!isNaN(ms)) {
+            var ageDifMs = Date.now() - ms;
+            var ageDate = new Date(ageDifMs);
+            isMinorUnderAge18 = Math.abs(ageDate.getUTCFullYear() - 1970) < 18;
+        }
+
+        var listB = {
+            0: this._('NA'),
+            1: this._('driverlicence'),
+            2: this._('idcard'),
+            3: this._('govermentid'),
+            4: this._('schoolid'),
+            5: this._('votercard'),
+            6: this._('militaryid'),
+            7: this._('draftrecord'),
+            8: this._('militarydependedid'),
+            9: this._('marinercard'),
+            10: this._('indiantribalid'),
+            11: this._('canadiandriverlicense'),
+            20: this._('specialplacement'),
+            21: this._('driverlicencereceipt'),
+            22: this._('idcardreceipt'),
+            23: this._('govermentidreceipt'),
+            24: this._('schoolidreceipt'),
+            25: this._('votercardreceipt'),
+            26: this._('militaryidreceipt'),
+            27: this._('militarydependedidreceipt'),
+            28: this._('draftrecordreceipt'),
+            29: this._('marinercardreceipt'),
+            30: this._('canadiandriverlicensereceipt'),
+            31: this._('indiantribalidreceipt')
+        };
+
+        if (isMinorUnderAge18 || dob === null) {
+            listB = $.extend(listB, {
+                12: this._('schoolrecord'),
+                13: this._('reportcard'),
+                14: this._('clinicrecord'),
+                15: this._('doctorrecord'),
+                16: this._('hospitalrecord'),
+                17: this._('datecarerecord'),
+                18: this._('nurseryschoolrecord'),
+                19: this._('individualunderage18'),
+                32: this._('schoolrecordreceipt'),
+                33: this._('reportcardreceipt'),
+                34: this._('clinicrecordreceipt'),
+                35: this._('doctorrecordreceipt'),
+                36: this._('hospitalrecordreceipt'),
+                37: this._('datecarerecordreceipt'),
+                38: this._('nurseryschoolrecordreceipt')
+            });
+        }
+
+        return listB;
+    }
+
+    getListCContent(citizenship) {
+        var listC = {
+            0: this._('NA'),
+            1: this._('ssncard'),
+            10: this._('ssnCardReceipt')
+        };
+
+        if (['1', '2', '0', null].includes(citizenship)) {
+            listC = $.extend(listC, {
+                2: this._('formFS545'),
+                3: this._('formDS1350'),
+                4: this._('formFS240'),
+                5: this._('birthCertificate'),
+                6: this._('tribalDocument'),
+                7: this._('formI197'),
+                8: this._('formI179'),
+                11: this._('birthCertificate'),
+                12: this._('tribalDocumentreceipt')
+            });
+        }
+
+        if (['3', '4', '0', null].includes(citizenship)) {
+            listC = $.extend(listC, {
+                9: this._('eadListC'),
+                13: this._('eadListCReceipt')
+            });
+        }
+
+        return listC;
+    }
 }
 
 var form = new USI9();
@@ -921,11 +1089,18 @@ document.addEventListener('pagerendered', function (e) {
         )
     );
 
-    if (e.detail.pageNumber === 1) {
-        $('body').append('<div id="dialogPage' + e.detail.pageNumber + '"></div>');
+    $('body').append('<div id="dialogPage"></div>');
+    
+    $('#dialogPage').dialog({
+        title: '',
+        minHeight: 50,
+        minWidth: 50,
+        autoOpen: false
+    });
 
+    if (e.detail.pageNumber === 1) {
         form.renderSection1(
-            $('#dialogPage' + e.detail.pageNumber),
+            $('#dialogPage'),
             $('[name=LastName]'),
             $('[name=LastNameHelp]'),
             $('[name=FirstName]'),
@@ -981,11 +1156,15 @@ document.addEventListener('pagerendered', function (e) {
             $('[name=ForeignPassportNumber]'),
             $('[name=ForeignPassportNumberHelp]'),
             $('[name=CountryOfIssuance]'),
-            $('[name=CountryOfIssuanceHelp]')
+            $('[name=CountryOfIssuanceHelp]'),
+            $('[name=sgnEmployee]'),
+            $('[name=sgnEmployeeHelp]'),
+            $('[name=sgnEmployeeDate]'),
+            $('[name=sgnEmployeeDateHelp]')
         );
 
         form.renderTranslatorSection(
-            $('#dialogPage' + e.detail.pageNumber),
+            $('#dialogPage'),
             $('[name=PreparerOrTranslatorNo]'),
             $('[name=PreparerOrTranslatorYes]'),
             $('[name=PreparerOrTranslatorHelp]'),
@@ -1009,10 +1188,9 @@ document.addEventListener('pagerendered', function (e) {
     }
 
     if (e.detail.pageNumber === 2) {
-        $('body').append('<div id="dialogPage' + e.detail.pageNumber + '"></div>');
-
         form.renderSection2(
-            $('#dialogPage' + e.detail.pageNumber),
+            $('#dialogPage'),
+            $('[name=EmployeeInfoSection2Help]'),
             $('[name=LastNameSection2]'),
             $('[name=LastNameSection2Help]'),
             $('[name=FirstNameSection2]'),
