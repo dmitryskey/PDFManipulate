@@ -268,6 +268,10 @@ app.get('/GetTemplateList', (req, res) => {
 var server = app.listen(8305, () => {
     db = new sqlite3.Database('db/database.db');
 
+    if (!fs.pathExists('data')) {
+        fs.mkdir('data');
+    }
+
     fs.emptyDir('data');
 
     // Where to serve static content
