@@ -1,0 +1,23 @@
+{
+    "files": [
+        "PDFForm",
+        "Fields",
+        "Section1",
+        "TranslatorSection",
+        "Section2",
+        "USI9"
+    ],
+    "compilerOptions": {
+        "module": "amd",
+        "target": "es5",
+        "outFile": "../../src/US I9.js",
+        "removeComments": true,
+        "noImplicitAny": true,
+        "lib": [
+            "dom",
+            "es5",
+            "scripthost",
+            "es2015.iterable"
+        ]
+    }
+}

@@ -1,16 +1,3 @@
-// For any third party dependencies, like jQuery, place them in the lib folder.
-
-// Configure loading modules from the lib directory,
-// except for 'app' ones, which are in a sibling
-// directory.
-require.config({
-    baseUrl: '/jquery',
-    paths: {
-        jQuery: 'jquery',
-        jQueryUI: 'jquery-ui'
-    }
-});
-
 let hash = document.location.hash.substring(1);
 let parts = hash.split('&');
 let params = Object.create(null);

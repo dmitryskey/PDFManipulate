@@ -300,5 +300,5 @@ var server = app.listen(8305, () => {
             });
     });
 
-    console.log('Smart Form-on-Demand service listening at http://%s:%s', server.address().address, server.address().port);
+    console.log('Smart Forms-on-Demand service listening at http://%s:%s', server.address().address, server.address().port);
 });
