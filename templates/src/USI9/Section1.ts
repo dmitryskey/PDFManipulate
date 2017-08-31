@@ -1,3 +1,5 @@
+/// <reference path="Fields.ts" />
+
 class USI9Section1 extends USI9Fields {
     private processLPR(flag: boolean) {
         var na = flag ? this._('NA') : '';
@@ -5,7 +7,7 @@ class USI9Section1 extends USI9Fields {
         this._lpruscisNum.prop('disabled', true).val(na);
         this._lpruscisNumType.prop('disabled', true);
 
-        this.filterCombolist(this._lpruscisNumType, flag ? {0:na} : {}, flag ? '0' : null, this.processListABC);
+        this.filterCombolist(this._lpruscisNumType, flag ? {0:na} : {}, flag ? '0' : null, this, this.processListABC);
     }
 
     private processAlien(flag: boolean) {
@@ -18,8 +20,8 @@ class USI9Section1 extends USI9Fields {
         this._passportNum.prop('disabled', true).val(na);
         this._countryOfIssuance.prop('disabled', true);
 
-        this.filterCombolist(this._alienuscisNumType, flag ? {0:na} : {}, flag ? '0' : null, this.processListABC);
-        this.filterCombolist(this._countryOfIssuance, flag ? {0:na} : {}, flag ? '0' : null, this.processListABC);
+        this.filterCombolist(this._alienuscisNumType, flag ? {0:na} : {}, flag ? '0' : null, this, this.processListABC);
+        this.filterCombolist(this._countryOfIssuance, flag ? {0:na} : {}, flag ? '0' : null, this, this.processListABC);
     }
 
     private renderNameAndAddress(
@@ -45,7 +47,7 @@ class USI9Section1 extends USI9Fields {
 
         // E-Verify requirements
         this._lastName = lastName
-        .prop('title', this._('lastnamehelp.tooltip'))
+        .prop('title', '').tooltip({content: () => this._('lastnamehelp.tooltip')})
         .prop('maxLength', 40)
         .keypress(e => this.nameFormat.test(String.fromCharCode(e.which)))
         .change(() => this._lastNameSection2.val(this._lastName.val()));
@@ -59,7 +61,7 @@ class USI9Section1 extends USI9Fields {
 
         // E-Verify requirements
         this._firstName = firstName
-        .prop('title', this._('firstnamehelp.tooltip'))
+        .prop('title', '').tooltip({content: () => this._('firstnamehelp.tooltip')})
         .prop('maxLength', 25)
         .keypress(e => this.nameFormat.test(String.fromCharCode(e.which)))
         .change(() => this._firstNameSection2.val(this._firstName.val()));
@@ -73,7 +75,7 @@ class USI9Section1 extends USI9Fields {
 
         // E-Verify requirements + N/A option
         this._middleInitial = middleInitial
-        .prop('title', this._('middleinitialhelp.tooltip'))
+        .prop('title', '').tooltip({content: () => this._('middleinitialhelp.tooltip')})
         .prop('maxLength', 3)
         .keypress(e =>
             this.nameFormat.test(String.fromCharCode(e.which)) ||
@@ -89,7 +91,7 @@ class USI9Section1 extends USI9Fields {
 
         // E-Verify requirements
         this._otherNames = otherNames
-        .prop('title', this._('othernameshelp.tooltip'))
+        .prop('title', '').tooltip({content: () => this._('othernameshelp.tooltip')})
         .prop('maxLength', 40)
         .keypress(e =>
             this.nameFormat.test(String.fromCharCode(e.which)) ||
@@ -102,7 +104,7 @@ class USI9Section1 extends USI9Fields {
             this._('othernameshelp.text')
         );
 
-        this._address = address.prop('title', this._('addresshelp.tooltip'));
+        this._address = address.prop('title', '').tooltip({content: () => this._('addresshelp.tooltip')});
 
         this._addressHelp = this.renderHelpIcon(
             addressHelp,
@@ -112,7 +114,7 @@ class USI9Section1 extends USI9Fields {
         );
 
         this._apptNumber = apptNumber
-        .prop('title', this._('apartmentnumberhelp.tooltip'));
+        .prop('title', '').tooltip({content: () => this._('apartmentnumberhelp.tooltip')});
 
         this._apptNumberHelp = this.renderHelpIcon(
             apptNumberHelp,
@@ -121,7 +123,7 @@ class USI9Section1 extends USI9Fields {
             this._('apartmentnumberhelp.text')
         );
 
-        this._city = city.prop('title', this._('cityhelp.caption'));
+        this._city = city.prop('title', '').tooltip({content: () => this._('cityhelp.tooltip')});
 
         this._cityHelp = this.renderHelpIcon(
             cityHelp,
@@ -130,7 +132,7 @@ class USI9Section1 extends USI9Fields {
             this._('cityhelp.text')
         );
 
-        this._state = state.prop('title', this._('statehelp.tooltip'));
+        this._state = state.prop('title', '').tooltip({content: () => this._('statehelp.tooltip')});
 
         this._stateHelp = this.renderHelpIcon(
             stateHelp,
@@ -140,7 +142,7 @@ class USI9Section1 extends USI9Fields {
         );
 
         this._zip = zip
-        .prop('title', this._('ziphelp.tooltip'))
+        .prop('title', '').tooltip({content: () => this._('ziphelp.tooltip')})
         .keypress(e => this.zipFormat.test(String.fromCharCode(e.which)));
 
         this._zipHelp = this.renderHelpIcon(
@@ -156,7 +158,7 @@ class USI9Section1 extends USI9Fields {
         for (var i = 0; i < ssn.length - 1; i++) {
             this._ssn[i]
             .attr('nextElement', (this._ssn[i + 1]).attr('name'))
-            .prop('title', this._('ssnhelp.tooltip'))
+            .prop('title', '').tooltip({content: () => this._('ssnhelp.tooltip')})
             .prop('maxLength', 1)
             .keypress(e => {
                 if (this.numberFormat.test(String.fromCharCode(e.which))) {
@@ -170,7 +172,7 @@ class USI9Section1 extends USI9Fields {
         }
 
         this._ssn[ssn.length - 1]
-        .prop('title', this._('ssnhelp.tooltip'))
+        .prop('title', '').tooltip({content: () => this._('ssnhelp.tooltip')})
         .prop('maxLength', 1)
         .keypress(e => this.numberFormat.test(String.fromCharCode(e.which)));
     }
@@ -197,13 +199,18 @@ class USI9Section1 extends USI9Fields {
         var na = this._('NA');
 
         // E-Verify requirements
-        this._dob = dob.prop('title', this._('dobhelp.tooltip'))
+        this._dob = dob.prop('title', '').tooltip({content: () => this._('dobhelp.tooltip')})
         .datepicker({
             changeMonth: true,
             changeYear: true,
             yearRange: '1908:' + (new Date()).getFullYear()})
         .change(e =>
-            this.filterCombolist(this._listBDoc, this.getListBContent((e.target as HTMLInputElement).value), na, this.processListABC));
+            this.filterCombolist(
+                this._listBDoc,
+                this.getListBContent((e.target as HTMLInputElement).value),
+                na,
+                this,
+                this.processListABC));
 
         this._dobHelp = this.renderHelpIcon(
             dobHelp,
@@ -223,7 +230,7 @@ class USI9Section1 extends USI9Fields {
         );
 
         this._email = email
-        .prop('title', this._('emailhelp.tooltip'))
+        .prop('title', '').tooltip({content: () => this._('emailhelp.tooltip')})
         .prop('maxLength', 60);
 
         this._emailHelp = this.renderHelpIcon(
@@ -234,7 +241,7 @@ class USI9Section1 extends USI9Fields {
         );
     
         this._phone = phone
-        .prop('title', this._('phonehelp.tooltip'))
+        .prop('title', '').tooltip({content: () => this._('phonehelp.tooltip')})
         .prop('maxLength', 13)
         .keypress(e => this.phoneFormat.test(String.fromCharCode(e.which)));
     
@@ -279,7 +286,7 @@ class USI9Section1 extends USI9Fields {
         var na = this._('NA');
 
         this._citizen = citizen
-        .prop('title', this._('citizenhelp.tooltip'))
+        .prop('title', '').tooltip({content: () => this._('citizenhelp.tooltip')})
         .click(() => {
             this.selectCheckmark(this._citizen, citizenships);
             this.processLPR(this._citizen.prop('checked'));
@@ -289,14 +296,16 @@ class USI9Section1 extends USI9Fields {
                 this._listCDoc,
                 this.getListCContent(this._immigrationStatus.val(this._citizen.prop('checked') ? 1 : 0).val() as string),
                 na,
+                this,
                 this.processListABC);
 
-            this.filterCombolist(this._listADoc, {0:na}, null, this.processListABC);
+            this.filterCombolist(this._listADoc, {0:na}, null, this, this.processListABC);
             if (this._citizen.prop('checked')) {
                 this.filterCombolist(
                     this._listADoc, 
                     {0:na, 1:this._('uspassport'), 2:this._('uspassportcard')},
                     na,
+                    this,
                     this.processListABC);
             }});
 
@@ -308,7 +317,7 @@ class USI9Section1 extends USI9Fields {
         );
 
         this._national = national
-            .prop('title', this._('nationalhelp.tooltip'))
+            .prop('title', '').tooltip({content: () => this._('nationalhelp.tooltip')})
             .click(() => {
                 this.selectCheckmark(this._national, citizenships);
                 this.processLPR(this._national.prop('checked'));
@@ -318,14 +327,16 @@ class USI9Section1 extends USI9Fields {
                     this._listCDoc,
                     this.getListCContent(this._immigrationStatus.val(this._national.prop('checked') ? 2 : 0).val() as string),
                     na,
+                    this,
                     this.processListABC);
 
-                this.filterCombolist(this._listADoc, {0:na}, null, this.processListABC);
+                this.filterCombolist(this._listADoc, {0:na}, null, this, this.processListABC);
                 if (this._national.prop('checked')) {
                     this.filterCombolist(
                         this._listADoc,
                         {0:na, 1:this._('uspassport'), 2:this._('uspassportcard')},
                         na,
+                        this,
                         this.processListABC);
                 }
             });
@@ -338,12 +349,12 @@ class USI9Section1 extends USI9Fields {
         );
     
         this._lpr = lpr
-            .prop('title', this._('lprhelp.tooltip'))
+            .prop('title', '').tooltip({content: () => this._('lprhelp.tooltip')})
             .click(() => {
                 this.selectCheckmark(this._lpr, citizenships);
                 this.processAlien(this._lpr.prop('checked'));
                 this._lpruscisNum.val('');
-                this.filterCombolist(this._lpruscisNumType, {}, null, this.processListABC);
+                this.filterCombolist(this._lpruscisNumType, {}, null, this, this.processListABC);
     
                 if (this._lpr.prop('checked')) {
                     this._lpruscisNum.prop('disabled', false);
@@ -351,16 +362,19 @@ class USI9Section1 extends USI9Fields {
                     this.filterCombolist(
                         this._lpruscisNumType,
                         {'A':this._('aliennumber'), 'U':this._('uscisnumber')},
-                        null, this.processListABC);
+                        null,
+                        this,
+                        this.processListABC);
                 }
 
                 this.filterCombolist(
                     this._listCDoc,
                     this.getListCContent(this._immigrationStatus.val(this._lpr.prop('checked') ? 3 : 0).val() as string),
                     na,
+                    this,
                     this.processListABC);
     
-                this.filterCombolist(this._listADoc, {}, null, this.processListABC);
+                this.filterCombolist(this._listADoc, {}, null, this, this.processListABC);
                 if (this._lpr.prop('checked')) {
                     this.filterCombolist(
                         this._listADoc, {
@@ -372,6 +386,7 @@ class USI9Section1 extends USI9Fields {
                         12:this._('I551receipt')
                     },
                     na,
+                    this,
                     this.processListABC);
                 }
             });
@@ -384,16 +399,16 @@ class USI9Section1 extends USI9Fields {
         );
     
         this._alien = alien
-            .prop('title', this._('alienhelp.tooltip'))
+            .prop('title', '').tooltip({content: () => this._('alienhelp.tooltip')})
             .click(() => {
                 this.selectCheckmark(this._alien, citizenships);
                 this.processLPR(this._alien.prop('checked'));
                 this._alienWorkAuthDate.val('');
                 this._alienuscisNum.val('');
-                this.filterCombolist(this._alienuscisNumType, {}, null, this.processListABC);
+                this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
                 this._admissionNum.val('');
                 this._passportNum.val('');
-                this.filterCombolist(this._countryOfIssuance, {}, null, this.processListABC);
+                this.filterCombolist(this._countryOfIssuance, {}, null, this, this.processListABC);
                 if (this._alien.prop('checked')) {
                     this._alienWorkAuthDate.prop('disabled', false);
                     this._alienuscisNum.prop('disabled', false);
@@ -403,6 +418,7 @@ class USI9Section1 extends USI9Fields {
                         this._alienuscisNumType, 
                         {'A':this._('aliennumber'), 'U':this._('uscisnumber')},
                         null,
+                        this,
                         this.processListABC);
     
                     this._admissionNum.prop('disabled', false);
@@ -414,6 +430,7 @@ class USI9Section1 extends USI9Fields {
                         this._countryOfIssuance,
                         JSON.parse(this._('countries')),
                         null,
+                        this,
                         this.processListABC);
                 }
     
@@ -421,9 +438,10 @@ class USI9Section1 extends USI9Fields {
                     this._listCDoc,
                     this.getListCContent(this._immigrationStatus.val(this._alien.prop('checked') ? 4 : 0).val() as string),
                     na,
+                    this,
                     this.processListABC);
     
-                this.filterCombolist(this._listADoc, {}, null, this.processListABC);
+                this.filterCombolist(this._listADoc, {}, null, this, this.processListABC);
                 if (this._alien.prop('checked')) {
                     this.filterCombolist(
                         this._listADoc, {
@@ -440,6 +458,7 @@ class USI9Section1 extends USI9Fields {
                         16:this._('RMIpassportreceipt')
                     },
                     na,
+                    this,
                     this.processListABC);
                 }
             });
@@ -462,18 +481,18 @@ class USI9Section1 extends USI9Fields {
         this._lpruscisNumPrefix = lpruscisNumPrefix;
     
         this._lpruscisNum = lpruscisNum
-        .prop('title', this._('uscisnumber.tooltip'))
+        .prop('title', '').tooltip({content: () => this._('uscisnumber.tooltip')})
         .prop('maxLength', 9)
         .keypress(e => this.numberFormat.test(String.fromCharCode(e.which)));
     
         this._lpruscisNumType = lpruscisNumType
-        .prop('title', this._('uscisnumbertype.tooltip'));
+        .prop('title', '').tooltip({content: () => this._('uscisnumbertype.tooltip')});
 
         this.assignCombolistEventHandler(this._lpruscisNumType, (e: JQuery.Event) => 
             this._lpruscisNumPrefix.val((e.target as HTMLElement).getAttribute('value') === 'A' ? 'A' : ''));
     
         this._alienWorkAuthDate = alienWorkAuthDate
-        .prop('title', this._('alienworkauthdate.tooltip'))
+        .prop('title', '').tooltip({content: () => this._('alienworkauthdate.tooltip')})
         .datepicker()
         .unbind('keypress')
         .keypress(e =>
@@ -485,7 +504,7 @@ class USI9Section1 extends USI9Fields {
     
         // E-Verify requirements
         this._alienuscisNum = alienuscisNum
-            .prop('title', this._('uscisnumber.tooltip'))
+            .prop('title', '').tooltip({content: () => this._('uscisnumber.tooltip')})
             .prop('maxLength', 9)
             .keypress(e =>
                 this.numberFormat.test(String.fromCharCode(e.which)))
@@ -496,46 +515,47 @@ class USI9Section1 extends USI9Fields {
                             this._alienuscisNumType, 
                             {'A':this._('aliennumber'), 'U':this._('uscisnumber')},
                             null,
+                            this,
                             this.processListABC);
                     }
     
                     this._admissionNum.val(na);
                     this._passportNum.val(na);
-                    this.filterCombolist(this._countryOfIssuance, {0:na}, na, this.processListABC);
+                    this.filterCombolist(this._countryOfIssuance, {0:na}, na, this, this.processListABC);
                 }
                 else {
-                    this.filterCombolist(this._alienuscisNumType, {}, null, this.processListABC);
+                    this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
                     this._admissionNum.val('');
                     this._passportNum.val('');
-                    this.filterCombolist(this._countryOfIssuance, {}, null, this.processListABC);
+                    this.filterCombolist(this._countryOfIssuance, {}, null, this, this.processListABC);
                 }
             });
     
         this._alienuscisNumType = alienuscisNumType
-        .prop('title', this._('uscisnumbertype.tooltip'));
+        .prop('title', '').tooltip({content: () => this._('uscisnumbertype.tooltip')});
 
         this.assignCombolistEventHandler(this._alienuscisNumType, (e: JQuery.Event) => 
             this._alienuscisNumPrefix.val((e.target as HTMLElement).getAttribute('value') === 'A' ? 'A' : ''));
     
         // E-Verify requirements
         this._admissionNum = admissionNum
-        .prop('title', this._('admissionnumber.tooltip'))
+        .prop('title', '').tooltip({content: () => this._('admissionnumber.tooltip')})
         .prop('maxLength', 11)
         .keypress(e =>
             this.numberFormat.test(String.fromCharCode(e.which)))
         .change(() => {
             if (this._admissionNum.val() !== '') {
                 this._alienuscisNum.val(na);
-                this.filterCombolist(this._alienuscisNumType, {0:na}, na, this.processListABC);
+                this.filterCombolist(this._alienuscisNumType, {0:na}, na, this, this.processListABC);
     
                 this._passportNum.val(na);
-                this.filterCombolist(this._countryOfIssuance, {0:na}, na, this.processListABC);
+                this.filterCombolist(this._countryOfIssuance, {0:na}, na, this, this.processListABC);
             }
             else {
                 this._alienuscisNum.val('');
-                this.filterCombolist(this._alienuscisNumType, {}, null, this.processListABC);
+                this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
                 this._passportNum.val('');
-                this.filterCombolist(this._countryOfIssuance, {}, null, this.processListABC);
+                this.filterCombolist(this._countryOfIssuance, {}, null, this, this.processListABC);
             }
         });
     
@@ -548,12 +568,12 @@ class USI9Section1 extends USI9Fields {
     
         // E-Verify requirements
         this._passportNum = passportNum
-        .prop('title', this._('passportnumber.tooltip'))
+        .prop('title', '').tooltip({content: () => this._('passportnumber.tooltip')})
         .prop('maxLength', 12)
         .change(() => {
             if (this._passportNum.val() !== '') {
                 this._alienuscisNum.val(na);
-                this.filterCombolist(this._alienuscisNumType, {0:na}, na, this.processListABC);
+                this.filterCombolist(this._alienuscisNumType, {0:na}, na, this, this.processListABC);
     
                 this._admissionNum.val(na);
             
@@ -562,12 +582,13 @@ class USI9Section1 extends USI9Fields {
                         this._countryOfIssuance,
                         JSON.parse(this._('countries')),
                         null,
+                        this,
                         this.processListABC);
                 }
             }
             else {
                 this._alienuscisNum.val('');
-                this.filterCombolist(this._alienuscisNumType, {}, null, this.processListABC);
+                this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
                 this._admissionNum.val('');
             }
         });
@@ -579,7 +600,7 @@ class USI9Section1 extends USI9Fields {
             this._('passportnumberhelp.text')
         );
 
-        this._countryOfIssuance = countryOfIssuance.prop('title', this._('coi.tooltip'));
+        this._countryOfIssuance = countryOfIssuance.prop('title', '').tooltip({content: () => this._('coi.tooltip')});
 
         this._countryOfIssuanceHelp = this.renderHelpIcon(
             countryOfIssuanceHelp,
@@ -588,7 +609,7 @@ class USI9Section1 extends USI9Fields {
             this._('coihelp.text')
         );
 
-        this._sgnEmployee = sgnEmployee.prop('title', this._('employee.tooltip'));
+        this._sgnEmployee = sgnEmployee.prop('title', '').tooltip({content: () => this._('employee.tooltip')});
   
         this._sgnEmployeeHelp = this.renderHelpIcon(
             sgnEmployeeHelp,
@@ -597,7 +618,7 @@ class USI9Section1 extends USI9Fields {
             this._('employeehelp.text'),
             700);
     
-        this._sgnEmployeeDate = sgnEmployeeDate.prop('title', this._('employeedate.tooltip')).datepicker();
+        this._sgnEmployeeDate = sgnEmployeeDate.prop('title', '').tooltip({content: () => this._('employeedate.tooltip')}).datepicker();
 
         this._sgnEmployeeDateHelp = this.renderHelpIcon(
             sgnEmployeeDateHelp,

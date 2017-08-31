@@ -12,7 +12,7 @@
                 "--out-dir",
                 "templates/lib",
                 "-w",
-                "--minified",
+                // "--minified",
                 "--comments=false"
             ],
             "group":"build",

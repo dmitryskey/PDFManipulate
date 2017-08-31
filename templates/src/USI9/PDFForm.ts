@@ -8,39 +8,57 @@ class PDFForm {
     protected phoneFormat = /^[\d/NA-]+$/;
     protected phoneNumber = /^[(]{0,1}\d{3}[ )-]{0,1}\d{3}[ -]{0,1}\d{4}$/;
 
+    private currentTooltip: any;
+
     constructor() {
+        let self = this;
+
         $(document).tooltip({
             show: {
                 delay: 200
             },
-            open: function open(event: Event, ui: any) {
-                return setTimeout(function () {
-                    return $(ui.tooltip).hide('fadeOut');
-                }, 5000);
-            },
+            open: (event, ui: any) => self.currentTooltip = $(ui.tooltip),
             position: {
                 my: 'center bottom',
                 at: 'center top' }
         });
-    
-        $.datepicker.regional.es = {
-            closeText: 'Cerrar',
-            prevText: '&#x3C;Ant',
-            nextText: 'Sig&#x3E;',
-            currentText: 'Hoy',
-            monthNames: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
-            monthNamesShort: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
-            dayNames: ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'],
-            dayNamesShort: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],
-            dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
-            weekHeader: 'Sm',
+
+        let monthNames:string[] = [];
+        let monthNamesShort:string[] = [];
+        let dayNames:string[] = [];
+        let dayNamesShort:string[] = [];
+        let dayNamesMin:string[] = [];
+
+        $.each(JSON.parse(this._('monthNames')), (index, value) => {
+            monthNamesShort.push(index);
+            monthNames.push(value);
+        })
+
+        $.each(JSON.parse(this._('dayNames')), (index, value) => {
+            dayNamesMin.push(index);
+            $.each(value, (i, v) => {
+                dayNamesShort.push(i);
+                dayNames.push(v);
+            });
+        });
+
+        $.datepicker.setDefaults({
+            closeText: this._('closeText'),
+            prevText: this._('prevText'),
+            nextText: this._('nextText'),
+            currentText: this._('currentText'),
+            monthNames: monthNames,
+            monthNamesShort: monthNamesShort,
+            dayNames: dayNames,
+            dayNamesShort: dayNamesShort,
+            dayNamesMin: dayNamesMin,
+            weekHeader: this._('weekHeader'),
             dateFormat: 'mm/dd/yy',
             firstDay: 1,
             isRTL: false,
             showMonthAfterYear: false,
-            yearSuffix: '' };
-        
-        $.datepicker.setDefaults($.datepicker.regional.es);
+            yearSuffix: '' }
+        )
     }
 
     protected _(t: string) {
@@ -59,6 +77,7 @@ class PDFForm {
         ctrl: JQuery<HTMLElement>,
         items: { [index: string]: string; },
         defaultValue: string,
+        fields: USI9Fields,
         callback: any) {
         var options = ctrl.parent().children().filter('.combo-content');
         for (let index in items) {
@@ -76,7 +95,9 @@ class PDFForm {
         options.children().click(e => {
             callback(
                 (e.target.parentNode.parentNode as any).getElementsByTagName('input')[0].getAttribute('name'),
-                e.target.getAttribute('value'));
+                e.target.getAttribute('value'),
+                fields
+            );
         });
 
         options.children().filter('[value="' + (defaultValue ? defaultValue : '') + '"]').click();
@@ -91,11 +112,19 @@ class PDFForm {
     }
 
     protected renderHelpIcon(ctrl: JQuery<HTMLElement>, title: string, dialog: JQuery<HTMLElement>, text: string, minWidth = 50) {
+        let self = this;
         return ctrl.prop('title', title).attr('icon', 'true').
             val(String.fromCharCode(0xFFFD)).
             toggleClass('noHighlight').parent().click(() => {
                 ctrl.blur();
-                (dialog.text('').append(text) as any).
+
+                if (self.currentTooltip) {
+                    self.currentTooltip.hide();
+                }
+
+                $('.ui-dialog-titlebar-close').attr('title', '');
+
+                dialog.text('').append(decodeURIComponent(text)).
                     dialog('option', 'minWidth', minWidth).dialog('open');              
             });
     }

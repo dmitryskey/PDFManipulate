@@ -1,11 +1,15 @@
-class USI9 extends USI9Section2 {
+/// <reference path="Section3.ts" />
+
+class USI9 extends USI9Section3 {
     constructor() {
         super();
 
         $('body').append('<div id="dialogPage"></div>');
-        
+
+        let self = this;
+
         $('#dialogPage').dialog({
-            title: '',
+            title: self._('help'),
             minHeight: 50,
             minWidth: 50,
             autoOpen: false
@@ -116,14 +120,23 @@ class USI9 extends USI9Section2 {
                     $('[name=ImmigrationStatus]'),
                     $('[name=ImmigrationStatusHelp]'),
                     $('[name=ListADocTitle]'),
+                    $('[name=ListADocTitleHelp]'),
                     $('[name=ListAIssuingAuthority]'),
+                    $('[name=ListAIssuingAuthorityHelp]'),
                     $('[name=ListADocNumber]'),
+                    $('[name=ListADocNumberHelp]'),
                     $('[name=ListAExpDate]'),
+                    $('[name=ListAExpDateHelp]'),
                     $('[name=ListADocTitle2]'),
+                    $('[name=ListADocTitle2Help]'),
                     $('[name=ListAIssuingAuthority2]'),
+                    $('[name=ListAIssuingAuthority2Help]'),
                     $('[name=ListADocNumber2]'),
+                    $('[name=ListADocNumber2Help]'),
                     $('[name=ListAExpDate2]'),
+                    $('[name=ListAExpDate2Help]'),
                     $('[name=ListADocTitle3]'),
+                    $('[name=ListADocTitle3Help]'),
                     $('[name=ListAIssuingAuthority3]'),
                     $('[name=ListADocNumber3]'),
                     $('[name=ListAExpDate3]'),

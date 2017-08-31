@@ -1,3 +1,5 @@
+/// <reference path="TranslatorSection.ts" />
+
 class USI9Section2 extends USI9Translator {
     protected renderSection2(
         dialog: JQuery<HTMLElement>,
@@ -11,14 +13,23 @@ class USI9Section2 extends USI9Translator {
         immigrationStatus: JQuery<HTMLElement>,
         immigrationStatusHelp: JQuery<HTMLElement>,
         listADoc: JQuery<HTMLElement>,
+        listADocHelp: JQuery<HTMLElement>,
         listAIssuingAuthority: JQuery<HTMLElement>,
+        listAIssuingAuthorityHelp: JQuery<HTMLElement>,
         listADocNumber: JQuery<HTMLElement>,
+        listADocNumberHelp: JQuery<HTMLElement>,
         listADocExpDate: JQuery<HTMLElement>,
+        listADocExpDateHelp: JQuery<HTMLElement>,
         listADoc2: JQuery<HTMLElement>,
+        listADoc2Help: JQuery<HTMLElement>,
         listAIssuingAuthority2: JQuery<HTMLElement>,
+        listAIssuingAuthority2Help: JQuery<HTMLElement>,
         listADocNumber2: JQuery<HTMLElement>,
+        listADocNumber2Help: JQuery<HTMLElement>,
         listADocExpDate2: JQuery<HTMLElement>,
+        listADocExpDate2Help: JQuery<HTMLElement>,
         listADoc3: JQuery<HTMLElement>,
+        listADoc3Help: JQuery<HTMLElement>,
         listAIssuingAuthority3: JQuery<HTMLElement>,
         listADocNumber3: JQuery<HTMLElement>,
         listADocExpDate3: JQuery<HTMLElement>,
@@ -74,34 +85,124 @@ class USI9Section2 extends USI9Translator {
             this._('immigrationstatushelp.text')
         );
 
-        this._listADoc = listADoc;
-        this._listAIssuingAuthority = listAIssuingAuthority;
-        this._listADocNumber = listADocNumber;
-        this._listADocExpDate = listADocExpDate;
-        this._listADocExpDate.datepicker();
+        this._listADoc = listADoc
+        .prop('title', '').tooltip({content: () => this._('listadoc.tooltip')});
 
-        this._listADoc2 = listADoc2;
-        this._listAIssuingAuthority2 = listAIssuingAuthority2;
-        this._listADocNumber2 = listADocNumber2;
-        this._listADocExpDate2 = listADocExpDate2;
-        this._listADocExpDate2.datepicker();
+        this._listADocHelp = this.renderHelpIcon(
+            listADocHelp,
+            this._('listadochelp.caption'),
+            dialog,
+            this._('listadochelp.text'),
+            500
+        );
 
-        this._listADoc3 = listADoc3;
+        this._listAIssuingAuthority = listAIssuingAuthority
+        .prop('title', '').tooltip({content: () => this._('listaissuingauthority.tooltip')});
+
+        this._listAIssuingAuthorityHelp = this.renderHelpIcon(
+            listAIssuingAuthorityHelp,
+            this._('listaissuingauthorityhelp.caption'),
+            dialog,
+            this._('listaissuingauthorityhelp.text'),
+            500
+        );
+
+        this._listADocNumber = listADocNumber
+        .prop('title', '').tooltip({content: () => this._('listadocnumber.tooltip')});
+
+        this._listADocNumberHelp = this.renderHelpIcon(
+            listADocNumberHelp,
+            this._('listadocnumberhelp.caption'),
+            dialog,
+            this._('listadocnumberhelp.text'),
+            500
+        );
+
+        this._listADocExpDate = listADocExpDate
+        .prop('title', '').tooltip({content: () => this._('listaexpdate.tooltip')})
+        .datepicker();
+
+        this._listADocExpDateHelp = this.renderHelpIcon(
+            listADocExpDateHelp,
+            this._('listaexpdatehelp.caption'),
+            dialog,
+            this._('listaexpdatehelp.text'),
+            500
+        );
+
+        this._listADoc2 = listADoc2
+        .prop('title', '').tooltip({content: () => this._('listadoc2.tooltip')});
+
+        this._listADoc2Help = this.renderHelpIcon(
+            listADoc2Help,
+            this._('listadoc2help.caption'),
+            dialog,
+            this._('listadoc2help.text'),
+            500
+        );
+
+        this._listAIssuingAuthority2 = listAIssuingAuthority2
+        .prop('title', '').tooltip({content: () => this._('listaissuingauthority2.tooltip')});
+        
+        this._listAIssuingAuthority2Help = this.renderHelpIcon(
+            listAIssuingAuthority2Help,
+            this._('listaissuingauthority2help.caption'),
+            dialog,
+            this._('listaissuingauthority2help.text'),
+            500
+        );
+
+        this._listADocNumber2 = listADocNumber2
+        .prop('title', '').tooltip({content: () => this._('listadocnumber2.tooltip')});
+        
+        this._listADocNumber2Help = this.renderHelpIcon(
+            listADocNumber2Help,
+            this._('listadocnumber2help.caption'),
+            dialog,
+            this._('listadocnumber2help.text'),
+            500
+        );
+
+        this._listADocExpDate2 = listADocExpDate2
+        .prop('title', '').tooltip({content: () => this._('listaexpdate2.tooltip')})
+        .datepicker();
+        
+        this._listADocExpDate2Help = this.renderHelpIcon(
+            listADocExpDate2Help,
+            this._('listaexpdate2help.caption'),
+            dialog,
+            this._('listaexpdate2help.text'),
+            500
+        );
+
+        this._listADoc3 = listADoc3
+        .prop('title', '').tooltip({content: () => this._('listadoc3.tooltip')});
+
+        this._listADoc3Help = this.renderHelpIcon(
+            listADoc3Help,
+            this._('listadoc3help.caption'),
+            dialog,
+            this._('listadoc3help.text'),
+            500
+        );
+        
         this._listAIssuingAuthority3 = listAIssuingAuthority3;
         this._listADocNumber3 = listADocNumber3;
-        this._listADocExpDate3 = listADocExpDate3;
-        this._listADocExpDate3.datepicker();
+        this._listADocExpDate3 = listADocExpDate3
+        .datepicker();
 
         this._listBDoc = listBDoc;
-        this.filterCombolist(this._listBDoc, this.getListBContent(null), null, this.processListABC);
+        this.filterCombolist(this._listBDoc, this.getListBContent(null), null, this, this.processListABC);
+        this._listBIssuingAuthority = listBIssuingAuthority;
         this._listBDocNumber = listBDocNumber;
-        this._listBDocExpDate = listBDocExpDate;
-        this._listBDocExpDate.datepicker();
+        this._listBDocExpDate = listBDocExpDate
+        .datepicker();
 
         this._listCDoc = listCDoc;
-        this.filterCombolist(this._listCDoc, this.getListCContent(null), null, this.processListABC);
+        this.filterCombolist(this._listCDoc, this.getListCContent(null), null, this, this.processListABC);
+        this._listCIssuingAuthority = listCIssuingAuthority;
         this._listCDocNumber = listCDocNumber;
-        this._listCDocExpDate = listCDocExpDate;
-        this._listCDocExpDate.datepicker();
+        this._listCDocExpDate = listCDocExpDate
+        .datepicker();
     }
 }

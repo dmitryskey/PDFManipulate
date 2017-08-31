@@ -1,3 +1,5 @@
+/// <reference path="PDFForm.ts" />
+
 class USI9Fields extends PDFForm {
     protected _lastName: JQuery<HTMLElement>;
     protected _lastNameHelp: JQuery<HTMLElement>;
@@ -84,14 +86,23 @@ class USI9Fields extends PDFForm {
     protected _middleInitialSection2Help: JQuery<HTMLElement>;
 
     protected _listADoc: JQuery<HTMLElement>;
+    protected _listADocHelp: JQuery<HTMLElement>;
     protected _listAIssuingAuthority: JQuery<HTMLElement>;
+    protected _listAIssuingAuthorityHelp: JQuery<HTMLElement>;
     protected _listADocNumber: JQuery<HTMLElement>;
+    protected _listADocNumberHelp: JQuery<HTMLElement>;
     protected _listADocExpDate: JQuery<HTMLElement>;
+    protected _listADocExpDateHelp: JQuery<HTMLElement>;
     protected _listADoc2: JQuery<HTMLElement>;
+    protected _listADoc2Help: JQuery<HTMLElement>;
     protected _listAIssuingAuthority2: JQuery<HTMLElement>;
+    protected _listAIssuingAuthority2Help: JQuery<HTMLElement>;
     protected _listADocNumber2: JQuery<HTMLElement>;
+    protected _listADocNumber2Help: JQuery<HTMLElement>;
     protected _listADocExpDate2: JQuery<HTMLElement>;
+    protected _listADocExpDate2Help: JQuery<HTMLElement>;
     protected _listADoc3: JQuery<HTMLElement>;
+    protected _listADoc3Help: JQuery<HTMLElement>;
     protected _listAIssuingAuthority3: JQuery<HTMLElement>;
     protected _listADocNumber3: JQuery<HTMLElement>;
     protected _listADocExpDate3: JQuery<HTMLElement>;
@@ -133,79 +144,97 @@ class USI9Fields extends PDFForm {
         }
     }
 
-    protected processListABC(ddl: string, code: string) {
+    protected processListABC(ddl: string, code: string, fields: USI9Fields) {
         switch(ddl)
         {
         case 'ListADocTitle':
-            var na = this._('NA');
-            var issuingAuthList;
+            var na = super._('NA');
+            var issuingAuthList: { [index: string]: string; } = {0:na};
             var issuingAuth: string;
 
             // US Citizens & Non-citizen nationals
             // 1 - U.S. Passport
             // 2 - U.S. Passport Card
             if (['1', '2'].indexOf(code) >= 0) {
-                issuingAuthList = {1:this._('USDS')};
+                issuingAuthList = {1:super._('USDS')};
                 issuingAuth = '1';
             }
 
             // LPR
             // 3 - Perm. Resident Card (Form I-551)
             if (code === '3') {
-                let issuingAuthList = {2:this._('USCIS'), 3:this._('DOJINS')};
+                issuingAuthList = {2:super._('USCIS'), 3:super._('DOJINS')};
                 issuingAuth = '0';
             }
 
             // 4 - Alien Reg. Receipt Card (Form I-551)
             if (code === '4') {
-                let issuingAuthList = {3:this._('DOJINS')};
+                issuingAuthList = {3:super._('DOJINS')};
                 issuingAuth = '3';
             }
 
             // 5 - Foreign Passport
             if (code === '5') {
-                issuingAuthList = JSON.parse(this._('countries'));
+                issuingAuthList = JSON.parse(super._('countries'));
                 issuingAuth = null;
 
-                this.filterCombolist(this._listADoc2, {1: this._('temporaryI551stamp'), 2: this._('mrivstamp')}, '1', this.processListABC);
-                this.filterCombolist(this._listAIssuingAuthority2, {0: na}, '0', this.processListABC);
+                fields.filterCombolist(
+                    fields._listADoc2,
+                    {1: super._('temporaryI551stamp'), 2: super._('mrivstamp')},
+                    '1',
+                    fields,
+                    fields.processListABC);
+
+                fields.filterCombolist(
+                    fields._listAIssuingAuthority2,
+                    {0:na},
+                    '0',
+                    fields,
+                    fields.processListABC);
             }
 
             // 10 - Receipt: Form I-94/I-94A w/I-551 stamp, photo
             if (code === '10') {
-                issuingAuthList = {4:this._('DHS')};
+                issuingAuthList = {4:super._('DHS')};
                 issuingAuth = '4';
             }
 
             // 12 - Receipt replacement Perm. Res. Card (Form I-551)
             if (code === '12') {
-                issuingAuthList = {2:this._('USCIS')};
+                issuingAuthList = {2:super._('USCIS')};
                 issuingAuth = '2';
             }
 
             if (['1', '2', '3', '4', '10', '12'].indexOf(code) >= 0) {
-                this.filterCombolist(this._listADoc2, {0: na}, '0', this.processListABC);
-                this.filterCombolist(this._listAIssuingAuthority2, {0: na}, '0', this.processListABC);
-                this._listADocNumber2.attr('readOnly', 'true').val(na);
-                (this._listADocExpDate2.attr('readOnly', 'true') as any).datepicker('option', 'showOn', 'off').val(na);
+                fields.filterCombolist(fields._listADoc2, {0:na}, '0', fields, fields.processListABC);
+                fields.filterCombolist(fields._listAIssuingAuthority2, {0:na}, '0', fields, fields.processListABC);
+                fields._listADocNumber2.attr('readOnly', 'true').val(na);
+                fields._listADocExpDate2.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(na);
             }
 
             if (['1', '2', '3', '4', '5', '10', '12'].indexOf(code) >= 0) {
-                this.filterCombolist(this._listADoc3, {0: na}, '0', this.processListABC);
-                this.filterCombolist(this._listAIssuingAuthority3, {0: na}, '0', this.processListABC);
-                this._listADocNumber3.attr('readOnly', 'true').val(na);
-                (this._listADocExpDate3.attr('readOnly', 'true') as any).datepicker('option', 'showOn', 'off').val(na);
+                fields.filterCombolist(fields._listADoc3, {0:na}, '0', fields, fields.processListABC);
+                fields.filterCombolist(fields._listAIssuingAuthority3, {0:na}, '0', fields, fields.processListABC);
+                fields._listADocNumber3.attr('readOnly', 'true').val(na);
+                fields._listADocExpDate3.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(na);
             }
 
-            if (!issuingAuthList) {
-                issuingAuthList = {0:na};
-            }
+            fields.filterCombolist(fields._listBDoc, {0:na}, '0', fields, fields.processListABC);
+            fields.filterCombolist(fields._listBIssuingAuthority, {0:na}, '0', fields, fields.processListABC);
+            fields._listBDocNumber.attr('readOnly', 'true').val(na);
+            fields._listBDocExpDate.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(na);
 
-            this.filterCombolist(
-                this._listAIssuingAuthority,
+            fields.filterCombolist(fields._listCDoc, {0:na}, '0', fields, fields.processListABC);
+            fields.filterCombolist(fields._listCIssuingAuthority, {0:na}, '0', fields, fields.processListABC);
+            fields._listCDocNumber.attr('readOnly', 'true').val(na);
+            fields._listCDocExpDate.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(na);
+
+            fields.filterCombolist(
+                fields._listAIssuingAuthority,
                 issuingAuthList,
                 issuingAuth,
-                this.processListABC);
+                fields,
+                fields.processListABC);
 
             break;
         }
@@ -267,6 +296,8 @@ class USI9Fields extends PDFForm {
             });
         }
 
+        $.each(listB, (i, v) => listB[i] = decodeURIComponent(v));
+
         return listB;
     }
 
@@ -297,6 +328,8 @@ class USI9Fields extends PDFForm {
                 13: this._('eadListCReceipt')
             });
         }
+
+        $.each(listC, (i, v) => listC[i] = decodeURIComponent(v));
 
         return listC;
     }

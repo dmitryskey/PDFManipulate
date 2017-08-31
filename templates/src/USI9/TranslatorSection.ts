@@ -1,3 +1,5 @@
+/// <reference path="Section1.ts" />
+
 class USI9Translator extends USI9Section1 {
     protected renderTranslatorSection(
         dialog: JQuery<HTMLElement>,
@@ -24,7 +26,7 @@ class USI9Translator extends USI9Section1 {
         var translator = [translatorYes, translatorNo];
             
         this._translatorYes = translatorYes
-        .prop('title', this._('translator.tooltip'))
+        .prop('title', '').tooltip({content: () => this._('translator.tooltip')})
         .click(() => { 
             this.selectCheckmark(this._translatorYes, translator);
 
@@ -39,7 +41,7 @@ class USI9Translator extends USI9Section1 {
         });
             
         this._translatorNo = translatorNo
-        .prop('title', this._('translator.tooltip'))
+        .prop('title', '').tooltip({content: () => this._('translator.tooltip')})
         .click(() => {
             this.selectCheckmark(this._translatorNo, translator);
             
@@ -62,7 +64,7 @@ class USI9Translator extends USI9Section1 {
         );
             
         this._sgnTranslator = sgnTranslator
-        .prop('title', this._('sgntranslator.tooltip'));
+        .prop('title', '').tooltip({content: () => this._('sgntranslator.tooltip')});
 
         this._sgnTranslatorHelp = this.renderHelpIcon(
             sgnTranslatorHelp,
@@ -72,7 +74,7 @@ class USI9Translator extends USI9Section1 {
         );
             
         this._translatorDate = translatorDate.datepicker()
-        .prop('title', this._('translatordate.tooltip'));
+        .prop('title', '').tooltip({content: () => this._('translatordate.tooltip')});
 
         this._translatorDateHelp = this.renderHelpIcon(
             translatorDateHelp,
@@ -82,7 +84,7 @@ class USI9Translator extends USI9Section1 {
         );
             
         this._translatorLastName = translatorLastName
-        .prop('title', this._('translatorlastname.tooltip'))
+        .prop('title', '').tooltip({content: () => this._('translatorlastname.tooltip')})
         .prop('maxLength', 40)
         .keypress(e => this.nameFormat.test(String.fromCharCode(e.which)));
 
@@ -94,7 +96,7 @@ class USI9Translator extends USI9Section1 {
         );
             
         this._translatorFirstName = translatorFirstName
-        .prop('title', this._('translatorfirstname.tooltip'))
+        .prop('title', '').tooltip({content: () => this._('translatorfirstname.tooltip')})
         .prop('maxLength', 25)
         .keypress(e => this.nameFormat.test(String.fromCharCode(e.which)));
 
@@ -106,7 +108,7 @@ class USI9Translator extends USI9Section1 {
         );
             
         this._translatorAddress = translatorAddress
-        .prop('title', this._('translatoraddress.tooltip'));
+        .prop('title', '').tooltip({content: () => this._('translatoraddress.tooltip')});
 
         this._translatorAddressHelp = this.renderHelpIcon(
             translatorAddressHelp,
@@ -116,7 +118,7 @@ class USI9Translator extends USI9Section1 {
         );
             
         this._translatorCity = translatorCity
-        .prop('title', this._('translatorcity.tooltip'));
+        .prop('title', '').tooltip({content: () => this._('translatorcity.tooltip')});
 
         this._translatorCityHelp = this.renderHelpIcon(
             translatorCityHelp,
@@ -126,7 +128,7 @@ class USI9Translator extends USI9Section1 {
         );
             
         this._translatorState = translatorState
-        .prop('title', this._('translatorstate.tooltip'));
+        .prop('title', '').tooltip({content: () => this._('translatorstate.tooltip')});
 
         this._translatorStateHelp = this.renderHelpIcon(
             translatorStateHelp,
@@ -136,7 +138,7 @@ class USI9Translator extends USI9Section1 {
         );
             
         this._translatorZip = translatorZip
-        .prop('title', this._('translatorzip.tooltip'))
+        .prop('title', '').tooltip({content: () => this._('translatorzip.tooltip')})
         .keypress(e => this.zipFormat.test(String.fromCharCode(e.which)));
 
         this._translatorZipHelp = this.renderHelpIcon(
