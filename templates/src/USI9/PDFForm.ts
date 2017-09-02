@@ -8,7 +8,7 @@ class PDFForm {
     protected phoneFormat = /^[\d/NA-]+$/;
     protected phoneNumber = /^[(]{0,1}\d{3}[ )-]{0,1}\d{3}[ -]{0,1}\d{4}$/;
 
-    private currentTooltip: any;
+    protected currentTooltip: any;
 
     constructor() {
         let self = this;
@@ -16,11 +16,7 @@ class PDFForm {
         $(document).tooltip({
             show: {
                 delay: 200
-            },
-            open: (event, ui: any) => self.currentTooltip = $(ui.tooltip),
-            position: {
-                my: 'center bottom',
-                at: 'center top' }
+            }
         });
 
         let monthNames:string[] = [];
@@ -111,6 +107,10 @@ class PDFForm {
         ctrl.parent().children().filter('.combo-content').click(f);
     }
 
+    protected hideTooltip() {
+        $('.ui-tooltip').hide();
+    }
+
     protected renderHelpIcon(ctrl: JQuery<HTMLElement>, title: string, dialog: JQuery<HTMLElement>, text: string, minWidth = 50) {
         let self = this;
         return ctrl.prop('title', title).attr('icon', 'true').
@@ -118,9 +118,7 @@ class PDFForm {
             toggleClass('noHighlight').parent().click(() => {
                 ctrl.blur();
 
-                if (self.currentTooltip) {
-                    self.currentTooltip.hide();
-                }
+                self.hideTooltip();
 
                 $('.ui-dialog-titlebar-close').attr('title', '');
 

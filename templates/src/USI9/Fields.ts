@@ -104,16 +104,29 @@ class USI9Fields extends PDFForm {
     protected _listADoc3: JQuery<HTMLElement>;
     protected _listADoc3Help: JQuery<HTMLElement>;
     protected _listAIssuingAuthority3: JQuery<HTMLElement>;
+    protected _listAIssuingAuthority3Help: JQuery<HTMLElement>;
     protected _listADocNumber3: JQuery<HTMLElement>;
+    protected _listADocNumber3Help: JQuery<HTMLElement>;
     protected _listADocExpDate3: JQuery<HTMLElement>;
+    protected _listADocExpDate3Help: JQuery<HTMLElement>;
     protected _listBDoc: JQuery<HTMLElement>;
+    protected _listBDocHelp: JQuery<HTMLElement>;
     protected _listBIssuingAuthority: JQuery<HTMLElement>;
+    protected _listBIssuingAuthorityHelp: JQuery<HTMLElement>;
     protected _listBDocNumber: JQuery<HTMLElement>;
+    protected _listBDocNumberHelp: JQuery<HTMLElement>;
     protected _listBDocExpDate: JQuery<HTMLElement>;
+    protected _listBDocExpDateHelp: JQuery<HTMLElement>;
     protected _listCDoc: JQuery<HTMLElement>;
+    protected _listCDocHelp: JQuery<HTMLElement>;
     protected _listCIssuingAuthority: JQuery<HTMLElement>;
+    protected _listCIssuingAuthorityHelp: JQuery<HTMLElement>;
     protected _listCDocNumber: JQuery<HTMLElement>;
+    protected _listCDocNumberHelp: JQuery<HTMLElement>;
     protected _listCDocExpDate: JQuery<HTMLElement>;
+    protected _listCDocExpDateHelp: JQuery<HTMLElement>;
+    protected _additionalInfo: JQuery<HTMLElement>;
+    protected _additionalInfoHelp: JQuery<HTMLElement>;
 
     protected validateFields() {
         var errorMessage = '';

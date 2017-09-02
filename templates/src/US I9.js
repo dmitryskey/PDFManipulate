@@ -22,11 +22,6 @@ var PDFForm = (function () {
         $(document).tooltip({
             show: {
                 delay: 200
-            },
-            open: function (event, ui) { return self.currentTooltip = $(ui.tooltip); },
-            position: {
-                my: 'center bottom',
-                at: 'center top'
             }
         });
         var monthNames = [];
@@ -96,6 +91,9 @@ var PDFForm = (function () {
     PDFForm.prototype.assignCombolistEventHandler = function (ctrl, f) {
         ctrl.parent().children().filter('.combo-content').click(f);
     };
+    PDFForm.prototype.hideTooltip = function () {
+        $('.ui-tooltip').hide();
+    };
     PDFForm.prototype.renderHelpIcon = function (ctrl, title, dialog, text, minWidth) {
         if (minWidth === void 0) { minWidth = 50; }
         var self = this;
@@ -103,9 +101,7 @@ var PDFForm = (function () {
             val(String.fromCharCode(0xFFFD)).
             toggleClass('noHighlight').parent().click(function () {
             ctrl.blur();
-            if (self.currentTooltip) {
-                self.currentTooltip.hide();
-            }
+            self.hideTooltip();
             $('.ui-dialog-titlebar-close').attr('title', '');
             dialog.text('').append(decodeURIComponent(text)).
                 dialog('option', 'minWidth', minWidth).dialog('open');
@@ -314,20 +310,24 @@ var USI9Section1 = (function (_super) {
     };
     USI9Section1.prototype.renderNameAndAddress = function (dialog, lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, otherNames, otherNamesHelp, address, addressHelp, apptNumber, apptNumberHelp, city, cityHelp, state, stateHelp, zip, zipHelp) {
         var _this = this;
+        var self = this;
         this._lastName = lastName
-            .prop('title', '').tooltip({ content: function () { return _this._('lastnamehelp.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('lastnamehelp.tooltip') })
             .prop('maxLength', 40)
             .keypress(function (e) { return _this.nameFormat.test(String.fromCharCode(e.which)); })
             .change(function () { return _this._lastNameSection2.val(_this._lastName.val()); });
         this._lastNameHelp = this.renderHelpIcon(lastNameHelp, this._('lastnamehelp.caption'), dialog, this._('lastnamehelp.text'));
         this._firstName = firstName
-            .prop('title', '').tooltip({ content: function () { return _this._('firstnamehelp.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('firstnamehelp.tooltip') })
             .prop('maxLength', 25)
             .keypress(function (e) { return _this.nameFormat.test(String.fromCharCode(e.which)); })
             .change(function () { return _this._firstNameSection2.val(_this._firstName.val()); });
         this._firstNameHelp = this.renderHelpIcon(firstNameHelp, this._('firstnamehelp.caption'), dialog, this._('firstnamehelp.text'));
         this._middleInitial = middleInitial
-            .prop('title', '').tooltip({ content: function () { return _this._('middleinitialhelp.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('middleinitialhelp.tooltip') })
             .prop('maxLength', 3)
             .keypress(function (e) {
             return _this.nameFormat.test(String.fromCharCode(e.which)) ||
@@ -336,24 +336,33 @@ var USI9Section1 = (function (_super) {
             .change(function () { return _this._middleInitialSection2.val(_this._middleInitial.val()); });
         this._middleInitialHelp = this.renderHelpIcon(middleInitialHelp, this._('middleinitialhelp.caption'), dialog, this._('middleinitialhelp.text'));
         this._otherNames = otherNames
-            .prop('title', '').tooltip({ content: function () { return _this._('othernameshelp.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('othernameshelp.tooltip') })
             .prop('maxLength', 40)
             .keypress(function (e) {
             return _this.nameFormat.test(String.fromCharCode(e.which)) ||
                 _this.NAFormat.test(String.fromCharCode(e.which));
         });
         this._otherNamesHelp = this.renderHelpIcon(otherNamesHelp, this._('othernameshelp.caption'), dialog, this._('othernameshelp.text'));
-        this._address = address.prop('title', '').tooltip({ content: function () { return _this._('addresshelp.tooltip'); } });
+        this._address = address
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('addresshelp.tooltip') });
         this._addressHelp = this.renderHelpIcon(addressHelp, this._('addresshelp.caption'), dialog, this._('addresshelp.text'));
         this._apptNumber = apptNumber
-            .prop('title', '').tooltip({ content: function () { return _this._('apartmentnumberhelp.tooltip'); } });
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('apartmentnumberhelp.tooltip') });
         this._apptNumberHelp = this.renderHelpIcon(apptNumberHelp, this._('apartmentnumberhelp.caption'), dialog, this._('apartmentnumberhelp.text'));
-        this._city = city.prop('title', '').tooltip({ content: function () { return _this._('cityhelp.tooltip'); } });
+        this._city = city
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('cityhelp.tooltip') });
         this._cityHelp = this.renderHelpIcon(cityHelp, this._('cityhelp.caption'), dialog, this._('cityhelp.text'));
-        this._state = state.prop('title', '').tooltip({ content: function () { return _this._('statehelp.tooltip'); } });
+        this._state = state
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('statehelp.tooltip') });
         this._stateHelp = this.renderHelpIcon(stateHelp, this._('statehelp.caption'), dialog, this._('statehelp.text'));
         this._zip = zip
-            .prop('title', '').tooltip({ content: function () { return _this._('ziphelp.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('ziphelp.tooltip') })
             .keypress(function (e) { return _this.zipFormat.test(String.fromCharCode(e.which)); });
         this._zipHelp = this.renderHelpIcon(zipHelp, this._('ziphelp.caption'), dialog, this._('ziphelp.text'));
     };
@@ -363,7 +372,8 @@ var USI9Section1 = (function (_super) {
         for (var i = 0; i < ssn.length - 1; i++) {
             this._ssn[i]
                 .attr('nextElement', (this._ssn[i + 1]).attr('name'))
-                .prop('title', '').tooltip({ content: function () { return _this._('ssnhelp.tooltip'); } })
+                .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+                .tooltip({ content: this._('ssnhelp.tooltip') })
                 .prop('maxLength', 1)
                 .keypress(function (e) {
                 if (_this.numberFormat.test(String.fromCharCode(e.which))) {
@@ -376,14 +386,17 @@ var USI9Section1 = (function (_super) {
             });
         }
         this._ssn[ssn.length - 1]
-            .prop('title', '').tooltip({ content: function () { return _this._('ssnhelp.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('ssnhelp.tooltip') })
             .prop('maxLength', 1)
             .keypress(function (e) { return _this.numberFormat.test(String.fromCharCode(e.which)); });
     };
     USI9Section1.prototype.renderPersonalData = function (dialog, dob, dobHelp, ssn11, ssn12, ssn13, ssn21, ssn22, ssn31, ssn32, ssn33, ssn34, ssnHelp, email, emailHelp, phone, phoneHelp) {
         var _this = this;
         var na = this._('NA');
-        this._dob = dob.prop('title', '').tooltip({ content: function () { return _this._('dobhelp.tooltip'); } })
+        this._dob = dob
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('dobhelp.tooltip') })
             .datepicker({
             changeMonth: true,
             changeYear: true,
@@ -396,11 +409,13 @@ var USI9Section1 = (function (_super) {
         this.renderSSNFields([ssn11, ssn12, ssn13, ssn21, ssn22, ssn31, ssn32, ssn33, ssn34]);
         this._ssnHelp = this.renderHelpIcon(ssnHelp, this._('ssnhelp.caption'), dialog, this._('ssnhelp.text'), 400);
         this._email = email
-            .prop('title', '').tooltip({ content: function () { return _this._('emailhelp.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('emailhelp.tooltip') })
             .prop('maxLength', 60);
         this._emailHelp = this.renderHelpIcon(emailHelp, this._('emailhelp.caption'), dialog, this._('emailhelp.text'));
         this._phone = phone
-            .prop('title', '').tooltip({ content: function () { return _this._('phonehelp.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('phonehelp.tooltip') })
             .prop('maxLength', 13)
             .keypress(function (e) { return _this.phoneFormat.test(String.fromCharCode(e.which)); });
         this._phoneHelp = this.renderHelpIcon(phoneHelp, this._('phonehelp.caption'), dialog, this._('phonehelp.text'));
@@ -410,7 +425,8 @@ var USI9Section1 = (function (_super) {
         var citizenships = [citizen, national, lpr, alien];
         var na = this._('NA');
         this._citizen = citizen
-            .prop('title', '').tooltip({ content: function () { return _this._('citizenhelp.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('citizenhelp.tooltip') })
             .click(function () {
             _this.selectCheckmark(_this._citizen, citizenships);
             _this.processLPR(_this._citizen.prop('checked'));
@@ -423,7 +439,8 @@ var USI9Section1 = (function (_super) {
         });
         this._citizenHelp = this.renderHelpIcon(citizenHelp, this._('citizenhelp.caption'), dialog, this._('citizenhelp.text'));
         this._national = national
-            .prop('title', '').tooltip({ content: function () { return _this._('nationalhelp.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('nationalhelp.tooltip') })
             .click(function () {
             _this.selectCheckmark(_this._national, citizenships);
             _this.processLPR(_this._national.prop('checked'));
@@ -436,7 +453,8 @@ var USI9Section1 = (function (_super) {
         });
         this._nationalHelp = this.renderHelpIcon(nationalHelp, this._('nationalhelp.caption'), dialog, this._('nationalhelp.text'));
         this._lpr = lpr
-            .prop('title', '').tooltip({ content: function () { return _this._('lprhelp.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('lprhelp.tooltip') })
             .click(function () {
             _this.selectCheckmark(_this._lpr, citizenships);
             _this.processAlien(_this._lpr.prop('checked'));
@@ -462,7 +480,8 @@ var USI9Section1 = (function (_super) {
         });
         this._lprHelp = this.renderHelpIcon(lprHelp, this._('lprhelp.caption'), dialog, this._('lprhelp.text'));
         this._alien = alien
-            .prop('title', '').tooltip({ content: function () { return _this._('alienhelp.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('alienhelp.tooltip') })
             .click(function () {
             _this.selectCheckmark(_this._alien, citizenships);
             _this.processLPR(_this._alien.prop('checked'));
@@ -504,16 +523,19 @@ var USI9Section1 = (function (_super) {
         this._uscisNumberHelp = this.renderHelpIcon(uscisNumberHelp, this._('uscisnumberhelp.caption'), dialog, this._('uscisnumberhelp.text'));
         this._lpruscisNumPrefix = lpruscisNumPrefix;
         this._lpruscisNum = lpruscisNum
-            .prop('title', '').tooltip({ content: function () { return _this._('uscisnumber.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('uscisnumber.tooltip') })
             .prop('maxLength', 9)
             .keypress(function (e) { return _this.numberFormat.test(String.fromCharCode(e.which)); });
         this._lpruscisNumType = lpruscisNumType
-            .prop('title', '').tooltip({ content: function () { return _this._('uscisnumbertype.tooltip'); } });
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('uscisnumbertype.tooltip') });
         this.assignCombolistEventHandler(this._lpruscisNumType, function (e) {
             return _this._lpruscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : '');
         });
         this._alienWorkAuthDate = alienWorkAuthDate
-            .prop('title', '').tooltip({ content: function () { return _this._('alienworkauthdate.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('alienworkauthdate.tooltip') })
             .datepicker()
             .unbind('keypress')
             .keypress(function (e) {
@@ -522,7 +544,8 @@ var USI9Section1 = (function (_super) {
         });
         this._alienuscisNumPrefix = alienuscisNumPrefix;
         this._alienuscisNum = alienuscisNum
-            .prop('title', '').tooltip({ content: function () { return _this._('uscisnumber.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('uscisnumber.tooltip') })
             .prop('maxLength', 9)
             .keypress(function (e) {
             return _this.numberFormat.test(String.fromCharCode(e.which));
@@ -544,12 +567,14 @@ var USI9Section1 = (function (_super) {
             }
         });
         this._alienuscisNumType = alienuscisNumType
-            .prop('title', '').tooltip({ content: function () { return _this._('uscisnumbertype.tooltip'); } });
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('uscisnumbertype.tooltip') });
         this.assignCombolistEventHandler(this._alienuscisNumType, function (e) {
             return _this._alienuscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : '');
         });
         this._admissionNum = admissionNum
-            .prop('title', '').tooltip({ content: function () { return _this._('admissionnumber.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('admissionnumber.tooltip') })
             .prop('maxLength', 11)
             .keypress(function (e) {
             return _this.numberFormat.test(String.fromCharCode(e.which));
@@ -570,7 +595,8 @@ var USI9Section1 = (function (_super) {
         });
         this._admissionNumHelp = this.renderHelpIcon(admissionNumHelp, this._('admissionnumberhelp.caption'), dialog, this._('admissionnumberhelp.text'));
         this._passportNum = passportNum
-            .prop('title', '').tooltip({ content: function () { return _this._('passportnumber.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('passportnumber.tooltip') })
             .prop('maxLength', 12)
             .change(function () {
             if (_this._passportNum.val() !== '') {
@@ -588,11 +614,18 @@ var USI9Section1 = (function (_super) {
             }
         });
         this._passportNumHelp = this.renderHelpIcon(passportNumHelp, this._('passportnumberhelp.caption'), dialog, this._('passportnumberhelp.text'));
-        this._countryOfIssuance = countryOfIssuance.prop('title', '').tooltip({ content: function () { return _this._('coi.tooltip'); } });
+        this._countryOfIssuance = countryOfIssuance
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('coi.tooltip') });
         this._countryOfIssuanceHelp = this.renderHelpIcon(countryOfIssuanceHelp, this._('coihelp.caption'), dialog, this._('coihelp.text'));
-        this._sgnEmployee = sgnEmployee.prop('title', '').tooltip({ content: function () { return _this._('employee.tooltip'); } });
+        this._sgnEmployee = sgnEmployee
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('employee.tooltip') });
         this._sgnEmployeeHelp = this.renderHelpIcon(sgnEmployeeHelp, this._('employeehelp.caption'), dialog, this._('employeehelp.text'), 700);
-        this._sgnEmployeeDate = sgnEmployeeDate.prop('title', '').tooltip({ content: function () { return _this._('employeedate.tooltip'); } }).datepicker();
+        this._sgnEmployeeDate = sgnEmployeeDate
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('employeedate.tooltip') })
+            .datepicker();
         this._sgnEmployeeDateHelp = this.renderHelpIcon(sgnEmployeeDateHelp, this._('employeedatehelp.caption'), dialog, this._('employeedatehelp.text'));
     };
     USI9Section1.prototype.renderSection1 = function (dialog, lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, otherNames, otherNamesHelp, address, addressHelp, apptNumber, apptNumberHelp, city, cityHelp, state, stateHelp, zip, zipHelp, dob, dobHelp, ssn11, ssn12, ssn13, ssn21, ssn22, ssn31, ssn32, ssn33, ssn34, ssnHelp, email, emailHelp, phone, phoneHelp, citizen, citizenHelp, national, nationalHelp, lpr, lprHelp, alien, alienHelp, uscisNumberHelp, lpruscisNumPrefix, lpruscisNum, lpruscisNumType, alienWorkAuthDate, alienuscisNumPrefix, alienuscisNum, alienuscisNumType, admissionNum, admissionNumHelp, passportNum, passportNumHelp, countryOfIssuance, countryOfIssuanceHelp, sgnEmployee, sgnEmployeeHelp, sgnEmployeeDate, sgnEmployeeDateHelp) {
@@ -614,7 +647,8 @@ var USI9Translator = (function (_super) {
         var _this = this;
         var translator = [translatorYes, translatorNo];
         this._translatorYes = translatorYes
-            .prop('title', '').tooltip({ content: function () { return _this._('translator.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('translator.tooltip') })
             .click(function () {
             _this.selectCheckmark(_this._translatorYes, translator);
             _this._sgnTranslator.prop('disabled', false);
@@ -627,7 +661,8 @@ var USI9Translator = (function (_super) {
             _this._translatorZip.prop('disabled', false);
         });
         this._translatorNo = translatorNo
-            .prop('title', '').tooltip({ content: function () { return _this._('translator.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('translator.tooltip') })
             .click(function () {
             _this.selectCheckmark(_this._translatorNo, translator);
             _this._sgnTranslator.val('').prop('disabled', true);
@@ -641,32 +676,38 @@ var USI9Translator = (function (_super) {
         });
         this._translatorHelp = this.renderHelpIcon(translatorHelp, this._('translatorhelp.caption'), dialog, this._('translatorhelp.text'), 500);
         this._sgnTranslator = sgnTranslator
-            .prop('title', '').tooltip({ content: function () { return _this._('sgntranslator.tooltip'); } });
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('sgntranslator.tooltip') });
         this._sgnTranslatorHelp = this.renderHelpIcon(sgnTranslatorHelp, this._('sgntranslatorhelp.caption'), dialog, this._('sgntranslatorhelp.text'));
         this._translatorDate = translatorDate.datepicker()
-            .prop('title', '').tooltip({ content: function () { return _this._('translatordate.tooltip'); } });
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('translatordate.tooltip') });
         this._translatorDateHelp = this.renderHelpIcon(translatorDateHelp, this._('translatordatehelp.caption'), dialog, this._('translatordatehelp.text'));
         this._translatorLastName = translatorLastName
-            .prop('title', '').tooltip({ content: function () { return _this._('translatorlastname.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('translatorlastname.tooltip') })
             .prop('maxLength', 40)
             .keypress(function (e) { return _this.nameFormat.test(String.fromCharCode(e.which)); });
         this._translatorLastNameHelp = this.renderHelpIcon(translatorLastNameHelp, this._('translatorlastnamehelp.caption'), dialog, this._('translatorlastnamehelp.text'));
         this._translatorFirstName = translatorFirstName
-            .prop('title', '').tooltip({ content: function () { return _this._('translatorfirstname.tooltip'); } })
+            .prop('title', '').tooltip({ content: this._('translatorfirstname.tooltip') })
             .prop('maxLength', 25)
             .keypress(function (e) { return _this.nameFormat.test(String.fromCharCode(e.which)); });
         this._translatorFirstNameHelp = this.renderHelpIcon(translatorFirstNameHelp, this._('translatorfirstnamehelp.caption'), dialog, this._('translatorfirstnamehelp.text'));
         this._translatorAddress = translatorAddress
-            .prop('title', '').tooltip({ content: function () { return _this._('translatoraddress.tooltip'); } });
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('translatoraddress.tooltip') });
         this._translatorAddressHelp = this.renderHelpIcon(translatorAddressHelp, this._('translatoraddresshelp.caption'), dialog, this._('translatoraddresshelp.text'));
         this._translatorCity = translatorCity
-            .prop('title', '').tooltip({ content: function () { return _this._('translatorcity.tooltip'); } });
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('translatorcity.tooltip') });
         this._translatorCityHelp = this.renderHelpIcon(translatorCityHelp, this._('translatorcityhelp.caption'), dialog, this._('translatorcityhelp.text'));
         this._translatorState = translatorState
-            .prop('title', '').tooltip({ content: function () { return _this._('translatorstate.tooltip'); } });
+            .prop('title', '').tooltip({ content: this._('translatorstate.tooltip') });
         this._translatorStateHelp = this.renderHelpIcon(translatorStateHelp, this._('translatorstatehelp.caption'), dialog, this._('translatorstatehelp.text'));
         this._translatorZip = translatorZip
-            .prop('title', '').tooltip({ content: function () { return _this._('translatorzip.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('translatorzip.tooltip') })
             .keypress(function (e) { return _this.zipFormat.test(String.fromCharCode(e.which)); });
         this._translatorZipHelp = this.renderHelpIcon(translatorZipHelp, this._('translatorziphelp.caption'), dialog, this._('translatorziphelp.text'));
     };
@@ -677,7 +718,7 @@ var USI9Section2 = (function (_super) {
     function USI9Section2() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    USI9Section2.prototype.renderSection2 = function (dialog, employeeInfoHelp, lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, immigrationStatus, immigrationStatusHelp, listADoc, listADocHelp, listAIssuingAuthority, listAIssuingAuthorityHelp, listADocNumber, listADocNumberHelp, listADocExpDate, listADocExpDateHelp, listADoc2, listADoc2Help, listAIssuingAuthority2, listAIssuingAuthority2Help, listADocNumber2, listADocNumber2Help, listADocExpDate2, listADocExpDate2Help, listADoc3, listADoc3Help, listAIssuingAuthority3, listADocNumber3, listADocExpDate3, listBDoc, listBIssuingAuthority, listBDocNumber, listBDocExpDate, listCDoc, listCIssuingAuthority, listCDocNumber, listCDocExpDate) {
+    USI9Section2.prototype.renderSection2 = function (dialog, employeeInfoHelp, lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, immigrationStatus, immigrationStatusHelp, listADoc, listADocHelp, listAIssuingAuthority, listAIssuingAuthorityHelp, listADocNumber, listADocNumberHelp, listADocExpDate, listADocExpDateHelp, listADoc2, listADoc2Help, listAIssuingAuthority2, listAIssuingAuthority2Help, listADocNumber2, listADocNumber2Help, listADocExpDate2, listADocExpDate2Help, listADoc3, listADoc3Help, listAIssuingAuthority3, listAIssuingAuthority3Help, listADocNumber3, listADocNumber3Help, listADocExpDate3, listADocExpDate3Help, listBDoc, listBDocHelp, listBIssuingAuthority, listBIssuingAuthorityHelp, listBDocNumber, listBDocNumberHelp, listBDocExpDate, listBDocExpDateHelp, listCDoc, listCDocHelp, listCIssuingAuthority, listCIssuingAuthorityHelp, listCDocNumber, listCDocNumberHelp, listCDocExpDate, listCDocExpDateHelp, additionalInfo, additionalInfoHelp) {
         var _this = this;
         this._employeeInfoHelp = this.renderHelpIcon(employeeInfoHelp, this._('employeeinfosection2help.caption'), dialog, this._('employeeinfosection2help.text'));
         this._lastNameSection2 = lastName;
@@ -689,50 +730,96 @@ var USI9Section2 = (function (_super) {
         this._immigrationStatus = immigrationStatus;
         this._immigrationStatusHelp = this.renderHelpIcon(immigrationStatusHelp, this._('immigrationstatushelp.caption'), dialog, this._('immigrationstatushelp.text'));
         this._listADoc = listADoc
-            .prop('title', '').tooltip({ content: function () { return _this._('listadoc.tooltip'); } });
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('listadoc.tooltip') });
         this._listADocHelp = this.renderHelpIcon(listADocHelp, this._('listadochelp.caption'), dialog, this._('listadochelp.text'), 500);
         this._listAIssuingAuthority = listAIssuingAuthority
-            .prop('title', '').tooltip({ content: function () { return _this._('listaissuingauthority.tooltip'); } });
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('listaissuingauthority.tooltip') });
         this._listAIssuingAuthorityHelp = this.renderHelpIcon(listAIssuingAuthorityHelp, this._('listaissuingauthorityhelp.caption'), dialog, this._('listaissuingauthorityhelp.text'), 500);
         this._listADocNumber = listADocNumber
-            .prop('title', '').tooltip({ content: function () { return _this._('listadocnumber.tooltip'); } });
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('listadocnumber.tooltip') });
         this._listADocNumberHelp = this.renderHelpIcon(listADocNumberHelp, this._('listadocnumberhelp.caption'), dialog, this._('listadocnumberhelp.text'), 500);
         this._listADocExpDate = listADocExpDate
-            .prop('title', '').tooltip({ content: function () { return _this._('listaexpdate.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('listaexpdate.tooltip') })
             .datepicker();
         this._listADocExpDateHelp = this.renderHelpIcon(listADocExpDateHelp, this._('listaexpdatehelp.caption'), dialog, this._('listaexpdatehelp.text'), 500);
         this._listADoc2 = listADoc2
-            .prop('title', '').tooltip({ content: function () { return _this._('listadoc2.tooltip'); } });
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('listadoc2.tooltip') });
         this._listADoc2Help = this.renderHelpIcon(listADoc2Help, this._('listadoc2help.caption'), dialog, this._('listadoc2help.text'), 500);
         this._listAIssuingAuthority2 = listAIssuingAuthority2
-            .prop('title', '').tooltip({ content: function () { return _this._('listaissuingauthority2.tooltip'); } });
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('listaissuingauthority2.tooltip') });
         this._listAIssuingAuthority2Help = this.renderHelpIcon(listAIssuingAuthority2Help, this._('listaissuingauthority2help.caption'), dialog, this._('listaissuingauthority2help.text'), 500);
         this._listADocNumber2 = listADocNumber2
-            .prop('title', '').tooltip({ content: function () { return _this._('listadocnumber2.tooltip'); } });
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('listadocnumber2.tooltip') });
         this._listADocNumber2Help = this.renderHelpIcon(listADocNumber2Help, this._('listadocnumber2help.caption'), dialog, this._('listadocnumber2help.text'), 500);
         this._listADocExpDate2 = listADocExpDate2
-            .prop('title', '').tooltip({ content: function () { return _this._('listaexpdate2.tooltip'); } })
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('listaexpdate2.tooltip') })
             .datepicker();
         this._listADocExpDate2Help = this.renderHelpIcon(listADocExpDate2Help, this._('listaexpdate2help.caption'), dialog, this._('listaexpdate2help.text'), 500);
         this._listADoc3 = listADoc3
-            .prop('title', '').tooltip({ content: function () { return _this._('listadoc3.tooltip'); } });
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('listadoc3.tooltip') });
         this._listADoc3Help = this.renderHelpIcon(listADoc3Help, this._('listadoc3help.caption'), dialog, this._('listadoc3help.text'), 500);
-        this._listAIssuingAuthority3 = listAIssuingAuthority3;
-        this._listADocNumber3 = listADocNumber3;
+        this._listAIssuingAuthority3 = listAIssuingAuthority3
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('listaissuingauthority3.tooltip') });
+        this._listAIssuingAuthority3Help = this.renderHelpIcon(listAIssuingAuthority3Help, this._('listaissuingauthority3help.caption'), dialog, this._('listaissuingauthority3help.text'), 500);
+        this._listADocNumber3 = listADocNumber3
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('listadocnumber3.tooltip') });
+        this._listADocNumber3Help = this.renderHelpIcon(listADocNumber3Help, this._('listadocnumber3help.caption'), dialog, this._('listadocnumber3help.text'), 500);
         this._listADocExpDate3 = listADocExpDate3
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('listaexpdate3.tooltip') })
             .datepicker();
-        this._listBDoc = listBDoc;
+        this._listADocExpDate3Help = this.renderHelpIcon(listADocExpDate3Help, this._('listaexpdate3help.caption'), dialog, this._('listaexpdate3help.text'), 500);
+        this._listBDoc = listBDoc
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('listbdoc.tooltip') });
+        this._listBDocHelp = this.renderHelpIcon(listBDocHelp, this._('listbdochelp.caption'), dialog, this._('listbdochelp.text'), 600);
         this.filterCombolist(this._listBDoc, this.getListBContent(null), null, this, this.processListABC);
-        this._listBIssuingAuthority = listBIssuingAuthority;
-        this._listBDocNumber = listBDocNumber;
+        this._listBIssuingAuthority = listBIssuingAuthority
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('listbissuingauthority.tooltip') });
+        this._listBIssuingAuthorityHelp = this.renderHelpIcon(listBIssuingAuthorityHelp, this._('listbissuingauthorityhelp.caption'), dialog, this._('listbissuingauthorityhelp.text'), 500);
+        this._listBDocNumber = listBDocNumber
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('listbdocnumber.tooltip') });
+        this._listBDocNumberHelp = this.renderHelpIcon(listBDocNumberHelp, this._('listbdocnumberhelp.caption'), dialog, this._('listbdocnumberhelp.text'));
         this._listBDocExpDate = listBDocExpDate
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('listbexpdate.tooltip') })
             .datepicker();
-        this._listCDoc = listCDoc;
+        this._listBDocExpDateHelp = this.renderHelpIcon(listBDocExpDateHelp, this._('listbexpdatehelp.caption'), dialog, this._('listbexpdatehelp.text'), 500);
+        this._listCDoc = listCDoc
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('listcdoc.tooltip') });
+        this._listCDocHelp = this.renderHelpIcon(listCDocHelp, this._('listcdochelp.caption'), dialog, this._('listcdochelp.text'), 600);
         this.filterCombolist(this._listCDoc, this.getListCContent(null), null, this, this.processListABC);
-        this._listCIssuingAuthority = listCIssuingAuthority;
-        this._listCDocNumber = listCDocNumber;
+        this._listCIssuingAuthority = listCIssuingAuthority
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('listcissuingauthority.tooltip') });
+        this._listCIssuingAuthorityHelp = this.renderHelpIcon(listCIssuingAuthorityHelp, this._('listcissuingauthorityhelp.caption'), dialog, this._('listcissuingauthorityhelp.text'), 500);
+        this._listCDocNumber = listCDocNumber
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('listcdocnumber.tooltip') });
+        this._listCDocNumberHelp = this.renderHelpIcon(listCDocNumberHelp, this._('listcdocnumberhelp.caption'), dialog, this._('listcdocnumberhelp.text'));
         this._listCDocExpDate = listCDocExpDate
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('listcexpdate.tooltip') })
             .datepicker();
+        this._listCDocExpDateHelp = this.renderHelpIcon(listCDocExpDateHelp, this._('listcexpdatehelp.caption'), dialog, this._('listcexpdatehelp.text'), 500);
+        this._additionalInfo = additionalInfo
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('additionalinfo.tooltip') });
+        this._additionalInfoHelp = this.renderHelpIcon(additionalInfoHelp, this._('additionalinfohelp.caption'), dialog, this._('additionalinfohelp.text'), 500);
     };
     return USI9Section2;
 }(USI9Translator));
@@ -765,7 +852,7 @@ var USI9 = (function (_super) {
                 _this.renderTranslatorSection($('#dialogPage'), $('[name=PreparerOrTranslatorNo]'), $('[name=PreparerOrTranslatorYes]'), $('[name=PreparerOrTranslatorHelp]'), $('[name=sgnTranslator]'), $('[name=sgnTranslatorHelp]'), $('[name=TranslatorDate]'), $('[name=TranslatorDateHelp]'), $('[name=TranslatorLastName]'), $('[name=TranslatorLastNameHelp]'), $('[name=TranslatorFirstName]'), $('[name=TranslatorFirstNameHelp]'), $('[name=TranslatorAddress]'), $('[name=TranslatorAddressHelp]'), $('[name=TranslatorCity]'), $('[name=TranslatorCityHelp]'), $('[name=TranslatorState]'), $('[name=TranslatorStateHelp]'), $('[name=TranslatorZip]'), $('[name=TranslatorZipHelp]'));
             }
             if (e.detail.pageNumber === 2) {
-                _this.renderSection2($('#dialogPage'), $('[name=EmployeeInfoSection2Help]'), $('[name=LastNameSection2]'), $('[name=LastNameSection2Help]'), $('[name=FirstNameSection2]'), $('[name=FirstNameSection2Help]'), $('[name=MiddleInitialSection2]'), $('[name=MiddleInitialSection2Help]'), $('[name=ImmigrationStatus]'), $('[name=ImmigrationStatusHelp]'), $('[name=ListADocTitle]'), $('[name=ListADocTitleHelp]'), $('[name=ListAIssuingAuthority]'), $('[name=ListAIssuingAuthorityHelp]'), $('[name=ListADocNumber]'), $('[name=ListADocNumberHelp]'), $('[name=ListAExpDate]'), $('[name=ListAExpDateHelp]'), $('[name=ListADocTitle2]'), $('[name=ListADocTitle2Help]'), $('[name=ListAIssuingAuthority2]'), $('[name=ListAIssuingAuthority2Help]'), $('[name=ListADocNumber2]'), $('[name=ListADocNumber2Help]'), $('[name=ListAExpDate2]'), $('[name=ListAExpDate2Help]'), $('[name=ListADocTitle3]'), $('[name=ListADocTitle3Help]'), $('[name=ListAIssuingAuthority3]'), $('[name=ListADocNumber3]'), $('[name=ListAExpDate3]'), $('[name=ListBDocTitle]'), $('[name=ListBIssuingAuthority]'), $('[name=ListBDocNumber]'), $('[name=ListBExpDate]'), $('[name=ListCDocTitle]'), $('[name=ListCIssuingAuthority]'), $('[name=ListCDocNumber]'), $('[name=ListCExpDate]'));
+                _this.renderSection2($('#dialogPage'), $('[name=EmployeeInfoSection2Help]'), $('[name=LastNameSection2]'), $('[name=LastNameSection2Help]'), $('[name=FirstNameSection2]'), $('[name=FirstNameSection2Help]'), $('[name=MiddleInitialSection2]'), $('[name=MiddleInitialSection2Help]'), $('[name=ImmigrationStatus]'), $('[name=ImmigrationStatusHelp]'), $('[name=ListADocTitle]'), $('[name=ListADocTitleHelp]'), $('[name=ListAIssuingAuthority]'), $('[name=ListAIssuingAuthorityHelp]'), $('[name=ListADocNumber]'), $('[name=ListADocNumberHelp]'), $('[name=ListAExpDate]'), $('[name=ListAExpDateHelp]'), $('[name=ListADocTitle2]'), $('[name=ListADocTitle2Help]'), $('[name=ListAIssuingAuthority2]'), $('[name=ListAIssuingAuthority2Help]'), $('[name=ListADocNumber2]'), $('[name=ListADocNumber2Help]'), $('[name=ListAExpDate2]'), $('[name=ListAExpDate2Help]'), $('[name=ListADocTitle3]'), $('[name=ListADocTitle3Help]'), $('[name=ListAIssuingAuthority3]'), $('[name=ListAIssuingAuthority3Help]'), $('[name=ListADocNumber3]'), $('[name=ListADocNumber3Help]'), $('[name=ListAExpDate3]'), $('[name=ListAExpDate3Help]'), $('[name=ListBDocTitle]'), $('[name=ListBDocTitleHelp]'), $('[name=ListBIssuingAuthority]'), $('[name=ListBIssuingAuthorityHelp]'), $('[name=ListBDocNumber]'), $('[name=ListBDocNumberHelp]'), $('[name=ListBExpDate]'), $('[name=ListBExpDateHelp]'), $('[name=ListCDocTitle]'), $('[name=ListCDocTitleHelp]'), $('[name=ListCIssuingAuthority]'), $('[name=ListCIssuingAuthorityHelp]'), $('[name=ListCDocNumber]'), $('[name=ListCDocNumberHelp]'), $('[name=ListCExpDate]'), $('[name=ListCExpDateHelp]'), $('[name=AdditionalInfo]'), $('[name=AdditionalInfoHelp]'));
             }
         });
     };

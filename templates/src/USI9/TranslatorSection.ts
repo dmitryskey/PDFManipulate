@@ -26,7 +26,8 @@ class USI9Translator extends USI9Section1 {
         var translator = [translatorYes, translatorNo];
             
         this._translatorYes = translatorYes
-        .prop('title', '').tooltip({content: () => this._('translator.tooltip')})
+        .focus(e => this.hideTooltip()).prop('title', '')
+        .tooltip({content: this._('translator.tooltip')})
         .click(() => { 
             this.selectCheckmark(this._translatorYes, translator);
 
@@ -41,7 +42,8 @@ class USI9Translator extends USI9Section1 {
         });
             
         this._translatorNo = translatorNo
-        .prop('title', '').tooltip({content: () => this._('translator.tooltip')})
+        .focus(e => this.hideTooltip()).prop('title', '')
+        .tooltip({content: this._('translator.tooltip')})
         .click(() => {
             this.selectCheckmark(this._translatorNo, translator);
             
@@ -64,7 +66,8 @@ class USI9Translator extends USI9Section1 {
         );
             
         this._sgnTranslator = sgnTranslator
-        .prop('title', '').tooltip({content: () => this._('sgntranslator.tooltip')});
+        .focus(e => this.hideTooltip()).prop('title', '')
+        .tooltip({content: this._('sgntranslator.tooltip')});
 
         this._sgnTranslatorHelp = this.renderHelpIcon(
             sgnTranslatorHelp,
@@ -74,7 +77,8 @@ class USI9Translator extends USI9Section1 {
         );
             
         this._translatorDate = translatorDate.datepicker()
-        .prop('title', '').tooltip({content: () => this._('translatordate.tooltip')});
+        .focus(e => this.hideTooltip()).prop('title', '')
+        .tooltip({content: this._('translatordate.tooltip')});
 
         this._translatorDateHelp = this.renderHelpIcon(
             translatorDateHelp,
@@ -84,7 +88,8 @@ class USI9Translator extends USI9Section1 {
         );
             
         this._translatorLastName = translatorLastName
-        .prop('title', '').tooltip({content: () => this._('translatorlastname.tooltip')})
+        .focus(e => this.hideTooltip()).prop('title', '')
+        .tooltip({content: this._('translatorlastname.tooltip')})
         .prop('maxLength', 40)
         .keypress(e => this.nameFormat.test(String.fromCharCode(e.which)));
 
@@ -96,7 +101,7 @@ class USI9Translator extends USI9Section1 {
         );
             
         this._translatorFirstName = translatorFirstName
-        .prop('title', '').tooltip({content: () => this._('translatorfirstname.tooltip')})
+        .prop('title', '').tooltip({content: this._('translatorfirstname.tooltip')})
         .prop('maxLength', 25)
         .keypress(e => this.nameFormat.test(String.fromCharCode(e.which)));
 
@@ -108,7 +113,8 @@ class USI9Translator extends USI9Section1 {
         );
             
         this._translatorAddress = translatorAddress
-        .prop('title', '').tooltip({content: () => this._('translatoraddress.tooltip')});
+        .focus(e => this.hideTooltip()).prop('title', '')
+        .tooltip({content: this._('translatoraddress.tooltip')});
 
         this._translatorAddressHelp = this.renderHelpIcon(
             translatorAddressHelp,
@@ -118,7 +124,8 @@ class USI9Translator extends USI9Section1 {
         );
             
         this._translatorCity = translatorCity
-        .prop('title', '').tooltip({content: () => this._('translatorcity.tooltip')});
+        .focus(e => this.hideTooltip()).prop('title', '')
+        .tooltip({content: this._('translatorcity.tooltip')});
 
         this._translatorCityHelp = this.renderHelpIcon(
             translatorCityHelp,
@@ -128,7 +135,7 @@ class USI9Translator extends USI9Section1 {
         );
             
         this._translatorState = translatorState
-        .prop('title', '').tooltip({content: () => this._('translatorstate.tooltip')});
+        .prop('title', '').tooltip({content: this._('translatorstate.tooltip')});
 
         this._translatorStateHelp = this.renderHelpIcon(
             translatorStateHelp,
@@ -138,7 +145,8 @@ class USI9Translator extends USI9Section1 {
         );
             
         this._translatorZip = translatorZip
-        .prop('title', '').tooltip({content: () => this._('translatorzip.tooltip')})
+        .focus(e => this.hideTooltip()).prop('title', '')
+        .tooltip({content: this._('translatorzip.tooltip')})
         .keypress(e => this.zipFormat.test(String.fromCharCode(e.which)));
 
         this._translatorZipHelp = this.renderHelpIcon(

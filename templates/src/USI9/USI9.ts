@@ -138,16 +138,29 @@ class USI9 extends USI9Section3 {
                     $('[name=ListADocTitle3]'),
                     $('[name=ListADocTitle3Help]'),
                     $('[name=ListAIssuingAuthority3]'),
+                    $('[name=ListAIssuingAuthority3Help]'),
                     $('[name=ListADocNumber3]'),
+                    $('[name=ListADocNumber3Help]'),
                     $('[name=ListAExpDate3]'),
+                    $('[name=ListAExpDate3Help]'),
                     $('[name=ListBDocTitle]'),
+                    $('[name=ListBDocTitleHelp]'),
                     $('[name=ListBIssuingAuthority]'),
+                    $('[name=ListBIssuingAuthorityHelp]'),
                     $('[name=ListBDocNumber]'),
+                    $('[name=ListBDocNumberHelp]'),
                     $('[name=ListBExpDate]'),
+                    $('[name=ListBExpDateHelp]'),
                     $('[name=ListCDocTitle]'),
+                    $('[name=ListCDocTitleHelp]'),
                     $('[name=ListCIssuingAuthority]'),
+                    $('[name=ListCIssuingAuthorityHelp]'),
                     $('[name=ListCDocNumber]'),
-                    $('[name=ListCExpDate]')
+                    $('[name=ListCDocNumberHelp]'),
+                    $('[name=ListCExpDate]'),
+                    $('[name=ListCExpDateHelp]'),
+                    $('[name=AdditionalInfo]'),
+                    $('[name=AdditionalInfoHelp]')
                 );
             }
         });
