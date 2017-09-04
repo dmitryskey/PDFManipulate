@@ -212,7 +212,10 @@ class USI9Section1 extends USI9Fields {
         phone: JQuery<HTMLElement>,
         phoneHelp: JQuery<HTMLElement>) {
 
-        var na = this._('NA');
+        let na = this._('NA');
+
+        let maxDOB = new Date();
+        maxDOB.setFullYear(maxDOB.getFullYear() - 14);
 
         // E-Verify requirements
         this._dob = dob
@@ -221,7 +224,8 @@ class USI9Section1 extends USI9Fields {
         .datepicker({
             changeMonth: true,
             changeYear: true,
-            yearRange: '1908:' + (new Date()).getFullYear()})
+            yearRange: '1908:' + maxDOB.getFullYear(),
+            maxDate: maxDOB})
         .change(e =>
             this.filterCombolist(
                 this._listBDoc,
@@ -471,7 +475,6 @@ class USI9Section1 extends USI9Fields {
                     this._listADoc, {
                     0:na,
                     6:this._('eadI766'),
-                    5:this._('foreignpassport'),
                     7:this._('foreinpassportnonimmigrant'),
                     8:this._('FSMpassport'),
                     9:this._('RMIpassport'),
@@ -520,7 +523,11 @@ class USI9Section1 extends USI9Fields {
         this._alienWorkAuthDate = alienWorkAuthDate
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('alienworkauthdate.tooltip')})
-        .datepicker()
+        .datepicker({
+            changeMonth: true,
+            changeYear: true,
+            minDate: new Date()
+        })
         .unbind('keypress')
         .keypress(e =>
             /[\d/]/g.test(String.fromCharCode(e.which)) ||
@@ -656,7 +663,7 @@ class USI9Section1 extends USI9Fields {
         this._sgnEmployeeDate = sgnEmployeeDate
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('employeedate.tooltip')})
-        .datepicker();
+        .datepicker({minDate: new Date()});
 
         this._sgnEmployeeDateHelp = this.renderHelpIcon(
             sgnEmployeeDateHelp,

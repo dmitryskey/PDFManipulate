@@ -137,7 +137,11 @@ class USI9Section2 extends USI9Translator {
         this._listADocExpDate = listADocExpDate
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('listaexpdate.tooltip')})
-        .datepicker();
+        .datepicker({
+            changeMonth: true,
+            changeYear: true,
+            minDate: new Date()
+        });
 
         this._listADocExpDateHelp = this.renderHelpIcon(
             listADocExpDateHelp,
@@ -186,7 +190,11 @@ class USI9Section2 extends USI9Translator {
         this._listADocExpDate2 = listADocExpDate2
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('listaexpdate2.tooltip')})
-        .datepicker();
+        .datepicker({
+            changeMonth: true,
+            changeYear: true,
+            minDate: new Date()
+        });
         
         this._listADocExpDate2Help = this.renderHelpIcon(
             listADocExpDate2Help,
@@ -235,7 +243,11 @@ class USI9Section2 extends USI9Translator {
         this._listADocExpDate3 = listADocExpDate3
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('listaexpdate3.tooltip')})
-        .datepicker();
+        .datepicker({
+            changeMonth: true,
+            changeYear: true,
+            minDate: new Date()
+        });
         
         this._listADocExpDate3Help = this.renderHelpIcon(
             listADocExpDate3Help,
@@ -285,7 +297,11 @@ class USI9Section2 extends USI9Translator {
         this._listBDocExpDate = listBDocExpDate
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('listbexpdate.tooltip')})
-        .datepicker();
+        .datepicker({
+            changeMonth: true,
+            changeYear: true,
+            minDate: new Date()
+        });
         
         this._listBDocExpDateHelp = this.renderHelpIcon(
             listBDocExpDateHelp,
@@ -335,7 +351,11 @@ class USI9Section2 extends USI9Translator {
         this._listCDocExpDate = listCDocExpDate
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('listcexpdate.tooltip')})
-        .datepicker();
+        .datepicker({
+            changeMonth: true,
+            changeYear: true,
+            minDate: new Date()
+        });
         
         this._listCDocExpDateHelp = this.renderHelpIcon(
             listCDocExpDateHelp,

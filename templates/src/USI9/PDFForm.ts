@@ -1,14 +1,17 @@
 class PDFForm {
     protected nameFormat = /^[A-Za-z ']+$/;
     protected NAFormat = /^[NA/]+$/;
+    protected DSFormat = /^[DS/]+$/;
     protected zipFormat = /^[\d-]+$/;
     protected zipNumber = /^(\d{5})(-\d{4}){0,1}$/;
     protected dateFormat = /^\d{2}[/]{1}\d{2}[/]{1}\d{4}$/;
     protected numberFormat = /^\d{1}$/;
     protected phoneFormat = /^[\d/NA-]+$/;
     protected phoneNumber = /^[(]{0,1}\d{3}[ )-]{0,1}\d{3}[ -]{0,1}\d{4}$/;
-
-    protected currentTooltip: any;
+    protected usPassportNumber = /^[a-zA-Z0-9]{6,9}$/;
+    protected cardNumber = /^[A-Za-z]{3}[0-9]{10}$/;
+    protected passportNumber = /^[a-zA-Z0-9]{6,12}$/;
+    protected i94Number = /^\d{11}$/;
 
     constructor() {
         let self = this;

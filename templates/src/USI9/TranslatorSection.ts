@@ -76,9 +76,10 @@ class USI9Translator extends USI9Section1 {
             this._('sgntranslatorhelp.text')
         );
             
-        this._translatorDate = translatorDate.datepicker()
+        this._translatorDate = translatorDate
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('translatordate.tooltip')});
+        .tooltip({content: this._('translatordate.tooltip')})
+        .datepicker({minDate: new Date()});
 
         this._translatorDateHelp = this.renderHelpIcon(
             translatorDateHelp,
