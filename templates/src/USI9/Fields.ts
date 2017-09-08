@@ -128,6 +128,13 @@ class USI9Fields extends PDFForm {
     protected _additionalInfo: JQuery<HTMLElement>;
     protected _additionalInfoHelp: JQuery<HTMLElement>;
 
+    protected na = super._('NA');
+
+    private numberMaxLength = 15;
+    private fieldFormat = /^[a-zA-Z0-9]+$/;
+    private issuingAuthList: { [index: string]: string; };
+    private issuingAuth: string;
+
     protected validateFields() {
         var errorMessage = '';
 
@@ -158,354 +165,34 @@ class USI9Fields extends PDFForm {
     }
 
     protected processListABC(ddl: string, code: string, fields: USI9Fields) {
-        let na = super._('NA');
-        let numberMaxLength = 15;
-        let numberFormat = /^[a-zA-Z0-9]+$/;
-        let issuingAuthList: { [index: string]: string; } = {0:na};
-        let issuingAuth: string;
+        this.numberMaxLength = 15;
+        this.fieldFormat = /^[a-zA-Z0-9]+$/;
+        this.issuingAuthList = {0:this.na};
 
         switch(ddl)
         {
         case 'ListADocTitle':
-            // restore min date after 6:I-766
-            fields._listADocExpDate.datepicker('option', 'minDate', new Date());
-
-            // US Citizens & Non-citizen nationals
-            // 1 - U.S. Passport
-            // 2 - U.S. Passport Card
-            if (['1', '2'].indexOf(code) >= 0) {
-                issuingAuthList = {'USDS':super._('USDS')};
-                issuingAuth = 'USDS';
-                numberMaxLength = 9;
-            }
-
-            // LPR
-            // 3 - Perm. Resident Card (Form I-551)
-            if (code === '3') {
-                issuingAuthList = {'USCIS':super._('USCIS'), 'DOJINS':super._('DOJINS')};
-                issuingAuth = 'USCIS';
-                numberMaxLength = 13;
-            }
-
-            // 4 - Alien Reg. Receipt Card (Form I-551)
-            if (code === '4') {
-                issuingAuthList = {'DOJINS':super._('DOJINS')};
-                issuingAuth = 'DOJINS';
-                numberMaxLength = 13;
-            }
-
-            // 5 - Foreign Passport
-            if (code === '5') {
-                issuingAuthList = JSON.parse(super._('countries'));
-                issuingAuth = null;
-
-                numberMaxLength = 12;
-
-                fields.filterCombolist(
-                    fields._listADoc2,
-                    {1: super._('temporaryI551stamp'), 2: super._('mrivstamp')},
-                    '1',
-                    fields,
-                    fields.processListABC);
-
-                fields.filterCombolist(
-                    fields._listAIssuingAuthority2,
-                    {'USCIS':super._('USCIS'), 'DOJINS':super._('DOJINS')},
-                    'USCIS',
-                    fields,
-                    fields.processListABC);
-
-                fields._listADocNumber2.attr('readOnly', 'true').val(na);
-            }
-
-            // 10 - Receipt: Form I-94/I-94A w/I-551 stamp, photo
-            if (code === '10') {
-                issuingAuthList = {'DHS':super._('DHS')};
-                issuingAuth = 'DHS';
-                
-                numberMaxLength = 11;
-                numberFormat = /^\d+$/;
-            }
-
-            // 12 - Receipt replacement Perm. Res. Card (Form I-551)
-            if (code === '12') {
-                issuingAuthList = {'USCIS':super._('USCIS')};
-                issuingAuth = 'USCIS';
-
-                numberMaxLength = 13;
-            }
-
-            // Alien authorized to work
-            // 6 - Employment Auth. Document (Form I-766)
-            if (code === '6') {
-                issuingAuthList = {'USCIS':super._('USCIS')};
-                issuingAuth = 'USCIS';
-                numberMaxLength = 13;
-
-                // I-766 can be expired in conjuction with I-797C (up to 180 days);
-                fields._listADocExpDate.datepicker('option', 'minDate', 
-                    new Date(Date.now() - 180 * 24 * 3600 * 1000));
-            }
-
-            // 7 - Foreign Passport, work-authorized nonimmigrant
-            // 14 - Receipt: Replacement Foreign Passport, work-authorized nonimmigrant
-            if (['7', '14'].indexOf(code) >= 0) {
-                issuingAuthList = JSON.parse(super._('countries'));
-                issuingAuth = null;
-
-                numberMaxLength = 12;
-
-                fields.filterCombolist(
-                    fields._listADoc2,
-                    {3: super._('formI94'), 4: super._('formI94receipt')},
-                    '3',
-                    fields,
-                    fields.processListABC);
-
-                fields.filterCombolist(
-                    fields._listAIssuingAuthority2,
-                    {'USCIS':super._('USCIS'), 'CBP':super._('CBP')},
-                    'USCIS',
-                    fields,
-                    fields.processListABC);
-
-                fields.filterCombolist(
-                    fields._listADoc3,
-                    {0: na, 1: super._('formI20'), 2: super._('formDS2019')},
-                    '0',
-                    fields,
-                    fields.processListABC);
-
-                fields.filterCombolist(fields._listAIssuingAuthority3, {0:na}, '0', fields, fields.processListABC);
-                fields._listADocNumber3.attr('readOnly', 'true').val(na);
-                fields._listADocExpDate3.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(na);
-            }
-
-            // 8 - FSM Passport with Form I-94
-            if (code === '8') {
-                issuingAuthList = {'FSM':super._('FSM')};
-                issuingAuth = 'FSM';
-
-                numberMaxLength = 12;
-
-                fields.filterCombolist(
-                    fields._listADoc2,
-                    {3: super._('formI94'), 4: super._('formI94receipt')},
-                    '3',
-                    fields,
-                    fields.processListABC);
-
-                fields.filterCombolist(
-                    fields._listAIssuingAuthority2,
-                    {'USCIS':super._('USCIS'), 'CBP':super._('CBP')},
-                    'USCIS',
-                    fields,
-                    fields.processListABC);
-            }
-
-            // 9 - RMI Passport with Form I-94
-            if (code === '9') {
-                issuingAuthList = {'RMI':super._('RMI')};
-                issuingAuth = 'RMI';
-        
-                numberMaxLength = 12;
-
-                fields.filterCombolist(
-                    fields._listADoc2,
-                    {3: super._('formI94'), 4: super._('formI94receipt')},
-                    '3',
-                    fields,
-                    fields.processListABC);
-
-                fields.filterCombolist(
-                    fields._listAIssuingAuthority2,
-                    {'USCIS':super._('USCIS'), 'CBP':super._('CBP')},
-                    'USCIS',
-                    fields,
-                    fields.processListABC);
-            }
-
-            // 11 - Receipt: Form I-94/I-94A w/refugee stamp
-            if (code === '11') {
-                issuingAuthList = {'DHS':super._('DHS')};
-                issuingAuth = 'DHS';
-                
-                numberMaxLength = 11;
-                numberFormat = /^\d+$/;
-            }
-
-            // 13 - Receipt replacement EAD (Form I-766)
-            if (code === '13') {
-                issuingAuthList = {'USCIS':super._('USCIS')};
-                issuingAuth = 'USCIS';
-        
-                numberMaxLength = 13;
-            }
-
-            // 15 - Receipt: Replacement FSM Passport with Form I-94
-            if (code === '15') {
-                issuingAuthList = {'FSM':super._('FSM')};
-                issuingAuth = 'FSM';
-
-                numberMaxLength = 12;
-            }
-
-            // 16 - Receipt: Replacement RMI Passport with Form I-94
-            if (code === '16') {
-                issuingAuthList = {'RMI':super._('RMI')};
-                issuingAuth = 'RMI';
-        
-                numberMaxLength = 12;
-            }
-
-            fields._listADocNumber
-            .prop('maxLength', numberMaxLength)
-            .keypress(e => numberFormat.test(String.fromCharCode(e.which)));
-
-            fields.filterCombolist(
-                fields._listAIssuingAuthority,
-                issuingAuthList,
-                issuingAuth,
-                fields,
-                fields.processListABC);
-
-            if (['1', '2', '3', '4', '6', '10', '11', '12'].indexOf(code) >= 0) {
-                fields.filterCombolist(fields._listADoc2, {0:na}, '0', fields, fields.processListABC);
-                fields.filterCombolist(fields._listAIssuingAuthority2, {0:na}, '0', fields, fields.processListABC);
-                fields._listADocNumber2.attr('readOnly', 'true').val(na);
-                fields._listADocExpDate2.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(na);
-            }
-
-            if (['1', '2', '3', '4', '5', '6', '8', '9', '10', '11', '12', '15', '16'].indexOf(code) >= 0) {
-                fields.filterCombolist(fields._listADoc3, {0:na}, '0', fields, fields.processListABC);
-                fields.filterCombolist(fields._listAIssuingAuthority3, {0:na}, '0', fields, fields.processListABC);
-                fields._listADocNumber3.attr('readOnly', 'true').val(na);
-                fields._listADocExpDate3.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(na);
-            }
-
-            // List B area
-            fields.filterCombolist(fields._listBDoc, {0:na}, '0', fields, fields.processListABC);
-            fields.filterCombolist(fields._listBIssuingAuthority, {0:na}, '0', fields, fields.processListABC);
-            fields._listBDocNumber.attr('readOnly', 'true').val(na);
-            fields._listBDocExpDate.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(na);
-
-            // List C area
-            fields.filterCombolist(fields._listCDoc, {0:na}, '0', fields, fields.processListABC);
-            fields.filterCombolist(fields._listCIssuingAuthority, {0:na}, '0', fields, fields.processListABC);
-            fields._listCDocNumber.attr('readOnly', 'true').val(na);
-            fields._listCDocExpDate.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(na);
+            fields.listADocTitle(ddl, code, fields);
 
             break;
 
         case 'ListADocTitle2':
-            // 1 - Temporary I-551 Stamp
-            if (code === '1'){
-                fields.filterCombolist(
-                    fields._listAIssuingAuthority2,
-                    {'USCIS':super._('USCIS'), 'DOJINS':super._('DOJINS')},
-                    'USCIS',
-                    fields,
-                    fields.processListABC);
-            }
-
-            // 2 - Machine-readable immigrant visa (MRIV)
-            if (code === '2') {
-                fields.filterCombolist(
-                    fields._listAIssuingAuthority2,
-                    {'USDS':super._('USDS')},
-                    'USDS',
-                    fields,
-                    fields.processListABC);
-                }
-
-                numberMaxLength = 11;
-
-            // 3 - Form I-94/I-94A
-            if (code === '3') {
-                numberMaxLength = 11;
-                numberFormat = /^\d+$/;
-            }
-
-            // 4 - Receipt: Replacement Form I-94/I-94A
-            // default parameters
-
-            fields._listADocNumber2
-            .prop('maxLength', numberMaxLength)
-            .keypress(e => numberFormat.test(String.fromCharCode(e.which)));
-
-            fields._listADocExpDate2
-            .unbind('keypress');
+            fields.listADocTitle2(ddl, code, fields);
 
             break;
         
         case 'ListADocTitle3':
-            // 0 - N/A
-            if (code === '0') {
-                fields.filterCombolist(fields._listAIssuingAuthority3, {0:na}, '0', fields, fields.processListABC);
-                fields._listADocNumber3.attr('readOnly', 'true').val(na);
-                fields._listADocExpDate3.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(na);
-            }
-
-            // 1 - Form I-20
-            if (code === '1') {
-                fields.filterCombolist(
-                    fields._listAIssuingAuthority3,
-                    {'ICE':super._('ICE'), 'DOJINS':super._('DOJINS')},
-                    'ICE',
-                    fields,
-                    fields.processListABC);
-                
-                fields._listADocNumber3.removeAttr('readOnly').val('');
-                fields._listADocExpDate3.removeAttr('readOnly')
-                .unbind('keypress')
-                .keypress(e =>
-                    /[\d/]/g.test(String.fromCharCode(e.which)) ||
-                    this.NAFormat.test(String.fromCharCode(e.which))
-                ).val('').datepicker('option', 'showOn', 'focus');
-            }
-
-            // 2 - Form DS-2019
-            if (code === '2') {
-                fields.filterCombolist(
-                    fields._listAIssuingAuthority3,
-                    {'USDS':super._('USDS')},
-                    'USDS',
-                    fields,
-                    fields.processListABC);
-                
-                fields._listADocNumber3.removeAttr('readOnly').val('');
-                fields._listADocExpDate3.removeAttr('readOnly')
-                .unbind('keypress')
-                .keypress(e =>
-                    /[\d/]/g.test(String.fromCharCode(e.which)) ||
-                    this.NAFormat.test(String.fromCharCode(e.which))
-                ).val('').datepicker('option', 'showOn', 'focus');
-            }
+            fields.listADocTitle3(ddl, code, fields);
 
             break;
 
         case 'ListBDocTitle':
-            // 1 - Driver’s license issued by state/territory
-            // 2 - ID card issued by state/territory
-            if (['1', '2'].indexOf(code) >= 0) {
-                issuingAuthList = JSON.parse(super._('usstates'));
-                issuingAuth = null;
+            fields.listBDocTitle(ddl, code, fields);
 
-                numberMaxLength = 14;
-            }
+            break;
 
-            // 11 - Canadian driver’s license
-            if (code === '11') {
-                issuingAuthList = JSON.parse(super._('canada'));
-                issuingAuth = null;
-            }
-
-            fields.filterCombolist(
-                fields._listBIssuingAuthority,
-                issuingAuthList,
-                issuingAuth,
-                fields,
-                fields.processListABC);
+        case 'ListCDocTitle':
+            fields.listCDocTitle(ddl, code, fields);
 
             break;
         }
@@ -588,8 +275,8 @@ class USI9Fields extends PDFForm {
                 6: this._('tribalDocument'),
                 7: this._('formI197'),
                 8: this._('formI179'),
-                11: this._('birthCertificate'),
-                12: this._('tribalDocumentreceipt')
+                11: this._('birthCertificateReceipt'),
+                12: this._('tribalDocumentReceipt')
             });
         }
 
@@ -603,5 +290,533 @@ class USI9Fields extends PDFForm {
         $.each(listC, (i, v) => listC[i] = decodeURIComponent(v));
 
         return listC;
+    }
+
+    private listADocTitle(ddl: string, code: string, fields: USI9Fields) {
+        let USDS = 'USDS';
+        let USCIS = 'USCIS'
+        let DOJINS = 'DOJINS';
+        let DHS = 'DHS';
+        let CBP = 'CBP';
+        let FSM = 'FSM';
+        let RMI = 'RMI';
+
+        // restore min date after 6:I-766
+        fields._listADocExpDate.datepicker('option', 'minDate', new Date());
+            
+        // US Citizens & Non-citizen nationals
+        // 1 - U.S. Passport
+        // 2 - U.S. Passport Card
+        if (['1', '2'].indexOf(code) >= 0) {
+            this.issuingAuthList = {USDS:super._(USDS)};
+            this.issuingAuth = USDS;
+            this.numberMaxLength = 9;
+        }
+        
+        // LPR
+        // 3 - Perm. Resident Card (Form I-551)
+        if (code === '3') {
+            this.issuingAuthList = {USCIS:super._(USCIS), DOJINS:super._(DOJINS)};
+            this.issuingAuth = USCIS;
+            this.numberMaxLength = 13;
+        }
+        
+        // 4 - Alien Reg. Receipt Card (Form I-551)
+        if (code === '4') {
+            this.issuingAuthList = {DOJINS:super._(DOJINS)};
+            this.issuingAuth = DOJINS;
+            this.numberMaxLength = 13;
+        }
+        
+        // 5 - Foreign Passport
+        if (code === '5') {
+            this.issuingAuthList = JSON.parse(super._('countries'));
+            this.issuingAuth = null;        
+            this.numberMaxLength = 12;
+        
+            fields.filterCombolist(
+                fields._listADoc2,
+                {1: super._('temporaryI551stamp'), 2: super._('mrivstamp')},
+                '1',
+                fields,
+                fields.processListABC);
+        
+            fields.filterCombolist(
+                fields._listAIssuingAuthority2,
+                {USCIS:super._(USCIS), DOJINS:super._(DOJINS)},
+                USCIS,
+                fields,
+                fields.processListABC);
+        
+            fields._listADocNumber2.attr('readOnly', 'true').val(this.na);
+        }
+        
+        // 10 - Receipt: Form I-94/I-94A w/I-551 stamp, photo
+        if (code === '10') {
+            this.issuingAuthList = {DHS:super._(DHS)};
+            this.issuingAuth = DHS;            
+            this.numberMaxLength = 11;
+            this.fieldFormat = /^\d+$/;
+        }
+        
+        // 12 - Receipt replacement Perm. Res. Card (Form I-551)
+        if (code === '12') {
+            this.issuingAuthList = {USCIS:super._(USCIS)};
+            this.issuingAuth = USCIS;        
+            this.numberMaxLength = 13;
+        }
+        
+        // Alien authorized to work
+        // 6 - Employment Auth. Document (Form I-766)
+        if (code === '6') {
+            this.issuingAuthList = {USCIS:super._(USCIS)};
+            this.issuingAuth = USCIS;
+            this.numberMaxLength = 13;
+        
+            // I-766 can be expired in conjuction with I-797C (up to 180 days);
+            fields._listADocExpDate.datepicker('option', 'minDate', 
+                new Date(Date.now() - 180 * 24 * 3600 * 1000));
+        }
+        
+        // 7 - Foreign Passport, work-authorized nonimmigrant
+        // 14 - Receipt: Replacement Foreign Passport, work-authorized nonimmigrant
+        if (['7', '14'].indexOf(code) >= 0) {
+            this.issuingAuthList = JSON.parse(super._('countries'));
+            this.issuingAuth = null;        
+            this.numberMaxLength = 12;
+        
+            fields.filterCombolist(
+                fields._listADoc2,
+                {3: super._('formI94'), 4: super._('formI94receipt')},
+                '3',
+                fields,
+                fields.processListABC);
+        
+            fields.filterCombolist(
+                fields._listAIssuingAuthority2,
+                {USCIS:super._(USCIS), CBP:super._(CBP)},
+                USCIS,
+                fields,
+                fields.processListABC);
+        
+            fields.filterCombolist(
+                fields._listADoc3,
+                {0: this.na, 1: super._('formI20'), 2: super._('formDS2019')},
+                '0',
+                fields,
+                fields.processListABC);
+        
+            fields.filterCombolist(fields._listAIssuingAuthority3, {0:this.na}, '0', fields, fields.processListABC);
+            fields._listADocNumber3.attr('readOnly', 'true').val(this.na);
+            fields._listADocExpDate3.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+        }
+        
+        // 8 - FSM Passport with Form I-94
+        if (code === '8') {
+            this.issuingAuthList = {FSM:super._(FSM)};
+            this.issuingAuth = FSM;        
+            this.numberMaxLength = 12;
+        
+            fields.filterCombolist(
+                fields._listADoc2,
+                {3: super._('formI94'), 4: super._('formI94receipt')},
+                '3',
+                fields,
+                fields.processListABC);
+        
+            fields.filterCombolist(
+                fields._listAIssuingAuthority2,
+                {USCIS:super._(USCIS), CBP:super._(CBP)},
+                USCIS,
+                fields,
+                fields.processListABC);
+        }
+        
+        // 9 - RMI Passport with Form I-94
+        if (code === '9') {
+            this.issuingAuthList = {RMI:super._(RMI)};
+            this.issuingAuth = RMI;
+            this.numberMaxLength = 12;
+        
+            fields.filterCombolist(
+                fields._listADoc2,
+                {3: super._('formI94'), 4: super._('formI94receipt')},
+                '3',
+                fields,
+                fields.processListABC);
+        
+            fields.filterCombolist(
+                fields._listAIssuingAuthority2,
+                {USCIS:super._(USCIS), CBP:super._(CBP)},
+                USCIS,
+                fields,
+                fields.processListABC);
+        }
+        
+        // 11 - Receipt: Form I-94/I-94A w/refugee stamp
+        if (code === '11') {
+            this.issuingAuthList = {DHS:super._(DHS)};
+            this.issuingAuth = DHS;      
+            this.numberMaxLength = 11;
+            this.fieldFormat = /^\d+$/;
+        }
+        
+        // 13 - Receipt replacement EAD (Form I-766)
+        if (code === '13') {
+            this.issuingAuthList = {USCIS:super._(USCIS)};
+            this.issuingAuth = USCIS;        
+            this.numberMaxLength = 13;
+        }
+        
+        // 15 - Receipt: Replacement FSM Passport with Form I-94
+        if (code === '15') {
+            this.issuingAuthList = {'FSM':super._('FSM')};
+            this.issuingAuth = 'FSM';
+            this.numberMaxLength = 12;
+        }
+        
+        // 16 - Receipt: Replacement RMI Passport with Form I-94
+        if (code === '16') {
+            this.issuingAuthList = {RMI:super._(RMI)};
+            this.issuingAuth = RMI;
+            this.numberMaxLength = 12;
+        }
+        
+        fields._listADocNumber
+        .prop('maxLength', this.numberMaxLength)
+        .keypress(e => this.fieldFormat.test(String.fromCharCode(e.which)));
+        
+        fields.filterCombolist(
+            fields._listAIssuingAuthority,
+            this.issuingAuthList,
+            this.issuingAuth,
+            fields,
+            fields.processListABC);
+        
+        if (['1', '2', '3', '4', '6', '10', '11', '12'].indexOf(code) >= 0) {
+            fields.filterCombolist(fields._listADoc2, {0:this.na}, '0', fields, fields.processListABC);
+            fields.filterCombolist(fields._listAIssuingAuthority2, {0:this.na}, '0', fields, fields.processListABC);
+            fields._listADocNumber2.attr('readOnly', 'true').val(this.na);
+            fields._listADocExpDate2.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+        }
+        
+        if (['1', '2', '3', '4', '5', '6', '8', '9', '10', '11', '12', '15', '16'].indexOf(code) >= 0) {
+            fields.filterCombolist(fields._listADoc3, {0:this.na}, '0', fields, fields.processListABC);
+            fields.filterCombolist(fields._listAIssuingAuthority3, {0:this.na}, '0', fields, fields.processListABC);
+            fields._listADocNumber3.attr('readOnly', 'true').val(this.na);
+            fields._listADocExpDate3.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+        }
+        
+        // List B area
+        fields.filterCombolist(fields._listBDoc, {0:this.na}, '0', fields, fields.processListABC);
+        fields.filterCombolist(fields._listBIssuingAuthority, {0:this.na}, '0', fields, fields.processListABC);
+        fields._listBDocNumber.attr('readOnly', 'true').val(this.na);
+        fields._listBDocExpDate.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+        
+        // List C area
+        fields.filterCombolist(fields._listCDoc, {0:this.na}, '0', fields, fields.processListABC);
+        fields.filterCombolist(fields._listCIssuingAuthority, {0:this.na}, '0', fields, fields.processListABC);
+        fields._listCDocNumber.attr('readOnly', 'true').val(this.na);
+        fields._listCDocExpDate.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+    }
+
+    private listADocTitle2(ddl: string, code: string, fields: USI9Fields) {
+        let USDS = 'USDS';
+        let USCIS = 'USCIS';
+        let DOJINS = 'DOJINS';
+
+        // 1 - Temporary I-551 Stamp
+        if (code === '1'){
+            fields.filterCombolist(
+                fields._listAIssuingAuthority2,
+                {USCIS:super._(USCIS), DOJINS:super._(DOJINS)},
+                USCIS,
+                fields,
+                fields.processListABC);
+        }
+
+        // 2 - Machine-readable immigrant visa (MRIV)
+        if (code === '2') {
+            fields.filterCombolist(
+                fields._listAIssuingAuthority2,
+                {USDS:super._(USDS)},
+                USDS,
+                fields,
+                fields.processListABC);
+            }
+
+            this.numberMaxLength = 11;
+
+        // 3 - Form I-94/I-94A
+        if (code === '3') {
+            this.numberMaxLength = 11;
+            this.fieldFormat = /^\d+$/;
+        }
+
+        // 4 - Receipt: Replacement Form I-94/I-94A
+        // default parameters
+
+        fields._listADocNumber2
+        .prop('maxLength', this.numberMaxLength)
+        .keypress(e => this.fieldFormat.test(String.fromCharCode(e.which)));
+
+        fields._listADocExpDate2
+        .unbind('keypress');
+    }
+
+    private listADocTitle3(ddl: string, code: string, fields: USI9Fields) {
+        let ICE = 'ICE';
+        let DOJINS = 'DOJINS';
+        let USDS = 'USDS';
+
+        // 0 - N/A
+        if (code === '0') {
+            fields.filterCombolist(fields._listAIssuingAuthority3, {0:this.na}, '0', fields, fields.processListABC);
+            fields._listADocNumber3.attr('readOnly', 'true').val(this.na);
+            fields._listADocExpDate3.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+        }
+
+        // 1 - Form I-20
+        if (code === '1') {
+            fields.filterCombolist(
+                fields._listAIssuingAuthority3,
+                {ICE:super._(ICE), DOJINS:super._(DOJINS)},
+                ICE,
+                fields,
+                fields.processListABC);
+            
+            fields._listADocNumber3.removeAttr('readOnly').val('');
+            fields._listADocExpDate3.removeAttr('readOnly')
+            .unbind('keypress')
+            .keypress(e =>
+                /[\d/]/g.test(String.fromCharCode(e.which)) ||
+                this.NAFormat.test(String.fromCharCode(e.which)))
+            .val('').datepicker('option', 'showOn', 'focus');
+        }
+
+        // 2 - Form DS-2019
+        if (code === '2') {
+            fields.filterCombolist(
+                fields._listAIssuingAuthority3,
+                {USDS:super._(USDS)},
+                USDS,
+                fields,
+                fields.processListABC);
+            
+            fields._listADocNumber3.removeAttr('readOnly').val('');
+            fields._listADocExpDate3.removeAttr('readOnly')
+            .unbind('keypress')
+            .keypress(e =>
+                /[\d/]/g.test(String.fromCharCode(e.which)) ||
+                this.NAFormat.test(String.fromCharCode(e.which))
+            ).val('').datepicker('option', 'showOn', 'focus');
+        }
+    }
+
+    private listBDocTitle(ddl: string, code: string, fields: USI9Fields) {
+        let USCG = 'USCG';
+
+        fields._listBDocNumber
+        .prop('maxLength', '100')
+        .unbind('keypress');
+
+        // NOT 19 - Individual under Age 18
+        // NOT 20 - Special Placement
+        if (['19', '20'].indexOf(code) < 0) {
+            fields._listBDocNumber.removeAttr('readOnly').val('');
+            fields._listBDocExpDate.removeAttr('readOnly')
+            .unbind('keypress')
+            .keypress(e =>
+                /[\d/]/g.test(String.fromCharCode(e.which)) ||
+                this.NAFormat.test(String.fromCharCode(e.which)))
+            .val('').datepicker('option', 'showOn', 'focus');
+        }
+
+        // 1 - Driver’s license issued by state/territory
+        // 2 - ID card issued by state/territory
+        // 21 - Receipt: Replacement driver’s license
+        // 22 - Receipt: Replacement ID card
+        if (['1', '2', '21', '22'].indexOf(code) >= 0) {
+            this.issuingAuthList = JSON.parse(super._('usstates'));
+            this.issuingAuth = null;
+
+            this.numberMaxLength = 14;
+
+            fields._listBDocNumber
+            .prop('maxLength', this.numberMaxLength)
+            .keypress(e => this.fieldFormat.test(String.fromCharCode(e.which)));
+
+            fields._listBIssuingAuthority.attr('readOnly', 'true');
+        }
+
+        // 3 - Government ID
+        // 4 - School ID
+        // 5 - Voter registration card
+        // 6 - U.S. Military card
+        // 7 - U.S. Military draft record
+        // 8 - Military dependent’s ID card
+        // 10 - Native American tribal document
+        // 12 - School record (under age 18)
+        // 13 - Report card (under age 18)
+        // 14 - Clinic record (under age 18)
+        // 15 - Doctor record (under age 18)
+        // 16 - Hospital record (under age 18)
+        // 17 - Day-care record (under age 18)
+        // 18 - Nursery school record (under age 18)
+        // 23 - Receipt: Replacement Gov’t ID
+        // 24 - Receipt: Replacement School ID
+        // 25 - Receipt: Replacement Voter reg. card
+        // 26 - Receipt: Replacement U.S. Military card
+        // 27 - Receipt: Replacement U.S. Military dep.
+        // 28 - Receipt: Replacement Military draft record
+        // 31 - Receipt: Replacement Native American tribal doc
+        // 32 - Replacement School record (under age 18)
+        // 33 - Replacement Report card (under age 18)
+        // 34 - Receipt: Replacement Clinic record (under age 18)
+        // 35 - Receipt: Replacement Doctor record (under age 18)
+        // 36 - Receipt: Replacement Hospital record (under age 18)
+        // 37 - Receipt: Replacement Day-care record (under age 18)
+        // 38 - Receipt: Replacement Nursery school record (under age 18)
+        if (['3', '4', '5', '6', '7', '8', '10', '12', '13', '14', '15', '16', '17', '18',
+             '23', '24', '25', '26', '27', '28', '31', '32', '33', '34', '35', '36', '37', '38'].indexOf(code) >= 0) {
+            this.issuingAuthList = {};
+            this.issuingAuth = null;
+
+            fields._listBIssuingAuthority.removeAttr('readOnly');
+        }
+
+        // 9 - USCG Merchant Mariner card
+        // 29 - Receipt: Replacement Merchant Mariner
+        if (['9', '29'].indexOf(code) >= 0) {
+            this.issuingAuthList = {USCG: super._(USCG)};
+            this.issuingAuth = USCG;
+
+            fields._listBIssuingAuthority.attr('readOnly', 'true');
+        }
+
+        // 11 - Canadian driver’s license
+        // 30 - Receipt: Replacement Canadian DL
+        if (['11', '30'].indexOf(code) >= 0) {
+            this.issuingAuthList = JSON.parse(super._('canada'));
+            this.issuingAuth = null;
+
+            fields._listBIssuingAuthority.attr('readOnly', 'true');
+        }
+
+        // 19 - Individual under Age 18
+        // 20 - Special Placement
+        if (['19'].indexOf(code) >= 0) {
+            this.issuingAuthList = {'0':this.na};
+            this.issuingAuth = '0';
+
+            fields._listBDocNumber.attr('readOnly', 'true').val(this.na);
+            fields._listBDocExpDate.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+        }
+
+        fields.filterCombolist(
+            fields._listBIssuingAuthority,
+            this.issuingAuthList,
+            this.issuingAuth,
+            fields,
+            fields.processListABC);
+    }
+
+    private listCDocTitle(ddl: string, code: string, fields: USI9Fields) {
+        let SSA = 'SSA';
+        let USDHHS = 'USDHHS';
+        let SSD = 'SSD';
+        let DHEW = 'DHEW';
+        let USDS = 'USDS';
+        let DOJINS = 'DOJINS';
+
+        fields._listCIssuingAuthority.attr('readOnly', 'true');
+        fields._listCDocExpDate.removeAttr('readOnly')
+        .unbind('keypress')
+        .keypress(e =>
+            /[\d/]/g.test(String.fromCharCode(e.which)) ||
+            this.NAFormat.test(String.fromCharCode(e.which)))
+        .val('').datepicker('option', 'showOn', 'focus');
+
+        // 1 - (Unrestricted) Social Security Card
+        if (code === '1') {
+            this.issuingAuthList = {SSA: super._(SSA), USDHHS: super._(USDHHS), SSD: super._(SSD), DHEW: super._(DHEW)};
+            this.issuingAuth = SSA;
+
+            this.numberMaxLength = 11;
+            this.fieldFormat = /^[\d-]+$/;
+
+            fields._listCDocExpDate.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+        }
+
+        // 2 - Form FS-545
+        // 3 - Form DS-1350
+        // 4 - Form FS-240
+        if (['2', '3', '4'].indexOf(code) >= 0) {
+            this.issuingAuthList = {USDS: super._(USDS)};
+            this.issuingAuth = USDS;
+        }
+
+        // 5 - Birth Certificate
+        // 6 - Native American tribal document
+        // 11 - Receipt: Replacement Birth Certificate
+        // 12 - Receipt: Replacement Native American Tribal Doc.
+        if (['5', '6', '11', '12'].indexOf(code) >= 0) {
+            this.issuingAuthList = {};
+            this.issuingAuth = null;
+
+            fields._listCIssuingAuthority.removeAttr('readOnly');
+        }
+
+        // 7 - Form I-197
+        // 8 - Form I-179
+        if (['7', '8'].indexOf(code) >= 0) {
+            this.issuingAuthList = {DOJINS: super._(DOJINS)};
+            this.issuingAuth = DOJINS;
+        }
+
+        // 9 - Employment Auth. document (DHS) List C #7
+        // 13 - Receipt: Replacement Employment Auth. Doc. (DHS)
+        if (['9', '13'].indexOf(code) >= 0) {
+            let name = decodeURIComponent(code === '9' ? super._('listC7') : super._('listC7Receipt'));
+            this.issuingAuthList = {0: name};
+            this.issuingAuth = '0';
+
+            fields._listCIssuingAuthority
+            .removeAttr('readOnly')
+            .keypress(e => {
+                let val = fields._listCIssuingAuthority.val() as string;
+
+                if (val.length >= name.length) {
+                    return val.substr(0, name.length) === name;
+                }
+
+                return true;
+            })
+            .keyup(e => {
+                let val = fields._listCIssuingAuthority.val() as string;
+
+                if (val.length <= name.length ||
+                (val.length === name.length + 1 && val.substr(0, name.length) !== name)) {
+                    fields._listCIssuingAuthority.val(name);
+                }
+            });
+        }
+
+        // 10 - Receipt: Replacement Unrestricted SS Card
+        if (code === '10') {
+            this.issuingAuthList = {SSA: super._(SSA)};
+            this.issuingAuth = SSA;
+        }
+
+        fields._listCDocNumber
+        .prop('maxLength', this.numberMaxLength)
+        .keypress(e => this.fieldFormat.test(String.fromCharCode(e.which)));
+
+        fields.filterCombolist(
+            fields._listCIssuingAuthority,
+            this.issuingAuthList,
+            this.issuingAuth,
+            fields,
+            fields.processListABC);
     }
 }
