@@ -78,6 +78,10 @@ class PDFForm {
         defaultValue: string,
         fields: USI9Fields,
         callback: any) {
+        if (!ctrl) {
+            return;
+        }
+
         var options = ctrl.parent().children().filter('.combo-content');
         for (let index in items) {
             options.children().filter('[value="' + index + '"]').text(items[index]);

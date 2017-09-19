@@ -7,7 +7,6 @@ class USI9Fields extends PDFForm {
     protected _firstNameHelp: JQuery<HTMLElement>;
     protected _middleInitial: JQuery<HTMLElement>;
     protected _middleInitialHelp: JQuery<HTMLElement>;
-    protected _middleInitialSection2: JQuery<HTMLElement>
     protected _otherNames: JQuery<HTMLElement>;
     protected _otherNamesHelp: JQuery<HTMLElement>;
     protected _address: JQuery<HTMLElement>;
@@ -83,6 +82,7 @@ class USI9Fields extends PDFForm {
     protected _lastNameSection2Help: JQuery<HTMLElement>;
     protected _firstNameSection2: JQuery<HTMLElement>;
     protected _firstNameSection2Help: JQuery<HTMLElement>;
+    protected _middleInitialSection2: JQuery<HTMLElement>;
     protected _middleInitialSection2Help: JQuery<HTMLElement>;
 
     protected _listADoc: JQuery<HTMLElement>;
@@ -127,6 +127,50 @@ class USI9Fields extends PDFForm {
     protected _listCDocExpDateHelp: JQuery<HTMLElement>;
     protected _additionalInfo: JQuery<HTMLElement>;
     protected _additionalInfoHelp: JQuery<HTMLElement>;
+
+    protected _hireDate: JQuery<HTMLElement>;
+    protected _hireDateHelp: JQuery<HTMLElement>;
+    protected _sgnEmployer: JQuery<HTMLElement>;
+    protected _sgnEmployerHelp: JQuery<HTMLElement>;
+    protected _employerSignDate: JQuery<HTMLElement>;
+    protected _employerSignDateHelp: JQuery<HTMLElement>;
+    protected _employerTitle: JQuery<HTMLElement>;
+    protected _employerTitleHelp: JQuery<HTMLElement>;
+    protected _employerLastName: JQuery<HTMLElement>;
+    protected _employerLastNameHelp: JQuery<HTMLElement>;
+    protected _employerFirstName: JQuery<HTMLElement>;
+    protected _employerFirstNameHelp: JQuery<HTMLElement>;
+    protected _employerName: JQuery<HTMLElement>;
+    protected _employerNameHelp: JQuery<HTMLElement>;
+    protected _employerAddress: JQuery<HTMLElement>;
+    protected _employerAddressHelp: JQuery<HTMLElement>;
+    protected _employerCity: JQuery<HTMLElement>;
+    protected _employerCityHelp: JQuery<HTMLElement>;
+    protected _employerState: JQuery<HTMLElement>;
+    protected _employerStateHelp: JQuery<HTMLElement>;
+    protected _employerZip: JQuery<HTMLElement>;
+    protected _employerZipHelp: JQuery<HTMLElement>;
+
+    protected _newlastName: JQuery<HTMLElement>;
+    protected _newlastNameHelp: JQuery<HTMLElement>;
+    protected _newfirstName: JQuery<HTMLElement>;
+    protected _newfirstNameHelp: JQuery<HTMLElement>;
+    protected _newmiddleInitial: JQuery<HTMLElement>;
+    protected _newmiddleInitialHelp: JQuery<HTMLElement>;
+    protected _rehireDate: JQuery<HTMLElement>;
+    protected _rehireDateHelp: JQuery<HTMLElement>;
+    protected _docTitleSec3: JQuery<HTMLElement>;
+    protected _docTitleSec3Help: JQuery<HTMLElement>;
+    protected _docNumberSec3: JQuery<HTMLElement>;
+    protected _docNumberSec3Help: JQuery<HTMLElement>;
+    protected _expDateSec3: JQuery<HTMLElement>;
+    protected _expDateSec3Help: JQuery<HTMLElement>;
+    protected _sgnEmployerSec3: JQuery<HTMLElement>;
+    protected _sgnEmployerSec3Help: JQuery<HTMLElement>;
+    protected _employerSignDateSec3: JQuery<HTMLElement>;
+    protected _employerSignDateSec3Help: JQuery<HTMLElement>;
+    protected _employerNameSec3: JQuery<HTMLElement>;
+    protected _employerNameSec3Help: JQuery<HTMLElement>;
 
     protected na = super._('NA');
 
@@ -195,6 +239,42 @@ class USI9Fields extends PDFForm {
             fields.listCDocTitle(ddl, code, fields);
 
             break;
+        }
+    }
+
+    protected getListAContent(citizenship: string) {
+        let usCitizenorNational = {0:this.na, 1:this._('uspassport'), 2:this._('uspassportcard')};
+        let lpr = {
+            0:this.na,
+            3:this._('permanentresidentcard'),
+            4:this._('alienresidentcard'),
+            5:this._('foreignpassport'),
+            10:this._('I551I94receipt'),
+            12:this._('I551receipt')
+        };
+        let alien = {
+            0:this.na,
+            6:this._('eadI766'),
+            7:this._('foreinpassportnonimmigrant'),
+            8:this._('FSMpassport'),
+            9:this._('RMIpassport'),
+            11:this._('I94refugeestampreceipt'),
+            13:this._('I766receipt'),
+            14:this._('foreinpassportnonimmigrantreceipt'),
+            15:this._('FSMpassportreceipt'),
+            16:this._('RMIpassportreceipt')
+        };
+
+        switch (citizenship)
+        {
+            case '0': case null:
+                return $.extend(usCitizenorNational, lpr, alien);
+            case '1': case '2':
+                return usCitizenorNational;
+            case '3':
+                return lpr;
+            case '4':
+                return alien;
         }
     }
 
@@ -620,6 +700,8 @@ class USI9Fields extends PDFForm {
         .prop('maxLength', '100')
         .unbind('keypress');
 
+        this.clearListA(fields);
+
         // NOT 19 - Individual under Age 18
         // NOT 20 - Special Placement
         if (['19', '20'].indexOf(code) < 0) {
@@ -719,6 +801,7 @@ class USI9Fields extends PDFForm {
             this.issuingAuth,
             fields,
             fields.processListABC);
+
     }
 
     private listCDocTitle(ddl: string, code: string, fields: USI9Fields) {
@@ -728,6 +811,8 @@ class USI9Fields extends PDFForm {
         let DHEW = 'DHEW';
         let USDS = 'USDS';
         let DOJINS = 'DOJINS';
+
+        this.clearListA(fields);
 
         fields._listCIssuingAuthority.attr('readOnly', 'true');
         fields._listCDocExpDate.removeAttr('readOnly')
@@ -818,5 +903,29 @@ class USI9Fields extends PDFForm {
             this.issuingAuth,
             fields,
             fields.processListABC);
+    }
+
+    private clearListA(fields: USI9Fields) {
+        // List A area
+        fields.filterCombolist(
+            fields._listADoc,
+            fields._listBDoc.val() === this.na && fields._listCDoc.val() === this.na ?
+            this.getListAContent(this._immigrationStatus.val() as string) : {0: this.na},
+            '0',
+            fields, fields.processListABC);
+    
+        fields.filterCombolist(fields._listAIssuingAuthority, {0:this.na}, '0', fields, fields.processListABC);
+        fields._listADocNumber.attr('readOnly', 'true').val(this.na);
+        fields._listADocExpDate.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+        
+        fields.filterCombolist(fields._listADoc2, {0:this.na}, '0', fields, fields.processListABC);
+        fields.filterCombolist(fields._listAIssuingAuthority2, {0:this.na}, '0', fields, fields.processListABC);
+        fields._listADocNumber2.attr('readOnly', 'true').val(this.na);
+        fields._listADocExpDate2.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+    
+        fields.filterCombolist(fields._listADoc3, {0:this.na}, '0', fields, fields.processListABC);
+        fields.filterCombolist(fields._listAIssuingAuthority3, {0:this.na}, '0', fields, fields.processListABC);
+        fields._listADocNumber3.attr('readOnly', 'true').val(this.na);
+        fields._listADocExpDate3.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
     }
 }

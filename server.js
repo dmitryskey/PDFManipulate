@@ -167,7 +167,7 @@ app.post('/PDFEditor', (req, res) => {
                     });
                 }
                 else if (data.type === 'application/pdf' && data.mode === 'edit') {
-                    fs.copy('templates/' + data.templateid + '.pdf', 'data/' + uuid, err => {
+                    fs.copy('templates/forms/' + data.locale + '/' + data.templateid + '.pdf', 'data/' + uuid, err => {
                         if (err) {
                             console.log(err);
                         }

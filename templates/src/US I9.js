@@ -74,6 +74,9 @@ var PDFForm = (function () {
         }
     };
     PDFForm.prototype.filterCombolist = function (ctrl, items, defaultValue, fields, callback) {
+        if (!ctrl) {
+            return;
+        }
         var options = ctrl.parent().children().filter('.combo-content');
         for (var index in items) {
             options.children().filter('[value="' + index + '"]').text(items[index]);
@@ -171,6 +174,41 @@ var USI9Fields = (function (_super) {
             case 'ListCDocTitle':
                 fields.listCDocTitle(ddl, code, fields);
                 break;
+        }
+    };
+    USI9Fields.prototype.getListAContent = function (citizenship) {
+        var usCitizenorNational = { 0: this.na, 1: this._('uspassport'), 2: this._('uspassportcard') };
+        var lpr = {
+            0: this.na,
+            3: this._('permanentresidentcard'),
+            4: this._('alienresidentcard'),
+            5: this._('foreignpassport'),
+            10: this._('I551I94receipt'),
+            12: this._('I551receipt')
+        };
+        var alien = {
+            0: this.na,
+            6: this._('eadI766'),
+            7: this._('foreinpassportnonimmigrant'),
+            8: this._('FSMpassport'),
+            9: this._('RMIpassport'),
+            11: this._('I94refugeestampreceipt'),
+            13: this._('I766receipt'),
+            14: this._('foreinpassportnonimmigrantreceipt'),
+            15: this._('FSMpassportreceipt'),
+            16: this._('RMIpassportreceipt')
+        };
+        switch (citizenship) {
+            case '0':
+            case null:
+                return $.extend(usCitizenorNational, lpr, alien);
+            case '1':
+            case '2':
+                return usCitizenorNational;
+            case '3':
+                return lpr;
+            case '4':
+                return alien;
         }
     };
     USI9Fields.prototype.getListBContent = function (dob) {
@@ -438,6 +476,7 @@ var USI9Fields = (function (_super) {
         fields._listBDocNumber
             .prop('maxLength', '100')
             .unbind('keypress');
+        this.clearListA(fields);
         if (['19', '20'].indexOf(code) < 0) {
             fields._listBDocNumber.removeAttr('readOnly').val('');
             fields._listBDocExpDate.removeAttr('readOnly')
@@ -489,6 +528,7 @@ var USI9Fields = (function (_super) {
         var DHEW = 'DHEW';
         var USDS = 'USDS';
         var DOJINS = 'DOJINS';
+        this.clearListA(fields);
         fields._listCIssuingAuthority.attr('readOnly', 'true');
         fields._listCDocExpDate.removeAttr('readOnly')
             .unbind('keypress')
@@ -547,6 +587,21 @@ var USI9Fields = (function (_super) {
             .keypress(function (e) { return _this.fieldFormat.test(String.fromCharCode(e.which)); });
         fields.filterCombolist(fields._listCIssuingAuthority, this.issuingAuthList, this.issuingAuth, fields, fields.processListABC);
     };
+    USI9Fields.prototype.clearListA = function (fields) {
+        fields.filterCombolist(fields._listADoc, fields._listBDoc.val() === this.na && fields._listCDoc.val() === this.na ?
+            this.getListAContent(this._immigrationStatus.val()) : { 0: this.na }, '0', fields, fields.processListABC);
+        fields.filterCombolist(fields._listAIssuingAuthority, { 0: this.na }, '0', fields, fields.processListABC);
+        fields._listADocNumber.attr('readOnly', 'true').val(this.na);
+        fields._listADocExpDate.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+        fields.filterCombolist(fields._listADoc2, { 0: this.na }, '0', fields, fields.processListABC);
+        fields.filterCombolist(fields._listAIssuingAuthority2, { 0: this.na }, '0', fields, fields.processListABC);
+        fields._listADocNumber2.attr('readOnly', 'true').val(this.na);
+        fields._listADocExpDate2.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+        fields.filterCombolist(fields._listADoc3, { 0: this.na }, '0', fields, fields.processListABC);
+        fields.filterCombolist(fields._listAIssuingAuthority3, { 0: this.na }, '0', fields, fields.processListABC);
+        fields._listADocNumber3.attr('readOnly', 'true').val(this.na);
+        fields._listADocExpDate3.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+    };
     return USI9Fields;
 }(PDFForm));
 var USI9Section1 = (function (_super) {
@@ -575,7 +630,6 @@ var USI9Section1 = (function (_super) {
     };
     USI9Section1.prototype.renderNameAndAddress = function (dialog, lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, otherNames, otherNamesHelp, address, addressHelp, apptNumber, apptNumberHelp, city, cityHelp, state, stateHelp, zip, zipHelp) {
         var _this = this;
-        var self = this;
         this._lastName = lastName
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
             .tooltip({ content: this._('lastnamehelp.tooltip') })
@@ -658,7 +712,6 @@ var USI9Section1 = (function (_super) {
     };
     USI9Section1.prototype.renderPersonalData = function (dialog, dob, dobHelp, ssn11, ssn12, ssn13, ssn21, ssn22, ssn31, ssn32, ssn33, ssn34, ssnHelp, email, emailHelp, phone, phoneHelp) {
         var _this = this;
-        var na = this._('NA');
         var maxDOB = new Date();
         maxDOB.setFullYear(maxDOB.getFullYear() - 14);
         this._dob = dob
@@ -671,7 +724,7 @@ var USI9Section1 = (function (_super) {
             maxDate: maxDOB
         })
             .change(function (e) {
-            return _this.filterCombolist(_this._listBDoc, _this.getListBContent(e.target.value), na, _this, _this.processListABC);
+            return _this.filterCombolist(_this._listBDoc, _this.getListBContent(e.target.value), _this.na, _this, _this.processListABC);
         });
         this._dobHelp = this.renderHelpIcon(dobHelp, this._('dobhelp.caption'), dialog, this._('dobhelp.text'));
         this.renderSSNFields([ssn11, ssn12, ssn13, ssn21, ssn22, ssn31, ssn32, ssn33, ssn34]);
@@ -691,7 +744,8 @@ var USI9Section1 = (function (_super) {
     USI9Section1.prototype.renderCitizenship = function (dialog, citizen, citizenHelp, national, nationalHelp, lpr, lprHelp, alien, alienHelp, uscisNumberHelp, lpruscisNumPrefix, lpruscisNum, lpruscisNumType, alienWorkAuthDate, alienuscisNumPrefix, alienuscisNum, alienuscisNumType, admissionNum, admissionNumHelp, passportNum, passportNumHelp, countryOfIssuance, countryOfIssuanceHelp, sgnEmployee, sgnEmployeeHelp, sgnEmployeeDate, sgnEmployeeDateHelp) {
         var _this = this;
         var citizenships = [citizen, national, lpr, alien];
-        var na = this._('NA');
+        this.filterCombolist(this._listADoc, this.getListAContent('0'), this.na, this, this.processListABC);
+        this.filterCombolist(this._listCDoc, this.getListCContent('0'), this.na, this, this.processListABC);
         this._citizen = citizen
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
             .tooltip({ content: this._('citizenhelp.tooltip') })
@@ -699,11 +753,8 @@ var USI9Section1 = (function (_super) {
             _this.selectCheckmark(_this._citizen, citizenships);
             _this.processLPR(_this._citizen.prop('checked'));
             _this.processAlien(_this._citizen.prop('checked'));
-            _this.filterCombolist(_this._listCDoc, _this.getListCContent(_this._immigrationStatus.val(_this._citizen.prop('checked') ? 1 : 0).val()), na, _this, _this.processListABC);
-            _this.filterCombolist(_this._listADoc, { 0: na }, null, _this, _this.processListABC);
-            if (_this._citizen.prop('checked')) {
-                _this.filterCombolist(_this._listADoc, { 0: na, 1: _this._('uspassport'), 2: _this._('uspassportcard') }, na, _this, _this.processListABC);
-            }
+            _this.filterCombolist(_this._listADoc, _this.getListAContent(_this._citizen.prop('checked') ? '1' : '0'), _this.na, _this, _this.processListABC);
+            _this.filterCombolist(_this._listCDoc, _this.getListCContent(_this._immigrationStatus.val(_this._citizen.prop('checked') ? 1 : 0).val()), _this.na, _this, _this.processListABC);
         });
         this._citizenHelp = this.renderHelpIcon(citizenHelp, this._('citizenhelp.caption'), dialog, this._('citizenhelp.text'));
         this._national = national
@@ -713,11 +764,8 @@ var USI9Section1 = (function (_super) {
             _this.selectCheckmark(_this._national, citizenships);
             _this.processLPR(_this._national.prop('checked'));
             _this.processAlien(_this._national.prop('checked'));
-            _this.filterCombolist(_this._listCDoc, _this.getListCContent(_this._immigrationStatus.val(_this._national.prop('checked') ? 2 : 0).val()), na, _this, _this.processListABC);
-            _this.filterCombolist(_this._listADoc, { 0: na }, null, _this, _this.processListABC);
-            if (_this._national.prop('checked')) {
-                _this.filterCombolist(_this._listADoc, { 0: na, 1: _this._('uspassport'), 2: _this._('uspassportcard') }, na, _this, _this.processListABC);
-            }
+            _this.filterCombolist(_this._listADoc, _this.getListAContent(_this._national.prop('checked') ? '2' : '0'), _this.na, _this, _this.processListABC);
+            _this.filterCombolist(_this._listCDoc, _this.getListCContent(_this._immigrationStatus.val(_this._national.prop('checked') ? 2 : 0).val()), _this.na, _this, _this.processListABC);
         });
         this._nationalHelp = this.renderHelpIcon(nationalHelp, this._('nationalhelp.caption'), dialog, this._('nationalhelp.text'));
         this._lpr = lpr
@@ -733,18 +781,11 @@ var USI9Section1 = (function (_super) {
                 _this._lpruscisNumType.prop('disabled', false);
                 _this.filterCombolist(_this._lpruscisNumType, { 'A': _this._('aliennumber'), 'U': _this._('uscisnumber') }, null, _this, _this.processListABC);
             }
-            _this.filterCombolist(_this._listCDoc, _this.getListCContent(_this._immigrationStatus.val(_this._lpr.prop('checked') ? 3 : 0).val()), na, _this, _this.processListABC);
             _this.filterCombolist(_this._listADoc, {}, null, _this, _this.processListABC);
             if (_this._lpr.prop('checked')) {
-                _this.filterCombolist(_this._listADoc, {
-                    0: na,
-                    3: _this._('permanentresidentcard'),
-                    4: _this._('alienresidentcard'),
-                    5: _this._('foreignpassport'),
-                    10: _this._('I551I94receipt'),
-                    12: _this._('I551receipt')
-                }, na, _this, _this.processListABC);
+                _this.filterCombolist(_this._listADoc, _this.getListAContent('3'), _this.na, _this, _this.processListABC);
             }
+            _this.filterCombolist(_this._listCDoc, _this.getListCContent(_this._immigrationStatus.val(_this._lpr.prop('checked') ? 3 : 0).val()), _this.na, _this, _this.processListABC);
         });
         this._lprHelp = this.renderHelpIcon(lprHelp, this._('lprhelp.caption'), dialog, this._('lprhelp.text'));
         this._alien = alien
@@ -769,22 +810,8 @@ var USI9Section1 = (function (_super) {
                 _this._countryOfIssuance.prop('disabled', false);
                 _this.filterCombolist(_this._countryOfIssuance, JSON.parse(_this._('countries')), null, _this, _this.processListABC);
             }
-            _this.filterCombolist(_this._listCDoc, _this.getListCContent(_this._immigrationStatus.val(_this._alien.prop('checked') ? 4 : 0).val()), na, _this, _this.processListABC);
-            _this.filterCombolist(_this._listADoc, {}, null, _this, _this.processListABC);
-            if (_this._alien.prop('checked')) {
-                _this.filterCombolist(_this._listADoc, {
-                    0: na,
-                    6: _this._('eadI766'),
-                    7: _this._('foreinpassportnonimmigrant'),
-                    8: _this._('FSMpassport'),
-                    9: _this._('RMIpassport'),
-                    11: _this._('I94refugeestampreceipt'),
-                    13: _this._('I766receipt'),
-                    14: _this._('foreinpassportnonimmigrantreceipt'),
-                    15: _this._('FSMpassportreceipt'),
-                    16: _this._('RMIpassportreceipt')
-                }, na, _this, _this.processListABC);
-            }
+            _this.filterCombolist(_this._listADoc, _this.getListAContent(_this._alien.prop('checked') ? '4' : '0'), _this.na, _this, _this.processListABC);
+            _this.filterCombolist(_this._listCDoc, _this.getListCContent(_this._immigrationStatus.val(_this._alien.prop('checked') ? 4 : 0).val()), _this.na, _this, _this.processListABC);
         });
         this._alienHelp = this.renderHelpIcon(alienHelp, this._('alienhelp.caption'), dialog, this._('alienhelp.text'), 500);
         this._uscisNumberHelp = this.renderHelpIcon(uscisNumberHelp, this._('uscisnumberhelp.caption'), dialog, this._('uscisnumberhelp.text'));
@@ -818,17 +845,15 @@ var USI9Section1 = (function (_super) {
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
             .tooltip({ content: this._('uscisnumber.tooltip') })
             .prop('maxLength', 9)
-            .keypress(function (e) {
-            return _this.numberFormat.test(String.fromCharCode(e.which));
-        })
+            .keypress(function (e) { return _this.numberFormat.test(String.fromCharCode(e.which)); })
             .change(function () {
             if (_this._alienuscisNum.val() !== '') {
                 if (_this._alienuscisNumType.val() === '') {
                     _this.filterCombolist(_this._alienuscisNumType, { 'A': _this._('aliennumber'), 'U': _this._('uscisnumber') }, null, _this, _this.processListABC);
                 }
-                _this._admissionNum.val(na);
-                _this._passportNum.val(na);
-                _this.filterCombolist(_this._countryOfIssuance, { 0: na }, na, _this, _this.processListABC);
+                _this._admissionNum.val(_this.na);
+                _this._passportNum.val(_this.na);
+                _this.filterCombolist(_this._countryOfIssuance, { 0: _this.na }, _this.na, _this, _this.processListABC);
             }
             else {
                 _this.filterCombolist(_this._alienuscisNumType, {}, null, _this, _this.processListABC);
@@ -852,10 +877,10 @@ var USI9Section1 = (function (_super) {
         })
             .change(function () {
             if (_this._admissionNum.val() !== '') {
-                _this._alienuscisNum.val(na);
-                _this.filterCombolist(_this._alienuscisNumType, { 0: na }, na, _this, _this.processListABC);
-                _this._passportNum.val(na);
-                _this.filterCombolist(_this._countryOfIssuance, { 0: na }, na, _this, _this.processListABC);
+                _this._alienuscisNum.val(_this.na);
+                _this.filterCombolist(_this._alienuscisNumType, { 0: _this.na }, _this.na, _this, _this.processListABC);
+                _this._passportNum.val(_this.na);
+                _this.filterCombolist(_this._countryOfIssuance, { 0: _this.na }, _this.na, _this, _this.processListABC);
             }
             else {
                 _this._alienuscisNum.val('');
@@ -871,9 +896,9 @@ var USI9Section1 = (function (_super) {
             .prop('maxLength', 12)
             .change(function () {
             if (_this._passportNum.val() !== '') {
-                _this._alienuscisNum.val(na);
-                _this.filterCombolist(_this._alienuscisNumType, { 0: na }, na, _this, _this.processListABC);
-                _this._admissionNum.val(na);
+                _this._alienuscisNum.val(_this.na);
+                _this.filterCombolist(_this._alienuscisNumType, { 0: _this.na }, _this.na, _this, _this.processListABC);
+                _this._admissionNum.val(_this.na);
                 if (_this._countryOfIssuance.val() === '') {
                     _this.filterCombolist(_this._countryOfIssuance, JSON.parse(_this._('countries')), null, _this, _this.processListABC);
                 }
@@ -891,8 +916,8 @@ var USI9Section1 = (function (_super) {
         this._countryOfIssuanceHelp = this.renderHelpIcon(countryOfIssuanceHelp, this._('coihelp.caption'), dialog, this._('coihelp.text'));
         this._sgnEmployee = sgnEmployee
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
-            .tooltip({ content: this._('employee.tooltip') });
-        this._sgnEmployeeHelp = this.renderHelpIcon(sgnEmployeeHelp, this._('employeehelp.caption'), dialog, this._('employeehelp.text'), 700);
+            .tooltip({ content: this._('sgnemployee.tooltip') });
+        this._sgnEmployeeHelp = this.renderHelpIcon(sgnEmployeeHelp, this._('sgnemployeehelp.caption'), dialog, this._('sgnemployeehelp.text'), 700);
         this._sgnEmployeeDate = sgnEmployeeDate
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
             .tooltip({ content: this._('employeedate.tooltip') })
@@ -990,8 +1015,9 @@ var USI9Section2 = (function (_super) {
     function USI9Section2() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    USI9Section2.prototype.renderSection2 = function (dialog, employeeInfoHelp, lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, immigrationStatus, immigrationStatusHelp, listADoc, listADocHelp, listAIssuingAuthority, listAIssuingAuthorityHelp, listADocNumber, listADocNumberHelp, listADocExpDate, listADocExpDateHelp, listADoc2, listADoc2Help, listAIssuingAuthority2, listAIssuingAuthority2Help, listADocNumber2, listADocNumber2Help, listADocExpDate2, listADocExpDate2Help, listADoc3, listADoc3Help, listAIssuingAuthority3, listAIssuingAuthority3Help, listADocNumber3, listADocNumber3Help, listADocExpDate3, listADocExpDate3Help, listBDoc, listBDocHelp, listBIssuingAuthority, listBIssuingAuthorityHelp, listBDocNumber, listBDocNumberHelp, listBDocExpDate, listBDocExpDateHelp, listCDoc, listCDocHelp, listCIssuingAuthority, listCIssuingAuthorityHelp, listCDocNumber, listCDocNumberHelp, listCDocExpDate, listCDocExpDateHelp, additionalInfo, additionalInfoHelp) {
+    USI9Section2.prototype.renderSection2 = function (dialog, employeeInfoHelp, lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, immigrationStatus, immigrationStatusHelp, listADoc, listADocHelp, listAIssuingAuthority, listAIssuingAuthorityHelp, listADocNumber, listADocNumberHelp, listADocExpDate, listADocExpDateHelp, listADoc2, listADoc2Help, listAIssuingAuthority2, listAIssuingAuthority2Help, listADocNumber2, listADocNumber2Help, listADocExpDate2, listADocExpDate2Help, listADoc3, listADoc3Help, listAIssuingAuthority3, listAIssuingAuthority3Help, listADocNumber3, listADocNumber3Help, listADocExpDate3, listADocExpDate3Help, listBDoc, listBDocHelp, listBIssuingAuthority, listBIssuingAuthorityHelp, listBDocNumber, listBDocNumberHelp, listBDocExpDate, listBDocExpDateHelp, listCDoc, listCDocHelp, listCIssuingAuthority, listCIssuingAuthorityHelp, listCDocNumber, listCDocNumberHelp, listCDocExpDate, listCDocExpDateHelp, additionalInfo, additionalInfoHelp, hireDate, hireDateHelp, sgnEmployer, sgnEmployerHelp, employerSignDate, employerSignDateHelp, employerTitle, employerTitleHelp, employerLastName, employerLastNameHelp, employerFirstName, employerFirstNameHelp, employerName, employerNameHelp, employerAddress, employerAddressHelp, employerCity, employerCityHelp, employerState, employerStateHelp, employerZip, employerZipHelp) {
         var _this = this;
+        $('a').prop('target', '_blank');
         this._employeeInfoHelp = this.renderHelpIcon(employeeInfoHelp, this._('employeeinfosection2help.caption'), dialog, this._('employeeinfosection2help.text'));
         this._lastNameSection2 = lastName;
         this._lastNameSection2Help = this.renderHelpIcon(lastNameHelp, this._('lastnamesection2help.caption'), dialog, this._('lastnamesection2help.text'));
@@ -1001,6 +1027,20 @@ var USI9Section2 = (function (_super) {
         this._middleInitialSection2Help = this.renderHelpIcon(middleInitialHelp, this._('middleinitialsection2help.caption'), dialog, this._('middleinitialsection2help.text'));
         this._immigrationStatus = immigrationStatus;
         this._immigrationStatusHelp = this.renderHelpIcon(immigrationStatusHelp, this._('immigrationstatushelp.caption'), dialog, this._('immigrationstatushelp.text'));
+        this.renderListABC(dialog, listADoc, listADocHelp, listAIssuingAuthority, listAIssuingAuthorityHelp, listADocNumber, listADocNumberHelp, listADocExpDate, listADocExpDateHelp, listADoc2, listADoc2Help, listAIssuingAuthority2, listAIssuingAuthority2Help, listADocNumber2, listADocNumber2Help, listADocExpDate2, listADocExpDate2Help, listADoc3, listADoc3Help, listAIssuingAuthority3, listAIssuingAuthority3Help, listADocNumber3, listADocNumber3Help, listADocExpDate3, listADocExpDate3Help, listBDoc, listBDocHelp, listBIssuingAuthority, listBIssuingAuthorityHelp, listBDocNumber, listBDocNumberHelp, listBDocExpDate, listBDocExpDateHelp, listCDoc, listCDocHelp, listCIssuingAuthority, listCIssuingAuthorityHelp, listCDocNumber, listCDocNumberHelp, listCDocExpDate, listCDocExpDateHelp);
+        this._additionalInfo = additionalInfo
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('additionalinfo.tooltip') });
+        this._additionalInfoHelp = this.renderHelpIcon(additionalInfoHelp, this._('additionalinfohelp.caption'), dialog, this._('additionalinfohelp.text'), 500);
+        this._hireDate = hireDate
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('hiredate.tooltip') })
+            .datepicker({ minDate: new Date() });
+        this._hireDateHelp = this.renderHelpIcon(hireDateHelp, this._('hiredatehelp.caption'), dialog, this._('hiredatehelp.text'));
+        this.renderEmployerData(dialog, sgnEmployer, sgnEmployerHelp, employerSignDate, employerSignDateHelp, employerTitle, employerTitleHelp, employerLastName, employerLastNameHelp, employerFirstName, employerFirstNameHelp, employerName, employerNameHelp, employerAddress, employerAddressHelp, employerCity, employerCityHelp, employerState, employerStateHelp, employerZip, employerZipHelp);
+    };
+    USI9Section2.prototype.renderListABC = function (dialog, listADoc, listADocHelp, listAIssuingAuthority, listAIssuingAuthorityHelp, listADocNumber, listADocNumberHelp, listADocExpDate, listADocExpDateHelp, listADoc2, listADoc2Help, listAIssuingAuthority2, listAIssuingAuthority2Help, listADocNumber2, listADocNumber2Help, listADocExpDate2, listADocExpDate2Help, listADoc3, listADoc3Help, listAIssuingAuthority3, listAIssuingAuthority3Help, listADocNumber3, listADocNumber3Help, listADocExpDate3, listADocExpDate3Help, listBDoc, listBDocHelp, listBIssuingAuthority, listBIssuingAuthorityHelp, listBDocNumber, listBDocNumberHelp, listBDocExpDate, listBDocExpDateHelp, listCDoc, listCDocHelp, listCIssuingAuthority, listCIssuingAuthorityHelp, listCDocNumber, listCDocNumberHelp, listCDocExpDate, listCDocExpDateHelp) {
+        var _this = this;
         this._listADoc = listADoc
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
             .tooltip({ content: this._('listadoc.tooltip') });
@@ -1108,10 +1148,52 @@ var USI9Section2 = (function (_super) {
             minDate: new Date()
         });
         this._listCDocExpDateHelp = this.renderHelpIcon(listCDocExpDateHelp, this._('listcexpdatehelp.caption'), dialog, this._('listcexpdatehelp.text'), 500);
-        this._additionalInfo = additionalInfo
+    };
+    USI9Section2.prototype.renderEmployerData = function (dialog, sgnEmployer, sgnEmployerHelp, employerSignDate, employerSignDateHelp, employerTitle, employerTitleHelp, employerLastName, employerLastNameHelp, employerFirstName, employerFirstNameHelp, employerName, employerNameHelp, employerAddress, employerAddressHelp, employerCity, employerCityHelp, employerState, employerStateHelp, employerZip, employerZipHelp) {
+        var _this = this;
+        this._sgnEmployer = sgnEmployer
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
-            .tooltip({ content: this._('additionalinfo.tooltip') });
-        this._additionalInfoHelp = this.renderHelpIcon(additionalInfoHelp, this._('additionalinfohelp.caption'), dialog, this._('additionalinfohelp.text'), 500);
+            .tooltip({ content: this._('sgnemployer.tooltip') });
+        this._sgnEmployerHelp = this.renderHelpIcon(sgnEmployerHelp, this._('sgnemployerhelp.caption'), dialog, this._('sgnemployerhelp.text'), 500);
+        this._employerSignDate = employerSignDate
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('employersigndate.tooltip') })
+            .datepicker({ minDate: new Date() });
+        this._employerSignDateHelp = this.renderHelpIcon(employerSignDateHelp, this._('employersigndatehelp.caption'), dialog, this._('employersigndatehelp.text'), 500);
+        this._employerTitle = employerTitle
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('employertitle.tooltip') });
+        this._employerTitleHelp = this.renderHelpIcon(employerTitleHelp, this._('employertitlehelp.caption'), dialog, this._('employertitlehelp.text'), 500);
+        this._employerLastName = employerLastName
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('employerlastname.tooltip') });
+        this._employerLastNameHelp = this.renderHelpIcon(employerLastNameHelp, this._('employerlastnamehelp.caption'), dialog, this._('employerlastnamehelp.text'), 500);
+        this._employerFirstName = employerFirstName
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('employerfirstname.tooltip') });
+        this._employerFirstNameHelp = this.renderHelpIcon(employerFirstNameHelp, this._('employerfirstnamehelp.caption'), dialog, this._('employerfirstnamehelp.text'), 500);
+        this._employerName = employerName
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('employername.tooltip') });
+        this._employerNameHelp = this.renderHelpIcon(employerNameHelp, this._('employernamehelp.caption'), dialog, this._('employernamehelp.text'), 500);
+        this._employerAddress = employerAddress
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('employeraddress.tooltip') });
+        this._employerAddressHelp = this.renderHelpIcon(employerAddressHelp, this._('employeraddresshelp.caption'), dialog, this._('employeraddresshelp.text'), 500);
+        this._employerCity = employerCity
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('employercity.tooltip') });
+        this._employerCityHelp = this.renderHelpIcon(employerCityHelp, this._('employercityhelp.caption'), dialog, this._('employercityhelp.text'), 500);
+        this._employerState = employerState
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('employerstate.tooltip') });
+        this._employerStateHelp = this.renderHelpIcon(employerStateHelp, this._('employerstatehelp.caption'), dialog, this._('employerstatehelp.text'), 500);
+        this._employerZip = employerZip
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('employerzip.tooltip') })
+            .prop('maxLength', 5)
+            .keypress(function (e) { return _this.zipFormat.test(String.fromCharCode(e.which)); });
+        this._employerZipHelp = this.renderHelpIcon(employerZipHelp, this._('employerziphelp.caption'), dialog, this._('employerziphelp.text'));
     };
     return USI9Section2;
 }(USI9Translator));
@@ -1120,6 +1202,62 @@ var USI9Section3 = (function (_super) {
     function USI9Section3() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    USI9Section3.prototype.renderSection3 = function (dialog, lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, rehireDate, rehireDateHelp, docTitleSec3, docTitleSec3Help, docNumberSec3, docNumberSec3Help, expDateSec3, expDateSec3Help, sgnEmployerSec3, sgnEmployerSec3Help, employerSignDateSec3, employerSignDateSec3Help, employerNameSec3, employerNameSec3Help) {
+        var _this = this;
+        this._newlastName = lastName
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('newlastname.tooltip') })
+            .prop('maxLength', 40)
+            .keypress(function (e) { return _this.nameFormat.test(String.fromCharCode(e.which)); });
+        this._newlastNameHelp = this.renderHelpIcon(lastNameHelp, this._('newlastnamehelp.caption'), dialog, this._('newlastnamehelp.text'));
+        this._newfirstName = firstName
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('newfirstname.tooltip') })
+            .prop('maxLength', 25)
+            .keypress(function (e) { return _this.nameFormat.test(String.fromCharCode(e.which)); });
+        this._newfirstNameHelp = this.renderHelpIcon(firstNameHelp, this._('newfirstnamehelp.caption'), dialog, this._('newfirstnamehelp.text'));
+        this._newmiddleInitial = middleInitial
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('newmiddleinitial.tooltip') })
+            .prop('maxLength', 3)
+            .keypress(function (e) {
+            return _this.nameFormat.test(String.fromCharCode(e.which)) ||
+                _this.NAFormat.test(String.fromCharCode(e.which));
+        });
+        this._newmiddleInitialHelp = this.renderHelpIcon(middleInitialHelp, this._('newmiddleinitialhelp.caption'), dialog, this._('newmiddleinitialhelp.text'));
+        this._rehireDate = rehireDate
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('rehiredate.tooltip') })
+            .datepicker();
+        this._rehireDateHelp = this.renderHelpIcon(rehireDateHelp, this._('rehiredatehelp.caption'), dialog, this._('rehiredatehelp.text'), 500);
+        this._docTitleSec3 = docTitleSec3
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('doctitlesec3.tooltip') });
+        this._docTitleSec3Help = this.renderHelpIcon(docTitleSec3Help, this._('doctitlesec3help.caption'), dialog, this._('doctitlesec3help.text'), 500);
+        this._docNumberSec3 = docNumberSec3
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('docnumbersec3.tooltip') });
+        this._docNumberSec3Help = this.renderHelpIcon(docNumberSec3Help, this._('docnumbersec3help.caption'), dialog, this._('docnumbersec3help.text'), 500);
+        this._expDateSec3 = expDateSec3
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('expdatesec3.tooltip') })
+            .datepicker({ minDate: new Date() });
+        this._expDateSec3Help = this.renderHelpIcon(expDateSec3Help, this._('expdatesec3help.caption'), dialog, this._('expdatesec3help.text'), 500);
+        this._sgnEmployerSec3 = sgnEmployerSec3
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('sgnemployersec3.tooltip') });
+        this._sgnEmployerSec3Help = this.renderHelpIcon(sgnEmployerSec3Help, this._('sgnemployersec3help.caption'), dialog, this._('sgnemployersec3help.text'), 500);
+        this._employerSignDateSec3 = employerSignDateSec3
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('employersigndatesec3.tooltip') })
+            .datepicker({ minDate: new Date() });
+        this._employerSignDateSec3Help = this.renderHelpIcon(employerSignDateSec3Help, this._('employersigndatesec3help.caption'), dialog, this._('employersigndatesec3help.text'), 500);
+        this._employerNameSec3 = employerNameSec3
+            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .tooltip({ content: this._('employernamesec3.tooltip') })
+            .datepicker({ minDate: new Date() });
+        this._employerNameSec3Help = this.renderHelpIcon(employerNameSec3Help, this._('employernamesec3help.caption'), dialog, this._('employernamesec3help.text'), 500);
+    };
     return USI9Section3;
 }(USI9Section2));
 var USI9 = (function (_super) {
@@ -1144,7 +1282,8 @@ var USI9 = (function (_super) {
                 _this.renderTranslatorSection($('#dialogPage'), $('[name=PreparerOrTranslatorNo]'), $('[name=PreparerOrTranslatorYes]'), $('[name=PreparerOrTranslatorHelp]'), $('[name=sgnTranslator]'), $('[name=sgnTranslatorHelp]'), $('[name=TranslatorDate]'), $('[name=TranslatorDateHelp]'), $('[name=TranslatorLastName]'), $('[name=TranslatorLastNameHelp]'), $('[name=TranslatorFirstName]'), $('[name=TranslatorFirstNameHelp]'), $('[name=TranslatorAddress]'), $('[name=TranslatorAddressHelp]'), $('[name=TranslatorCity]'), $('[name=TranslatorCityHelp]'), $('[name=TranslatorState]'), $('[name=TranslatorStateHelp]'), $('[name=TranslatorZip]'), $('[name=TranslatorZipHelp]'));
             }
             if (e.detail.pageNumber === 2) {
-                _this.renderSection2($('#dialogPage'), $('[name=EmployeeInfoSection2Help]'), $('[name=LastNameSection2]'), $('[name=LastNameSection2Help]'), $('[name=FirstNameSection2]'), $('[name=FirstNameSection2Help]'), $('[name=MiddleInitialSection2]'), $('[name=MiddleInitialSection2Help]'), $('[name=ImmigrationStatus]'), $('[name=ImmigrationStatusHelp]'), $('[name=ListADocTitle]'), $('[name=ListADocTitleHelp]'), $('[name=ListAIssuingAuthority]'), $('[name=ListAIssuingAuthorityHelp]'), $('[name=ListADocNumber]'), $('[name=ListADocNumberHelp]'), $('[name=ListAExpDate]'), $('[name=ListAExpDateHelp]'), $('[name=ListADocTitle2]'), $('[name=ListADocTitle2Help]'), $('[name=ListAIssuingAuthority2]'), $('[name=ListAIssuingAuthority2Help]'), $('[name=ListADocNumber2]'), $('[name=ListADocNumber2Help]'), $('[name=ListAExpDate2]'), $('[name=ListAExpDate2Help]'), $('[name=ListADocTitle3]'), $('[name=ListADocTitle3Help]'), $('[name=ListAIssuingAuthority3]'), $('[name=ListAIssuingAuthority3Help]'), $('[name=ListADocNumber3]'), $('[name=ListADocNumber3Help]'), $('[name=ListAExpDate3]'), $('[name=ListAExpDate3Help]'), $('[name=ListBDocTitle]'), $('[name=ListBDocTitleHelp]'), $('[name=ListBIssuingAuthority]'), $('[name=ListBIssuingAuthorityHelp]'), $('[name=ListBDocNumber]'), $('[name=ListBDocNumberHelp]'), $('[name=ListBExpDate]'), $('[name=ListBExpDateHelp]'), $('[name=ListCDocTitle]'), $('[name=ListCDocTitleHelp]'), $('[name=ListCIssuingAuthority]'), $('[name=ListCIssuingAuthorityHelp]'), $('[name=ListCDocNumber]'), $('[name=ListCDocNumberHelp]'), $('[name=ListCExpDate]'), $('[name=ListCExpDateHelp]'), $('[name=AdditionalInfo]'), $('[name=AdditionalInfoHelp]'));
+                _this.renderSection2($('#dialogPage'), $('[name=EmployeeInfoSection2Help]'), $('[name=LastNameSection2]'), $('[name=LastNameSection2Help]'), $('[name=FirstNameSection2]'), $('[name=FirstNameSection2Help]'), $('[name=MiddleInitialSection2]'), $('[name=MiddleInitialSection2Help]'), $('[name=ImmigrationStatus]'), $('[name=ImmigrationStatusHelp]'), $('[name=ListADocTitle]'), $('[name=ListADocTitleHelp]'), $('[name=ListAIssuingAuthority]'), $('[name=ListAIssuingAuthorityHelp]'), $('[name=ListADocNumber]'), $('[name=ListADocNumberHelp]'), $('[name=ListAExpDate]'), $('[name=ListAExpDateHelp]'), $('[name=ListADocTitle2]'), $('[name=ListADocTitle2Help]'), $('[name=ListAIssuingAuthority2]'), $('[name=ListAIssuingAuthority2Help]'), $('[name=ListADocNumber2]'), $('[name=ListADocNumber2Help]'), $('[name=ListAExpDate2]'), $('[name=ListAExpDate2Help]'), $('[name=ListADocTitle3]'), $('[name=ListADocTitle3Help]'), $('[name=ListAIssuingAuthority3]'), $('[name=ListAIssuingAuthority3Help]'), $('[name=ListADocNumber3]'), $('[name=ListADocNumber3Help]'), $('[name=ListAExpDate3]'), $('[name=ListAExpDate3Help]'), $('[name=ListBDocTitle]'), $('[name=ListBDocTitleHelp]'), $('[name=ListBIssuingAuthority]'), $('[name=ListBIssuingAuthorityHelp]'), $('[name=ListBDocNumber]'), $('[name=ListBDocNumberHelp]'), $('[name=ListBExpDate]'), $('[name=ListBExpDateHelp]'), $('[name=ListCDocTitle]'), $('[name=ListCDocTitleHelp]'), $('[name=ListCIssuingAuthority]'), $('[name=ListCIssuingAuthorityHelp]'), $('[name=ListCDocNumber]'), $('[name=ListCDocNumberHelp]'), $('[name=ListCExpDate]'), $('[name=ListCExpDateHelp]'), $('[name=AdditionalInfo]'), $('[name=AdditionalInfoHelp]'), $('[name=HireDate]'), $('[name=HireDateHelp]'), $('[name=sgnEmployer]'), $('[name=sgnEmployerHelp]'), $('[name=EmployerSignDate]'), $('[name=EmployerSignDateHelp]'), $('[name=EmployerTitle]'), $('[name=EmployerTitleHelp]'), $('[name=EmployerLastName]'), $('[name=EmployerLastNameHelp]'), $('[name=EmployerFirstName]'), $('[name=EmployerFirstNameHelp]'), $('[name=EmployerName]'), $('[name=EmployerNameHelp]'), $('[name=EmployerAddress]'), $('[name=EmployerAddressHelp]'), $('[name=EmployerCity]'), $('[name=EmployerCityHelp]'), $('[name=EmployerState]'), $('[name=EmployerStateHelp]'), $('[name=EmployerZip]'), $('[name=EmployerZipHelp]'));
+                _this.renderSection3($('#dialogPage'), $('[name=NewLastName]'), $('[name=NewLastNameHelp]'), $('[name=NewFirstName]'), $('[name=NewFirstNameHelp]'), $('[name=NewMiddleInitial]'), $('[name=NewMiddleInitialHelp]'), $('[name=RehireDate]'), $('[name=RehireDateHelp]'), $('[name=DocTitleSec3]'), $('[name=DocTitleSec3Help]'), $('[name=DocNumberSec3]'), $('[name=DocNumberSec3Help]'), $('[name=ExpDateSec3]'), $('[name=ExpDateSec3Help]'), $('[name=sgnEmployerSec3]'), $('[name=sgnEmployerSec3Help]'), $('[name=EmployerSignDateSec3]'), $('[name=EmployerSignDateSec3Help]'), $('[name=EmployerNameSec3]'), $('[name=EmployerNameSec3Help]'));
             }
         });
     };
