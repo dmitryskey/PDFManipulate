@@ -120,9 +120,47 @@
   border: 1px solid transparent;
   box-sizing: border-box;
   height: 100%;
+  margin: 0;
   padding: 0 1px;
   vertical-align: top;
   width: 100%;
+}
+
+.annotationLayer .textWidgetAnnotation input.inset,
+.annotationLayer .textWidgetAnnotation textarea.inset,
+.annotationLayer .choiceWidgetAnnotation select.inset,
+.annotationLayer .choiceWidgetAnnotation input.inset,
+.annotationLayer .buttonWidgetAnnotation.checkBox input.inset,
+.annotationLayer .buttonWidgetAnnotation.radioButton input.inset {
+  border: 1px solid;
+  border-top-color: gray;
+  border-left-color: gray;
+  border-right-color: lightgray;
+  border-bottom-color: lightgray;
+}
+
+.annotationLayer .textWidgetAnnotation input.beveled,
+.annotationLayer .textWidgetAnnotation textarea.beveled,
+.annotationLayer .choiceWidgetAnnotation select.beveled,
+.annotationLayer .choiceWidgetAnnotation input.beveled,
+.annotationLayer .buttonWidgetAnnotation.checkBox input.beveled,
+.annotationLayer .buttonWidgetAnnotation.radioButton input.beveled {
+  border: 1px solid;
+  border-top-color: white;
+  border-left-color: white;
+  border-right-color: gray;
+  border-bottom-color: gray;
+}
+
+.annotationLayer .buttonWidgetAnnotation.radioButton.circle input {
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+}
+
+.annotationLayer .choiceWidgetAnnotation select option {
+  padding: 0;
 }
 
 .annotationLayer .textWidgetAnnotation textarea {
@@ -193,13 +231,15 @@
   -moz-appearance: none;
   -ms-appearance: none;
   appearance: none;
+  padding: 0;
 }
 
 .annotationLayer .choiceWidgetAnnotation input + span::before {
-  content: "\25BC";
-  right: 1px;
-  top: 15%;
-  zoom: 50%;
+  content: '▼';
+  right: 0;
+  font-size: 8pt;
+  top: 60%;
+  transform: translate(0, -60%);
   position: absolute;
 }
 
@@ -236,25 +276,46 @@
   margin-top: -3px;
 }
 
-.annotationLayer .buttonWidgetAnnotation.checkBox input:checked + span::before {
-  font-family: 'sans-serif';
-  content: '\2713';
+.annotationLayer .buttonWidgetAnnotation.checkBox input:checked + span,
+.annotationLayer .buttonWidgetAnnotation.radioButton input:checked + span::before {
   position: absolute;
   left: 50%;
-  transform: translate(-50%, 0);
-  bottom: 0;
-  zoom: 90%;
-  z-index: -1;
+  top: 50%;
+  transform: translate(-50%, -55%);
+  text-align: center;
+  z-index: 1;
+  cursor: default;
 }
 
-.annotationLayer .buttonWidgetAnnotation.radioButton input:checked + span::before {
-  font-family: 'sans-serif';
-  content: '\2022';
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, 0);
-  bottom: 0;
-  z-index: -1;
+.annotationLayer .buttonWidgetAnnotation.checkBox.check input:checked + span,
+.annotationLayer .buttonWidgetAnnotation.radioButton.check input:checked + span::before,
+.annotationLayer .buttonWidgetAnnotation.checkBox.cross input:checked + span,
+.annotationLayer .buttonWidgetAnnotation.radioButton.cross input:checked + span::before {
+  transform: translate(-50%, -50%);
+}
+
+.annotationLayer .buttonWidgetAnnotation.radioButton.check input:checked + span::before {
+  content: '✓';
+}
+
+.annotationLayer .buttonWidgetAnnotation.radioButton.circle input:checked + span::before {
+  content: '●';
+}
+
+.annotationLayer .buttonWidgetAnnotation.radioButton.cross input:checked + span::before {
+  content: '✕';
+}
+
+.annotationLayer .buttonWidgetAnnotation.radioButton.diamond input:checked + span::before {
+  content: '◆';
+}
+
+.annotationLayer .buttonWidgetAnnotation.radioButton.square input:checked + span::before {
+  content: '■';
+}
+
+.annotationLayer .buttonWidgetAnnotation.radioButton.star input:checked + span::before {
+  content: '★';
 }
 
 .annotationLayer .popupWrapper {
@@ -272,16 +333,19 @@
   padding: 0.6em;
   margin-left: 5px;
   cursor: pointer;
+  font: message-box;
   word-wrap: break-word;
 }
 
 .annotationLayer .popup h1 {
   font-size: 1em;
   border-bottom: 1px solid #000000;
+  margin: 0;
   padding-bottom: 0.2em;
 }
 
 .annotationLayer .popup p {
+  margin: 0;
   padding-top: 0.2em;
 }
 
@@ -290,6 +354,9 @@
 .annotationLayer .squigglyAnnotation,
 .annotationLayer .strikeoutAnnotation,
 .annotationLayer .lineAnnotation svg line,
+.annotationLayer .squareAnnotation svg rect,
+.annotationLayer .circleAnnotation svg ellipse,
+.annotationLayer .stampAnnotation,
 .annotationLayer .fileAttachmentAnnotation {
   cursor: pointer;
 }
