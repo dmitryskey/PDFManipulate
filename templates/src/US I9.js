@@ -105,10 +105,13 @@ var PDFForm = (function () {
     PDFForm.prototype.renderHelpIcon = function (ctrl, title, dialog, text, minWidth) {
         if (minWidth === void 0) { minWidth = 50; }
         var self = this;
-        return ctrl.prop('title', title).attr('icon', 'true').
-            val(String.fromCharCode(0xFFFD)).
-            toggleClass('noHighlight').parent().click(function () {
-            ctrl.blur();
+        var tag = 'div';
+        ctrl.hide().parent().children(tag).remove();
+        return ctrl.parent().append('<' + tag + '>�</' + tag + '>')
+            .children(tag).prop('title', title)
+            .css('color', ctrl.css('color'))
+            .css('font-size', ctrl.css('font-size'))
+            .toggleClass('icon').parent().click(function () {
             self.hideTooltip();
             $('.ui-dialog-titlebar-close').attr('title', '');
             dialog.text('').append(decodeURIComponent(text)).

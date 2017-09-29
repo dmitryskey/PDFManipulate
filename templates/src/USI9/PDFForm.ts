@@ -120,17 +120,22 @@ class PDFForm {
 
     protected renderHelpIcon(ctrl: JQuery<HTMLElement>, title: string, dialog: JQuery<HTMLElement>, text: string, minWidth = 50) {
         let self = this;
-        return ctrl.prop('title', title).attr('icon', 'true').
-            val(String.fromCharCode(0xFFFD)).
-            toggleClass('noHighlight').parent().click(() => {
-                ctrl.blur();
 
-                self.hideTooltip();
+        let tag = 'div';
 
-                $('.ui-dialog-titlebar-close').attr('title', '');
+        ctrl.hide().parent().children(tag).remove();
 
-                dialog.text('').append(decodeURIComponent(text)).
-                    dialog('option', 'minWidth', minWidth).dialog('open');              
-            });
+        return ctrl.parent().append('<' + tag + '>�</' + tag + '>')
+        .children(tag).prop('title', title)
+        .css('color', ctrl.css('color'))
+        .css('font-size', ctrl.css('font-size'))
+        .toggleClass('icon').parent().click(() => {
+            self.hideTooltip();
+
+            $('.ui-dialog-titlebar-close').attr('title', '');
+
+            dialog.text('').append(decodeURIComponent(text)).
+                dialog('option', 'minWidth', minWidth).dialog('open');              
+        });
     }
 }

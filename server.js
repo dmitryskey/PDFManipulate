@@ -281,6 +281,7 @@ var server = app.listen(8305, () => {
     app.use('/data', express.static(path.join(__dirname, 'data')));
     app.use('/templates', express.static(path.join(__dirname, 'templates/lib')));
     app.use('/locale', express.static(path.join(__dirname, 'locale')));
+    app.use('/image', express.static(path.join(__dirname, 'image')));
     app.use('/editor.html', express.static(path.join(__dirname, 'editor.html')));
     app.use('/jquery/jquery.js', express.static(path.join(__dirname, 'jquery/jquery-3.2.1.min.js')));
     app.use('/jquery/jquery-ui.js', express.static(path.join(__dirname, 'jquery/jquery-ui-1.12.1.min.js')));
