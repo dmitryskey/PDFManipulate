@@ -1,7 +1,5 @@
 package com.itextpdfservice;
 
 public class FieldEntry {
-  public String name;
-  public String value;
-  public String operation;
+  public String name, value, operation;
 }

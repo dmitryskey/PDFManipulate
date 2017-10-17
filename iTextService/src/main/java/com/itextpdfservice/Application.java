@@ -6,19 +6,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @SpringBootApplication
 @RestController
 public class Application
 {
     @RequestMapping("/")
-    public String hello() {
-        return "Hello";
+    public String iTextWrapper() {
+        return "iText REST Wrapper";
     }
 
-    @RequestMapping(value="/ex", method=RequestMethod.POST)
-    public String ex(@RequestBody String fields) {
-        return Controller.updatePdf(fields);
+    @CrossOrigin
+    @RequestMapping(value="/update", method=RequestMethod.POST)
+    public String update(@RequestBody String fields) {
+        return Controller.update(fields);
     }
 
     public static void main(String[] args)
