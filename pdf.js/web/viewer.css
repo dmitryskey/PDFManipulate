@@ -126,6 +126,49 @@
   width: 100%;
 }
 
+.annotationLayer .buttonWidgetAnnotation.checkBox input,
+.annotationLayer .buttonWidgetAnnotation.radioButton input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.annotationLayer .buttonWidgetAnnotation.checkBox input + span,
+.annotationLayer .buttonWidgetAnnotation.radioButton input + span {
+  cursor: pointer;
+}
+
+.annotationLayer .buttonWidgetAnnotation.radioButton.circle input {
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+}
+
+.annotationLayer .choiceWidgetAnnotation select option {
+  padding: 0;
+}
+
+.annotationLayer .textWidgetAnnotation textarea {
+  font: message-box;
+  resize: none;
+}
+
+.annotationLayer .textWidgetAnnotation input[disabled],
+.annotationLayer .textWidgetAnnotation textarea[disabled],
+.annotationLayer .choiceWidgetAnnotation select[disabled],
+.annotationLayer .choiceWidgetAnnotation input[disabled],
+.annotationLayer .buttonWidgetAnnotation.checkBox input[disabled],
+.annotationLayer .buttonWidgetAnnotation.checkBox input[disabled] + span,
+.annotationLayer .buttonWidgetAnnotation.radioButton input[disabled] {
+  background: none;
+  border: 1px solid transparent;
+  cursor: not-allowed;
+}
+
 .annotationLayer .textWidgetAnnotation input.inset,
 .annotationLayer .textWidgetAnnotation textarea.inset,
 .annotationLayer .choiceWidgetAnnotation select.inset,
@@ -152,33 +195,6 @@
   border-bottom-color: gray;
 }
 
-.annotationLayer .buttonWidgetAnnotation.radioButton.circle input {
-  border-radius: 50%;
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%);
-}
-
-.annotationLayer .choiceWidgetAnnotation select option {
-  padding: 0;
-}
-
-.annotationLayer .textWidgetAnnotation textarea {
-  font: message-box;
-  resize: none;
-}
-
-.annotationLayer .textWidgetAnnotation input[disabled],
-.annotationLayer .textWidgetAnnotation textarea[disabled],
-.annotationLayer .choiceWidgetAnnotation select[disabled],
-.annotationLayer .choiceWidgetAnnotation input[disabled],
-.annotationLayer .buttonWidgetAnnotation.checkBox input[disabled],
-.annotationLayer .buttonWidgetAnnotation.radioButton input[disabled] {
-  background: none;
-  border: 1px solid transparent;
-  cursor: not-allowed;
-}
-
 .annotationLayer .textWidgetAnnotation input:hover,
 .annotationLayer .textWidgetAnnotation textarea:hover,
 .annotationLayer .choiceWidgetAnnotation select:hover,
@@ -189,7 +205,17 @@
 }
 
 .annotationLayer .textWidgetAnnotation .icon {
+  width: 100%;
+  height: 100%;
+  text-align: center;
   cursor: pointer;
+}
+
+.annotationLayer .textWidgetAnnotation .invalid,
+.annotationLayer .choiceWidgetAnnotation .invalid,
+.annotationLayer .buttonWidgetAnnotation.checkBox .invalid,
+.annotationLayer .buttonWidgetAnnotation.radioButton .invalid {
+  border-color: red;
 }
 
 .annotationLayer .textWidgetAnnotation input:focus,
@@ -220,15 +246,6 @@
    * when the element has focus and revert this when it loses focus.
    */
   width: 115%;
-}
-
-.annotationLayer .buttonWidgetAnnotation.checkBox input,
-.annotationLayer .buttonWidgetAnnotation.radioButton input {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  padding: 0;
 }
 
 .annotationLayer .choiceWidgetAnnotation input + span::before {
@@ -274,45 +291,21 @@
 }
 
 .annotationLayer .buttonWidgetAnnotation.checkBox input:checked + span,
-.annotationLayer .buttonWidgetAnnotation.radioButton input:checked + span::before {
+.annotationLayer .buttonWidgetAnnotation.radioButton input:checked + span {
+  font-family: Helvetica, sans-serif;
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -55%);
+  transform: translate(-50%, -50%); 
   text-align: center;
+  width: 100%;
+  height: 100%;
   z-index: 1;
-  cursor: default;
 }
 
 .annotationLayer .buttonWidgetAnnotation.checkBox.check input:checked + span,
-.annotationLayer .buttonWidgetAnnotation.radioButton.check input:checked + span::before,
-.annotationLayer .buttonWidgetAnnotation.checkBox.cross input:checked + span,
-.annotationLayer .buttonWidgetAnnotation.radioButton.cross input:checked + span::before {
-  transform: translate(-50%, -50%);
-}
-
-.annotationLayer .buttonWidgetAnnotation.radioButton.check input:checked + span::before {
-  content: '✓';
-}
-
-.annotationLayer .buttonWidgetAnnotation.radioButton.circle input:checked + span::before {
-  content: '●';
-}
-
-.annotationLayer .buttonWidgetAnnotation.radioButton.cross input:checked + span::before {
-  content: '✕';
-}
-
-.annotationLayer .buttonWidgetAnnotation.radioButton.diamond input:checked + span::before {
-  content: '◆';
-}
-
-.annotationLayer .buttonWidgetAnnotation.radioButton.square input:checked + span::before {
-  content: '■';
-}
-
-.annotationLayer .buttonWidgetAnnotation.radioButton.star input:checked + span::before {
-  content: '★';
+.annotationLayer .buttonWidgetAnnotation.radioButton.check input:checked + span {
+  transform: translate(-50%, -40%); 
 }
 
 .annotationLayer .popupWrapper {
@@ -353,6 +346,8 @@
 .annotationLayer .lineAnnotation svg line,
 .annotationLayer .squareAnnotation svg rect,
 .annotationLayer .circleAnnotation svg ellipse,
+.annotationLayer .polylineAnnotation svg polyline,
+.annotationLayer .polygonAnnotation svg polygon,
 .annotationLayer .stampAnnotation,
 .annotationLayer .fileAttachmentAnnotation {
   cursor: pointer;
