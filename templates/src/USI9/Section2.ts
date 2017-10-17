@@ -661,7 +661,6 @@ class USI9Section2 extends USI9Translator {
         this._employerZip = employerZip
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('employerzip.tooltip')})
-        .prop('maxLength', 5)
         .keypress(e => this.zipFormat.test(String.fromCharCode(e.which)));
 
         this._employerZipHelp = this.renderHelpIcon(

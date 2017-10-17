@@ -60,7 +60,7 @@ class PDFForm {
         )
     }
 
-    protected _(t: string) {
+    protected _(t: string): string {
         return (document as any).webL10n.get(t);
     }
 
@@ -127,15 +127,16 @@ class PDFForm {
 
         return ctrl.parent().append('<' + tag + '>�</' + tag + '>')
         .children(tag).prop('title', title)
-        .css('color', ctrl.css('color'))
-        .css('font-size', ctrl.css('font-size'))
+        .css({'color': ctrl.css('color'),
+        'font-size': ctrl.css('font-size')})
         .toggleClass('icon').parent().click(() => {
             self.hideTooltip();
 
             $('.ui-dialog-titlebar-close').attr('title', '');
 
-            dialog.text('').append(decodeURIComponent(text)).
-                dialog('option', 'minWidth', minWidth).dialog('open');              
+            dialog.text('').append(decodeURIComponent(text))
+                .dialog('option', 'title', self._('help'))
+                .dialog('option', 'minWidth', minWidth).dialog('open');
         });
     }
 }

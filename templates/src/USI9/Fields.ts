@@ -179,29 +179,69 @@ class USI9Fields extends PDFForm {
     private issuingAuthList: { [index: string]: string; };
     private issuingAuth: string;
 
-    protected validateFields() {
-        var errorMessage = '';
+    private parameterExistsMsg = this._('parameter.exists');
+    private parameterLengthMsg = this._('parameter.length');
+    private parameterFormatMsg = this._('parameter.format');
+    private dateFormatMsg = this._('date.format');
 
-        if (this._lastName.val() === '') {
-            errorMessage += '- ' + this._('lastname.exists') + '\r\n';
-        } else if (this.nameFormat.test(this._lastName.val() as string)) {
-            errorMessage += '- ' + this._('lastname.format') + '\r\n';
+    private invalidFieldClass = 'invalid';
+
+    private validateTextField(field: JQuery<HTMLElement>, parameter: string, regEx: RegExp, errorMessages: string[]): boolean {
+      let errorFlag = true;
+      let length = field.prop('maxLength') ? field.prop('maxLength') : 0;
+
+      if (field.attr('annotation-required') && field.val() === '') {   
+          errorMessages.push(this.parameterExistsMsg.replace('${parameter}', parameter));
+      } else if ((field.val() as string).length > length && length > 0) {
+          errorMessages.push(this.parameterLengthMsg
+            .replace('${parameter}', parameter)
+            .replace('${length}', length.toString()));
+      } else if (regEx && !regEx.test(field.val() as string)) {
+          errorMessages.push(this.parameterFormatMsg.replace('${parameter}', parameter));
+      } else {
+          errorFlag = false;
+      }
+
+      field.toggleClass(this.invalidFieldClass, errorFlag);
+
+      return errorFlag;
+    }
+
+    private validateDateField(field: JQuery<HTMLElement>, parameter: string, regEx: RegExp, errorMessages: string[]): boolean {
+        let errorFlag = true;
+  
+        if (field.attr('annotation-required') && field.val() === '') {   
+            errorMessages.push(this.parameterExistsMsg.replace('${parameter}', parameter));
+        } else if (regEx && !regEx.test(field.val() as string)) {
+            errorMessages.push(this.parameterFormatMsg.replace('${parameter}', parameter));
+        } else {
+            errorFlag = false;
         }
+  
+        field.toggleClass(this.invalidFieldClass, errorFlag);
+  
+        return errorFlag;
+      }
 
-        if (this._firstName.val() === '') {
-            errorMessage += '- ' + this._('firstname.exists') + '\r\n';
-        } else if (this.nameFormat.test(this._firstName.val() as string)) {
-            errorMessage += '- ' + this._('firstname.format') + '\r\n';
-        }
+    protected validateFields(dialog: JQuery<HTMLElement>) {
+        let errorMessages: string[] = [];
 
-        if (this._dob.val() === '') {
-            errorMessage += '- ' + this._('dateofbirth.exists') + '\r\n';
-        } else if (this._dob.val() === '' || this.dateFormat.test(this._dob.val() as string)) {
-            errorMessage += '- ' + this._('dateofbirth.format') + '\r\n';
-        }
+        this.validateTextField(this._lastName, this._('name.last'), this.nameFormat, errorMessages);
+        this.validateTextField(this._firstName, this._('name.first'), this.nameFormat, errorMessages);
+        this.validateTextField(this._middleInitial, this._('name.middleinitial'), this.NAFormat, errorMessages);
+        this.validateDateField(this._dob, this._('date.dob'), this.dateFormat, errorMessages);
 
-        if (errorMessage !== '') {
-            alert(errorMessage);
+        if (errorMessages.length > 0) {
+            var errorMessage = this._('error.header') + '<br />';
+            errorMessages.forEach(element => {
+                errorMessage += ' - ' + element + '<br />';
+            });
+
+            $('.ui-dialog-titlebar-close').attr('title', '');
+            dialog.dialog('option', 'minWidth', 500).text('')
+              .dialog('option', 'title', this._('validation'))
+              .append(errorMessage).dialog('open');
+
             return false;
         } else {
             return true;

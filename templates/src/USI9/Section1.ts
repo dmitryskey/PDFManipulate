@@ -45,11 +45,9 @@ class USI9Section1 extends USI9Fields {
         zip: JQuery<HTMLElement>,
         zipHelp: JQuery<HTMLElement>) {
 
-        // E-Verify requirements
         this._lastName = lastName
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('lastnamehelp.tooltip')})
-        .prop('maxLength', 40)
         .keypress(e => this.nameFormat.test(String.fromCharCode(e.which)))
         .change(() => this._lastNameSection2.val(this._lastName.val()));
 
@@ -60,11 +58,9 @@ class USI9Section1 extends USI9Fields {
             this._('lastnamehelp.text')
         );
 
-        // E-Verify requirements
         this._firstName = firstName
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('firstnamehelp.tooltip')})
-        .prop('maxLength', 25)
         .keypress(e => this.nameFormat.test(String.fromCharCode(e.which)))
         .change(() => this._firstNameSection2.val(this._firstName.val()));
 
@@ -75,11 +71,10 @@ class USI9Section1 extends USI9Fields {
             this._('firstnamehelp.text')
         );
 
-        // E-Verify requirements + N/A option
+        // N/A option
         this._middleInitial = middleInitial
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('middleinitialhelp.tooltip')})
-        .prop('maxLength', 3)
         .keypress(e =>
             this.nameFormat.test(String.fromCharCode(e.which)) ||
             this.NAFormat.test(String.fromCharCode(e.which)))
@@ -92,11 +87,9 @@ class USI9Section1 extends USI9Fields {
             this._('middleinitialhelp.text')
         );
 
-        // E-Verify requirements
         this._otherNames = otherNames
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('othernameshelp.tooltip')})
-        .prop('maxLength', 40)
         .keypress(e =>
             this.nameFormat.test(String.fromCharCode(e.which)) ||
             this.NAFormat.test(String.fromCharCode(e.which)));
@@ -172,7 +165,6 @@ class USI9Section1 extends USI9Fields {
             .attr('nextElement', (this._ssn[i + 1]).attr('name'))
             .focus(e => this.hideTooltip()).prop('title', '')
             .tooltip({content: this._('ssnhelp.tooltip')})
-            .prop('maxLength', 1)
             .keypress(e => {
                 if (this.numberFormat.test(String.fromCharCode(e.which))) {
                     $('[name=' + $(e.target).attr('nextElement') + ']').focus();
@@ -187,7 +179,6 @@ class USI9Section1 extends USI9Fields {
         this._ssn[ssn.length - 1]
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('ssnhelp.tooltip')})
-        .prop('maxLength', 1)
         .keypress(e => this.numberFormat.test(String.fromCharCode(e.which)));
     }
 
@@ -250,7 +241,6 @@ class USI9Section1 extends USI9Fields {
         this._email = email
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('emailhelp.tooltip')})
-        .prop('maxLength', 60);
 
         this._emailHelp = this.renderHelpIcon(
             emailHelp,
@@ -262,7 +252,6 @@ class USI9Section1 extends USI9Fields {
         this._phone = phone
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('phonehelp.tooltip')})
-        .prop('maxLength', 13)
         .keypress(e => this.phoneFormat.test(String.fromCharCode(e.which)));
     
         this._phoneHelp = this.renderHelpIcon(
@@ -464,7 +453,6 @@ class USI9Section1 extends USI9Fields {
         this._lpruscisNum = lpruscisNum
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('uscisnumber.tooltip')})
-        .prop('maxLength', 9)
         .keypress(e => this.numberFormat.test(String.fromCharCode(e.which)));
     
         this._lpruscisNumType = lpruscisNumType
@@ -490,11 +478,9 @@ class USI9Section1 extends USI9Fields {
     
         this._alienuscisNumPrefix = alienuscisNumPrefix;
     
-        // E-Verify requirements
         this._alienuscisNum = alienuscisNum
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('uscisnumber.tooltip')})
-        .prop('maxLength', 9)
         .keypress(e => this.numberFormat.test(String.fromCharCode(e.which)))
         .change(() => {
             if (this._alienuscisNum.val() !== '') {
@@ -526,11 +512,9 @@ class USI9Section1 extends USI9Fields {
         this.assignCombolistEventHandler(this._alienuscisNumType, (e: JQuery.Event) => 
             this._alienuscisNumPrefix.val((e.target as HTMLElement).getAttribute('value') === 'A' ? 'A' : ''));
     
-        // E-Verify requirements
         this._admissionNum = admissionNum
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('admissionnumber.tooltip')})
-        .prop('maxLength', 11)
         .keypress(e =>
             this.numberFormat.test(String.fromCharCode(e.which)))
         .change(() => {
@@ -556,11 +540,9 @@ class USI9Section1 extends USI9Fields {
             this._('admissionnumberhelp.text')
         );
     
-        // E-Verify requirements
         this._passportNum = passportNum
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('passportnumber.tooltip')})
-        .prop('maxLength', 12)
         .change(() => {
             if (this._passportNum.val() !== '') {
                 this._alienuscisNum.val(this.na);

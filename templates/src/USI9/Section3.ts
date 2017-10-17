@@ -27,7 +27,6 @@ class USI9Section3 extends USI9Section2 {
         this._newlastName = lastName
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('newlastname.tooltip')})
-        .prop('maxLength', 40)
         .keypress(e => this.nameFormat.test(String.fromCharCode(e.which)));
 
         this._newlastNameHelp = this.renderHelpIcon(
@@ -40,7 +39,6 @@ class USI9Section3 extends USI9Section2 {
         this._newfirstName = firstName
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('newfirstname.tooltip')})
-        .prop('maxLength', 25)
         .keypress(e => this.nameFormat.test(String.fromCharCode(e.which)));
 
         this._newfirstNameHelp = this.renderHelpIcon(
@@ -53,7 +51,6 @@ class USI9Section3 extends USI9Section2 {
         this._newmiddleInitial = middleInitial
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('newmiddleinitial.tooltip')})
-        .prop('maxLength', 3)
         .keypress(e =>
             this.nameFormat.test(String.fromCharCode(e.which)) ||
             this.NAFormat.test(String.fromCharCode(e.which)));

@@ -109,13 +109,14 @@ var PDFForm = (function () {
         ctrl.hide().parent().children(tag).remove();
         return ctrl.parent().append('<' + tag + '>�</' + tag + '>')
             .children(tag).prop('title', title)
-            .css('color', ctrl.css('color'))
-            .css('font-size', ctrl.css('font-size'))
+            .css({ 'color': ctrl.css('color'),
+            'font-size': ctrl.css('font-size') })
             .toggleClass('icon').parent().click(function () {
             self.hideTooltip();
             $('.ui-dialog-titlebar-close').attr('title', '');
-            dialog.text('').append(decodeURIComponent(text)).
-                dialog('option', 'minWidth', minWidth).dialog('open');
+            dialog.text('').append(decodeURIComponent(text))
+                .dialog('option', 'title', self._('help'))
+                .dialog('option', 'minWidth', minWidth).dialog('open');
         });
     };
     return PDFForm;
@@ -127,30 +128,62 @@ var USI9Fields = (function (_super) {
         _this.na = _super.prototype._.call(_this, 'NA');
         _this.numberMaxLength = 15;
         _this.fieldFormat = /^[a-zA-Z0-9]+$/;
+        _this.parameterExistsMsg = _this._('parameter.exists');
+        _this.parameterLengthMsg = _this._('parameter.length');
+        _this.parameterFormatMsg = _this._('parameter.format');
+        _this.dateFormatMsg = _this._('date.format');
+        _this.invalidFieldClass = 'invalid';
         return _this;
     }
-    USI9Fields.prototype.validateFields = function () {
-        var errorMessage = '';
-        if (this._lastName.val() === '') {
-            errorMessage += '- ' + this._('lastname.exists') + '\r\n';
+    USI9Fields.prototype.validateTextField = function (field, parameter, regEx, errorMessages) {
+        var errorFlag = true;
+        var length = field.prop('maxLength') ? field.prop('maxLength') : 0;
+        if (field.attr('annotation-required') && field.val() === '') {
+            errorMessages.push(this.parameterExistsMsg.replace('${parameter}', parameter));
         }
-        else if (this.nameFormat.test(this._lastName.val())) {
-            errorMessage += '- ' + this._('lastname.format') + '\r\n';
+        else if (field.val().length > length && length > 0) {
+            errorMessages.push(this.parameterLengthMsg
+                .replace('${parameter}', parameter)
+                .replace('${length}', length.toString()));
         }
-        if (this._firstName.val() === '') {
-            errorMessage += '- ' + this._('firstname.exists') + '\r\n';
+        else if (regEx && !regEx.test(field.val())) {
+            errorMessages.push(this.parameterFormatMsg.replace('${parameter}', parameter));
         }
-        else if (this.nameFormat.test(this._firstName.val())) {
-            errorMessage += '- ' + this._('firstname.format') + '\r\n';
+        else {
+            errorFlag = false;
         }
-        if (this._dob.val() === '') {
-            errorMessage += '- ' + this._('dateofbirth.exists') + '\r\n';
+        field.toggleClass(this.invalidFieldClass, errorFlag);
+        return errorFlag;
+    };
+    USI9Fields.prototype.validateDateField = function (field, parameter, regEx, errorMessages) {
+        var errorFlag = true;
+        if (field.attr('annotation-required') && field.val() === '') {
+            errorMessages.push(this.parameterExistsMsg.replace('${parameter}', parameter));
         }
-        else if (this._dob.val() === '' || this.dateFormat.test(this._dob.val())) {
-            errorMessage += '- ' + this._('dateofbirth.format') + '\r\n';
+        else if (regEx && !regEx.test(field.val())) {
+            errorMessages.push(this.parameterFormatMsg.replace('${parameter}', parameter));
         }
-        if (errorMessage !== '') {
-            alert(errorMessage);
+        else {
+            errorFlag = false;
+        }
+        field.toggleClass(this.invalidFieldClass, errorFlag);
+        return errorFlag;
+    };
+    USI9Fields.prototype.validateFields = function (dialog) {
+        var errorMessages = [];
+        this.validateTextField(this._lastName, this._('name.last'), this.nameFormat, errorMessages);
+        this.validateTextField(this._firstName, this._('name.first'), this.nameFormat, errorMessages);
+        this.validateTextField(this._middleInitial, this._('name.middleinitial'), this.NAFormat, errorMessages);
+        this.validateDateField(this._dob, this._('date.dob'), this.dateFormat, errorMessages);
+        if (errorMessages.length > 0) {
+            var errorMessage = this._('error.header') + '<br />';
+            errorMessages.forEach(function (element) {
+                errorMessage += ' - ' + element + '<br />';
+            });
+            $('.ui-dialog-titlebar-close').attr('title', '');
+            dialog.dialog('option', 'minWidth', 500).text('')
+                .dialog('option', 'title', this._('validation'))
+                .append(errorMessage).dialog('open');
             return false;
         }
         else {
@@ -636,21 +669,18 @@ var USI9Section1 = (function (_super) {
         this._lastName = lastName
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
             .tooltip({ content: this._('lastnamehelp.tooltip') })
-            .prop('maxLength', 40)
             .keypress(function (e) { return _this.nameFormat.test(String.fromCharCode(e.which)); })
             .change(function () { return _this._lastNameSection2.val(_this._lastName.val()); });
         this._lastNameHelp = this.renderHelpIcon(lastNameHelp, this._('lastnamehelp.caption'), dialog, this._('lastnamehelp.text'));
         this._firstName = firstName
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
             .tooltip({ content: this._('firstnamehelp.tooltip') })
-            .prop('maxLength', 25)
             .keypress(function (e) { return _this.nameFormat.test(String.fromCharCode(e.which)); })
             .change(function () { return _this._firstNameSection2.val(_this._firstName.val()); });
         this._firstNameHelp = this.renderHelpIcon(firstNameHelp, this._('firstnamehelp.caption'), dialog, this._('firstnamehelp.text'));
         this._middleInitial = middleInitial
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
             .tooltip({ content: this._('middleinitialhelp.tooltip') })
-            .prop('maxLength', 3)
             .keypress(function (e) {
             return _this.nameFormat.test(String.fromCharCode(e.which)) ||
                 _this.NAFormat.test(String.fromCharCode(e.which));
@@ -660,7 +690,6 @@ var USI9Section1 = (function (_super) {
         this._otherNames = otherNames
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
             .tooltip({ content: this._('othernameshelp.tooltip') })
-            .prop('maxLength', 40)
             .keypress(function (e) {
             return _this.nameFormat.test(String.fromCharCode(e.which)) ||
                 _this.NAFormat.test(String.fromCharCode(e.which));
@@ -696,7 +725,6 @@ var USI9Section1 = (function (_super) {
                 .attr('nextElement', (this._ssn[i + 1]).attr('name'))
                 .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
                 .tooltip({ content: this._('ssnhelp.tooltip') })
-                .prop('maxLength', 1)
                 .keypress(function (e) {
                 if (_this.numberFormat.test(String.fromCharCode(e.which))) {
                     $('[name=' + $(e.target).attr('nextElement') + ']').focus();
@@ -710,7 +738,6 @@ var USI9Section1 = (function (_super) {
         this._ssn[ssn.length - 1]
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
             .tooltip({ content: this._('ssnhelp.tooltip') })
-            .prop('maxLength', 1)
             .keypress(function (e) { return _this.numberFormat.test(String.fromCharCode(e.which)); });
     };
     USI9Section1.prototype.renderPersonalData = function (dialog, dob, dobHelp, ssn11, ssn12, ssn13, ssn21, ssn22, ssn31, ssn32, ssn33, ssn34, ssnHelp, email, emailHelp, phone, phoneHelp) {
@@ -734,13 +761,11 @@ var USI9Section1 = (function (_super) {
         this._ssnHelp = this.renderHelpIcon(ssnHelp, this._('ssnhelp.caption'), dialog, this._('ssnhelp.text'), 400);
         this._email = email
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
-            .tooltip({ content: this._('emailhelp.tooltip') })
-            .prop('maxLength', 60);
+            .tooltip({ content: this._('emailhelp.tooltip') });
         this._emailHelp = this.renderHelpIcon(emailHelp, this._('emailhelp.caption'), dialog, this._('emailhelp.text'));
         this._phone = phone
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
             .tooltip({ content: this._('phonehelp.tooltip') })
-            .prop('maxLength', 13)
             .keypress(function (e) { return _this.phoneFormat.test(String.fromCharCode(e.which)); });
         this._phoneHelp = this.renderHelpIcon(phoneHelp, this._('phonehelp.caption'), dialog, this._('phonehelp.text'));
     };
@@ -822,7 +847,6 @@ var USI9Section1 = (function (_super) {
         this._lpruscisNum = lpruscisNum
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
             .tooltip({ content: this._('uscisnumber.tooltip') })
-            .prop('maxLength', 9)
             .keypress(function (e) { return _this.numberFormat.test(String.fromCharCode(e.which)); });
         this._lpruscisNumType = lpruscisNumType
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
@@ -847,7 +871,6 @@ var USI9Section1 = (function (_super) {
         this._alienuscisNum = alienuscisNum
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
             .tooltip({ content: this._('uscisnumber.tooltip') })
-            .prop('maxLength', 9)
             .keypress(function (e) { return _this.numberFormat.test(String.fromCharCode(e.which)); })
             .change(function () {
             if (_this._alienuscisNum.val() !== '') {
@@ -874,7 +897,6 @@ var USI9Section1 = (function (_super) {
         this._admissionNum = admissionNum
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
             .tooltip({ content: this._('admissionnumber.tooltip') })
-            .prop('maxLength', 11)
             .keypress(function (e) {
             return _this.numberFormat.test(String.fromCharCode(e.which));
         })
@@ -896,7 +918,6 @@ var USI9Section1 = (function (_super) {
         this._passportNum = passportNum
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
             .tooltip({ content: this._('passportnumber.tooltip') })
-            .prop('maxLength', 12)
             .change(function () {
             if (_this._passportNum.val() !== '') {
                 _this._alienuscisNum.val(_this.na);
@@ -1194,7 +1215,6 @@ var USI9Section2 = (function (_super) {
         this._employerZip = employerZip
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
             .tooltip({ content: this._('employerzip.tooltip') })
-            .prop('maxLength', 5)
             .keypress(function (e) { return _this.zipFormat.test(String.fromCharCode(e.which)); });
         this._employerZipHelp = this.renderHelpIcon(employerZipHelp, this._('employerziphelp.caption'), dialog, this._('employerziphelp.text'));
     };
@@ -1210,19 +1230,16 @@ var USI9Section3 = (function (_super) {
         this._newlastName = lastName
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
             .tooltip({ content: this._('newlastname.tooltip') })
-            .prop('maxLength', 40)
             .keypress(function (e) { return _this.nameFormat.test(String.fromCharCode(e.which)); });
         this._newlastNameHelp = this.renderHelpIcon(lastNameHelp, this._('newlastnamehelp.caption'), dialog, this._('newlastnamehelp.text'));
         this._newfirstName = firstName
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
             .tooltip({ content: this._('newfirstname.tooltip') })
-            .prop('maxLength', 25)
             .keypress(function (e) { return _this.nameFormat.test(String.fromCharCode(e.which)); });
         this._newfirstNameHelp = this.renderHelpIcon(firstNameHelp, this._('newfirstnamehelp.caption'), dialog, this._('newfirstnamehelp.text'));
         this._newmiddleInitial = middleInitial
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
             .tooltip({ content: this._('newmiddleinitial.tooltip') })
-            .prop('maxLength', 3)
             .keypress(function (e) {
             return _this.nameFormat.test(String.fromCharCode(e.which)) ||
                 _this.NAFormat.test(String.fromCharCode(e.which));
@@ -1267,26 +1284,64 @@ var USI9 = (function (_super) {
     __extends(USI9, _super);
     function USI9() {
         var _this = _super.call(this) || this;
+        _this.annotationName = 'annotation-name';
         $('body').append('<div id="dialogPage"></div>');
         var self = _this;
         $('#dialogPage').dialog({
-            title: self._('help'),
             minHeight: 50,
             minWidth: 50,
-            autoOpen: false
+            autoOpen: false,
+            buttons: [{
+                    text: 'OK',
+                    click: function () {
+                        $(this).dialog("close");
+                    }
+                }]
         });
         return _this;
     }
+    USI9.prototype.prepareData = function () {
+        var _this = this;
+        PDFViewerApplication.transformationService = 'http://127.0.0.1:8080/update';
+        PDFViewerApplication.fieldsData = {
+            'file': PDFViewerApplication.url,
+            'operation': 'f',
+            'entries': []
+        };
+        var readOnlyFieldsToFlat = ['LastNameSection2', 'FirstNameSection2',
+            'MiddleInitialSection2', 'ImmigrationStatus'];
+        $('[' + this.annotationName + ']').each(function (index, ctrl) {
+            var op = !ctrl.disabled ||
+                readOnlyFieldsToFlat.indexOf(ctrl.getAttribute(_this.annotationName)) > -1;
+            PDFViewerApplication.fieldsData.entries.push({
+                'name': ctrl.getAttribute('annotation-name'),
+                'value': op ? ctrl.value : '',
+                'operation': op ? 's' : 'd'
+            });
+        });
+    };
     USI9.prototype.renderSections = function () {
         var _this = this;
+        $('#print').click(function () {
+            if (_this.validateFields($('#dialogPage'))) {
+                _this.prepareData();
+                PDFViewerApplication.print();
+            }
+        });
+        $('#download').click(function () {
+            if (_this.validateFields($('#dialogPage'))) {
+                _this.prepareData();
+                PDFViewerApplication.download();
+            }
+        });
         document.addEventListener('pagerendered', function (e) {
             if (e.detail.pageNumber === 1) {
-                _this.renderSection1($('#dialogPage'), $('[annotation-name=LastName]'), $('[annotation-name=LastNameHelp]'), $('[annotation-name=FirstName]'), $('[annotation-name=FirstNameHelp]'), $('[annotation-name=MiddleInitial]'), $('[annotation-name=MiddleInitialHelp]'), $('[annotation-name=OtherNames]'), $('[annotation-name=OtherNamesHelp]'), $('[annotation-name=Address]'), $('[annotation-name=AddressHelp]'), $('[annotation-name=ApartmentNumber]'), $('[annotation-name=ApartmentNumberHelp]'), $('[annotation-name=City]'), $('[annotation-name=CityHelp]'), $('[annotation-name=State]'), $('[annotation-name=StateHelp]'), $('[annotation-name=Zip]'), $('[annotation-name=ZipHelp]'), $('[annotation-name=DateOfBirth]'), $('[annotation-name=DateOfBirthHelp]'), $('[annotation-name=SSN11]'), $('[annotation-name=SSN12]'), $('[annotation-name=SSN13]'), $('[annotation-name=SSN21]'), $('[annotation-name=SSN22]'), $('[annotation-name=SSN31]'), $('[annotation-name=SSN32]'), $('[annotation-name=SSN33]'), $('[annotation-name=SSN34]'), $('[annotation-name=SSNHelp]'), $('[annotation-name=Email]'), $('[annotation-name=EmailHelp]'), $('[annotation-name=Phone]'), $('[annotation-name=PhoneHelp]'), $('[annotation-name=Citizen]'), $('[annotation-name=CitizenHelp]'), $('[annotation-name=NonCitizenNational]'), $('[annotation-name=NonCitizenNationalHelp]'), $('[annotation-name=LawfulPermanentResident]'), $('[annotation-name=LawfulPermanentResidentHelp]'), $('[annotation-name=AlienAuthorizedToWork]'), $('[annotation-name=AlienAuthorizedToWorkHelp]'), $('[annotation-name=USCISNumberHelp]'), $('[annotation-name=LPRUSCISNumberPrefix]'), $('[annotation-name=LPRUSCISNumber]'), $('[annotation-name=LPRUSCISNumberType]'), $('[annotation-name=AlienWorkAuthorizationDate]'), $('[annotation-name=AlienUSCISNumberPrefix]'), $('[annotation-name=AlienUSCISNumber]'), $('[annotation-name=AlienUSCISNumberType]'), $('[annotation-name=AdmissionNumber]'), $('[annotation-name=AdmissionNumberHelp]'), $('[annotation-name=ForeignPassportNumber]'), $('[annotation-name=ForeignPassportNumberHelp]'), $('[annotation-name=CountryOfIssuance]'), $('[annotation-name=CountryOfIssuanceHelp]'), $('[annotation-name=sgnEmployee]'), $('[annotation-name=sgnEmployeeHelp]'), $('[annotation-name=sgnEmployeeDate]'), $('[annotation-name=sgnEmployeeDateHelp]'));
-                _this.renderTranslatorSection($('#dialogPage'), $('[annotation-name=PreparerOrTranslatorNo]'), $('[annotation-name=PreparerOrTranslatorYes]'), $('[annotation-name=PreparerOrTranslatorHelp]'), $('[annotation-name=sgnTranslator]'), $('[annotation-name=sgnTranslatorHelp]'), $('[annotation-name=TranslatorDate]'), $('[annotation-name=TranslatorDateHelp]'), $('[annotation-name=TranslatorLastName]'), $('[annotation-name=TranslatorLastNameHelp]'), $('[annotation-name=TranslatorFirstName]'), $('[annotation-name=TranslatorFirstNameHelp]'), $('[annotation-name=TranslatorAddress]'), $('[annotation-name=TranslatorAddressHelp]'), $('[annotation-name=TranslatorCity]'), $('[annotation-name=TranslatorCityHelp]'), $('[annotation-name=TranslatorState]'), $('[annotation-name=TranslatorStateHelp]'), $('[annotation-name=TranslatorZip]'), $('[annotation-name=TranslatorZipHelp]'));
+                _this.renderSection1($('#dialogPage'), $('[' + _this.annotationName + '=LastName]'), $('[' + _this.annotationName + '=LastNameHelp]'), $('[' + _this.annotationName + '=FirstName]'), $('[' + _this.annotationName + '=FirstNameHelp]'), $('[' + _this.annotationName + '=MiddleInitial]'), $('[' + _this.annotationName + '=MiddleInitialHelp]'), $('[' + _this.annotationName + '=OtherNames]'), $('[' + _this.annotationName + '=OtherNamesHelp]'), $('[' + _this.annotationName + '=Address]'), $('[' + _this.annotationName + '=AddressHelp]'), $('[' + _this.annotationName + '=ApartmentNumber]'), $('[' + _this.annotationName + '=ApartmentNumberHelp]'), $('[' + _this.annotationName + '=City]'), $('[' + _this.annotationName + '=CityHelp]'), $('[' + _this.annotationName + '=State]'), $('[' + _this.annotationName + '=StateHelp]'), $('[' + _this.annotationName + '=Zip]'), $('[' + _this.annotationName + '=ZipHelp]'), $('[' + _this.annotationName + '=DateOfBirth]'), $('[' + _this.annotationName + '=DateOfBirthHelp]'), $('[' + _this.annotationName + '=SSN11]'), $('[' + _this.annotationName + '=SSN12]'), $('[' + _this.annotationName + '=SSN13]'), $('[' + _this.annotationName + '=SSN21]'), $('[' + _this.annotationName + '=SSN22]'), $('[' + _this.annotationName + '=SSN31]'), $('[' + _this.annotationName + '=SSN32]'), $('[' + _this.annotationName + '=SSN33]'), $('[' + _this.annotationName + '=SSN34]'), $('[' + _this.annotationName + '=SSNHelp]'), $('[' + _this.annotationName + '=Email]'), $('[' + _this.annotationName + '=EmailHelp]'), $('[' + _this.annotationName + '=Phone]'), $('[' + _this.annotationName + '=PhoneHelp]'), $('[' + _this.annotationName + '=Citizen]'), $('[' + _this.annotationName + '=CitizenHelp]'), $('[' + _this.annotationName + '=NonCitizenNational]'), $('[' + _this.annotationName + '=NonCitizenNationalHelp]'), $('[' + _this.annotationName + '=LawfulPermanentResident]'), $('[' + _this.annotationName + '=LawfulPermanentResidentHelp]'), $('[' + _this.annotationName + '=AlienAuthorizedToWork]'), $('[' + _this.annotationName + '=AlienAuthorizedToWorkHelp]'), $('[' + _this.annotationName + '=USCISNumberHelp]'), $('[' + _this.annotationName + '=LPRUSCISNumberPrefix]'), $('[' + _this.annotationName + '=LPRUSCISNumber]'), $('[' + _this.annotationName + '=LPRUSCISNumberType]'), $('[' + _this.annotationName + '=AlienWorkAuthorizationDate]'), $('[' + _this.annotationName + '=AlienUSCISNumberPrefix]'), $('[' + _this.annotationName + '=AlienUSCISNumber]'), $('[' + _this.annotationName + '=AlienUSCISNumberType]'), $('[' + _this.annotationName + '=AdmissionNumber]'), $('[' + _this.annotationName + '=AdmissionNumberHelp]'), $('[' + _this.annotationName + '=ForeignPassportNumber]'), $('[' + _this.annotationName + '=ForeignPassportNumberHelp]'), $('[' + _this.annotationName + '=CountryOfIssuance]'), $('[' + _this.annotationName + '=CountryOfIssuanceHelp]'), $('[' + _this.annotationName + '=sgnEmployee]'), $('[' + _this.annotationName + '=sgnEmployeeHelp]'), $('[' + _this.annotationName + '=sgnEmployeeDate]'), $('[' + _this.annotationName + '=sgnEmployeeDateHelp]'));
+                _this.renderTranslatorSection($('#dialogPage'), $('[' + _this.annotationName + '=PreparerOrTranslatorNo]'), $('[' + _this.annotationName + '=PreparerOrTranslatorYes]'), $('[' + _this.annotationName + '=PreparerOrTranslatorHelp]'), $('[' + _this.annotationName + '=sgnTranslator]'), $('[' + _this.annotationName + '=sgnTranslatorHelp]'), $('[' + _this.annotationName + '=TranslatorDate]'), $('[' + _this.annotationName + '=TranslatorDateHelp]'), $('[' + _this.annotationName + '=TranslatorLastName]'), $('[' + _this.annotationName + '=TranslatorLastNameHelp]'), $('[' + _this.annotationName + '=TranslatorFirstName]'), $('[' + _this.annotationName + '=TranslatorFirstNameHelp]'), $('[' + _this.annotationName + '=TranslatorAddress]'), $('[' + _this.annotationName + '=TranslatorAddressHelp]'), $('[' + _this.annotationName + '=TranslatorCity]'), $('[' + _this.annotationName + '=TranslatorCityHelp]'), $('[' + _this.annotationName + '=TranslatorState]'), $('[' + _this.annotationName + '=TranslatorStateHelp]'), $('[' + _this.annotationName + '=TranslatorZip]'), $('[' + _this.annotationName + '=TranslatorZipHelp]'));
             }
             if (e.detail.pageNumber === 2) {
-                _this.renderSection2($('#dialogPage'), $('[annotation-name=EmployeeInfoSection2Help]'), $('[annotation-name=LastNameSection2]'), $('[annotation-name=LastNameSection2Help]'), $('[annotation-name=FirstNameSection2]'), $('[annotation-name=FirstNameSection2Help]'), $('[annotation-name=MiddleInitialSection2]'), $('[annotation-name=MiddleInitialSection2Help]'), $('[annotation-name=ImmigrationStatus]'), $('[annotation-name=ImmigrationStatusHelp]'), $('[annotation-name=ListADocTitle]'), $('[annotation-name=ListADocTitleHelp]'), $('[annotation-name=ListAIssuingAuthority]'), $('[annotation-name=ListAIssuingAuthorityHelp]'), $('[annotation-name=ListADocNumber]'), $('[annotation-name=ListADocNumberHelp]'), $('[annotation-name=ListAExpDate]'), $('[annotation-name=ListAExpDateHelp]'), $('[annotation-name=ListADocTitle2]'), $('[annotation-name=ListADocTitle2Help]'), $('[annotation-name=ListAIssuingAuthority2]'), $('[annotation-name=ListAIssuingAuthority2Help]'), $('[annotation-name=ListADocNumber2]'), $('[annotation-name=ListADocNumber2Help]'), $('[annotation-name=ListAExpDate2]'), $('[annotation-name=ListAExpDate2Help]'), $('[annotation-name=ListADocTitle3]'), $('[annotation-name=ListADocTitle3Help]'), $('[annotation-name=ListAIssuingAuthority3]'), $('[annotation-name=ListAIssuingAuthority3Help]'), $('[annotation-name=ListADocNumber3]'), $('[annotation-name=ListADocNumber3Help]'), $('[annotation-name=ListAExpDate3]'), $('[annotation-name=ListAExpDate3Help]'), $('[annotation-name=ListBDocTitle]'), $('[annotation-name=ListBDocTitleHelp]'), $('[annotation-name=ListBIssuingAuthority]'), $('[annotation-name=ListBIssuingAuthorityHelp]'), $('[annotation-name=ListBDocNumber]'), $('[annotation-name=ListBDocNumberHelp]'), $('[annotation-name=ListBExpDate]'), $('[annotation-name=ListBExpDateHelp]'), $('[annotation-name=ListCDocTitle]'), $('[annotation-name=ListCDocTitleHelp]'), $('[annotation-name=ListCIssuingAuthority]'), $('[annotation-name=ListCIssuingAuthorityHelp]'), $('[annotation-name=ListCDocNumber]'), $('[annotation-name=ListCDocNumberHelp]'), $('[annotation-name=ListCExpDate]'), $('[annotation-name=ListCExpDateHelp]'), $('[annotation-name=AdditionalInfo]'), $('[annotation-name=AdditionalInfoHelp]'), $('[annotation-name=HireDate]'), $('[annotation-name=HireDateHelp]'), $('[annotation-name=sgnEmployer]'), $('[annotation-name=sgnEmployerHelp]'), $('[annotation-name=EmployerSignDate]'), $('[annotation-name=EmployerSignDateHelp]'), $('[annotation-name=EmployerTitle]'), $('[annotation-name=EmployerTitleHelp]'), $('[annotation-name=EmployerLastName]'), $('[annotation-name=EmployerLastNameHelp]'), $('[annotation-name=EmployerFirstName]'), $('[annotation-name=EmployerFirstNameHelp]'), $('[annotation-name=EmployerName]'), $('[annotation-name=EmployerNameHelp]'), $('[annotation-name=EmployerAddress]'), $('[annotation-name=EmployerAddressHelp]'), $('[annotation-name=EmployerCity]'), $('[annotation-name=EmployerCityHelp]'), $('[annotation-name=EmployerState]'), $('[annotation-name=EmployerStateHelp]'), $('[annotation-name=EmployerZip]'), $('[annotation-name=EmployerZipHelp]'));
-                _this.renderSection3($('#dialogPage'), $('[annotation-name=NewLastName]'), $('[annotation-name=NewLastNameHelp]'), $('[annotation-name=NewFirstName]'), $('[annotation-name=NewFirstNameHelp]'), $('[annotation-name=NewMiddleInitial]'), $('[annotation-name=NewMiddleInitialHelp]'), $('[annotation-name=RehireDate]'), $('[annotation-name=RehireDateHelp]'), $('[annotation-name=DocTitleSec3]'), $('[annotation-name=DocTitleSec3Help]'), $('[annotation-name=DocNumberSec3]'), $('[annotation-name=DocNumberSec3Help]'), $('[annotation-name=ExpDateSec3]'), $('[annotation-name=ExpDateSec3Help]'), $('[annotation-name=sgnEmployerSec3]'), $('[annotation-name=sgnEmployerSec3Help]'), $('[annotation-name=EmployerSignDateSec3]'), $('[annotation-name=EmployerSignDateSec3Help]'), $('[annotation-name=EmployerNameSec3]'), $('[annotation-name=EmployerNameSec3Help]'));
+                _this.renderSection2($('#dialogPage'), $('[' + _this.annotationName + '=EmployeeInfoSection2Help]'), $('[' + _this.annotationName + '=LastNameSection2]'), $('[' + _this.annotationName + '=LastNameSection2Help]'), $('[' + _this.annotationName + '=FirstNameSection2]'), $('[' + _this.annotationName + '=FirstNameSection2Help]'), $('[' + _this.annotationName + '=MiddleInitialSection2]'), $('[' + _this.annotationName + '=MiddleInitialSection2Help]'), $('[' + _this.annotationName + '=ImmigrationStatus]'), $('[' + _this.annotationName + '=ImmigrationStatusHelp]'), $('[' + _this.annotationName + '=ListADocTitle]'), $('[' + _this.annotationName + '=ListADocTitleHelp]'), $('[' + _this.annotationName + '=ListAIssuingAuthority]'), $('[' + _this.annotationName + '=ListAIssuingAuthorityHelp]'), $('[' + _this.annotationName + '=ListADocNumber]'), $('[' + _this.annotationName + '=ListADocNumberHelp]'), $('[' + _this.annotationName + '=ListAExpDate]'), $('[' + _this.annotationName + '=ListAExpDateHelp]'), $('[' + _this.annotationName + '=ListADocTitle2]'), $('[' + _this.annotationName + '=ListADocTitle2Help]'), $('[' + _this.annotationName + '=ListAIssuingAuthority2]'), $('[' + _this.annotationName + '=ListAIssuingAuthority2Help]'), $('[' + _this.annotationName + '=ListADocNumber2]'), $('[' + _this.annotationName + '=ListADocNumber2Help]'), $('[' + _this.annotationName + '=ListAExpDate2]'), $('[' + _this.annotationName + '=ListAExpDate2Help]'), $('[' + _this.annotationName + '=ListADocTitle3]'), $('[' + _this.annotationName + '=ListADocTitle3Help]'), $('[' + _this.annotationName + '=ListAIssuingAuthority3]'), $('[' + _this.annotationName + '=ListAIssuingAuthority3Help]'), $('[' + _this.annotationName + '=ListADocNumber3]'), $('[' + _this.annotationName + '=ListADocNumber3Help]'), $('[' + _this.annotationName + '=ListAExpDate3]'), $('[' + _this.annotationName + '=ListAExpDate3Help]'), $('[' + _this.annotationName + '=ListBDocTitle]'), $('[' + _this.annotationName + '=ListBDocTitleHelp]'), $('[' + _this.annotationName + '=ListBIssuingAuthority]'), $('[' + _this.annotationName + '=ListBIssuingAuthorityHelp]'), $('[' + _this.annotationName + '=ListBDocNumber]'), $('[' + _this.annotationName + '=ListBDocNumberHelp]'), $('[' + _this.annotationName + '=ListBExpDate]'), $('[' + _this.annotationName + '=ListBExpDateHelp]'), $('[' + _this.annotationName + '=ListCDocTitle]'), $('[' + _this.annotationName + '=ListCDocTitleHelp]'), $('[' + _this.annotationName + '=ListCIssuingAuthority]'), $('[' + _this.annotationName + '=ListCIssuingAuthorityHelp]'), $('[' + _this.annotationName + '=ListCDocNumber]'), $('[' + _this.annotationName + '=ListCDocNumberHelp]'), $('[' + _this.annotationName + '=ListCExpDate]'), $('[' + _this.annotationName + '=ListCExpDateHelp]'), $('[' + _this.annotationName + '=AdditionalInfo]'), $('[' + _this.annotationName + '=AdditionalInfoHelp]'), $('[' + _this.annotationName + '=HireDate]'), $('[' + _this.annotationName + '=HireDateHelp]'), $('[' + _this.annotationName + '=sgnEmployer]'), $('[' + _this.annotationName + '=sgnEmployerHelp]'), $('[' + _this.annotationName + '=EmployerSignDate]'), $('[' + _this.annotationName + '=EmployerSignDateHelp]'), $('[' + _this.annotationName + '=EmployerTitle]'), $('[' + _this.annotationName + '=EmployerTitleHelp]'), $('[' + _this.annotationName + '=EmployerLastName]'), $('[' + _this.annotationName + '=EmployerLastNameHelp]'), $('[' + _this.annotationName + '=EmployerFirstName]'), $('[' + _this.annotationName + '=EmployerFirstNameHelp]'), $('[' + _this.annotationName + '=EmployerName]'), $('[' + _this.annotationName + '=EmployerNameHelp]'), $('[' + _this.annotationName + '=EmployerAddress]'), $('[' + _this.annotationName + '=EmployerAddressHelp]'), $('[' + _this.annotationName + '=EmployerCity]'), $('[' + _this.annotationName + '=EmployerCityHelp]'), $('[' + _this.annotationName + '=EmployerState]'), $('[' + _this.annotationName + '=EmployerStateHelp]'), $('[' + _this.annotationName + '=EmployerZip]'), $('[' + _this.annotationName + '=EmployerZipHelp]'));
+                _this.renderSection3($('#dialogPage'), $('[' + _this.annotationName + '=NewLastName]'), $('[' + _this.annotationName + '=NewLastNameHelp]'), $('[' + _this.annotationName + '=NewFirstName]'), $('[' + _this.annotationName + '=NewFirstNameHelp]'), $('[' + _this.annotationName + '=NewMiddleInitial]'), $('[' + _this.annotationName + '=NewMiddleInitialHelp]'), $('[' + _this.annotationName + '=RehireDate]'), $('[' + _this.annotationName + '=RehireDateHelp]'), $('[' + _this.annotationName + '=DocTitleSec3]'), $('[' + _this.annotationName + '=DocTitleSec3Help]'), $('[' + _this.annotationName + '=DocNumberSec3]'), $('[' + _this.annotationName + '=DocNumberSec3Help]'), $('[' + _this.annotationName + '=ExpDateSec3]'), $('[' + _this.annotationName + '=ExpDateSec3Help]'), $('[' + _this.annotationName + '=sgnEmployerSec3]'), $('[' + _this.annotationName + '=sgnEmployerSec3Help]'), $('[' + _this.annotationName + '=EmployerSignDateSec3]'), $('[' + _this.annotationName + '=EmployerSignDateSec3Help]'), $('[' + _this.annotationName + '=EmployerNameSec3]'), $('[' + _this.annotationName + '=EmployerNameSec3Help]'));
             }
         });
     };
