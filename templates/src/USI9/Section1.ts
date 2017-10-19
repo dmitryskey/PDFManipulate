@@ -135,7 +135,21 @@ class USI9Section1 extends USI9Fields {
         );
 
         this._state = state
-        .focus(e => this.hideTooltip()).prop('title', '')
+        .focus(e => {
+            this.hideTooltip();
+
+            let nonUSCountries = ['CAN', 'MEX'];
+
+            let zipCode = nonUSCountries.indexOf((e.currentTarget as HTMLInputElement).value) < 0;
+            this._zip.unbind('keypress');
+            this._zip.keypress(e => {
+                return (nonUSCountries.indexOf(this._state.val() as string) < 0
+                  ? this.zipFormat : this.postalFormat).test(String.fromCharCode(e.which))
+            });
+
+            this._zip.prop('maxLength', zipCode ? 5 : 6);
+        })
+        .prop('title', '')
         .tooltip({content: this._('statehelp.tooltip')})
 
         this._stateHelp = this.renderHelpIcon(
@@ -697,5 +711,46 @@ class USI9Section1 extends USI9Fields {
 
         this.processLPR(false);
         this.processAlien(false);
+    }
+
+    protected validateFields(dialog: JQuery<HTMLElement>) {
+        let errorMessages: string[] = [];
+
+        // Put N/A if required
+        let naFields = [this._middleInitial, this._otherNames, this._apptNumber, this._email, this._phone];
+
+        for (let idx in naFields) {
+            if (naFields[idx].val() === '') {
+                naFields[idx].val(this.na);
+            }
+        }
+
+        this.validateTextField(this._lastName, this._('name.last'), [this.nameFormat], errorMessages);
+        this.validateTextField(this._firstName, this._('name.first'), [this.nameFormat], errorMessages);
+        this.validateTextField(this._middleInitial, this._('name.middleinitial'), [this.nameInitialFormat, this.NAFormat], errorMessages);
+        this.validateTextField(this._otherNames, this._('name.othernames'), [this.nameFormat, this.NAFormat], errorMessages);
+        this.validateTextField(this._address, this._('address.address'), [], errorMessages);
+        this.validateTextField(this._apptNumber, this._('address.appartment'), [this.NAFormat], errorMessages);
+        this.validateTextField(this._city, this._('address.city'), [], errorMessages);
+        this.validateTextField(this._state, this._('address.state'), [this.stateFormat], errorMessages);
+        this.validateTextField(this._zip, this._('address.zip'),
+            [['CAN', 'MEX'].indexOf(this._state.val() as string) < 0 ? this.zipNumberFormat: this.postalCodeFormat], errorMessages);
+        this.validateDateField(this._dob, this._('date.dob'), this.dateFormat, errorMessages);
+
+        if (errorMessages.length > 0) {
+            var errorMessage = this._('error.header') + '<br />';
+            errorMessages.forEach(element => {
+                errorMessage += ' - ' + element + '<br />';
+            });
+
+            $('.ui-dialog-titlebar-close').attr('title', '');
+            dialog.dialog('option', 'minWidth', 500).text('')
+              .dialog('option', 'title', this._('validation'))
+              .append(errorMessage).dialog('open');
+
+            return false;
+        } else {
+            return true;
+        }
     }
 }

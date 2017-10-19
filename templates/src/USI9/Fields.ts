@@ -1,6 +1,7 @@
 /// <reference path="PDFForm.ts" />
 
 class USI9Fields extends PDFForm {
+    //region "Section 1 Personal data Fields"
     protected _lastName: JQuery<HTMLElement>;
     protected _lastNameHelp: JQuery<HTMLElement>;
     protected _firstName: JQuery<HTMLElement>;
@@ -27,7 +28,9 @@ class USI9Fields extends PDFForm {
     protected _emailHelp: JQuery<HTMLElement>;
     protected _phone: JQuery<HTMLElement>;
     protected _phoneHelp: JQuery<HTMLElement>;
+    //endregion
 
+    //region "Citizenship Data fields"
     protected _citizen: JQuery<HTMLElement>;
     protected _citizenHelp: JQuery<HTMLElement>;
     protected _national: JQuery<HTMLElement>;
@@ -54,7 +57,9 @@ class USI9Fields extends PDFForm {
     protected _sgnEmployeeHelp: JQuery<HTMLElement>;
     protected _sgnEmployeeDate: JQuery<HTMLElement>;
     protected _sgnEmployeeDateHelp: JQuery<HTMLElement>;
+    //endregion
 
+    //region "Translator Section Fields"
     protected _translatorNo: JQuery<HTMLElement>;
     protected _translatorYes: JQuery<HTMLElement>;
     protected _translatorHelp: JQuery<HTMLElement>;
@@ -74,7 +79,9 @@ class USI9Fields extends PDFForm {
     protected _translatorStateHelp: JQuery<HTMLElement>;
     protected _translatorZip: JQuery<HTMLElement>;
     protected _translatorZipHelp: JQuery<HTMLElement>;
+    //endregion
 
+    //region "Employee Section 2 Data fields"
     protected _employeeInfoHelp: JQuery<HTMLElement>;
     protected _immigrationStatus: JQuery<HTMLElement>;
     protected _immigrationStatusHelp: JQuery<HTMLElement>;
@@ -84,7 +91,9 @@ class USI9Fields extends PDFForm {
     protected _firstNameSection2Help: JQuery<HTMLElement>;
     protected _middleInitialSection2: JQuery<HTMLElement>;
     protected _middleInitialSection2Help: JQuery<HTMLElement>;
+    //endregion
 
+    //region "List A, B, C Fields"
     protected _listADoc: JQuery<HTMLElement>;
     protected _listADocHelp: JQuery<HTMLElement>;
     protected _listAIssuingAuthority: JQuery<HTMLElement>;
@@ -127,7 +136,9 @@ class USI9Fields extends PDFForm {
     protected _listCDocExpDateHelp: JQuery<HTMLElement>;
     protected _additionalInfo: JQuery<HTMLElement>;
     protected _additionalInfoHelp: JQuery<HTMLElement>;
+    //endregion
 
+    //region "Employer Data Fields"
     protected _hireDate: JQuery<HTMLElement>;
     protected _hireDateHelp: JQuery<HTMLElement>;
     protected _sgnEmployer: JQuery<HTMLElement>;
@@ -150,7 +161,9 @@ class USI9Fields extends PDFForm {
     protected _employerStateHelp: JQuery<HTMLElement>;
     protected _employerZip: JQuery<HTMLElement>;
     protected _employerZipHelp: JQuery<HTMLElement>;
+    //endregion
 
+    //region "Section 3 Fields"
     protected _newlastName: JQuery<HTMLElement>;
     protected _newlastNameHelp: JQuery<HTMLElement>;
     protected _newfirstName: JQuery<HTMLElement>;
@@ -171,6 +184,7 @@ class USI9Fields extends PDFForm {
     protected _employerSignDateSec3Help: JQuery<HTMLElement>;
     protected _employerNameSec3: JQuery<HTMLElement>;
     protected _employerNameSec3Help: JQuery<HTMLElement>;
+    //endregion
 
     protected na = super._('NA');
 
@@ -186,28 +200,40 @@ class USI9Fields extends PDFForm {
 
     private invalidFieldClass = 'invalid';
 
-    private validateTextField(field: JQuery<HTMLElement>, parameter: string, regEx: RegExp, errorMessages: string[]): boolean {
-      let errorFlag = true;
-      let length = field.prop('maxLength') ? field.prop('maxLength') : 0;
+    protected validateTextField(field: JQuery<HTMLElement>, parameter: string, regExs: RegExp[], errorMessages: string[]): boolean {
+        let errorFlag = true;
+        let length = field.prop('maxLength') ? field.prop('maxLength') : 0;
 
-      if (field.attr('annotation-required') && field.val() === '') {   
-          errorMessages.push(this.parameterExistsMsg.replace('${parameter}', parameter));
-      } else if ((field.val() as string).length > length && length > 0) {
-          errorMessages.push(this.parameterLengthMsg
-            .replace('${parameter}', parameter)
-            .replace('${length}', length.toString()));
-      } else if (regEx && !regEx.test(field.val() as string)) {
-          errorMessages.push(this.parameterFormatMsg.replace('${parameter}', parameter));
-      } else {
-          errorFlag = false;
-      }
+        if (field.attr('annotation-required') && field.val() === '') {   
+            errorMessages.push(this.parameterExistsMsg.replace('${parameter}', parameter));
+        } else if ((field.val() as string).length > length && length > 0) {
+            errorMessages.push(this.parameterLengthMsg
+              .replace('${parameter}', parameter)
+              .replace('${length}', length.toString()));
+        } else if (field.val() !== '' && regExs.length > 0) {
+            let validFlag = false;
+            for (let i in regExs) {
+                if (regExs[i].test(field.val() as string)) {
+                    validFlag = true;
+                    break;
+                }
+            }
 
-      field.toggleClass(this.invalidFieldClass, errorFlag);
+            if (!validFlag) {
+                errorMessages.push(this.parameterFormatMsg.replace('${parameter}', parameter));
+            }
 
-      return errorFlag;
+            errorFlag = !validFlag;
+        } else {
+            errorFlag = false;
+        }
+
+        field.toggleClass(this.invalidFieldClass, errorFlag);
+
+        return errorFlag;
     }
 
-    private validateDateField(field: JQuery<HTMLElement>, parameter: string, regEx: RegExp, errorMessages: string[]): boolean {
+    protected validateDateField(field: JQuery<HTMLElement>, parameter: string, regEx: RegExp, errorMessages: string[]): boolean {
         let errorFlag = true;
   
         if (field.attr('annotation-required') && field.val() === '') {   
@@ -221,31 +247,6 @@ class USI9Fields extends PDFForm {
         field.toggleClass(this.invalidFieldClass, errorFlag);
   
         return errorFlag;
-      }
-
-    protected validateFields(dialog: JQuery<HTMLElement>) {
-        let errorMessages: string[] = [];
-
-        this.validateTextField(this._lastName, this._('name.last'), this.nameFormat, errorMessages);
-        this.validateTextField(this._firstName, this._('name.first'), this.nameFormat, errorMessages);
-        this.validateTextField(this._middleInitial, this._('name.middleinitial'), this.NAFormat, errorMessages);
-        this.validateDateField(this._dob, this._('date.dob'), this.dateFormat, errorMessages);
-
-        if (errorMessages.length > 0) {
-            var errorMessage = this._('error.header') + '<br />';
-            errorMessages.forEach(element => {
-                errorMessage += ' - ' + element + '<br />';
-            });
-
-            $('.ui-dialog-titlebar-close').attr('title', '');
-            dialog.dialog('option', 'minWidth', 500).text('')
-              .dialog('option', 'title', this._('validation'))
-              .append(errorMessage).dialog('open');
-
-            return false;
-        } else {
-            return true;
-        }
     }
 
     protected processListABC(ddl: string, code: string, fields: USI9Fields) {

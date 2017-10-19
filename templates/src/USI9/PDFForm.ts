@@ -1,9 +1,13 @@
 class PDFForm {
     protected nameFormat = /^[A-Za-z ']+$/;
+    protected nameInitialFormat = /^[A-Za-z]{1}$/;
+    protected stateFormat = /^[A-Z]{2,3}$/;
     protected NAFormat = /^[NA/]+$/;
     protected DSFormat = /^[DS/]+$/;
-    protected zipFormat = /^[\d-]+$/;
-    protected zipNumber = /^(\d{5})(-\d{4}){0,1}$/;
+    protected zipFormat = /^\d+$/;
+    protected postalFormat = /^[A-Za-z0-9]+$/;
+    protected zipNumberFormat = /^\d{5}$/;
+    protected postalCodeFormat = /^[A-Za-z0-9]{6}$/;
     protected dateFormat = /^\d{2}[/]{1}\d{2}[/]{1}\d{4}$/;
     protected numberFormat = /^\d{1}$/;
     protected phoneFormat = /^[\d/NA-]+$/;

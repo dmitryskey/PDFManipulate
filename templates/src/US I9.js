@@ -11,10 +11,14 @@ var __extends = (this && this.__extends) || (function () {
 var PDFForm = (function () {
     function PDFForm() {
         this.nameFormat = /^[A-Za-z ']+$/;
+        this.nameInitialFormat = /^[A-Za-z]{1}$/;
+        this.stateFormat = /^[A-Z]{2,3}$/;
         this.NAFormat = /^[NA/]+$/;
         this.DSFormat = /^[DS/]+$/;
-        this.zipFormat = /^[\d-]+$/;
-        this.zipNumber = /^(\d{5})(-\d{4}){0,1}$/;
+        this.zipFormat = /^\d+$/;
+        this.postalFormat = /^[A-Za-z0-9]+$/;
+        this.zipNumberFormat = /^\d{5}$/;
+        this.postalCodeFormat = /^[A-Za-z0-9]{6}$/;
         this.dateFormat = /^\d{2}[/]{1}\d{2}[/]{1}\d{4}$/;
         this.numberFormat = /^\d{1}$/;
         this.phoneFormat = /^[\d/NA-]+$/;
@@ -135,7 +139,7 @@ var USI9Fields = (function (_super) {
         _this.invalidFieldClass = 'invalid';
         return _this;
     }
-    USI9Fields.prototype.validateTextField = function (field, parameter, regEx, errorMessages) {
+    USI9Fields.prototype.validateTextField = function (field, parameter, regExs, errorMessages) {
         var errorFlag = true;
         var length = field.prop('maxLength') ? field.prop('maxLength') : 0;
         if (field.attr('annotation-required') && field.val() === '') {
@@ -146,8 +150,18 @@ var USI9Fields = (function (_super) {
                 .replace('${parameter}', parameter)
                 .replace('${length}', length.toString()));
         }
-        else if (regEx && !regEx.test(field.val())) {
-            errorMessages.push(this.parameterFormatMsg.replace('${parameter}', parameter));
+        else if (field.val() !== '' && regExs.length > 0) {
+            var validFlag = false;
+            for (var i in regExs) {
+                if (regExs[i].test(field.val())) {
+                    validFlag = true;
+                    break;
+                }
+            }
+            if (!validFlag) {
+                errorMessages.push(this.parameterFormatMsg.replace('${parameter}', parameter));
+            }
+            errorFlag = !validFlag;
         }
         else {
             errorFlag = false;
@@ -168,27 +182,6 @@ var USI9Fields = (function (_super) {
         }
         field.toggleClass(this.invalidFieldClass, errorFlag);
         return errorFlag;
-    };
-    USI9Fields.prototype.validateFields = function (dialog) {
-        var errorMessages = [];
-        this.validateTextField(this._lastName, this._('name.last'), this.nameFormat, errorMessages);
-        this.validateTextField(this._firstName, this._('name.first'), this.nameFormat, errorMessages);
-        this.validateTextField(this._middleInitial, this._('name.middleinitial'), this.NAFormat, errorMessages);
-        this.validateDateField(this._dob, this._('date.dob'), this.dateFormat, errorMessages);
-        if (errorMessages.length > 0) {
-            var errorMessage = this._('error.header') + '<br />';
-            errorMessages.forEach(function (element) {
-                errorMessage += ' - ' + element + '<br />';
-            });
-            $('.ui-dialog-titlebar-close').attr('title', '');
-            dialog.dialog('option', 'minWidth', 500).text('')
-                .dialog('option', 'title', this._('validation'))
-                .append(errorMessage).dialog('open');
-            return false;
-        }
-        else {
-            return true;
-        }
     };
     USI9Fields.prototype.processListABC = function (ddl, code, fields) {
         this.numberMaxLength = 15;
@@ -708,7 +701,18 @@ var USI9Section1 = (function (_super) {
             .tooltip({ content: this._('cityhelp.tooltip') });
         this._cityHelp = this.renderHelpIcon(cityHelp, this._('cityhelp.caption'), dialog, this._('cityhelp.text'));
         this._state = state
-            .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
+            .focus(function (e) {
+            _this.hideTooltip();
+            var nonUSCountries = ['CAN', 'MEX'];
+            var zipCode = nonUSCountries.indexOf(e.currentTarget.value) < 0;
+            _this._zip.unbind('keypress');
+            _this._zip.keypress(function (e) {
+                return (nonUSCountries.indexOf(_this._state.val()) < 0
+                    ? _this.zipFormat : _this.postalFormat).test(String.fromCharCode(e.which));
+            });
+            _this._zip.prop('maxLength', zipCode ? 5 : 6);
+        })
+            .prop('title', '')
             .tooltip({ content: this._('statehelp.tooltip') });
         this._stateHelp = this.renderHelpIcon(stateHelp, this._('statehelp.caption'), dialog, this._('statehelp.text'));
         this._zip = zip
@@ -955,6 +959,39 @@ var USI9Section1 = (function (_super) {
         this.renderCitizenship(dialog, citizen, citizenHelp, national, nationalHelp, lpr, lprHelp, alien, alienHelp, uscisNumberHelp, lpruscisNumPrefix, lpruscisNum, lpruscisNumType, alienWorkAuthDate, alienuscisNumPrefix, alienuscisNum, alienuscisNumType, admissionNum, admissionNumHelp, passportNum, passportNumHelp, countryOfIssuance, countryOfIssuanceHelp, sgnEmployee, sgnEmployeeHelp, sgnEmployeeDate, sgnEmployeeDateHelp);
         this.processLPR(false);
         this.processAlien(false);
+    };
+    USI9Section1.prototype.validateFields = function (dialog) {
+        var errorMessages = [];
+        var naFields = [this._middleInitial, this._otherNames, this._apptNumber, this._email, this._phone];
+        for (var idx in naFields) {
+            if (naFields[idx].val() === '') {
+                naFields[idx].val(this.na);
+            }
+        }
+        this.validateTextField(this._lastName, this._('name.last'), [this.nameFormat], errorMessages);
+        this.validateTextField(this._firstName, this._('name.first'), [this.nameFormat], errorMessages);
+        this.validateTextField(this._middleInitial, this._('name.middleinitial'), [this.nameInitialFormat, this.NAFormat], errorMessages);
+        this.validateTextField(this._otherNames, this._('name.othernames'), [this.nameFormat, this.NAFormat], errorMessages);
+        this.validateTextField(this._address, this._('address.address'), [], errorMessages);
+        this.validateTextField(this._apptNumber, this._('address.appartment'), [this.NAFormat], errorMessages);
+        this.validateTextField(this._city, this._('address.city'), [], errorMessages);
+        this.validateTextField(this._state, this._('address.state'), [this.stateFormat], errorMessages);
+        this.validateTextField(this._zip, this._('address.zip'), [['CAN', 'MEX'].indexOf(this._state.val()) < 0 ? this.zipNumberFormat : this.postalCodeFormat], errorMessages);
+        this.validateDateField(this._dob, this._('date.dob'), this.dateFormat, errorMessages);
+        if (errorMessages.length > 0) {
+            var errorMessage = this._('error.header') + '<br />';
+            errorMessages.forEach(function (element) {
+                errorMessage += ' - ' + element + '<br />';
+            });
+            $('.ui-dialog-titlebar-close').attr('title', '');
+            dialog.dialog('option', 'minWidth', 500).text('')
+                .dialog('option', 'title', this._('validation'))
+                .append(errorMessage).dialog('open');
+            return false;
+        }
+        else {
+            return true;
+        }
     };
     return USI9Section1;
 }(USI9Fields));
