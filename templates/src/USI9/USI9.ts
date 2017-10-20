@@ -4,8 +4,6 @@
 declare var PDFViewerApplication: any;
 
 class USI9 extends USI9Section3 {
-    private annotationName = 'annotation-name';
-
     constructor() {
         super();
 

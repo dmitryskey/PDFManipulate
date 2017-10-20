@@ -186,8 +186,6 @@ class USI9Fields extends PDFForm {
     protected _employerNameSec3Help: JQuery<HTMLElement>;
     //endregion
 
-    protected na = super._('NA');
-
     private numberMaxLength = 15;
     private fieldFormat = /^[a-zA-Z0-9]+$/;
     private issuingAuthList: { [index: string]: string; };
@@ -198,7 +196,10 @@ class USI9Fields extends PDFForm {
     private parameterFormatMsg = this._('parameter.format');
     private dateFormatMsg = this._('date.format');
 
-    private invalidFieldClass = 'invalid';
+    protected invalidFieldClass = 'invalid';
+
+    protected annotationName = 'annotation-name';
+    protected na = super._('NA');
 
     protected validateTextField(field: JQuery<HTMLElement>, parameter: string, regExs: RegExp[], errorMessages: string[]): boolean {
         let errorFlag = true;

@@ -14,6 +14,7 @@ var PDFForm = (function () {
         this.nameInitialFormat = /^[A-Za-z]{1}$/;
         this.stateFormat = /^[A-Z]{2,3}$/;
         this.NAFormat = /^[NA/]+$/;
+        this.NAString = /^N\/A$/;
         this.DSFormat = /^[DS/]+$/;
         this.zipFormat = /^\d+$/;
         this.postalFormat = /^[A-Za-z0-9]+$/;
@@ -21,8 +22,9 @@ var PDFForm = (function () {
         this.postalCodeFormat = /^[A-Za-z0-9]{6}$/;
         this.dateFormat = /^\d{2}[/]{1}\d{2}[/]{1}\d{4}$/;
         this.numberFormat = /^\d{1}$/;
+        this.emailFormat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         this.phoneFormat = /^[\d/NA-]+$/;
-        this.phoneNumber = /^[(]{0,1}\d{3}[ )-]{0,1}\d{3}[ -]{0,1}\d{4}$/;
+        this.phoneNumber = /^\d{3}\-{1}\d{3}\-{1}\d{4}$/;
         this.usPassportNumber = /^[a-zA-Z0-9]{6,9}$/;
         this.cardNumber = /^[A-Za-z]{3}[0-9]{10}$/;
         this.passportNumber = /^[a-zA-Z0-9]{6,12}$/;
@@ -129,7 +131,6 @@ var USI9Fields = (function (_super) {
     __extends(USI9Fields, _super);
     function USI9Fields() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.na = _super.prototype._.call(_this, 'NA');
         _this.numberMaxLength = 15;
         _this.fieldFormat = /^[a-zA-Z0-9]+$/;
         _this.parameterExistsMsg = _this._('parameter.exists');
@@ -137,6 +138,8 @@ var USI9Fields = (function (_super) {
         _this.parameterFormatMsg = _this._('parameter.format');
         _this.dateFormatMsg = _this._('date.format');
         _this.invalidFieldClass = 'invalid';
+        _this.annotationName = 'annotation-name';
+        _this.na = _super.prototype._.call(_this, 'NA');
         return _this;
     }
     USI9Fields.prototype.validateTextField = function (field, parameter, regExs, errorMessages) {
@@ -726,12 +729,12 @@ var USI9Section1 = (function (_super) {
         this._ssn = ssn;
         for (var i = 0; i < ssn.length - 1; i++) {
             this._ssn[i]
-                .attr('nextElement', (this._ssn[i + 1]).attr('name'))
+                .attr('nextElement', (this._ssn[i + 1]).attr(this.annotationName))
                 .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
                 .tooltip({ content: this._('ssnhelp.tooltip') })
                 .keypress(function (e) {
                 if (_this.numberFormat.test(String.fromCharCode(e.which))) {
-                    $('[name=' + $(e.target).attr('nextElement') + ']').focus();
+                    $('[' + _this.annotationName + '=' + $(e.target).attr('nextElement') + ']').focus();
                     return true;
                 }
                 else {
@@ -961,6 +964,7 @@ var USI9Section1 = (function (_super) {
         this.processAlien(false);
     };
     USI9Section1.prototype.validateFields = function (dialog) {
+        var _this = this;
         var errorMessages = [];
         var naFields = [this._middleInitial, this._otherNames, this._apptNumber, this._email, this._phone];
         for (var idx in naFields) {
@@ -970,14 +974,45 @@ var USI9Section1 = (function (_super) {
         }
         this.validateTextField(this._lastName, this._('name.last'), [this.nameFormat], errorMessages);
         this.validateTextField(this._firstName, this._('name.first'), [this.nameFormat], errorMessages);
-        this.validateTextField(this._middleInitial, this._('name.middleinitial'), [this.nameInitialFormat, this.NAFormat], errorMessages);
-        this.validateTextField(this._otherNames, this._('name.othernames'), [this.nameFormat, this.NAFormat], errorMessages);
+        this.validateTextField(this._middleInitial, this._('name.middleinitial'), [this.nameInitialFormat, this.NAString], errorMessages);
+        this.validateTextField(this._otherNames, this._('name.othernames'), [this.nameFormat, this.NAString], errorMessages);
         this.validateTextField(this._address, this._('address.address'), [], errorMessages);
-        this.validateTextField(this._apptNumber, this._('address.appartment'), [this.NAFormat], errorMessages);
+        this.validateTextField(this._apptNumber, this._('address.appartment'), [this.NAString], errorMessages);
         this.validateTextField(this._city, this._('address.city'), [], errorMessages);
         this.validateTextField(this._state, this._('address.state'), [this.stateFormat], errorMessages);
         this.validateTextField(this._zip, this._('address.zip'), [['CAN', 'MEX'].indexOf(this._state.val()) < 0 ? this.zipNumberFormat : this.postalCodeFormat], errorMessages);
         this.validateDateField(this._dob, this._('date.dob'), this.dateFormat, errorMessages);
+        var areaCode = Math.round(100 * this._ssn[0].val() +
+            10 * this._ssn[1].val() +
+            1 * this._ssn[2].val());
+        this._ssn.forEach(function (field) { return field.toggleClass(_this.invalidFieldClass, false); });
+        if (this._ssn.filter(function (element) { return element.val() !== ''; }).length > 0) {
+            if (this._ssn.filter(function (element) { return element.val() === ''; }).length > 0) {
+                errorMessages.push(this._('ssn.allfields'));
+                this._ssn.forEach(function (field) { return field.toggleClass(_this.invalidFieldClass, true); });
+            }
+            else if (this._ssn.filter(function (element) { return !_this.numberFormat.test(element.val()); }).length > 0) {
+                errorMessages.push(this._('ssn.allnumeric'));
+                this._ssn.filter(function (element) { return !_this.numberFormat.test(element.val()); }).forEach(function (field) { return field.toggleClass(_this.invalidFieldClass, true); });
+            }
+            else if (areaCode === 0 || areaCode === 666 || areaCode > 899) {
+                errorMessages.push(this._('ssn.areanumber'));
+                [this._ssn[0], this._ssn[1], this._ssn[2]].forEach(function (field) { return field.toggleClass(_this.invalidFieldClass, true); });
+            }
+            else if (Math.round(10 * this._ssn[3].val() + 1 * this._ssn[4].val()) === 0) {
+                errorMessages.push(this._('ssn.groupnumber'));
+                [this._ssn[3], this._ssn[4]].forEach(function (field) { return field.toggleClass(_this.invalidFieldClass, true); });
+            }
+            else if (Math.round(1000 * this._ssn[5].val() +
+                100 * this._ssn[6].val() +
+                10 * this._ssn[7].val() +
+                1 * this._ssn[8].val()) === 0) {
+                errorMessages.push(this._('ssn.serialnumber'));
+                [this._ssn[5], this._ssn[6], this._ssn[7], this._ssn[8]].forEach(function (field) { return field.toggleClass(_this.invalidFieldClass, true); });
+            }
+        }
+        this.validateTextField(this._email, this._('email.address'), [this.NAString, this.emailFormat], errorMessages);
+        this.validateTextField(this._phone, this._('employee.phone'), [this.NAString, this.phoneNumber], errorMessages);
         if (errorMessages.length > 0) {
             var errorMessage = this._('error.header') + '<br />';
             errorMessages.forEach(function (element) {
@@ -1321,7 +1356,6 @@ var USI9 = (function (_super) {
     __extends(USI9, _super);
     function USI9() {
         var _this = _super.call(this) || this;
-        _this.annotationName = 'annotation-name';
         $('body').append('<div id="dialogPage"></div>');
         var self = _this;
         $('#dialogPage').dialog({

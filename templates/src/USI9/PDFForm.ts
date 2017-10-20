@@ -3,6 +3,7 @@ class PDFForm {
     protected nameInitialFormat = /^[A-Za-z]{1}$/;
     protected stateFormat = /^[A-Z]{2,3}$/;
     protected NAFormat = /^[NA/]+$/;
+    protected NAString = /^N\/A$/;
     protected DSFormat = /^[DS/]+$/;
     protected zipFormat = /^\d+$/;
     protected postalFormat = /^[A-Za-z0-9]+$/;
@@ -10,8 +11,9 @@ class PDFForm {
     protected postalCodeFormat = /^[A-Za-z0-9]{6}$/;
     protected dateFormat = /^\d{2}[/]{1}\d{2}[/]{1}\d{4}$/;
     protected numberFormat = /^\d{1}$/;
+    protected emailFormat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     protected phoneFormat = /^[\d/NA-]+$/;
-    protected phoneNumber = /^[(]{0,1}\d{3}[ )-]{0,1}\d{3}[ -]{0,1}\d{4}$/;
+    protected phoneNumber = /^\d{3}\-{1}\d{3}\-{1}\d{4}$/;
     protected usPassportNumber = /^[a-zA-Z0-9]{6,9}$/;
     protected cardNumber = /^[A-Za-z]{3}[0-9]{10}$/;
     protected passportNumber = /^[a-zA-Z0-9]{6,12}$/;

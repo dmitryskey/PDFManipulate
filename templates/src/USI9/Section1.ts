@@ -176,12 +176,12 @@ class USI9Section1 extends USI9Fields {
         this._ssn = ssn;
         for (var i = 0; i < ssn.length - 1; i++) {
             this._ssn[i]
-            .attr('nextElement', (this._ssn[i + 1]).attr('name'))
+            .attr('nextElement', (this._ssn[i + 1]).attr(this.annotationName))
             .focus(e => this.hideTooltip()).prop('title', '')
             .tooltip({content: this._('ssnhelp.tooltip')})
             .keypress(e => {
                 if (this.numberFormat.test(String.fromCharCode(e.which))) {
-                    $('[name=' + $(e.target).attr('nextElement') + ']').focus();
+                    $('[' + this.annotationName + '=' + $(e.target).attr('nextElement') + ']').focus();
                     return true;
                 }
                 else {
@@ -727,15 +727,53 @@ class USI9Section1 extends USI9Fields {
 
         this.validateTextField(this._lastName, this._('name.last'), [this.nameFormat], errorMessages);
         this.validateTextField(this._firstName, this._('name.first'), [this.nameFormat], errorMessages);
-        this.validateTextField(this._middleInitial, this._('name.middleinitial'), [this.nameInitialFormat, this.NAFormat], errorMessages);
-        this.validateTextField(this._otherNames, this._('name.othernames'), [this.nameFormat, this.NAFormat], errorMessages);
+        this.validateTextField(this._middleInitial, this._('name.middleinitial'), [this.nameInitialFormat, this.NAString], errorMessages);
+        this.validateTextField(this._otherNames, this._('name.othernames'), [this.nameFormat, this.NAString], errorMessages);
         this.validateTextField(this._address, this._('address.address'), [], errorMessages);
-        this.validateTextField(this._apptNumber, this._('address.appartment'), [this.NAFormat], errorMessages);
+        this.validateTextField(this._apptNumber, this._('address.appartment'), [this.NAString], errorMessages);
         this.validateTextField(this._city, this._('address.city'), [], errorMessages);
         this.validateTextField(this._state, this._('address.state'), [this.stateFormat], errorMessages);
         this.validateTextField(this._zip, this._('address.zip'),
             [['CAN', 'MEX'].indexOf(this._state.val() as string) < 0 ? this.zipNumberFormat: this.postalCodeFormat], errorMessages);
         this.validateDateField(this._dob, this._('date.dob'), this.dateFormat, errorMessages);
+
+        let areaCode = Math.round(100 * (this._ssn[0].val() as number) +
+                                  10 * (this._ssn[1].val() as number) +
+                                  1 * (this._ssn[2].val() as number));
+
+        this._ssn.forEach(field => field.toggleClass(this.invalidFieldClass, false));
+        if (this._ssn.filter(element => element.val() !== '').length > 0) {
+            if (this._ssn.filter(element => element.val() === '').length > 0) {
+                errorMessages.push(this._('ssn.allfields'));
+                this._ssn.forEach(field => field.toggleClass(this.invalidFieldClass, true));
+            }
+            else if (this._ssn.filter(element => !this.numberFormat.test(element.val() as string)).length > 0) {
+                errorMessages.push(this._('ssn.allnumeric'));
+                this._ssn.filter(element => !this.numberFormat.test(element.val() as string)).forEach(
+                    field => field.toggleClass(this.invalidFieldClass, true));
+            }
+            else if (areaCode === 0 || areaCode === 666 || areaCode > 899) {
+                errorMessages.push(this._('ssn.areanumber'));
+                [this._ssn[0], this._ssn[1], this._ssn[2]].forEach(
+                    field => field.toggleClass(this.invalidFieldClass, true));
+            }
+            else if (Math.round(10 * (this._ssn[3].val() as number) + 1 * (this._ssn[4].val() as number)) === 0) {
+                errorMessages.push(this._('ssn.groupnumber'));
+                [this._ssn[3], this._ssn[4]].forEach(
+                    field => field.toggleClass(this.invalidFieldClass, true));
+            }
+            else if (Math.round(1000 * (this._ssn[5].val() as number) +
+                                100 * (this._ssn[6].val() as number) +
+                                10 * (this._ssn[7].val() as number) +
+                                1 * (this._ssn[8].val() as number)) === 0) {
+                errorMessages.push(this._('ssn.serialnumber'));
+                [this._ssn[5], this._ssn[6], this._ssn[7], this._ssn[8]].forEach(
+                    field => field.toggleClass(this.invalidFieldClass, true));
+            }
+        }
+
+        this.validateTextField(this._email, this._('email.address'), [this.NAString, this.emailFormat], errorMessages);
+        this.validateTextField(this._phone, this._('employee.phone'), [this.NAString, this.phoneNumber], errorMessages);
 
         if (errorMessages.length > 0) {
             var errorMessage = this._('error.header') + '<br />';
