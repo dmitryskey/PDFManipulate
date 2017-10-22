@@ -18,6 +18,10 @@ public class Controller {
       Gson gson = new GsonBuilder().create();
       Fields f = gson.fromJson(jsonReader, Fields.class);
 
+      if (!(new File(".." + f.file)).exists()) {
+        return null;
+      }
+
       ByteArrayOutputStream w = new ByteArrayOutputStream();
 
       PdfStamper s = new PdfStamper(new PdfReader(".." + f.file), w);

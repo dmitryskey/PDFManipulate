@@ -25,15 +25,15 @@ var PDFForm = (function () {
         this.emailFormat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         this.phoneFormat = /^[\d/NA-]+$/;
         this.phoneNumber = /^\d{3}\-{1}\d{3}\-{1}\d{4}$/;
+        this.uscisNumberFormat = /^\d{7,9}$/;
+        this.admissionNumberFormat = /^\d{1}$/;
         this.usPassportNumber = /^[a-zA-Z0-9]{6,9}$/;
         this.cardNumber = /^[A-Za-z]{3}[0-9]{10}$/;
         this.passportNumber = /^[a-zA-Z0-9]{6,12}$/;
         this.i94Number = /^\d{11}$/;
         var self = this;
         $(document).tooltip({
-            show: {
-                delay: 200
-            }
+            show: { delay: 200 }
         });
         var monthNames = [];
         var monthNamesShort = [];
@@ -76,6 +76,7 @@ var PDFForm = (function () {
         for (var c in arr) {
             if (arr[c] !== ctrl) {
                 arr[c].prop('checked', false);
+                arr[c].parent().children('span').text('');
             }
         }
     };
@@ -133,27 +134,30 @@ var USI9Fields = (function (_super) {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.numberMaxLength = 15;
         _this.fieldFormat = /^[a-zA-Z0-9]+$/;
-        _this.parameterExistsMsg = _this._('parameter.exists');
-        _this.parameterLengthMsg = _this._('parameter.length');
-        _this.parameterFormatMsg = _this._('parameter.format');
+        _this.paramExistsMsg = _this._('parameter.exists');
+        _this.paramLengthMsg = _this._('parameter.length');
+        _this.paramFormatMsg = _this._('parameter.format');
+        _this.paramMaxValueMsg = _this._('parameter.max');
+        _this.paramMinValueMsg = _this._('parameter.min');
         _this.dateFormatMsg = _this._('date.format');
         _this.invalidFieldClass = 'invalid';
         _this.annotationName = 'annotation-name';
+        _this.annotationRequired = 'annotation-required';
         _this.na = _super.prototype._.call(_this, 'NA');
         return _this;
     }
-    USI9Fields.prototype.validateTextField = function (field, parameter, regExs, errorMessages) {
+    USI9Fields.prototype.validateTextField = function (field, parameter, regExs, validateIfEmpty, errorMessages) {
         var errorFlag = true;
         var length = field.prop('maxLength') ? field.prop('maxLength') : 0;
-        if (field.attr('annotation-required') && field.val() === '') {
-            errorMessages.push(this.parameterExistsMsg.replace('${parameter}', parameter));
+        if (field.attr(this.annotationRequired) && field.val() === '') {
+            errorMessages.push(this.paramExistsMsg.replace('${parameter}', parameter));
         }
         else if (field.val().length > length && length > 0) {
-            errorMessages.push(this.parameterLengthMsg
+            errorMessages.push(this.paramLengthMsg
                 .replace('${parameter}', parameter)
                 .replace('${length}', length.toString()));
         }
-        else if (field.val() !== '' && regExs.length > 0) {
+        else if ((field.val() !== '' || validateIfEmpty) && regExs.length > 0) {
             var validFlag = false;
             for (var i in regExs) {
                 if (regExs[i].test(field.val())) {
@@ -162,23 +166,32 @@ var USI9Fields = (function (_super) {
                 }
             }
             if (!validFlag) {
-                errorMessages.push(this.parameterFormatMsg.replace('${parameter}', parameter));
+                errorMessages.push(this.paramFormatMsg.replace('${parameter}', parameter));
             }
             errorFlag = !validFlag;
-        }
-        else {
-            errorFlag = false;
-        }
-        field.toggleClass(this.invalidFieldClass, errorFlag);
-        return errorFlag;
-    };
-    USI9Fields.prototype.validateDateField = function (field, parameter, regEx, errorMessages) {
-        var errorFlag = true;
-        if (field.attr('annotation-required') && field.val() === '') {
-            errorMessages.push(this.parameterExistsMsg.replace('${parameter}', parameter));
-        }
-        else if (regEx && !regEx.test(field.val())) {
-            errorMessages.push(this.parameterFormatMsg.replace('${parameter}', parameter));
+            if (!errorFlag) {
+                var maxDate = field.datepicker('option', 'maxDate');
+                var minDate = field.datepicker('option', 'minDate');
+                if (maxDate) {
+                    maxDate.setHours(0, 0, 0, 0);
+                }
+                if (minDate) {
+                    minDate.setHours(0, 0, 0, 0);
+                }
+                if (maxDate && (new Date(field.val()) > maxDate)) {
+                    errorMessages.push(this.paramMaxValueMsg
+                        .replace('${parameter}', parameter)
+                        .replace('${value}', maxDate.toDateString()));
+                }
+                else if (minDate && (new Date(field.val()) < minDate)) {
+                    errorMessages.push(this.paramMinValueMsg
+                        .replace('${parameter}', parameter)
+                        .replace('${value}', minDate.toDateString()));
+                }
+                else {
+                    errorFlag = false;
+                }
+            }
         }
         else {
             errorFlag = false;
@@ -646,7 +659,7 @@ var USI9Section1 = (function (_super) {
         this._lpruscisNumPrefix.val('');
         this._lpruscisNum.prop('disabled', true).val(na);
         this._lpruscisNumType.prop('disabled', true);
-        this.filterCombolist(this._lpruscisNumType, flag ? { 0: na } : {}, flag ? '0' : null, this, this.processListABC);
+        this.filterCombolist(this._lpruscisNumType, {}, null, this, this.processListABC);
     };
     USI9Section1.prototype.processAlien = function (flag) {
         var na = flag ? this._('NA') : '';
@@ -657,7 +670,7 @@ var USI9Section1 = (function (_super) {
         this._admissionNum.prop('disabled', true).val(na);
         this._passportNum.prop('disabled', true).val(na);
         this._countryOfIssuance.prop('disabled', true);
-        this.filterCombolist(this._alienuscisNumType, flag ? { 0: na } : {}, flag ? '0' : null, this, this.processListABC);
+        this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
         this.filterCombolist(this._countryOfIssuance, flag ? { 0: na } : {}, flag ? '0' : null, this, this.processListABC);
     };
     USI9Section1.prototype.renderNameAndAddress = function (dialog, lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, otherNames, otherNamesHelp, address, addressHelp, apptNumber, apptNumberHelp, city, cityHelp, state, stateHelp, zip, zipHelp) {
@@ -880,13 +893,13 @@ var USI9Section1 = (function (_super) {
             .tooltip({ content: this._('uscisnumber.tooltip') })
             .keypress(function (e) { return _this.numberFormat.test(String.fromCharCode(e.which)); })
             .change(function () {
-            if (_this._alienuscisNum.val() !== '') {
-                if (_this._alienuscisNumType.val() === '') {
+            if (!_this.EmptyOrNA(_this._alienuscisNum)) {
+                if (_this.EmptyOrNA(_this._alienuscisNumType)) {
                     _this.filterCombolist(_this._alienuscisNumType, { 'A': _this._('aliennumber'), 'U': _this._('uscisnumber') }, null, _this, _this.processListABC);
                 }
                 _this._admissionNum.val(_this.na);
                 _this._passportNum.val(_this.na);
-                _this.filterCombolist(_this._countryOfIssuance, { 0: _this.na }, _this.na, _this, _this.processListABC);
+                _this.filterCombolist(_this._countryOfIssuance, { 0: _this.na }, '0', _this, _this.processListABC);
             }
             else {
                 _this.filterCombolist(_this._alienuscisNumType, {}, null, _this, _this.processListABC);
@@ -904,18 +917,18 @@ var USI9Section1 = (function (_super) {
         this._admissionNum = admissionNum
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
             .tooltip({ content: this._('admissionnumber.tooltip') })
-            .keypress(function (e) {
-            return _this.numberFormat.test(String.fromCharCode(e.which));
-        })
+            .keypress(function (e) { return _this.numberFormat.test(String.fromCharCode(e.which)); })
             .change(function () {
-            if (_this._admissionNum.val() !== '') {
+            if (!_this.EmptyOrNA(_this._admissionNum)) {
                 _this._alienuscisNum.val(_this.na);
-                _this.filterCombolist(_this._alienuscisNumType, { 0: _this.na }, _this.na, _this, _this.processListABC);
+                _this._alienuscisNumPrefix.val('');
+                _this.filterCombolist(_this._alienuscisNumType, {}, null, _this, _this.processListABC);
                 _this._passportNum.val(_this.na);
-                _this.filterCombolist(_this._countryOfIssuance, { 0: _this.na }, _this.na, _this, _this.processListABC);
+                _this.filterCombolist(_this._countryOfIssuance, { 0: _this.na }, '0', _this, _this.processListABC);
             }
             else {
                 _this._alienuscisNum.val('');
+                _this._alienuscisNumPrefix.val('');
                 _this.filterCombolist(_this._alienuscisNumType, {}, null, _this, _this.processListABC);
                 _this._passportNum.val('');
                 _this.filterCombolist(_this._countryOfIssuance, {}, null, _this, _this.processListABC);
@@ -926,11 +939,12 @@ var USI9Section1 = (function (_super) {
             .focus(function (e) { return _this.hideTooltip(); }).prop('title', '')
             .tooltip({ content: this._('passportnumber.tooltip') })
             .change(function () {
-            if (_this._passportNum.val() !== '') {
+            if (!_this.EmptyOrNA(_this._passportNum)) {
                 _this._alienuscisNum.val(_this.na);
+                _this._alienuscisNumPrefix.val('');
                 _this.filterCombolist(_this._alienuscisNumType, { 0: _this.na }, _this.na, _this, _this.processListABC);
                 _this._admissionNum.val(_this.na);
-                if (_this._countryOfIssuance.val() === '') {
+                if (_this.EmptyOrNA(_this._countryOfIssuance)) {
                     _this.filterCombolist(_this._countryOfIssuance, JSON.parse(_this._('countries')), null, _this, _this.processListABC);
                 }
             }
@@ -963,7 +977,7 @@ var USI9Section1 = (function (_super) {
         this.processLPR(false);
         this.processAlien(false);
     };
-    USI9Section1.prototype.validateFields = function (dialog) {
+    USI9Section1.prototype.validateFields = function () {
         var _this = this;
         var errorMessages = [];
         var naFields = [this._middleInitial, this._otherNames, this._apptNumber, this._email, this._phone];
@@ -972,16 +986,16 @@ var USI9Section1 = (function (_super) {
                 naFields[idx].val(this.na);
             }
         }
-        this.validateTextField(this._lastName, this._('name.last'), [this.nameFormat], errorMessages);
-        this.validateTextField(this._firstName, this._('name.first'), [this.nameFormat], errorMessages);
-        this.validateTextField(this._middleInitial, this._('name.middleinitial'), [this.nameInitialFormat, this.NAString], errorMessages);
-        this.validateTextField(this._otherNames, this._('name.othernames'), [this.nameFormat, this.NAString], errorMessages);
-        this.validateTextField(this._address, this._('address.address'), [], errorMessages);
-        this.validateTextField(this._apptNumber, this._('address.appartment'), [this.NAString], errorMessages);
-        this.validateTextField(this._city, this._('address.city'), [], errorMessages);
-        this.validateTextField(this._state, this._('address.state'), [this.stateFormat], errorMessages);
-        this.validateTextField(this._zip, this._('address.zip'), [['CAN', 'MEX'].indexOf(this._state.val()) < 0 ? this.zipNumberFormat : this.postalCodeFormat], errorMessages);
-        this.validateDateField(this._dob, this._('date.dob'), this.dateFormat, errorMessages);
+        this.validateTextField(this._lastName, this._('name.last'), [this.nameFormat], false, errorMessages);
+        this.validateTextField(this._firstName, this._('name.first'), [this.nameFormat], false, errorMessages);
+        this.validateTextField(this._middleInitial, this._('name.middleinitial'), [this.nameInitialFormat, this.NAString], false, errorMessages);
+        this.validateTextField(this._otherNames, this._('name.othernames'), [this.nameFormat, this.NAString], false, errorMessages);
+        this.validateTextField(this._address, this._('address.address'), [], false, errorMessages);
+        this.validateTextField(this._apptNumber, this._('address.appartment'), [this.NAString], false, errorMessages);
+        this.validateTextField(this._city, this._('address.city'), [], false, errorMessages);
+        this.validateTextField(this._state, this._('address.state'), [this.stateFormat], false, errorMessages);
+        this.validateTextField(this._zip, this._('address.zip'), [['CAN', 'MEX'].indexOf(this._state.val()) < 0 ? this.zipNumberFormat : this.postalCodeFormat], false, errorMessages);
+        this.validateTextField(this._dob, this._('date.dob'), [this.dateFormat], true, errorMessages);
         var areaCode = Math.round(100 * this._ssn[0].val() +
             10 * this._ssn[1].val() +
             1 * this._ssn[2].val());
@@ -1011,22 +1025,53 @@ var USI9Section1 = (function (_super) {
                 [this._ssn[5], this._ssn[6], this._ssn[7], this._ssn[8]].forEach(function (field) { return field.toggleClass(_this.invalidFieldClass, true); });
             }
         }
-        this.validateTextField(this._email, this._('email.address'), [this.NAString, this.emailFormat], errorMessages);
-        this.validateTextField(this._phone, this._('employee.phone'), [this.NAString, this.phoneNumber], errorMessages);
-        if (errorMessages.length > 0) {
-            var errorMessage = this._('error.header') + '<br />';
-            errorMessages.forEach(function (element) {
-                errorMessage += ' - ' + element + '<br />';
-            });
-            $('.ui-dialog-titlebar-close').attr('title', '');
-            dialog.dialog('option', 'minWidth', 500).text('')
-                .dialog('option', 'title', this._('validation'))
-                .append(errorMessage).dialog('open');
-            return false;
+        this.validateTextField(this._email, this._('email.address'), [this.NAString, this.emailFormat], false, errorMessages);
+        this.validateTextField(this._phone, this._('employee.phone'), [this.NAString, this.phoneNumber], false, errorMessages);
+        var citizenship = [this._citizen, this._national, this._lpr, this._alien];
+        var statusSelected = citizenship.filter(function (status) { return status.prop('checked'); }).length > 0;
+        if (!statusSelected) {
+            errorMessages.push(this._('citizenship.status'));
+        }
+        citizenship.forEach(function (status) { return status.toggleClass(_this.invalidFieldClass, !statusSelected); });
+        if (this._lpr.prop('checked')) {
+            this._lpruscisNum.attr(this.annotationRequired, 'true');
+            this.validateTextField(this._lpruscisNum, this._('citizenship.uscis'), [this.uscisNumberFormat], true, errorMessages);
         }
         else {
-            return true;
+            this._lpruscisNum.removeAttr(this.annotationRequired);
         }
+        if (this._alien.prop('checked')) {
+            this._alienWorkAuthDate.attr(this.annotationRequired, 'true');
+            this.validateTextField(this._alienWorkAuthDate, this._('citizenship.alienworkauthdate'), [this.NAString, this.dateFormat], true, errorMessages);
+            [this._alienuscisNum, this._admissionNum, this._passportNum, this._countryOfIssuance].forEach(function (field) {
+                return field.toggleClass(_this.invalidFieldClass, false);
+            });
+            this.validateTextField(this._alienuscisNum, this._('citizenship.uscis'), [this.NAFormat, this.uscisNumberFormat], false, errorMessages);
+            this.validateTextField(this._admissionNum, this._('citizenship.admission'), [this.NAFormat, this.admissionNumberFormat], false, errorMessages);
+            this.validateTextField(this._passportNum, this._('citizenship.passport'), [this.NAFormat, this.passportNumber], false, errorMessages);
+            if (this.EmptyOrNA(this._alienuscisNum) && this.EmptyOrNA(this._admissionNum) &&
+                this.EmptyOrNA(this._passportNum) && this.EmptyOrNA(this._countryOfIssuance)) {
+                [this._alienuscisNum, this._admissionNum, this._passportNum, this._countryOfIssuance].forEach(function (field) {
+                    return field.toggleClass(_this.invalidFieldClass, true);
+                });
+                errorMessages.push(this.paramExistsMsg.replace('${parameter}', this._('citizenship.alienadmissionpassport')));
+            }
+            else if (this.EmptyOrNA(this._alienuscisNum) && this.EmptyOrNA(this._admissionNum) &&
+                (this.EmptyOrNA(this._passportNum) || this.EmptyOrNA(this._countryOfIssuance))) {
+                [this._passportNum, this._countryOfIssuance].forEach(function (field) {
+                    return field.toggleClass(_this.invalidFieldClass, true);
+                });
+                errorMessages.push(this.paramExistsMsg.replace('${parameter}', this._('citizenship.passportcountry')));
+            }
+        }
+        else {
+            this._alienWorkAuthDate.removeAttr(this.annotationRequired);
+        }
+        this.validateTextField(this._sgnEmployeeDate, this._('date.sgnemployee'), [this.dateFormat], true, errorMessages);
+        return errorMessages;
+    };
+    USI9Section1.prototype.EmptyOrNA = function (field) {
+        return [null, '', this.na].indexOf(field.val()) >= 0;
     };
     return USI9Section1;
 }(USI9Fields));
@@ -1103,6 +1148,10 @@ var USI9Translator = (function (_super) {
             .tooltip({ content: this._('translatorzip.tooltip') })
             .keypress(function (e) { return _this.zipFormat.test(String.fromCharCode(e.which)); });
         this._translatorZipHelp = this.renderHelpIcon(translatorZipHelp, this._('translatorziphelp.caption'), dialog, this._('translatorziphelp.text'));
+    };
+    USI9Translator.prototype.validateFields = function () {
+        var errorMessages = _super.prototype.validateFields.call(this);
+        return errorMessages;
     };
     return USI9Translator;
 }(USI9Section1));
@@ -1390,6 +1439,23 @@ var USI9 = (function (_super) {
                 'operation': op ? 's' : 'd'
             });
         });
+    };
+    USI9.prototype.validateFields = function (dialog) {
+        var errorMessages = _super.prototype.validateFields.call(this);
+        if (errorMessages.length > 0) {
+            var errorMessage = this._('error.header') + '<br />';
+            errorMessages.forEach(function (element) {
+                errorMessage += ' - ' + element + '<br />';
+            });
+            $('.ui-dialog-titlebar-close').attr('title', '');
+            dialog.dialog('option', 'minWidth', 500).text('')
+                .dialog('option', 'title', this._('validation'))
+                .append(errorMessage).dialog('open');
+            return false;
+        }
+        else {
+            return true;
+        }
     };
     USI9.prototype.renderSections = function () {
         var _this = this;

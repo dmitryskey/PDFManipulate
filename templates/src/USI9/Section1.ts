@@ -7,7 +7,7 @@ class USI9Section1 extends USI9Fields {
         this._lpruscisNum.prop('disabled', true).val(na);
         this._lpruscisNumType.prop('disabled', true);
 
-        this.filterCombolist(this._lpruscisNumType, flag ? {0:na} : {}, flag ? '0' : null, this, this.processListABC);
+        this.filterCombolist(this._lpruscisNumType, {}, null, this, this.processListABC);
     }
 
     private processAlien(flag: boolean) {
@@ -20,7 +20,7 @@ class USI9Section1 extends USI9Fields {
         this._passportNum.prop('disabled', true).val(na);
         this._countryOfIssuance.prop('disabled', true);
 
-        this.filterCombolist(this._alienuscisNumType, flag ? {0:na} : {}, flag ? '0' : null, this, this.processListABC);
+        this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
         this.filterCombolist(this._countryOfIssuance, flag ? {0:na} : {}, flag ? '0' : null, this, this.processListABC);
     }
 
@@ -497,8 +497,8 @@ class USI9Section1 extends USI9Fields {
         .tooltip({content: this._('uscisnumber.tooltip')})
         .keypress(e => this.numberFormat.test(String.fromCharCode(e.which)))
         .change(() => {
-            if (this._alienuscisNum.val() !== '') {
-                if (this._alienuscisNumType.val() === '') {
+            if (!this.EmptyOrNA(this._alienuscisNum)) {
+                if (this.EmptyOrNA(this._alienuscisNumType)) {
                     this.filterCombolist(
                         this._alienuscisNumType, 
                         {'A':this._('aliennumber'), 'U':this._('uscisnumber')},
@@ -509,7 +509,7 @@ class USI9Section1 extends USI9Fields {
     
                 this._admissionNum.val(this.na);
                 this._passportNum.val(this.na);
-                this.filterCombolist(this._countryOfIssuance, {0:this.na}, this.na, this, this.processListABC);
+                this.filterCombolist(this._countryOfIssuance, {0:this.na}, '0', this, this.processListABC);
             }
             else {
                 this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
@@ -529,18 +529,19 @@ class USI9Section1 extends USI9Fields {
         this._admissionNum = admissionNum
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('admissionnumber.tooltip')})
-        .keypress(e =>
-            this.numberFormat.test(String.fromCharCode(e.which)))
+        .keypress(e => this.numberFormat.test(String.fromCharCode(e.which)))
         .change(() => {
-            if (this._admissionNum.val() !== '') {
+            if (!this.EmptyOrNA(this._admissionNum)) {
                 this._alienuscisNum.val(this.na);
-                this.filterCombolist(this._alienuscisNumType, {0:this.na}, this.na, this, this.processListABC);
+                this._alienuscisNumPrefix.val('');
+                this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
     
                 this._passportNum.val(this.na);
-                this.filterCombolist(this._countryOfIssuance, {0:this.na}, this.na, this, this.processListABC);
+                this.filterCombolist(this._countryOfIssuance, {0:this.na}, '0', this, this.processListABC);
             }
             else {
                 this._alienuscisNum.val('');
+                this._alienuscisNumPrefix.val('');
                 this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
                 this._passportNum.val('');
                 this.filterCombolist(this._countryOfIssuance, {}, null, this, this.processListABC);
@@ -558,13 +559,14 @@ class USI9Section1 extends USI9Fields {
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('passportnumber.tooltip')})
         .change(() => {
-            if (this._passportNum.val() !== '') {
+            if (!this.EmptyOrNA(this._passportNum)) {
                 this._alienuscisNum.val(this.na);
+                this._alienuscisNumPrefix.val('');
                 this.filterCombolist(this._alienuscisNumType, {0:this.na}, this.na, this, this.processListABC);
     
                 this._admissionNum.val(this.na);
             
-                if (this._countryOfIssuance.val() === '') {
+                if (this.EmptyOrNA(this._countryOfIssuance)) {
                     this.filterCombolist(
                         this._countryOfIssuance,
                         JSON.parse(this._('countries')),
@@ -713,7 +715,7 @@ class USI9Section1 extends USI9Fields {
         this.processAlien(false);
     }
 
-    protected validateFields(dialog: JQuery<HTMLElement>) {
+    protected validateFields(): string[] {
         let errorMessages: string[] = [];
 
         // Put N/A if required
@@ -725,17 +727,17 @@ class USI9Section1 extends USI9Fields {
             }
         }
 
-        this.validateTextField(this._lastName, this._('name.last'), [this.nameFormat], errorMessages);
-        this.validateTextField(this._firstName, this._('name.first'), [this.nameFormat], errorMessages);
-        this.validateTextField(this._middleInitial, this._('name.middleinitial'), [this.nameInitialFormat, this.NAString], errorMessages);
-        this.validateTextField(this._otherNames, this._('name.othernames'), [this.nameFormat, this.NAString], errorMessages);
-        this.validateTextField(this._address, this._('address.address'), [], errorMessages);
-        this.validateTextField(this._apptNumber, this._('address.appartment'), [this.NAString], errorMessages);
-        this.validateTextField(this._city, this._('address.city'), [], errorMessages);
-        this.validateTextField(this._state, this._('address.state'), [this.stateFormat], errorMessages);
+        this.validateTextField(this._lastName, this._('name.last'), [this.nameFormat], false, errorMessages);
+        this.validateTextField(this._firstName, this._('name.first'), [this.nameFormat], false, errorMessages);
+        this.validateTextField(this._middleInitial, this._('name.middleinitial'), [this.nameInitialFormat, this.NAString], false, errorMessages);
+        this.validateTextField(this._otherNames, this._('name.othernames'), [this.nameFormat, this.NAString], false, errorMessages);
+        this.validateTextField(this._address, this._('address.address'), [], false, errorMessages);
+        this.validateTextField(this._apptNumber, this._('address.appartment'), [this.NAString], false, errorMessages);
+        this.validateTextField(this._city, this._('address.city'), [], false, errorMessages);
+        this.validateTextField(this._state, this._('address.state'), [this.stateFormat], false, errorMessages);
         this.validateTextField(this._zip, this._('address.zip'),
-            [['CAN', 'MEX'].indexOf(this._state.val() as string) < 0 ? this.zipNumberFormat: this.postalCodeFormat], errorMessages);
-        this.validateDateField(this._dob, this._('date.dob'), this.dateFormat, errorMessages);
+            [['CAN', 'MEX'].indexOf(this._state.val() as string) < 0 ? this.zipNumberFormat: this.postalCodeFormat], false, errorMessages);
+        this.validateTextField(this._dob, this._('date.dob'), [this.dateFormat], true, errorMessages);
 
         let areaCode = Math.round(100 * (this._ssn[0].val() as number) +
                                   10 * (this._ssn[1].val() as number) +
@@ -772,23 +774,62 @@ class USI9Section1 extends USI9Fields {
             }
         }
 
-        this.validateTextField(this._email, this._('email.address'), [this.NAString, this.emailFormat], errorMessages);
-        this.validateTextField(this._phone, this._('employee.phone'), [this.NAString, this.phoneNumber], errorMessages);
+        this.validateTextField(this._email, this._('email.address'), [this.NAString, this.emailFormat], false, errorMessages);
+        this.validateTextField(this._phone, this._('employee.phone'), [this.NAString, this.phoneNumber], false, errorMessages);
 
-        if (errorMessages.length > 0) {
-            var errorMessage = this._('error.header') + '<br />';
-            errorMessages.forEach(element => {
-                errorMessage += ' - ' + element + '<br />';
-            });
-
-            $('.ui-dialog-titlebar-close').attr('title', '');
-            dialog.dialog('option', 'minWidth', 500).text('')
-              .dialog('option', 'title', this._('validation'))
-              .append(errorMessage).dialog('open');
-
-            return false;
-        } else {
-            return true;
+        let citizenship = [this._citizen, this._national, this._lpr, this._alien];
+        let statusSelected = citizenship.filter(status => status.prop('checked')).length > 0;
+        if (!statusSelected) {
+            errorMessages.push(this._('citizenship.status'));
         }
+        citizenship.forEach(status => status.toggleClass(this.invalidFieldClass, !statusSelected));
+
+        if (this._lpr.prop('checked')) {
+            this._lpruscisNum.attr(this.annotationRequired, 'true');
+            this.validateTextField(this._lpruscisNum, this._('citizenship.uscis'), [this.uscisNumberFormat], true, errorMessages);
+        } else {
+            this._lpruscisNum.removeAttr(this.annotationRequired);
+        }
+
+        if (this._alien.prop('checked')) {
+            this._alienWorkAuthDate.attr(this.annotationRequired, 'true');
+            this.validateTextField(
+                this._alienWorkAuthDate,
+                this._('citizenship.alienworkauthdate'),
+                [this.NAString, this.dateFormat],
+                true,
+                errorMessages);
+
+            [this._alienuscisNum, this._admissionNum, this._passportNum, this._countryOfIssuance].forEach(field =>
+                field.toggleClass(this.invalidFieldClass, false));
+            
+            this.validateTextField(this._alienuscisNum, this._('citizenship.uscis'), [this.NAFormat, this.uscisNumberFormat], false, errorMessages);
+            this.validateTextField(this._admissionNum, this._('citizenship.admission'), [this.NAFormat, this.admissionNumberFormat], false, errorMessages);
+            this.validateTextField(this._passportNum, this._('citizenship.passport'), [this.NAFormat, this.passportNumber], false, errorMessages);
+            
+            if (this.EmptyOrNA(this._alienuscisNum) && this.EmptyOrNA(this._admissionNum) &&
+                this.EmptyOrNA(this._passportNum) && this.EmptyOrNA(this._countryOfIssuance)) {
+                [this._alienuscisNum, this._admissionNum, this._passportNum, this._countryOfIssuance].forEach(field =>
+                    field.toggleClass(this.invalidFieldClass, true));
+
+                errorMessages.push(this.paramExistsMsg.replace('${parameter}', this._('citizenship.alienadmissionpassport')));
+            } else if (this.EmptyOrNA(this._alienuscisNum) && this.EmptyOrNA(this._admissionNum) &&
+               (this.EmptyOrNA(this._passportNum) || this.EmptyOrNA(this._countryOfIssuance))) {
+                [this._passportNum, this._countryOfIssuance].forEach(field =>
+                field.toggleClass(this.invalidFieldClass, true));
+
+                errorMessages.push(this.paramExistsMsg.replace('${parameter}', this._('citizenship.passportcountry')));
+            }
+        } else {
+            this._alienWorkAuthDate.removeAttr(this.annotationRequired);
+        }
+
+        this.validateTextField(this._sgnEmployeeDate, this._('date.sgnemployee'), [this.dateFormat], true, errorMessages);
+
+        return errorMessages;
+    }
+
+    private EmptyOrNA(field: JQuery<HTMLElement>) : boolean {
+        return [null, '', this.na].indexOf(field.val() as string) >= 0;
     }
 }

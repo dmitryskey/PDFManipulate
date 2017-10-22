@@ -47,6 +47,26 @@ class USI9 extends USI9Section3 {
         });
     }
 
+    protected validateFields(dialog: JQuery<HTMLElement>) {
+        let errorMessages = super.validateFields();
+
+        if (errorMessages.length > 0) {
+            var errorMessage = this._('error.header') + '<br />';
+            errorMessages.forEach(element => {
+                errorMessage += ' - ' + element + '<br />';
+            });
+
+            $('.ui-dialog-titlebar-close').attr('title', '');
+            dialog.dialog('option', 'minWidth', 500).text('')
+              .dialog('option', 'title', this._('validation'))
+              .append(errorMessage).dialog('open');
+
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public renderSections() {
         $('#print').click(() => {
             if (this.validateFields($('#dialogPage'))) {

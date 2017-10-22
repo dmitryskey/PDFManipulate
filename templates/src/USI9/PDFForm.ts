@@ -14,6 +14,8 @@ class PDFForm {
     protected emailFormat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     protected phoneFormat = /^[\d/NA-]+$/;
     protected phoneNumber = /^\d{3}\-{1}\d{3}\-{1}\d{4}$/;
+    protected uscisNumberFormat = /^\d{7,9}$/;
+    protected admissionNumberFormat = /^\d{1}$/;
     protected usPassportNumber = /^[a-zA-Z0-9]{6,9}$/;
     protected cardNumber = /^[A-Za-z]{3}[0-9]{10}$/;
     protected passportNumber = /^[a-zA-Z0-9]{6,12}$/;
@@ -23,9 +25,7 @@ class PDFForm {
         let self = this;
 
         $(document).tooltip({
-            show: {
-                delay: 200
-            }
+            show: { delay: 200 }
         });
 
         let monthNames:string[] = [];
@@ -74,6 +74,7 @@ class PDFForm {
         for (var c in arr) {
             if (arr[c] !== ctrl) {
                 arr[c].prop('checked', false);
+                arr[c].parent().children('span').text('');
             }
         }
     }

@@ -191,27 +191,35 @@ class USI9Fields extends PDFForm {
     private issuingAuthList: { [index: string]: string; };
     private issuingAuth: string;
 
-    private parameterExistsMsg = this._('parameter.exists');
-    private parameterLengthMsg = this._('parameter.length');
-    private parameterFormatMsg = this._('parameter.format');
-    private dateFormatMsg = this._('date.format');
+    protected paramExistsMsg = this._('parameter.exists');
+    protected paramLengthMsg = this._('parameter.length');
+    protected paramFormatMsg = this._('parameter.format');
+    protected paramMaxValueMsg = this._('parameter.max');
+    protected paramMinValueMsg = this._('parameter.min');
+    protected dateFormatMsg = this._('date.format');
 
     protected invalidFieldClass = 'invalid';
 
     protected annotationName = 'annotation-name';
+    protected annotationRequired = 'annotation-required';
     protected na = super._('NA');
 
-    protected validateTextField(field: JQuery<HTMLElement>, parameter: string, regExs: RegExp[], errorMessages: string[]): boolean {
+    protected validateTextField(
+        field: JQuery<HTMLElement>,
+        parameter: string,
+        regExs: RegExp[],
+        validateIfEmpty: boolean,
+        errorMessages: string[]): boolean {
         let errorFlag = true;
         let length = field.prop('maxLength') ? field.prop('maxLength') : 0;
 
-        if (field.attr('annotation-required') && field.val() === '') {   
-            errorMessages.push(this.parameterExistsMsg.replace('${parameter}', parameter));
+        if (field.attr(this.annotationRequired) && field.val() === '') {   
+            errorMessages.push(this.paramExistsMsg.replace('${parameter}', parameter));
         } else if ((field.val() as string).length > length && length > 0) {
-            errorMessages.push(this.parameterLengthMsg
+            errorMessages.push(this.paramLengthMsg
               .replace('${parameter}', parameter)
               .replace('${length}', length.toString()));
-        } else if (field.val() !== '' && regExs.length > 0) {
+        } else if ((field.val() !== '' || validateIfEmpty) && regExs.length > 0) {
             let validFlag = false;
             for (let i in regExs) {
                 if (regExs[i].test(field.val() as string)) {
@@ -221,32 +229,44 @@ class USI9Fields extends PDFForm {
             }
 
             if (!validFlag) {
-                errorMessages.push(this.parameterFormatMsg.replace('${parameter}', parameter));
+                errorMessages.push(this.paramFormatMsg.replace('${parameter}', parameter));
             }
 
             errorFlag = !validFlag;
+
+            if (!errorFlag) {
+                let maxDate = field.datepicker('option', 'maxDate') as Date;
+                let minDate = field.datepicker('option', 'minDate') as Date;
+                if (maxDate) {
+                    maxDate.setHours(0, 0, 0, 0);
+                }
+
+                if (minDate) {
+                    minDate.setHours(0, 0, 0, 0);
+                }
+                
+                if (maxDate && (new Date(field.val()) > maxDate)) {
+                    errorMessages.push(
+                        this.paramMaxValueMsg
+                        .replace('${parameter}', parameter)
+                        .replace('${value}', maxDate.toDateString())
+                    );
+                } else if (minDate && (new Date(field.val()) < minDate)) {
+                    errorMessages.push(
+                        this.paramMinValueMsg
+                        .replace('${parameter}', parameter)
+                        .replace('${value}', minDate.toDateString())
+                    );
+                } else {
+                    errorFlag = false;
+                }
+            }
         } else {
             errorFlag = false;
         }
 
         field.toggleClass(this.invalidFieldClass, errorFlag);
 
-        return errorFlag;
-    }
-
-    protected validateDateField(field: JQuery<HTMLElement>, parameter: string, regEx: RegExp, errorMessages: string[]): boolean {
-        let errorFlag = true;
-  
-        if (field.attr('annotation-required') && field.val() === '') {   
-            errorMessages.push(this.parameterExistsMsg.replace('${parameter}', parameter));
-        } else if (regEx && !regEx.test(field.val() as string)) {
-            errorMessages.push(this.parameterFormatMsg.replace('${parameter}', parameter));
-        } else {
-            errorFlag = false;
-        }
-  
-        field.toggleClass(this.invalidFieldClass, errorFlag);
-  
         return errorFlag;
     }
 

@@ -157,4 +157,10 @@ class USI9Translator extends USI9Section1 {
             this._('translatorziphelp.text')
         );
     }
+
+    protected validateFields(): string[] {
+        let errorMessages = super.validateFields();
+
+        return errorMessages;
+    }
 }
