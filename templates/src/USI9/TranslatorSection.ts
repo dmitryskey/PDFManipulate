@@ -161,6 +161,38 @@ class USI9Translator extends USI9Section1 {
     protected validateFields(): string[] {
         let errorMessages = super.validateFields();
 
+        let translator = [this._translatorNo, this._translatorYes];
+        let statusSelected = translator.filter(status => status.prop('checked')).length > 0;
+        if (!statusSelected) {
+            errorMessages.push(this._('translator.status'));
+        }
+        translator.forEach(status => status.toggleClass(this.invalidFieldClass, !statusSelected));
+        
+        if (this._translatorYes.prop('checked')) {
+            this._translatorDate.attr(this.annotationRequired, 'true');
+            this.validateTextField(this._translatorDate, this._('date.sgntranslator'), [this.dateFormat], true, errorMessages);
+            this._translatorLastName.attr(this.annotationRequired, 'true');
+            this.validateTextField(this._translatorLastName, this._('translator.lastname'), [this.nameFormat], true, errorMessages);
+            this._translatorFirstName.attr(this.annotationRequired, 'true');
+            this.validateTextField(this._translatorFirstName, this._('translator.firstname'), [this.nameFormat], true, errorMessages);
+            this._translatorAddress.attr(this.annotationRequired, 'true');
+            this.validateTextField(this._translatorAddress, this._('translator.address'), [], true, errorMessages);
+            this._translatorCity.attr(this.annotationRequired, 'true');
+            this.validateTextField(this._translatorCity, this._('translator.city'), [], true, errorMessages);
+            this._translatorState.attr(this.annotationRequired, 'true');
+            this.validateTextField(this._translatorState, this._('translator.state'), [], true, errorMessages);
+            this._translatorZip.attr(this.annotationRequired, 'true');
+            this.validateTextField(this._translatorZip, this._('translator.zip'), [this.zipNumberFormat], true, errorMessages);
+        } else {
+            this._translatorDate.removeAttr(this.annotationRequired);
+            this._translatorLastName.removeAttr(this.annotationRequired);
+            this._translatorFirstName.removeAttr(this.annotationRequired);
+            this._translatorAddress.removeAttr(this.annotationRequired);
+            this._translatorCity.removeAttr(this.annotationRequired);
+            this._translatorState.removeAttr(this.annotationRequired);
+            this._translatorZip.removeAttr(this.annotationRequired);
+        }
+
         return errorMessages;
     }
 }

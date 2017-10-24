@@ -149,7 +149,7 @@ var USI9Fields = (function (_super) {
     USI9Fields.prototype.validateTextField = function (field, parameter, regExs, validateIfEmpty, errorMessages) {
         var errorFlag = true;
         var length = field.prop('maxLength') ? field.prop('maxLength') : 0;
-        if (field.attr(this.annotationRequired) && field.val() === '') {
+        if (field.attr(this.annotationRequired) && field.val().trim() === '') {
             errorMessages.push(this.paramExistsMsg.replace('${parameter}', parameter));
         }
         else if (field.val().length > length && length > 0) {
@@ -1150,7 +1150,39 @@ var USI9Translator = (function (_super) {
         this._translatorZipHelp = this.renderHelpIcon(translatorZipHelp, this._('translatorziphelp.caption'), dialog, this._('translatorziphelp.text'));
     };
     USI9Translator.prototype.validateFields = function () {
+        var _this = this;
         var errorMessages = _super.prototype.validateFields.call(this);
+        var translator = [this._translatorNo, this._translatorYes];
+        var statusSelected = translator.filter(function (status) { return status.prop('checked'); }).length > 0;
+        if (!statusSelected) {
+            errorMessages.push(this._('translator.status'));
+        }
+        translator.forEach(function (status) { return status.toggleClass(_this.invalidFieldClass, !statusSelected); });
+        if (this._translatorYes.prop('checked')) {
+            this._translatorDate.attr(this.annotationRequired, 'true');
+            this.validateTextField(this._translatorDate, this._('date.sgntranslator'), [this.dateFormat], true, errorMessages);
+            this._translatorLastName.attr(this.annotationRequired, 'true');
+            this.validateTextField(this._translatorLastName, this._('translator.lastname'), [this.nameFormat], true, errorMessages);
+            this._translatorFirstName.attr(this.annotationRequired, 'true');
+            this.validateTextField(this._translatorFirstName, this._('translator.firstname'), [this.nameFormat], true, errorMessages);
+            this._translatorAddress.attr(this.annotationRequired, 'true');
+            this.validateTextField(this._translatorAddress, this._('translator.address'), [], true, errorMessages);
+            this._translatorCity.attr(this.annotationRequired, 'true');
+            this.validateTextField(this._translatorCity, this._('translator.city'), [], true, errorMessages);
+            this._translatorState.attr(this.annotationRequired, 'true');
+            this.validateTextField(this._translatorState, this._('translator.state'), [], true, errorMessages);
+            this._translatorZip.attr(this.annotationRequired, 'true');
+            this.validateTextField(this._translatorZip, this._('translator.zip'), [this.zipNumberFormat], true, errorMessages);
+        }
+        else {
+            this._translatorDate.removeAttr(this.annotationRequired);
+            this._translatorLastName.removeAttr(this.annotationRequired);
+            this._translatorFirstName.removeAttr(this.annotationRequired);
+            this._translatorAddress.removeAttr(this.annotationRequired);
+            this._translatorCity.removeAttr(this.annotationRequired);
+            this._translatorState.removeAttr(this.annotationRequired);
+            this._translatorZip.removeAttr(this.annotationRequired);
+        }
         return errorMessages;
     };
     return USI9Translator;
@@ -1428,7 +1460,8 @@ var USI9 = (function (_super) {
             'operation': 'f',
             'entries': []
         };
-        var readOnlyFieldsToFlat = ['LastNameSection2', 'FirstNameSection2',
+        var readOnlyFieldsToFlat = ['LPRUSCISNumberPrefix', 'AlienUSCISNumberPrefix',
+            'LastNameSection2', 'FirstNameSection2',
             'MiddleInitialSection2', 'ImmigrationStatus'];
         $('[' + this.annotationName + ']').each(function (index, ctrl) {
             var op = !ctrl.disabled ||
@@ -1440,7 +1473,7 @@ var USI9 = (function (_super) {
             });
         });
     };
-    USI9.prototype.validateFields = function (dialog) {
+    USI9.prototype.validateForm = function (dialog) {
         var errorMessages = _super.prototype.validateFields.call(this);
         if (errorMessages.length > 0) {
             var errorMessage = this._('error.header') + '<br />';
@@ -1460,13 +1493,13 @@ var USI9 = (function (_super) {
     USI9.prototype.renderSections = function () {
         var _this = this;
         $('#print').click(function () {
-            if (_this.validateFields($('#dialogPage'))) {
+            if (_this.validateForm($('#dialogPage'))) {
                 _this.prepareData();
                 PDFViewerApplication.print();
             }
         });
         $('#download').click(function () {
-            if (_this.validateFields($('#dialogPage'))) {
+            if (_this.validateForm($('#dialogPage'))) {
                 _this.prepareData();
                 PDFViewerApplication.download();
             }

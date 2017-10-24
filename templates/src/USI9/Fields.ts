@@ -213,7 +213,7 @@ class USI9Fields extends PDFForm {
         let errorFlag = true;
         let length = field.prop('maxLength') ? field.prop('maxLength') : 0;
 
-        if (field.attr(this.annotationRequired) && field.val() === '') {   
+        if (field.attr(this.annotationRequired) && (field.val() as string).trim() === '') {   
             errorMessages.push(this.paramExistsMsg.replace('${parameter}', parameter));
         } else if ((field.val() as string).length > length && length > 0) {
             errorMessages.push(this.paramLengthMsg
@@ -244,7 +244,7 @@ class USI9Fields extends PDFForm {
                 if (minDate) {
                     minDate.setHours(0, 0, 0, 0);
                 }
-                
+
                 if (maxDate && (new Date(field.val()) > maxDate)) {
                     errorMessages.push(
                         this.paramMaxValueMsg

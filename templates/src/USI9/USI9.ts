@@ -33,7 +33,8 @@ class USI9 extends USI9Section3 {
         }
 
         let readOnlyFieldsToFlat =
-        ['LastNameSection2', 'FirstNameSection2',
+        ['LPRUSCISNumberPrefix', 'AlienUSCISNumberPrefix',
+         'LastNameSection2', 'FirstNameSection2',
          'MiddleInitialSection2', 'ImmigrationStatus'];
 
         $('[' + this.annotationName + ']').each((index, ctrl: HTMLInputElement) => {
@@ -47,7 +48,7 @@ class USI9 extends USI9Section3 {
         });
     }
 
-    protected validateFields(dialog: JQuery<HTMLElement>) {
+    protected validateForm(dialog: JQuery<HTMLElement>) : boolean {
         let errorMessages = super.validateFields();
 
         if (errorMessages.length > 0) {
@@ -69,7 +70,7 @@ class USI9 extends USI9Section3 {
 
     public renderSections() {
         $('#print').click(() => {
-            if (this.validateFields($('#dialogPage'))) {
+            if (this.validateForm($('#dialogPage'))) {
                 this.prepareData();
 
                 PDFViewerApplication.print();
@@ -77,7 +78,7 @@ class USI9 extends USI9Section3 {
         });
 
         $('#download').click(() => {
-            if (this.validateFields($('#dialogPage'))) {
+            if (this.validateForm($('#dialogPage'))) {
                 this.prepareData();
 
                 PDFViewerApplication.download();

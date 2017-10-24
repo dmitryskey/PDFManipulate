@@ -10,6 +10,7 @@ const crypto = require('crypto');
 const uuidV4 = require('uuid/v4');
 const jwt = require('jwt-simple'); // used to create, sign, and verify tokens
 const assert = require('assert');
+const request = require('request');
 const pdfApi = require('asposepdfcloud');
 const storageApi = require('asposestoragecloud');
 
@@ -77,12 +78,12 @@ app.post('/RichTextEditor', (req, res) => {
     });
 
     req.on('end', () => {
-        var data = JSON.parse(body);
-
-        // check token
-        var editorUrl = '';
-
         try {
+            var data = JSON.parse(body);
+
+            // check token
+            var editorUrl = '';
+
             var decoded = jwt.decode(data.token, app.get('jwtTokenSecret'), false, app.get('tokenAlg'));
 
             if (moment() <= decoded.exp) {
@@ -137,12 +138,12 @@ app.post('/PDFEditor', (req, res) => {
     });
 
     req.on('end', () => {
-        var data = JSON.parse(body);
-
-        // check token
-        var editorUrl = '';
-
         try {
+            var data = JSON.parse(body);
+
+            // check token
+            var editorUrl = '';
+
             var decoded = jwt.decode(data.token, app.get('jwtTokenSecret'), false, app.get('tokenAlg'));
             var host = server.address().address;
             var port = server.address().port;
@@ -158,6 +159,38 @@ app.post('/PDFEditor', (req, res) => {
                         }
                         else {
                             editorUrl = 'http://' + (host !== '::' ? host : '127.0.0.1') + ':' + port + url + '&mode=' + data.mode;
+
+                            if (data.data) {
+                                var fields = {
+                                    'file': '/data/' + uuid,
+                                    'operation': '',
+                                    'entries': []
+                                };
+
+                                for (var i in data.data) {
+                                    fields.entries.push({
+                                        'name': data.data[i].name,
+                                        'value': data.data[i].value,
+                                        'operation': 's'
+                                    });
+                                }
+
+                                request.post(
+                                    app.get('iTextService'),
+                                    {
+                                        json: fields
+                                    },
+                                    (error, response, body)  => {
+                                        if (!error && response.statusCode === 200) {
+                                            fs.writeFile('data/' + uuid, base64.decode(body), 'binary', err => {
+                                                if (err) {
+                                                    console.log(err);
+                                                }
+                                            });
+                                        }
+                                    }
+                                );
+                            }
                         }
 
                         res.end(JSON.stringify({
@@ -261,8 +294,52 @@ app.post('/PDFEditor', (req, res) => {
     });
 });
 
-app.get('/GetTemplateList', (req, res) => {
-    res.end();
+app.post('/GetTemplateList', (req, res) => {
+    var body = '';
+    req.on('data', data => {
+        body += data;
+        if (body.length > 1e6) { 
+            // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
+            req.connection.destroy();
+        }
+    });
+
+    req.on('end', () => {
+        try {
+            var data = JSON.parse(body);
+
+            var decoded = jwt.decode(data.token, app.get('jwtTokenSecret'), false, app.get('tokenAlg'));
+
+            if (moment() <= decoded.exp) {
+                let forms = [];
+
+                forms.push({
+                    'id': 'US I9',
+                    'name': 'US I-9',
+                    'group': 'US Federal Forms',
+                    'description': 'US I-9 Form'
+                });
+
+                res.end(JSON.stringify({
+                    token: data.token,
+                    forms: forms
+                }));
+            } else {
+                res.end(JSON.stringify({
+                    token: data.token,
+                    forms: [] 
+                }));
+            }
+        }
+        catch (err) {
+            console.log(err);
+
+            res.end(JSON.stringify({
+                token: data.token,
+                forms: [] 
+            }));
+        }
+    });
 });
 
 var server = app.listen(8305, () => {
@@ -290,6 +367,8 @@ var server = app.listen(8305, () => {
     // Aspose credentials for dmitryskey@gmail.com/dmitryskataev
     app.set('appSID', '7a0214bb-4866-4686-a6b0-e933234c1886');
     app.set('apiKey', '7ee74818ff99046cd6c10f3cb719c2f0');
+
+    app.set('iTextService', 'http://127.0.0.1:8080/update');
 
     db.serialize(() => {
         db.get('SELECT Parameter FROM App_Config WHERE Name = (?)', 'TokenSecret',
