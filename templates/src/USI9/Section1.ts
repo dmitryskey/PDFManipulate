@@ -1,29 +1,6 @@
 /// <reference path="Fields.ts" />
 
 class USI9Section1 extends USI9Fields {
-    private processLPR(flag: boolean) {
-        var na = flag ? this._('NA') : '';
-        this._lpruscisNumPrefix.val('');
-        this._lpruscisNum.prop('disabled', true).val(na);
-        this._lpruscisNumType.prop('disabled', true);
-
-        this.filterCombolist(this._lpruscisNumType, {}, null, this, this.processListABC);
-    }
-
-    private processAlien(flag: boolean) {
-        var na = flag ? this._('NA') : '';
-        this._alienWorkAuthDate.prop('disabled', true).val(na);
-        this._alienuscisNumPrefix.val('');
-        this._alienuscisNum.prop('disabled', true).val(na);
-        this._alienuscisNumType.prop('disabled', true);
-        this._admissionNum.prop('disabled', true).val(na);
-        this._passportNum.prop('disabled', true).val(na);
-        this._countryOfIssuance.prop('disabled', true);
-
-        this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
-        this.filterCombolist(this._countryOfIssuance, flag ? {0:na} : {}, flag ? '0' : null, this, this.processListABC);
-    }
-
     private renderNameAndAddress(
         dialog: JQuery<HTMLElement>,
         lastName: JQuery<HTMLElement>,
@@ -48,8 +25,7 @@ class USI9Section1 extends USI9Fields {
         this._lastName = lastName
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('lastnamehelp.tooltip')})
-        .keypress(e => this.nameFormat.test(String.fromCharCode(e.which)))
-        .change(() => this._lastNameSection2.val(this._lastName.val()));
+        .keypress(e => this.nameFormat.test(String.fromCharCode(e.which)));
 
         this._lastNameHelp = this.renderHelpIcon(
             lastNameHelp,
@@ -61,8 +37,7 @@ class USI9Section1 extends USI9Fields {
         this._firstName = firstName
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('firstnamehelp.tooltip')})
-        .keypress(e => this.nameFormat.test(String.fromCharCode(e.which)))
-        .change(() => this._firstNameSection2.val(this._firstName.val()));
+        .keypress(e => this.nameFormat.test(String.fromCharCode(e.which)));
 
         this._firstNameHelp = this.renderHelpIcon(
             firstNameHelp,
@@ -77,8 +52,7 @@ class USI9Section1 extends USI9Fields {
         .tooltip({content: this._('middleinitialhelp.tooltip')})
         .keypress(e =>
             this.nameFormat.test(String.fromCharCode(e.which)) ||
-            this.NAFormat.test(String.fromCharCode(e.which)))
-        .change(() => this._middleInitialSection2.val(this._middleInitial.val()));
+            this.NAFormat.test(String.fromCharCode(e.which)));
 
         this._middleInitialHelp = this.renderHelpIcon(
             middleInitialHelp,
@@ -226,14 +200,7 @@ class USI9Section1 extends USI9Fields {
             changeMonth: true,
             changeYear: true,
             yearRange: '1908:' + maxDOB.getFullYear(),
-            maxDate: maxDOB})
-        .change(e =>
-            this.filterCombolist(
-                this._listBDoc,
-                this.getListBContent((e.target as HTMLInputElement).value),
-                this.na,
-                this,
-                this.processListABC));
+            maxDate: maxDOB});
 
         this._dobHelp = this.renderHelpIcon(
             dobHelp,
@@ -305,28 +272,9 @@ class USI9Section1 extends USI9Fields {
         sgnEmployeeDate: JQuery<HTMLElement>,
         sgnEmployeeDateHelp: JQuery<HTMLElement>) {
 
-        var citizenships = [citizen, national, lpr, alien];
-
-        this.filterCombolist(this._listADoc, this.getListAContent('0'), this.na, this, this.processListABC);
-        this.filterCombolist(this._listCDoc, this.getListCContent('0'), this.na, this, this.processListABC);
-
         this._citizen = citizen
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('citizenhelp.tooltip')})
-        .click(() => {
-            this.selectCheckmark(this._citizen, citizenships);
-            this.processLPR(this._citizen.prop('checked'));
-            this.processAlien(this._citizen.prop('checked'));
-
-            this.filterCombolist(this._listADoc, this.getListAContent(this._citizen.prop('checked') ? '1' : '0'), this.na, this, this.processListABC);
-
-            this.filterCombolist(
-                this._listCDoc,
-                this.getListCContent(this._immigrationStatus.val(this._citizen.prop('checked') ? 1 : 0).val() as string),
-                this.na,
-                this,
-                this.processListABC);
-        });
+        .tooltip({content: this._('citizenhelp.tooltip')});
 
         this._citizenHelp = this.renderHelpIcon(
             citizenHelp,
@@ -337,21 +285,7 @@ class USI9Section1 extends USI9Fields {
 
         this._national = national
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('nationalhelp.tooltip')})
-        .click(() => {
-            this.selectCheckmark(this._national, citizenships);
-            this.processLPR(this._national.prop('checked'));
-            this.processAlien(this._national.prop('checked'));
-
-            this.filterCombolist(this._listADoc, this.getListAContent(this._national.prop('checked') ? '2' : '0'), this.na, this, this.processListABC);
-
-            this.filterCombolist(
-                this._listCDoc,
-                this.getListCContent(this._immigrationStatus.val(this._national.prop('checked') ? 2 : 0).val() as string),
-                this.na,
-                this,
-                this.processListABC);
-        });
+        .tooltip({content: this._('nationalhelp.tooltip')});
 
         this._nationalHelp = this.renderHelpIcon(
             nationalHelp,
@@ -362,36 +296,7 @@ class USI9Section1 extends USI9Fields {
     
         this._lpr = lpr
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('lprhelp.tooltip')})
-        .click(() => {
-            this.selectCheckmark(this._lpr, citizenships);
-            this.processAlien(this._lpr.prop('checked'));
-            this._lpruscisNum.val('');
-            this.filterCombolist(this._lpruscisNumType, {}, null, this, this.processListABC);
-    
-            if (this._lpr.prop('checked')) {
-                this._lpruscisNum.prop('disabled', false);
-                this._lpruscisNumType.prop('disabled', false);
-                this.filterCombolist(
-                    this._lpruscisNumType,
-                    {'A':this._('aliennumber'), 'U':this._('uscisnumber')},
-                    null,
-                    this,
-                    this.processListABC);
-            }
-    
-            this.filterCombolist(this._listADoc, {}, null, this, this.processListABC);
-            if (this._lpr.prop('checked')) {
-                this.filterCombolist(this._listADoc, this.getListAContent('3'), this.na, this, this.processListABC);
-            }
-
-            this.filterCombolist(
-                this._listCDoc,
-                this.getListCContent(this._immigrationStatus.val(this._lpr.prop('checked') ? 3 : 0).val() as string),
-                this.na,
-                this,
-                this.processListABC);
-        });
+        .tooltip({content: this._('lprhelp.tooltip')});
     
         this._lprHelp = this.renderHelpIcon(
             lprHelp,
@@ -402,50 +307,7 @@ class USI9Section1 extends USI9Fields {
     
         this._alien = alien
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('alienhelp.tooltip')})
-        .click(() => {
-            this.selectCheckmark(this._alien, citizenships);
-            this.processLPR(this._alien.prop('checked'));
-            this._alienWorkAuthDate.val('');
-            this._alienuscisNum.val('');
-            this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
-            this._admissionNum.val('');
-            this._passportNum.val('');
-            this.filterCombolist(this._countryOfIssuance, {}, null, this, this.processListABC);
-            if (this._alien.prop('checked')) {
-                this._alienWorkAuthDate.prop('disabled', false);
-                this._alienuscisNum.prop('disabled', false);
-                this._alienuscisNumType.prop('disabled', false);
-    
-                this.filterCombolist(
-                    this._alienuscisNumType, 
-                    {'A':this._('aliennumber'), 'U':this._('uscisnumber')},
-                    null,
-                    this,
-                    this.processListABC);
-    
-                this._admissionNum.prop('disabled', false);
-                this._passportNum.prop('disabled', false);
-    
-                this._countryOfIssuance.prop('disabled', false);
-    
-                this.filterCombolist(
-                    this._countryOfIssuance,
-                    JSON.parse(this._('countries')),
-                    null,
-                    this,
-                    this.processListABC);
-            }
-    
-            this.filterCombolist(this._listADoc, this.getListAContent(this._alien.prop('checked') ? '4' : '0'), this.na, this, this.processListABC);
-
-            this.filterCombolist(
-                this._listCDoc,
-                this.getListCContent(this._immigrationStatus.val(this._alien.prop('checked') ? 4 : 0).val() as string),
-                this.na,
-                this,
-                this.processListABC);
-        });
+        .tooltip({content: this._('alienhelp.tooltip')});
     
         this._alienHelp = this.renderHelpIcon(
             alienHelp,
@@ -495,29 +357,7 @@ class USI9Section1 extends USI9Fields {
         this._alienuscisNum = alienuscisNum
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('uscisnumber.tooltip')})
-        .keypress(e => this.numberFormat.test(String.fromCharCode(e.which)))
-        .change(() => {
-            if (!this.EmptyOrNA(this._alienuscisNum)) {
-                if (this.EmptyOrNA(this._alienuscisNumType)) {
-                    this.filterCombolist(
-                        this._alienuscisNumType, 
-                        {'A':this._('aliennumber'), 'U':this._('uscisnumber')},
-                        null,
-                        this,
-                        this.processListABC);
-                }
-    
-                this._admissionNum.val(this.na);
-                this._passportNum.val(this.na);
-                this.filterCombolist(this._countryOfIssuance, {0:this.na}, '0', this, this.processListABC);
-            }
-            else {
-                this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
-                this._admissionNum.val('');
-                this._passportNum.val('');
-                this.filterCombolist(this._countryOfIssuance, {}, null, this, this.processListABC);
-            }
-        });
+        .keypress(e => this.numberFormat.test(String.fromCharCode(e.which)));
     
         this._alienuscisNumType = alienuscisNumType
         .focus(e => this.hideTooltip()).prop('title', '')
@@ -529,24 +369,7 @@ class USI9Section1 extends USI9Fields {
         this._admissionNum = admissionNum
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({content: this._('admissionnumber.tooltip')})
-        .keypress(e => this.numberFormat.test(String.fromCharCode(e.which)))
-        .change(() => {
-            if (!this.EmptyOrNA(this._admissionNum)) {
-                this._alienuscisNum.val(this.na);
-                this._alienuscisNumPrefix.val('');
-                this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
-    
-                this._passportNum.val(this.na);
-                this.filterCombolist(this._countryOfIssuance, {0:this.na}, '0', this, this.processListABC);
-            }
-            else {
-                this._alienuscisNum.val('');
-                this._alienuscisNumPrefix.val('');
-                this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
-                this._passportNum.val('');
-                this.filterCombolist(this._countryOfIssuance, {}, null, this, this.processListABC);
-            }
-        });
+        .keypress(e => this.numberFormat.test(String.fromCharCode(e.which)));
     
         this._admissionNumHelp = this.renderHelpIcon(
             admissionNumHelp,
@@ -557,30 +380,7 @@ class USI9Section1 extends USI9Fields {
     
         this._passportNum = passportNum
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('passportnumber.tooltip')})
-        .change(() => {
-            if (!this.EmptyOrNA(this._passportNum)) {
-                this._alienuscisNum.val(this.na);
-                this._alienuscisNumPrefix.val('');
-                this.filterCombolist(this._alienuscisNumType, {0:this.na}, this.na, this, this.processListABC);
-    
-                this._admissionNum.val(this.na);
-            
-                if (this.EmptyOrNA(this._countryOfIssuance)) {
-                    this.filterCombolist(
-                        this._countryOfIssuance,
-                        JSON.parse(this._('countries')),
-                        null,
-                        this,
-                        this.processListABC);
-                }
-            }
-            else {
-                this._alienuscisNum.val('');
-                this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
-                this._admissionNum.val('');
-            }
-        });
+        .tooltip({content: this._('passportnumber.tooltip')});
 
         this._passportNumHelp = this.renderHelpIcon(
             passportNumHelp,
@@ -710,9 +510,6 @@ class USI9Section1 extends USI9Fields {
             countryOfIssuance, countryOfIssuanceHelp,
             sgnEmployee, sgnEmployeeHelp,
             sgnEmployeeDate, sgnEmployeeDateHelp);
-
-        this.processLPR(false);
-        this.processAlien(false);
     }
 
     protected validateFields(): string[] {
@@ -829,7 +626,7 @@ class USI9Section1 extends USI9Fields {
         return errorMessages;
     }
 
-    private EmptyOrNA(field: JQuery<HTMLElement>) : boolean {
+    protected EmptyOrNA(field: JQuery<HTMLElement>) : boolean {
         return [null, '', this.na].indexOf(field.val() as string) >= 0;
     }
 }

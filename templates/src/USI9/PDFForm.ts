@@ -21,6 +21,10 @@ class PDFForm {
     protected passportNumber = /^[a-zA-Z0-9]{6,12}$/;
     protected i94Number = /^\d{11}$/;
 
+    protected annotationName = 'annotation-name';
+    protected annotationRequired = 'annotation-required';
+    protected na = this._('NA');
+
     constructor() {
         let self = this;
 
@@ -83,8 +87,8 @@ class PDFForm {
         ctrl: JQuery<HTMLElement>,
         items: { [index: string]: string; },
         defaultValue: string,
-        fields: USI9Fields,
-        callback: any) {
+        fields: USI9Section2,
+        callback: (ddl: string, code: string, parent: USI9Section2) => any) {
         if (!ctrl) {
             return;
         }
@@ -102,17 +106,23 @@ class PDFForm {
             }
         });
 
-        options.children().click(e => {
-            callback(
-                (e.target.parentNode.parentNode as any).getElementsByTagName('input')[0].getAttribute('name'),
-                e.target.getAttribute('value'),
-                fields
-            );
-        });
+        if (callback) {
+            options.children().click(e => {
+                callback(
+                    (e.target.parentNode.parentNode as HTMLElement)
+                        .getElementsByTagName('input')[0].getAttribute(this.annotationName),
+                    e.target.getAttribute('value'),
+                    fields
+                );
+            });
+        }
 
-        options.children().filter('[value="' + (defaultValue ? defaultValue : '') + '"]').click();
-
-        if (defaultValue === null) {
+        if (defaultValue) {
+            options.children().filter('[value="' + defaultValue + '"]').each((index, value) => {
+                ctrl.val((value as HTMLLinkElement).textContent);
+            });
+        }
+        else {
             ctrl.val('');
         }
     }

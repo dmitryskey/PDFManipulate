@@ -150,4 +150,10 @@ class USI9Section3 extends USI9Section2 {
             500
         );
     }
+
+    protected validateFields(): string[] {
+        let errorMessages = super.validateFields();
+
+        return errorMessages;
+    }
 }

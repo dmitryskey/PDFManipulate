@@ -4,6 +4,9 @@
 declare var PDFViewerApplication: any;
 
 class USI9 extends USI9Section3 {
+    private firstPageRendered = false;
+    private secondPageRendered = false;
+
     constructor() {
         super();
 
@@ -25,7 +28,7 @@ class USI9 extends USI9Section3 {
     }
 
     private prepareData() {
-        PDFViewerApplication.transformationService = 'http://127.0.0.1:8080/update';
+        PDFViewerApplication.transformationService = 'http://' + window.location.hostname + ':8080/update';
         PDFViewerApplication.fieldsData = {
             'file': PDFViewerApplication.url,
             'operation': 'f',
@@ -43,7 +46,7 @@ class USI9 extends USI9Section3 {
 
             PDFViewerApplication.fieldsData.entries.push({
                 'name': ctrl.getAttribute('annotation-name'),
-                'value': op ? ctrl.value : '',
+                'value': op ? (ctrl.type === 'checkbox' ? ( ctrl.checked ? 'Yes' : 'No') : ctrl.value) : '',
                 'operation': op ? 's': 'd'});
         });
     }
@@ -85,8 +88,15 @@ class USI9 extends USI9Section3 {
             }
         });
 
-        document.addEventListener('pagerendered', (e: any) => {
-            if (e.detail.pageNumber === 1) {
+        $(document).on('textlayerrendered', (e: any) => {
+            PDFViewerApplication.eventBus.dispatch('firstpage');
+            if (!this.secondPageRendered) {
+                PDFViewerApplication.eventBus.dispatch('nextpage');    
+            }
+        });
+
+        $(document).on('pagerendered', (e: any) => {
+            if (e.detail.pageNumber === 1 && !this.firstPageRendered) {
                 this.renderSection1(
                     $('#dialogPage'),
                     $('[' + this.annotationName + '=LastName]'),
@@ -173,9 +183,11 @@ class USI9 extends USI9Section3 {
                     $('[' + this.annotationName + '=TranslatorZip]'),
                     $('[' + this.annotationName + '=TranslatorZipHelp]')
                 );
+
+                this.firstPageRendered = true;
             }
         
-            if (e.detail.pageNumber === 2) {
+            if (e.detail.pageNumber === 2 && this.firstPageRendered && !this.secondPageRendered) {
                 this.renderSection2(
                     $('#dialogPage'),
                     $('[' + this.annotationName + '=EmployeeInfoSection2Help]'),
@@ -276,10 +288,13 @@ class USI9 extends USI9Section3 {
                     $('[' + this.annotationName + '=EmployerNameSec3]'),
                     $('[' + this.annotationName + '=EmployerNameSec3Help]')
                 );
+
+                this.secondPageRendered = true;
             }
         });
     }
 }
 
 var form = new USI9();
+
 form.renderSections();

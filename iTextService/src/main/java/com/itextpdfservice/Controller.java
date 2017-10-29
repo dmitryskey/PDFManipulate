@@ -4,15 +4,15 @@ import com.itextpdf.text.pdf.*;
 import java.io.*;
 import java.net.URLDecoder;
 import java.util.*;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
+import org.apache.logging.log4j.*;
 
 public class Controller {
+  private static final Logger logger = LogManager.getLogger(Controller.class);
 
   public static String update(String fields) {
     try {
-      URLDecoder decoder = new URLDecoder();
-      fields = decoder.decode(fields, "UTF-8").replace("=", "");
+      fields = URLDecoder.decode(fields, "UTF-8").replace("=", "");
 
       Reader jsonReader = new StringReader(fields);
       Gson gson = new GsonBuilder().create();
@@ -67,9 +67,11 @@ public class Controller {
       s.close();
       w.close();
 
+      logger.trace("Generate the form [" +  f.file + "]");
+
       return new String(Base64.getEncoder().encode(w.toByteArray()));
     } catch (Exception ex) {
-      ex.printStackTrace();
+      logger.error(ex);
     }
 
     return null;

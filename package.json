@@ -27,6 +27,7 @@
     "gulp-typescript": "^3.2.2",
     "jquery": "^3.2.1",
     "jwt-simple": "^0.5.1",
+    "log4js": "^2.3.8",
     "moment": "^2.18.1",
     "path": "^0.12.7",
     "request": "^2.83.0",

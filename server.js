@@ -11,12 +11,16 @@ const uuidV4 = require('uuid/v4');
 const jwt = require('jwt-simple'); // used to create, sign, and verify tokens
 const assert = require('assert');
 const request = require('request');
+const log4js = require('log4js');
 const pdfApi = require('asposepdfcloud');
 const storageApi = require('asposestoragecloud');
 
 var app = express();
 
 var db;
+
+var logger = log4js.getLogger();
+logger.level = 'debug';
 
 app.post('/BeginSession', (req, res) => {
     var body = '';
@@ -40,7 +44,7 @@ app.post('/BeginSession', (req, res) => {
             db.get('SELECT Password, Salt FROM User_Info WHERE LoginName = (?)', data.login,
                 (err, row) => {
                     if (err) {
-                        console.log(err);
+                        logger.error(err);
                     }
                     else if (row) {
                         if (row.Password === crypto.createHmac('sha256', row.Salt).update(data.password).digest('hex')) {
@@ -54,12 +58,12 @@ app.post('/BeginSession', (req, res) => {
                             }));
                         }
                         else {
-                            console.log('Incorrect password for the [%s]', data.login);
+                            logger.debug('Incorrect password for the [%s]', data.login);
                             res.end();
                         }
                     }
                     else {
-                        console.log('User [%s] is not found', data.login);
+                        logger.debug('User [%s] is not found', data.login);
                         res.end();
                     }
                 });
@@ -93,7 +97,7 @@ app.post('/RichTextEditor', (req, res) => {
                 var decodedData = base64.decode(data.text);
                 fs.writeFile('data/' + uuid, decodedData, err => {
                     if (err) {
-                        console.log(err);
+                        logger.error(err);
                     }
                     else {
                         var host = server.address().address;
@@ -109,7 +113,7 @@ app.post('/RichTextEditor', (req, res) => {
                 });
             }
             else {
-                console.log('Session is expired for the token [%s]', data.token);
+                logger.debug('Session is expired for the token [%s]', data.token);
                 res.end(JSON.stringify({
                     token: data.token,
                     editorUrl: '' 
@@ -117,7 +121,7 @@ app.post('/RichTextEditor', (req, res) => {
             }
         }
         catch (err) {
-            console.log(err);
+            logger.error(err);
 
             res.end(JSON.stringify({
                 token: data.token,
@@ -155,7 +159,7 @@ app.post('/PDFEditor', (req, res) => {
                 if (data.type === 'application/pdf' && ['view', 'design'].includes(data.mode)) {
                     fs.writeFile('data/' + uuid, base64.decode(data.content), 'binary', err => {
                         if (err) {
-                            console.log(err);
+                            logger.error(err);
                         }
                         else {
                             editorUrl = 'http://' + (host !== '::' ? host : '127.0.0.1') + ':' + port + url + '&mode=' + data.mode;
@@ -184,7 +188,7 @@ app.post('/PDFEditor', (req, res) => {
                                         if (!error && response.statusCode === 200) {
                                             fs.writeFile('data/' + uuid, base64.decode(body), 'binary', err => {
                                                 if (err) {
-                                                    console.log(err);
+                                                    logger.error(err);
                                                 }
                                             });
                                         }
@@ -202,7 +206,7 @@ app.post('/PDFEditor', (req, res) => {
                 else if (data.type === 'application/pdf' && data.mode === 'edit') {
                     fs.copy('templates/forms/' + data.locale + '/' + data.templateid + '.pdf', 'data/' + uuid, err => {
                         if (err) {
-                            console.log(err);
+                            logger.error(err);
                         }
                         else {
                             editorUrl = 'http://' + (host !== '::' ? host : '127.0.0.1') + ':' + port + url + '&mode=' + data.mode + 
@@ -218,7 +222,7 @@ app.post('/PDFEditor', (req, res) => {
                 else if (data.type === 'application/html' && ['view', 'edit'].includes(data.mode)) {
                     fs.writeFile('data/' + uuid + '.html', base64.decode(data.content), err => {
                         if (err) {
-                            console.log(err);
+                            logger.error(err);
                         }
                         else {
                             var config = {'appSid': app.get('appSID'), 'apiKey': app.get('apiKey'), 'debug': true};
@@ -242,7 +246,7 @@ app.post('/PDFEditor', (req, res) => {
 
                                         fs.writeFile('data/' + uuid, responseMessage.body, 'binary', err => {
                                             if (err) {
-                                                console.log(err);
+                                                logger.error(err);
                                             }
                                             else {
                                                 editorUrl = 'http://' + (host !== '::' ? host : '127.0.0.1') + ':' + port + url + '&mode=' + data.mode;
@@ -268,7 +272,7 @@ app.post('/PDFEditor', (req, res) => {
                     });
                 }
                 else {
-                    console.log('Wrong conbination of the type [%s] and mode [%s]', data.type, data.mode);
+                    logger.debug('Wrong conbination of the type [%s] and mode [%s]', data.type, data.mode);
                     res.end(JSON.stringify({
                         token: data.token,
                         editorUrl: '' 
@@ -276,7 +280,7 @@ app.post('/PDFEditor', (req, res) => {
                 }
             }
             else {
-                console.log('Session is expired for the token [%s]', data.token);
+                logger.debug('Session is expired for the token [%s]', data.token);
                 res.end(JSON.stringify({
                     token: data.token,
                     editorUrl: '' 
@@ -284,7 +288,7 @@ app.post('/PDFEditor', (req, res) => {
             }
         }
         catch (err) {
-            console.log(err);
+            logger.error(err);
 
             res.end(JSON.stringify({
                 token: data.token,
@@ -332,7 +336,7 @@ app.post('/GetTemplateList', (req, res) => {
             }
         }
         catch (err) {
-            console.log(err);
+            logger.error(err);
 
             res.end(JSON.stringify({
                 token: data.token,
@@ -374,7 +378,7 @@ var server = app.listen(8305, () => {
         db.get('SELECT Parameter FROM App_Config WHERE Name = (?)', 'TokenSecret',
             (err, row) => {
                 if (err) {
-                    console.log(err);
+                    logger.error(err);
                 }
                 else if (row) {
                     // HS256 secrets are typically 128-bit random strings, for example hex-encoded: 
@@ -384,5 +388,5 @@ var server = app.listen(8305, () => {
             });
     });
 
-    console.log('SmartForms-on-Demand service listening at http://%s:%s', server.address().address, server.address().port);
+    logger.debug('SmartForms-on-Demand service listening at http://%s:%s', server.address().address, server.address().port);
 });

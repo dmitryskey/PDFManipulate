@@ -166,7 +166,7 @@
 .annotationLayer .buttonWidgetAnnotation.radioButton input[disabled] {
   background: none;
   border: 1px solid transparent;
-  cursor: not-allowed;
+  cursor: pointer;
 }
 
 .annotationLayer .textWidgetAnnotation input.inset,
