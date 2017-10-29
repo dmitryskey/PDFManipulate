@@ -3,7 +3,7 @@ package com.itextpdfservice;
 import com.itextpdf.text.pdf.*;
 import java.io.*;
 import java.net.URLDecoder;
-import java.util.*;
+import com.google.common.io.*;
 import com.google.gson.*;
 import org.apache.logging.log4j.*;
 
@@ -69,7 +69,7 @@ public class Controller {
 
       logger.trace("Generate the form [" +  f.file + "]");
 
-      return new String(Base64.getEncoder().encode(w.toByteArray()));
+      return new String(BaseEncoding.base64().encode(w.toByteArray()));
     } catch (Exception ex) {
       logger.error(ex);
     }
