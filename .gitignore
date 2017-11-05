@@ -60,3 +60,7 @@ typings/
 .DS_Store
 templates/lib/*
 data/*
+iTextService/target/*
+iTextService/.classpath
+iTextService/.project
+iTextService/.settings

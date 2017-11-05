@@ -15,11 +15,12 @@ class PDFForm {
     protected phoneFormat = /^[\d/NA-]+$/;
     protected phoneNumber = /^\d{3}\-{1}\d{3}\-{1}\d{4}$/;
     protected uscisNumberFormat = /^\d{7,9}$/;
-    protected admissionNumberFormat = /^\d{1}$/;
-    protected usPassportNumber = /^[a-zA-Z0-9]{6,9}$/;
-    protected cardNumber = /^[A-Za-z]{3}[0-9]{10}$/;
-    protected passportNumber = /^[a-zA-Z0-9]{6,12}$/;
-    protected i94Number = /^\d{11}$/;
+    protected admissionNumberFormat = /^\d{11}$/;
+    protected usPassportNumberFormat = /^[a-zA-Z0-9]{6,9}$/;
+    protected cardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$/;
+    protected passportNumberFormat = /^[a-zA-Z0-9]{6,12}$/;
+    protected driverLicenseNumberFormat = /^[a-zA-Z0-9]{8,14}$/;
+    protected ssnFormat = /^\d{3}[-]*\d{2}[-]*\d{4}$/;
 
     protected annotationName = 'annotation-name';
     protected annotationRequired = 'annotation-required';
@@ -76,11 +77,18 @@ class PDFForm {
 
     protected selectCheckmark(ctrl: JQuery<HTMLElement>, arr: Array<JQuery<HTMLElement>>) {
         for (var c in arr) {
-            if (arr[c] !== ctrl) {
+            if (arr[c].attr(this.annotationName) !== ctrl.attr(this.annotationName)) {
                 arr[c].prop('checked', false);
                 arr[c].parent().children('span').text('');
             }
         }
+    }
+
+    protected setCombolistValue(ctrl: JQuery<HTMLElement>, val: string) {
+        var options = ctrl.parent().children().filter('.combo-content');
+        options.children().filter('[value="' + val + '"]').each((index, value) => {
+            value.onclick(null);
+        });
     }
 
     protected filterCombolist(
@@ -94,6 +102,7 @@ class PDFForm {
         }
 
         var options = ctrl.parent().children().filter('.combo-content');
+
         for (let index in items) {
             options.children().filter('[value="' + index + '"]').text(items[index]);
         }
@@ -118,9 +127,7 @@ class PDFForm {
         }
 
         if (defaultValue) {
-            options.children().filter('[value="' + defaultValue + '"]').each((index, value) => {
-                ctrl.val((value as HTMLLinkElement).textContent);
-            });
+            this.setCombolistValue(ctrl, defaultValue);
         }
         else {
             ctrl.val('');

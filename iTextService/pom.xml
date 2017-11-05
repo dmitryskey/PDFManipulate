@@ -77,11 +77,11 @@
       <version>2.9.1</version>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+    <!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
     <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>23.3-jre</version>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+      <version>1.11</version>
     </dependency>
 
   </dependencies>

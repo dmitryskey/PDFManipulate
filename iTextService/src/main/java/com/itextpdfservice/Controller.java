@@ -3,8 +3,8 @@ package com.itextpdfservice;
 import com.itextpdf.text.pdf.*;
 import java.io.*;
 import java.net.URLDecoder;
-import com.google.common.io.*;
 import com.google.gson.*;
+import org.apache.commons.codec.binary.*;
 import org.apache.logging.log4j.*;
 
 public class Controller {
@@ -69,7 +69,7 @@ public class Controller {
 
       logger.trace("Generate the form [" +  f.file + "]");
 
-      return new String(BaseEncoding.base64().encode(w.toByteArray()));
+      return new String(Base64.encodeBase64(w.toByteArray()));
     } catch (Exception ex) {
       logger.error(ex);
     }

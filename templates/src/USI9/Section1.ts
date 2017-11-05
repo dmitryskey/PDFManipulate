@@ -602,7 +602,7 @@ class USI9Section1 extends USI9Fields {
             
             this.validateTextField(this._alienuscisNum, this._('citizenship.uscis'), [this.NAFormat, this.uscisNumberFormat], false, errorMessages);
             this.validateTextField(this._admissionNum, this._('citizenship.admission'), [this.NAFormat, this.admissionNumberFormat], false, errorMessages);
-            this.validateTextField(this._passportNum, this._('citizenship.passport'), [this.NAFormat, this.passportNumber], false, errorMessages);
+            this.validateTextField(this._passportNum, this._('citizenship.passport'), [this.NAFormat, this.passportNumberFormat], false, errorMessages);
             
             if (this.EmptyOrNA(this._alienuscisNum) && this.EmptyOrNA(this._admissionNum) &&
                 this.EmptyOrNA(this._passportNum) && this.EmptyOrNA(this._countryOfIssuance)) {

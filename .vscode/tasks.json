@@ -15,7 +15,7 @@
                 // "--minified",
                 "--comments=false"
             ],
-            "group":"build",
+            "group": "build",
             "isBackground": true
         },
         {
@@ -26,6 +26,15 @@
                 "kind": "build",
                 "isDefault": true
             }
-        }
+        },
+        {
+            "taskName": "spring",
+            "type": "shell",
+            "command": "cd ${workspaceRoot}/iTextService; mvn",
+			"args": [
+				"clean spring-boot:run"
+            ],
+            "group": "build"
+		}
     ]
 }
