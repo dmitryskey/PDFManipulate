@@ -3,6 +3,8 @@
 class USI9Section2 extends USI9Translator {
     private validationExpressionProp = 'validationexpression';
     private validationMessageProp = 'validationmessage';
+    private freeTextProp = 'freeText';
+    private requiredProp = 'required';
 
     protected renderSection2(
         dialog: JQuery<HTMLElement>,
@@ -89,162 +91,6 @@ class USI9Section2 extends USI9Translator {
                 this.na,
                 this,
                 this.processListABC));
-
-        let citizenships = [this._citizen, this._national, this._lpr, this._alien];
-
-        this._citizen.click(() => {
-            this.selectCheckmark(this._citizen, citizenships);
-            this.processLPR(this._citizen.prop('checked'));
-            this.processAlien(this._citizen.prop('checked'));
-
-            this.clearListABC();
-
-            if (this._citizen.prop('checked')) {
-                this.fillListABC('1');
-            }
-        });
-
-        this._national.click(() => {
-            this.selectCheckmark(this._national, citizenships);
-            this.processLPR(this._national.prop('checked'));
-            this.processAlien(this._national.prop('checked'));
-
-            this.clearListABC();
-
-            if (this._national.prop('checked')) {
-                this.fillListABC('2');
-            }
-        });
-
-        this._lpr.click(() => {
-            this.selectCheckmark(this._lpr, citizenships);
-            this.processAlien(this._lpr.prop('checked'));
-            this._lpruscisNum.val('');
-            this.filterCombolist(this._lpruscisNumType, {}, null, this, this.processListABC);
-
-            this.clearListABC();
-    
-            if (this._lpr.prop('checked')) {
-                this._lpruscisNum.prop('disabled', false);
-                this._lpruscisNumType.prop('disabled', false);
-                this.filterCombolist(
-                    this._lpruscisNumType,
-                    {'A':this._('aliennumber'), 'U':this._('uscisnumber')},
-                    null,
-                    this,
-                    this.processListABC);
-
-                    this.fillListABC('3');
-                }
-        });
-
-        this._alien.click(() => {
-            this.selectCheckmark(this._alien, citizenships);
-            this.processLPR(this._alien.prop('checked'));
-            this._alienWorkAuthDate.val('');
-            this._alienuscisNum.val('');
-            this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
-            this._admissionNum.val('');
-            this._passportNum.val('');
-            this.filterCombolist(this._countryOfIssuance, {}, null, this, this.processListABC);
-
-            this.clearListABC();
-
-            if (this._alien.prop('checked')) {
-                this._alienWorkAuthDate.prop('disabled', false);
-                this._alienuscisNum.prop('disabled', false);
-                this._alienuscisNumType.prop('disabled', false);
-    
-                this.filterCombolist(
-                    this._alienuscisNumType, 
-                    {'A':this._('aliennumber'), 'U':this._('uscisnumber')},
-                    null,
-                    this,
-                    this.processListABC);
-    
-                this._admissionNum.prop('disabled', false);
-                this._passportNum.prop('disabled', false);
-    
-                this._countryOfIssuance.prop('disabled', false);
-    
-                this.filterCombolist(
-                    this._countryOfIssuance,
-                    JSON.parse(this._('countries')),
-                    null,
-                    this,
-                    this.processListABC);
-
-                    this.fillListABC('4');
-                }
-        });
-
-        this._alienuscisNum.change(() => {
-            if (!this.EmptyOrNA(this._alienuscisNum)) {
-                if (this.EmptyOrNA(this._alienuscisNumType)) {
-                    this.filterCombolist(
-                        this._alienuscisNumType, 
-                        {'A':this._('aliennumber'), 'U':this._('uscisnumber')},
-                        null,
-                        this,
-                        this.processListABC);
-                }
-    
-                this._admissionNum.val(this.na);
-                this._passportNum.val(this.na);
-                this.filterCombolist(this._countryOfIssuance, {0:this.na}, '0', this, this.processListABC);
-            }
-            else {
-                this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
-                this._admissionNum.val('');
-                this._passportNum.val('');
-                this.filterCombolist(this._countryOfIssuance, {}, null, this, this.processListABC);
-            }
-        });
-
-        this._admissionNum.change(() => {
-            if (!this.EmptyOrNA(this._admissionNum)) {
-                this._alienuscisNum.val(this.na);
-                this._alienuscisNumPrefix.val('');
-                this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
-    
-                this._passportNum.val(this.na);
-                this.filterCombolist(this._countryOfIssuance, {0:this.na}, '0', this, this.processListABC);
-            }
-            else {
-                this._alienuscisNum.val('');
-                this._alienuscisNumPrefix.val('');
-                this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
-                this._passportNum.val('');
-                this.filterCombolist(this._countryOfIssuance, {}, null, this, this.processListABC);
-            }
-        });
-
-        this._passportNum.change(() => {
-            if (!this.EmptyOrNA(this._passportNum)) {
-                this._alienuscisNum.val(this.na);
-                this._alienuscisNumPrefix.val('');
-                this.filterCombolist(this._alienuscisNumType, {0:this.na}, this.na, this, this.processListABC);
-    
-                this._admissionNum.val(this.na);
-            
-                if (this.EmptyOrNA(this._countryOfIssuance)) {
-                    this.filterCombolist(
-                        this._countryOfIssuance,
-                        JSON.parse(this._('countries')),
-                        null,
-                        this,
-                        this.processListABC);
-                }
-            }
-            else {
-                this._alienuscisNum.val('');
-                this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
-                this._admissionNum.val('');
-            }
-        });
-
-        this.processLPR(false);
-        this.processAlien(false);
 
         this._employeeInfoHelp = this.renderHelpIcon(
             employeeInfoHelp,
@@ -350,7 +196,7 @@ class USI9Section2 extends USI9Translator {
         this._hireDate = hireDate
         .focus(e => this.hideTooltip()).prop('title', '')
         .tooltip({ content: this._('hiredate.tooltip') })
-        .datepicker({minDate: new Date()});
+        .datepicker();
 
         this._hireDateHelp = this.renderHelpIcon(
             hireDateHelp,
@@ -414,7 +260,7 @@ class USI9Section2 extends USI9Translator {
             return errorMessages;
         }
 
-        section2Fields.filter(f => (f.val() as string).trim() === '' && !f.prop('required')).forEach(f => f.val(this.na));
+        section2Fields.filter(f => (f.val() as string).trim() === '' && !f.prop(this.requiredProp)).forEach(f => f.val(this.na));
 
         section2Fields.forEach(f => f.toggleClass(this.invalidFieldClass, false));
 
@@ -433,6 +279,11 @@ class USI9Section2 extends USI9Translator {
              (this._listCDoc.val() as string).trim() === this.na)))) {
             errorMessages.push(this._('section2.listabc'));
         } else if ((this._listADoc.val() as string).trim() !== this.na) {
+            if ((this._listAIssuingAuthority.val() as string).trim() === '') {
+                errorMessages.push(this._('section2.listafirstissuingauthority'));
+                this._listAIssuingAuthority.toggleClass(this.invalidFieldClass, true);
+            }
+            
             if ((this._listADocNumber.val() as string).trim() === '') {
                 errorMessages.push(this._('section2.listafirstdocnumber'));
                 this._listADocNumber.toggleClass(this.invalidFieldClass, true);
@@ -444,33 +295,57 @@ class USI9Section2 extends USI9Translator {
                 errorMessages.push(this._listADocNumber.prop(this.validationMessageProp));
                 this._listADocNumber.toggleClass(this.invalidFieldClass, true);
             }
+
+            if ((this._listAIssuingAuthority2.val() as string).trim() === '') {
+                errorMessages.push(this._('section2.listasecondissuingauthority'));
+                this._listAIssuingAuthority2.toggleClass(this.invalidFieldClass, true);
+            }
             
             if ((this._listADocNumber2.val() as string).trim() === '') {
                 errorMessages.push(this._('section2.listaseconddocnumber'));
                 this._listADocNumber2.toggleClass(this.invalidFieldClass, true);
+            }
+
+            if ((this._listAIssuingAuthority3.val() as string).trim() === '') {
+                errorMessages.push(this._('section2.listathirdissuingauthority'));
+                this._listAIssuingAuthority3.toggleClass(this.invalidFieldClass, true);
             }
             
             if ((this._listADocNumber3.val() as string).trim() === '') {
                 errorMessages.push(this._('section2.listathirddocnumber'));
                 this._listADocNumber3.toggleClass(this.invalidFieldClass, true);
             }
-            
-            if ((this._listADocExpDate.val() as string).trim() === '') {
+
+            if (!this.validateDateRange(this._listADocExpDate, '', []) ||
+               (!this._listADocExpDate.prop(this.freeTextProp) &&
+                !this.validateTextField(this._listADocExpDate, '', [this.dateFormat], true, [])) ||
+                (this._listADocExpDate.prop(this.freeTextProp) && this._listADocExpDate.val() === '')) {
                 errorMessages.push(this._('section2.listafirstexpdate'));
                 this._listADocExpDate.toggleClass(this.invalidFieldClass, true);
             }
             
-            if ((this._listADocExpDate2.val() as string).trim() === '') {
+            if (!this.validateDateRange(this._listADocExpDate2, '', []) ||
+               (!this._listADocExpDate2.prop(this.freeTextProp) &&
+                !this.validateTextField(this._listADocExpDate2, '', [this.dateFormat], true, [])) ||
+                (this._listADocExpDate2.prop(this.freeTextProp) && this._listADocExpDate2.val() === '')) {
                 errorMessages.push(this._('section2.listasecondexpdate'));
                 this._listADocExpDate2.toggleClass(this.invalidFieldClass, true);
             }
             
-            if ((this._listADocExpDate3.val() as string).trim() === '') {
+            if (!this.validateDateRange(this._listADocExpDate3, '', []) ||
+               (!this._listADocExpDate3.prop(this.freeTextProp) &&
+                !this.validateTextField(this._listADocExpDate3, '', [this.dateFormat], true, [])) ||
+                (this._listADocExpDate3.prop(this.freeTextProp) && this._listADocExpDate3.val() === '')) {
                 errorMessages.push(this._('section2.listathirdexpdate'));
                 this._listADocExpDate3.toggleClass(this.invalidFieldClass, true);
             }
         } else { 
             if ((this._listBDoc.val() as string).trim() !== this.na) {
+                if ((this._listBIssuingAuthority.val() as string).trim() === '') {
+                    errorMessages.push(this._('section2.listbissuingauthority'));
+                    this._listBIssuingAuthority.toggleClass(this.invalidFieldClass, true);
+                }
+
                 if ((this._listBDocNumber.val() as string).trim() === '') {
                     errorMessages.push(this._('section2.listbdocnumber'));
                     this._listBDocNumber.toggleClass(this.invalidFieldClass, true);
@@ -481,9 +356,19 @@ class USI9Section2 extends USI9Translator {
                     errorMessages.push(this._listBDocNumber.prop(this.validationMessageProp));
                     this._listBDocNumber.toggleClass(this.invalidFieldClass, true);
                 }
+
+                if (!this.validateTextField(this._listBDocExpDate, '', [this.dateFormat, this.NAFormat], true, [])) {
+                     errorMessages.push(this._('section2.listbexpdate'));
+                     this._listBDocExpDate.toggleClass(this.invalidFieldClass, true);
+                 }
             }
 
             if ((this._listCDoc.val() as string).trim() !== this.na) {
+                if ((this._listCIssuingAuthority.val() as string).trim() === '') {
+                    errorMessages.push(this._('section2.listcissuingauthority'));
+                    this._listCIssuingAuthority.toggleClass(this.invalidFieldClass, true);
+                }
+
                 if (this._listCDoc.prop('ssncard') && !confirm(this._('section2.ssncardnotvalid'))) {
                     errorMessages.push(this._('section2.ssncardnotvalidformat'));
                     this._listCDoc.toggleClass(this.invalidFieldClass, true);
@@ -494,33 +379,31 @@ class USI9Section2 extends USI9Translator {
                     errorMessages.push(this._listCDocNumber.prop(this.validationMessageProp));
                     this._listCDocNumber.toggleClass(this.invalidFieldClass, true);
                 }
+
+                if (!this.validateTextField(this._listCDocExpDate, '', [this.dateFormat, this.NAFormat], true, [])) {
+                    errorMessages.push(this._('section2.listcexpdate'));
+                    this._listCDocExpDate.toggleClass(this.invalidFieldClass, true);
+                }
             }
         }
 
+        [this._hireDate, this._employerSignDate, this._employerLastName, this._employerFirstName,
+         this._employerTitle, this._employerName, this._employerAddress, this._employerCity,
+         this._employerState, this._employerZip].forEach(f =>
+            f.attr(this.annotationRequired, 'true'));
+
+        this.validateTextField(this._hireDate, this._('section2.hiredate'), [this.dateFormat], true, errorMessages);
+        this.validateTextField(this._employerSignDate, this._('section2.sgnemployer'), [this.dateFormat], true, errorMessages);
+        this.validateTextField(this._employerTitle, this._('section2.title'), [this.nameFormat], true, errorMessages);
+        this.validateTextField(this._employerLastName, this._('section2.lastname'), [this.nameFormat], true, errorMessages);
+        this.validateTextField(this._employerFirstName, this._('section2.firstname'), [this.nameFormat], true, errorMessages);
+        this.validateTextField(this._employerName, this._('section2.name'), [], true, errorMessages);
+        this.validateTextField(this._employerAddress, this._('section2.address'), [], true, errorMessages);
+        this.validateTextField(this._employerCity, this._('section2.city'), [], true, errorMessages);
+        this.validateTextField(this._employerState, this._('section2.state'), [], true, errorMessages);
+        this.validateTextField(this._employerZip, this._('section2.zip'), [this.zipNumberFormat], true, errorMessages);
+
         return errorMessages;
-    }
-
-    private processLPR(flag: boolean) {
-        var na = flag ? this.na : '';
-        this._lpruscisNumPrefix.val('');
-        this._lpruscisNum.prop('disabled', true).val(na);
-        this._lpruscisNumType.prop('disabled', true);
-
-        this.filterCombolist(this._lpruscisNumType, {}, null, this, this.processListABC);
-    }
-
-    private processAlien(flag: boolean) {
-        var na = flag ? this.na : '';
-        this._alienWorkAuthDate.prop('disabled', true).val(na);
-        this._alienuscisNumPrefix.val('');
-        this._alienuscisNum.prop('disabled', true).val(na);
-        this._alienuscisNumType.prop('disabled', true);
-        this._admissionNum.prop('disabled', true).val(na);
-        this._passportNum.prop('disabled', true).val(na);
-        this._countryOfIssuance.prop('disabled', true);
-
-        this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
-        this.filterCombolist(this._countryOfIssuance, flag ? {0:na} : {}, flag ? '0' : null, this, this.processListABC);
     }
 
     private renderEmployerData(
@@ -548,7 +431,7 @@ class USI9Section2 extends USI9Translator {
             
         this._sgnEmployer = sgnEmployer
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('sgnemployer.tooltip')});
+        .tooltip({ content: this._('sgnemployer.tooltip') });
 
         this._sgnEmployerHelp = this.renderHelpIcon(
             sgnEmployerHelp,
@@ -560,8 +443,8 @@ class USI9Section2 extends USI9Translator {
 
         this._employerSignDate = employerSignDate
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('employersigndate.tooltip')})
-        .datepicker({minDate: new Date()});
+        .tooltip({ content: this._('employersigndate.tooltip') })
+        .datepicker({ minDate: new Date() });
 
         this._employerSignDateHelp = this.renderHelpIcon(
             employerSignDateHelp,
@@ -573,7 +456,7 @@ class USI9Section2 extends USI9Translator {
 
         this._employerTitle = employerTitle
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('employertitle.tooltip')});
+        .tooltip({ content: this._('employertitle.tooltip') });
 
         this._employerTitleHelp = this.renderHelpIcon(
             employerTitleHelp,
@@ -585,7 +468,7 @@ class USI9Section2 extends USI9Translator {
 
         this._employerLastName = employerLastName
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('employerlastname.tooltip')});
+        .tooltip({ content: this._('employerlastname.tooltip') });
 
         this._employerLastNameHelp = this.renderHelpIcon(
             employerLastNameHelp,
@@ -597,7 +480,7 @@ class USI9Section2 extends USI9Translator {
 
         this._employerFirstName = employerFirstName
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('employerfirstname.tooltip')});
+        .tooltip({ content: this._('employerfirstname.tooltip') });
 
         this._employerFirstNameHelp = this.renderHelpIcon(
             employerFirstNameHelp,
@@ -609,7 +492,7 @@ class USI9Section2 extends USI9Translator {
 
         this._employerName = employerName
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('employername.tooltip')});
+        .tooltip({ content: this._('employername.tooltip') });
 
         this._employerNameHelp = this.renderHelpIcon(
             employerNameHelp,
@@ -621,7 +504,7 @@ class USI9Section2 extends USI9Translator {
 
         this._employerAddress = employerAddress
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('employeraddress.tooltip')});
+        .tooltip({ content: this._('employeraddress.tooltip') });
 
         this._employerAddressHelp = this.renderHelpIcon(
             employerAddressHelp,
@@ -633,7 +516,7 @@ class USI9Section2 extends USI9Translator {
 
         this._employerCity = employerCity
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('employercity.tooltip')});
+        .tooltip({ content: this._('employercity.tooltip') });
 
         this._employerCityHelp = this.renderHelpIcon(
             employerCityHelp,
@@ -645,7 +528,7 @@ class USI9Section2 extends USI9Translator {
 
         this._employerState = employerState
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('employerstate.tooltip')});
+        .tooltip({ content: this._('employerstate.tooltip') });
 
         this._employerStateHelp = this.renderHelpIcon(
             employerStateHelp,
@@ -657,7 +540,7 @@ class USI9Section2 extends USI9Translator {
 
         this._employerZip = employerZip
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('employerzip.tooltip')})
+        .tooltip({ content: this._('employerzip.tooltip') })
         .keypress(e => this.zipFormat.test(String.fromCharCode(e.which)));
 
         this._employerZipHelp = this.renderHelpIcon(
@@ -714,7 +597,7 @@ class USI9Section2 extends USI9Translator {
 
         this._listADoc = listADoc
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('listadoc.tooltip')});
+        .tooltip({ content: this._('listadoc.tooltip') });
     
         this._listADocHelp = this.renderHelpIcon(
             listADocHelp,
@@ -726,7 +609,7 @@ class USI9Section2 extends USI9Translator {
     
         this._listAIssuingAuthority = listAIssuingAuthority
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('listaissuingauthority.tooltip')});
+        .tooltip({ content: this._('listaissuingauthority.tooltip') });
     
         this._listAIssuingAuthorityHelp = this.renderHelpIcon(
             listAIssuingAuthorityHelp,
@@ -738,7 +621,7 @@ class USI9Section2 extends USI9Translator {
     
         this._listADocNumber = listADocNumber
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('listadocnumber.tooltip')});
+        .tooltip( {content: this._('listadocnumber.tooltip') });
     
         this._listADocNumberHelp = this.renderHelpIcon(
             listADocNumberHelp,
@@ -750,7 +633,7 @@ class USI9Section2 extends USI9Translator {
     
         this._listADocExpDate = listADocExpDate
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('listaexpdate.tooltip')})
+        .tooltip({ content: this._('listaexpdate.tooltip') })
         .datepicker({
             changeMonth: true,
             changeYear: true,
@@ -767,7 +650,7 @@ class USI9Section2 extends USI9Translator {
     
         this._listADoc2 = listADoc2
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('listadoc2.tooltip')});
+        .tooltip({ content: this._('listadoc2.tooltip') });
     
         this._listADoc2Help = this.renderHelpIcon(
             listADoc2Help,
@@ -779,7 +662,7 @@ class USI9Section2 extends USI9Translator {
     
         this._listAIssuingAuthority2 = listAIssuingAuthority2
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('listaissuingauthority2.tooltip')});
+        .tooltip({ content: this._('listaissuingauthority2.tooltip') });
         
         this._listAIssuingAuthority2Help = this.renderHelpIcon(
             listAIssuingAuthority2Help,
@@ -791,7 +674,7 @@ class USI9Section2 extends USI9Translator {
     
         this._listADocNumber2 = listADocNumber2
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('listadocnumber2.tooltip')});
+        .tooltip({ content: this._('listadocnumber2.tooltip') });
         
         this._listADocNumber2Help = this.renderHelpIcon(
             listADocNumber2Help,
@@ -803,7 +686,7 @@ class USI9Section2 extends USI9Translator {
     
         this._listADocExpDate2 = listADocExpDate2
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('listaexpdate2.tooltip')})
+        .tooltip({ content: this._('listaexpdate2.tooltip') })
         .datepicker({
             changeMonth: true,
             changeYear: true,
@@ -820,7 +703,7 @@ class USI9Section2 extends USI9Translator {
     
         this._listADoc3 = listADoc3
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('listadoc3.tooltip')});
+        .tooltip({ content: this._('listadoc3.tooltip') });
     
         this._listADoc3Help = this.renderHelpIcon(
             listADoc3Help,
@@ -832,7 +715,7 @@ class USI9Section2 extends USI9Translator {
         
         this._listAIssuingAuthority3 = listAIssuingAuthority3
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('listaissuingauthority3.tooltip')});
+        .tooltip({ content: this._('listaissuingauthority3.tooltip') });
         
         this._listAIssuingAuthority3Help = this.renderHelpIcon(
             listAIssuingAuthority3Help,
@@ -844,7 +727,7 @@ class USI9Section2 extends USI9Translator {
     
         this._listADocNumber3 = listADocNumber3
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('listadocnumber3.tooltip')});
+        .tooltip({ content: this._('listadocnumber3.tooltip') });
         
         this._listADocNumber3Help = this.renderHelpIcon(
             listADocNumber3Help,
@@ -856,7 +739,7 @@ class USI9Section2 extends USI9Translator {
     
         this._listADocExpDate3 = listADocExpDate3
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('listaexpdate3.tooltip')})
+        .tooltip({ content: this._('listaexpdate3.tooltip') })
         .datepicker({
             changeMonth: true,
             changeYear: true,
@@ -873,7 +756,7 @@ class USI9Section2 extends USI9Translator {
     
         this._listBDoc = listBDoc
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('listbdoc.tooltip')});
+        .tooltip({ content: this._('listbdoc.tooltip') });
     
         this._listBDocHelp = this.renderHelpIcon(
             listBDocHelp,
@@ -887,7 +770,7 @@ class USI9Section2 extends USI9Translator {
     
         this._listBIssuingAuthority = listBIssuingAuthority
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('listbissuingauthority.tooltip')});
+        .tooltip({ content: this._('listbissuingauthority.tooltip') });
         
         this._listBIssuingAuthorityHelp = this.renderHelpIcon(
             listBIssuingAuthorityHelp,
@@ -899,7 +782,7 @@ class USI9Section2 extends USI9Translator {
     
         this._listBDocNumber = listBDocNumber
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('listbdocnumber.tooltip')});
+        .tooltip({ content: this._('listbdocnumber.tooltip') });
     
         this._listBDocNumberHelp = this.renderHelpIcon(
             listBDocNumberHelp,
@@ -910,7 +793,7 @@ class USI9Section2 extends USI9Translator {
     
         this._listBDocExpDate = listBDocExpDate
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('listbexpdate.tooltip')})
+        .tooltip({ content: this._('listbexpdate.tooltip') })
         .datepicker({
             changeMonth: true,
             changeYear: true,
@@ -927,7 +810,7 @@ class USI9Section2 extends USI9Translator {
     
         this._listCDoc = listCDoc
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('listcdoc.tooltip')});
+        .tooltip({ content: this._('listcdoc.tooltip') });
     
         this._listCDocHelp = this.renderHelpIcon(
             listCDocHelp,
@@ -941,7 +824,7 @@ class USI9Section2 extends USI9Translator {
     
         this._listCIssuingAuthority = listCIssuingAuthority
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('listcissuingauthority.tooltip')});
+        .tooltip({ content: this._('listcissuingauthority.tooltip') });
         
         this._listCIssuingAuthorityHelp = this.renderHelpIcon(
             listCIssuingAuthorityHelp,
@@ -953,7 +836,7 @@ class USI9Section2 extends USI9Translator {
     
         this._listCDocNumber = listCDocNumber
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('listcdocnumber.tooltip')});
+        .tooltip({ content: this._('listcdocnumber.tooltip') });
     
         this._listCDocNumberHelp = this.renderHelpIcon(
             listCDocNumberHelp,
@@ -964,7 +847,7 @@ class USI9Section2 extends USI9Translator {
     
         this._listCDocExpDate = listCDocExpDate
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('listcexpdate.tooltip')})
+        .tooltip({ content: this._('listcexpdate.tooltip') })
         .datepicker({
             changeMonth: true,
             changeYear: true,
@@ -1010,9 +893,10 @@ class USI9Section2 extends USI9Translator {
         }
     }
 
-    protected getListAContent(citizenship: string) {
-        let usCitizenorNational = {'': '', 0: this.na, 1: this._('uspassport'), 2: this._('uspassportcard')};
+    protected getListAContent(citizenship: string) : { [index: string]: string; } {
+        let usCitizenOrNational = {' ': this.blankItem, 0: this.na, 1: this._('uspassport'), 2: this._('uspassportcard')};
         let lpr = {
+            ' ': this.blankItem,
             0: this.na,
             3: this._('permanentresidentcard'),
             4: this._('alienresidentcard'),
@@ -1021,6 +905,7 @@ class USI9Section2 extends USI9Translator {
             12: this._('I551receipt')
         };
         let alien = {
+            ' ': this.blankItem,
             0: this.na,
             6: this._('eadI766'),
             7: this._('foreinpassportnonimmigrant'),
@@ -1036,9 +921,9 @@ class USI9Section2 extends USI9Translator {
         switch (citizenship)
         {
             case '0': case null:
-                return $.extend(usCitizenorNational, lpr, alien);
+                return {};
             case '1': case '2':
-                return usCitizenorNational;
+                return usCitizenOrNational;
             case '3':
                 return lpr;
             case '4':
@@ -1056,6 +941,7 @@ class USI9Section2 extends USI9Translator {
         }
 
         var listB = {
+            ' ': this.blankItem,
             0: this._('NA'),
             1: this._('driverlicence'),
             2: this._('idcard'),
@@ -1109,6 +995,7 @@ class USI9Section2 extends USI9Translator {
 
     protected getListCContent(citizenship: string) {
         var listC = {
+            ' ': this.blankItem,
             0: this._('NA'),
             1: this._('ssncard'),
             10: this._('ssnCardReceipt')
@@ -1156,11 +1043,19 @@ class USI9Section2 extends USI9Translator {
         let issuingAuthList: { [index: string]: string; };
         let issuingAuth: string = null;
 
-        // restore min date after 6:I-766
-        this._listADocExpDate.datepicker('option', 'minDate', new Date());
+        this._listADocNumber.prop(this.requiredProp, true);
 
-        this._listADocNumber.prop('required', true);
-        this._listADocExpDate.prop('required', true);
+        this._listADocNumber2.prop(this.requiredProp, false);
+        this._listADocExpDate2.prop(this.requiredProp, false);
+
+        // restore min date after 6:I-766
+        this._listADocExpDate
+            .datepicker('option', 'minDate', new Date())
+            .datepicker('option', 'maxDate', null).prop(this.requiredProp, true)
+            .prop(this.freeTextProp, false);
+
+        let tenYearsFromNow = new Date();
+        tenYearsFromNow.setFullYear(tenYearsFromNow.getFullYear() + 10);
             
         if (['1', '2'].indexOf(code) >= 0) {
             // 1 - U.S. Passport
@@ -1170,6 +1065,8 @@ class USI9Section2 extends USI9Translator {
             numberMaxLength = 9;
             fieldValidationExpression = this.usPassportNumberFormat;
             fieldValidationMessage = this._('section2.uspassportformat');
+
+            this._listADocExpDate.datepicker('option', 'maxDate', tenYearsFromNow);
         } else if (code === '3') {
             // 3 - Perm. Resident Card (Form I-551)
             issuingAuthList = { USCIS: this._(USCIS), DOJINS: this._(DOJINS) };
@@ -1177,6 +1074,8 @@ class USI9Section2 extends USI9Translator {
             numberMaxLength = 13;
             fieldValidationExpression = this.cardNumberFormat;
             fieldValidationMessage = this._('section2.cardformat');
+
+            this._listADocExpDate.datepicker('option', 'maxDate', tenYearsFromNow);
         } else if (code === '4') {
             // 4 - Alien Reg. Receipt Card (Form I-551)
             issuingAuthList = { DOJINS: this._(DOJINS) };
@@ -1184,6 +1083,8 @@ class USI9Section2 extends USI9Translator {
             numberMaxLength = 13;
             fieldValidationExpression = this.cardNumberFormat;
             fieldValidationMessage = this._('section2.cardformat');
+
+            this._listADocExpDate.datepicker('option', 'maxDate', tenYearsFromNow);
         } else if (code === '5') {
             // 5 - Foreign Passport
             issuingAuthList = JSON.parse(this._('countries'));
@@ -1194,7 +1095,7 @@ class USI9Section2 extends USI9Translator {
         
             this.filterCombolist(
                 this._listADoc2,
-                {1: this._('temporaryI551stamp'), 2: this._('mrivstamp')},
+                { 1: this._('temporaryI551stamp'), 2: this._('mrivstamp') },
                 '1',
                 this,
                 this.processListABC);
@@ -1207,6 +1108,8 @@ class USI9Section2 extends USI9Translator {
                 this.processListABC);
         
             this._listADocNumber2.attr('readOnly', 'true').val(this.na);
+
+            this._listADocExpDate2.prop(this.requiredProp, true);
         } else if (code === '10') {
             // 10 - Receipt: Form I-94/I-94A w/I-551 stamp, photo
             issuingAuthList = {DHS: this._(DHS)};
@@ -1215,6 +1118,8 @@ class USI9Section2 extends USI9Translator {
             fieldFormat = this.numberFormat;
             fieldValidationExpression = this.admissionNumberFormat
             fieldValidationMessage = this._('admissionnumber.format');
+
+            this._listADocExpDate.prop(this.freeTextProp, true);
         } else if (code === '12') {
             // 12 - Receipt replacement Perm. Res. Card (Form I-551)
             issuingAuthList = { USCIS: this._(USCIS) };
@@ -1222,6 +1127,8 @@ class USI9Section2 extends USI9Translator {
             numberMaxLength = 13;
             fieldValidationExpression = this.cardNumberFormat;
             fieldValidationMessage = this._('section2.cardformat');
+
+            this._listADocExpDate.prop(this.freeTextProp, true);
         } else if (code === '6') {
             // Alien authorized to work
             // 6 - Employment Auth. Document (Form I-766)
@@ -1234,8 +1141,10 @@ class USI9Section2 extends USI9Translator {
             // I-766 can be expired in conjuction with I-797C (up to 180 days);
             this._listADocExpDate.datepicker('option', 'minDate', 
                 new Date(Date.now() - 180 * 24 * 3600 * 1000));
+
+            this._listADocExpDate.prop(this.freeTextProp, true);
         } else if (['7', '14'].indexOf(code) >= 0) {
-             // 7 - Foreign Passport, work-authorized nonimmigrant
+            // 7 - Foreign Passport, work-authorized nonimmigrant
             // 14 - Receipt: Replacement Foreign Passport, work-authorized nonimmigrant
             issuingAuthList = JSON.parse(this._('countries'));
             issuingAuth = null;        
@@ -1245,21 +1154,24 @@ class USI9Section2 extends USI9Translator {
         
             this.filterCombolist(
                 this._listADoc2,
-                {3: this._('formI94'), 4: this._('formI94receipt')},
+                { 3: this._('formI94'), 4: this._('formI94receipt') },
                 '3',
                 this,
                 this.processListABC);
         
             this.filterCombolist(
                 this._listAIssuingAuthority2,
-                {USCIS:this._(USCIS), CBP:this._(CBP)},
+                { USCIS:this._(USCIS), CBP:this._(CBP) },
                 USCIS,
                 this,
                 this.processListABC);
+
+            this._listADocNumber2.prop(this.requiredProp, true);
+            this._listADocExpDate2.prop(this.requiredProp, true);
         
             this.filterCombolist(
                 this._listADoc3,
-                {0: this.na, 1: this._('formI20'), 2: this._('formDS2019')},
+                { 0: this.na, 1: this._('formI20'), 2: this._('formDS2019') },
                 '0',
                 this,
                 this.processListABC);
@@ -1277,17 +1189,20 @@ class USI9Section2 extends USI9Translator {
         
             this.filterCombolist(
                 this._listADoc2,
-                {3: this._('formI94'), 4: this._('formI94receipt')},
+                { 3: this._('formI94'), 4: this._('formI94receipt') },
                 '3',
                 this,
                 this.processListABC);
         
             this.filterCombolist(
                 this._listAIssuingAuthority2,
-                {USCIS:this._(USCIS), CBP:this._(CBP)},
+                { USCIS:this._(USCIS), CBP:this._(CBP) },
                 USCIS,
                 this,
                 this.processListABC);
+
+            this._listADocNumber2.prop(this.requiredProp, true);
+            this._listADocExpDate2.prop(this.requiredProp, true);
         } else if (code === '9') {
             // 9 - RMI Passport with Form I-94
             issuingAuthList = { RMI: this._(RMI) };
@@ -1298,17 +1213,20 @@ class USI9Section2 extends USI9Translator {
         
             this.filterCombolist(
                 this._listADoc2,
-                {3: this._('formI94'), 4: this._('formI94receipt')},
+                { 3: this._('formI94'), 4: this._('formI94receipt') },
                 '3',
                 this,
                 this.processListABC);
         
             this.filterCombolist(
                 this._listAIssuingAuthority2,
-                {USCIS:this._(USCIS), CBP:this._(CBP)},
+                { USCIS:this._(USCIS), CBP:this._(CBP) },
                 USCIS,
                 this,
                 this.processListABC);
+
+            this._listADocNumber2.prop(this.requiredProp, true);
+            this._listADocExpDate2.prop(this.requiredProp, true);
         } else if (code === '11') {
             // 11 - Receipt: Form I-94/I-94A w/refugee stamp
             issuingAuthList = { DHS: this._(DHS) };
@@ -1318,6 +1236,8 @@ class USI9Section2 extends USI9Translator {
             fieldFormat = this.numberFormat;
             fieldValidationExpression = this.admissionNumberFormat
             fieldValidationMessage = this._('admissionnumber.format');
+
+            this._listADocExpDate.prop(this.freeTextProp, true);
         } else if (code === '13') {
             // 13 - Receipt replacement EAD (Form I-766)
             issuingAuthList = { USCIS: this._(USCIS) };
@@ -1325,6 +1245,8 @@ class USI9Section2 extends USI9Translator {
             numberMaxLength = 13;
             fieldValidationExpression = this.cardNumberFormat;
             fieldValidationMessage = this._('section2.cardformat');
+
+            this._listADocExpDate.prop(this.freeTextProp, true);
         } else if (code === '15') {
             // 15 - Receipt: Replacement FSM Passport with Form I-94
             issuingAuthList = { 'FSM': this._('FSM') };
@@ -1345,31 +1267,39 @@ class USI9Section2 extends USI9Translator {
         .prop('maxLength', numberMaxLength)
         .keypress(e => fieldFormat.test(String.fromCharCode(e.which)));
 
+        this._listADocExpDate.unbind('keypress');
+        if (!this._listADocExpDate.prop(this.freeTextProp)) {
+            this._listADocExpDate
+            .keypress(e =>
+                /[\d/]/g.test(String.fromCharCode(e.which)) ||
+                this.NAFormat.test(String.fromCharCode(e.which)))
+        }
+
         this._listADocNumber.prop(this.validationExpressionProp,  fieldValidationExpression);    
         this._listADocNumber.prop(this.validationMessageProp, fieldValidationMessage);
 
         this.filterCombolist(
-            this._listAIssuingAuthority,
-            issuingAuthList,
+            this._listAIssuingAuthority.prop(this.requiredProp, true),
+            $.extend({' ': this.blankItem}, issuingAuthList),
             issuingAuth,
             this,
             this.processListABC);
         
         if (['1', '2', '3', '4', '6', '10', '11', '12'].indexOf(code) >= 0) {
-            this.filterCombolist(this._listADoc2, {0:this.na}, '0', this, this.processListABC);
-            this.filterCombolist(this._listAIssuingAuthority2, {0: this.na}, '0', this, this.processListABC);
+            this.filterCombolist(this._listADoc2, { 0: this.na }, '0', this, this.processListABC);
+            this.filterCombolist(this._listAIssuingAuthority2, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber2.attr('readOnly', 'true').val(this.na);
             this._listADocExpDate2.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
         }
         
         if (['1', '2', '3', '4', '5', '6', '8', '9', '10', '11', '12', '15', '16'].indexOf(code) >= 0) {
-            this.filterCombolist(this._listADoc3, {0:this.na}, '0', this, this.processListABC);
-            this.filterCombolist(this._listAIssuingAuthority3, {0: this.na}, '0', this, this.processListABC);
+            this.filterCombolist(this._listADoc3, { 0: this.na }, '0', this, this.processListABC);
+            this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber3.attr('readOnly', 'true').val(this.na);
             this._listADocExpDate3.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
         }
         
-        if (code !== '0'){
+        if (code !== '0' && code.trim() !== ''){
             // List B area
             this.setCombolistValue(this._listBDoc, '0');
             this.filterCombolist(this._listBIssuingAuthority, {0: this.na}, '0', this, null);
@@ -1391,15 +1321,12 @@ class USI9Section2 extends USI9Translator {
 
         let numberMaxLength = 11;
         let fieldFormat = /^[a-zA-Z0-9]+$/;
-
-        this._listADocNumber2.prop('required', true);
-        this._listADocExpDate2.prop('required', true);
       
         if (code === '1') {
             // 1 - Temporary I-551 Stamp
             this.filterCombolist(
                 this._listAIssuingAuthority2,
-                { USCIS: this._(USCIS), DOJINS: this._(DOJINS) },
+                { ' ': this.blankItem, USCIS: this._(USCIS), DOJINS: this._(DOJINS) },
                 USCIS,
                 this,
                 this.processListABC);
@@ -1407,7 +1334,7 @@ class USI9Section2 extends USI9Translator {
             // 2 - Machine-readable immigrant visa (MRIV)
             this.filterCombolist(
                 this._listAIssuingAuthority2,
-                { USDS: this._(USDS) },
+                { ' ': this.blankItem, USDS: this._(USDS) },
                 USDS,
                 this,
                 this.processListABC);
@@ -1421,10 +1348,14 @@ class USI9Section2 extends USI9Translator {
 
         this._listADocNumber2
         .prop('maxLength', numberMaxLength)
+        .prop(this.requiredProp, true)
         .keypress(e => fieldFormat.test(String.fromCharCode(e.which)));
 
         this._listADocExpDate2
-        .unbind('keypress');
+        .unbind('keypress')
+        .datepicker('option', 'minDate', new Date())
+        .datepicker('option', 'maxDate', null).val('')
+        .prop(this.requiredProp, true).prop(this.freeTextProp, false);
     }
 
     private listADocTitle3(ddl: string, code: string) {
@@ -1432,8 +1363,8 @@ class USI9Section2 extends USI9Translator {
         let DOJINS = 'DOJINS';
         let USDS = 'USDS';
 
-        this._listADocNumber3.prop('required', true);
-        this._listADocExpDate3.prop('required', true);
+        this._listADocNumber3.prop(this.requiredProp, true);
+        this._listADocExpDate3.prop(this.requiredProp, true);
 
         // 0 - N/A
         if (code === '0') {
@@ -1444,7 +1375,7 @@ class USI9Section2 extends USI9Translator {
             // 1 - Form I-20
             this.filterCombolist(
                 this._listAIssuingAuthority3,
-                { ICE: this._(ICE), DOJINS: this._(DOJINS) },
+                { ' ': this.blankItem, ICE: this._(ICE), DOJINS: this._(DOJINS) },
                 ICE,
                 this,
                 this.processListABC);
@@ -1460,7 +1391,7 @@ class USI9Section2 extends USI9Translator {
             // 2 - Form DS-2019
             this.filterCombolist(
                 this._listAIssuingAuthority3,
-                { USDS: this._(USDS) },
+                { ' ': this.blankItem, USDS: this._(USDS) },
                 USDS,
                 this,
                 this.processListABC);
@@ -1468,10 +1399,9 @@ class USI9Section2 extends USI9Translator {
             this._listADocNumber3.removeAttr('readOnly').val('');
             this._listADocExpDate3.removeAttr('readOnly')
             .unbind('keypress')
-            .keypress(e =>
-                /[\d/]/g.test(String.fromCharCode(e.which)) ||
-                this.NAFormat.test(String.fromCharCode(e.which))
-            ).val('').datepicker('option', 'showOn', 'focus');
+            .datepicker('option', 'minDate', new Date())
+            .datepicker('option', 'maxDate', null).val('')
+            .prop(this.requiredProp, true).prop(this.freeTextProp, false);
         }
     }
 
@@ -1489,10 +1419,13 @@ class USI9Section2 extends USI9Translator {
         .prop('maxLength', '100')
         .unbind('keypress');
 
-        this.clearListA();
+        if (code !== '0' && code.trim() !== '') {
+            this.clearListA();
+        }
 
-        this._listBDocNumber.prop('required', true);
-        this._listBDocExpDate.prop('required', true);
+        this._listBIssuingAuthority.prop(this.requiredProp, true);
+        this._listBDocNumber.prop(this.requiredProp, true);
+        this._listBDocExpDate.prop(this.requiredProp, true);
 
         // NOT 19 - Individual under Age 18
         // NOT 20 - Special Placement
@@ -1518,9 +1451,9 @@ class USI9Section2 extends USI9Translator {
 
             this._listBDocNumber
             .prop('maxLength', numberMaxLength)
-            .keypress(e => fieldFormat.test(String.fromCharCode(e.which)));
-
-            this._listBIssuingAuthority.attr('readOnly', 'true');
+            .unbind('keypress')
+            .keypress(e => fieldFormat.test(String.fromCharCode(e.which)) ||
+                           this.NAFormat.test(String.fromCharCode(e.which)));
 
             fieldValidationExpression = this.driverLicenseNumberFormat;
             fieldValidationMessage = this._('section2.listbnumberformat');
@@ -1584,7 +1517,7 @@ class USI9Section2 extends USI9Translator {
 
         this.filterCombolist(
             this._listBIssuingAuthority,
-            issuingAuthList,
+            $.extend({' ': this.blankItem}, issuingAuthList),
             issuingAuth,
             this,
             this.processListABC);
@@ -1608,10 +1541,13 @@ class USI9Section2 extends USI9Translator {
         let issuingAuthList: { [index: string]: string; };
         let issuingAuth: string;
 
-        this.clearListA();
+        if (code !== '0' && code.trim() !== '') {
+            this.clearListA();
+        }
 
-        this._listCDocNumber.prop('required', true);
-        this._listCDocExpDate.prop('required', true);
+        this._listCIssuingAuthority.prop(this.requiredProp, true);
+        this._listCDocNumber.prop(this.requiredProp, true);
+        this._listCDocExpDate.prop(this.requiredProp, true);
 
         this._listCIssuingAuthority.attr('readOnly', 'true');
         this._listCDocExpDate.removeAttr('readOnly')
@@ -1695,7 +1631,7 @@ class USI9Section2 extends USI9Translator {
 
         this.filterCombolist(
             this._listCIssuingAuthority,
-            issuingAuthList,
+            $.extend({' ': this.blankItem}, issuingAuthList),
             issuingAuth,
             this,
             this.processListABC);
@@ -1704,7 +1640,7 @@ class USI9Section2 extends USI9Translator {
         this._listCDocNumber.prop(this.validationMessageProp, fieldValidationMessage);
     }
     
-    private fillListABC(status: string) {
+    protected fillListABC(status: string) {
         this.filterCombolist(
             this._listADoc,
             this.getListAContent(status),
@@ -1727,7 +1663,7 @@ class USI9Section2 extends USI9Translator {
             this.processListABC);
     }
 
-    private clearListABC() {
+    protected clearListABC() {
         this._lastNameSection2.val('');
         this._firstNameSection2.val('');
         this._middleInitialSection2.val('');
@@ -1755,7 +1691,7 @@ class USI9Section2 extends USI9Translator {
         this._listCDocExpDate.val('');
     }
 
-    private clearListA() {
+    protected clearListA() {
         // List A area
         this.setCombolistValue(this._listADoc, '0');
         this.filterCombolist(this._listAIssuingAuthority, {0:this.na}, '0', this, this.processListABC);

@@ -25,6 +25,7 @@ class PDFForm {
     protected annotationName = 'annotation-name';
     protected annotationRequired = 'annotation-required';
     protected na = this._('NA');
+    protected blankItem = '&nbsp;';
 
     constructor() {
         let self = this;
@@ -104,22 +105,26 @@ class PDFForm {
         var options = ctrl.parent().children().filter('.combo-content');
 
         for (let index in items) {
-            options.children().filter('[value="' + index + '"]').text(items[index]);
+            options.children().filter('[value="' + index + '"]').html(items[index]);
         }
 
         options.children().show();
         options.children().each((code: number, item: HTMLElement) => {
             var val = item.getAttribute('value');
-            if (!(val in items)) {
+            if (items && !(val in items)) {
                 options.children().filter('[value="' + val + '"]').hide();
             }
         });
 
         if (callback) {
             options.children().click(e => {
+                let inputText = (e.target.parentNode.parentNode as HTMLElement).getElementsByTagName('input')[0];
+                if (e.target.innerHTML === this.blankItem) {
+                    inputText.value = '';
+                }
+
                 callback(
-                    (e.target.parentNode.parentNode as HTMLElement)
-                        .getElementsByTagName('input')[0].getAttribute(this.annotationName),
+                    inputText.getAttribute(this.annotationName),
                     e.target.getAttribute('value'),
                     fields
                 );

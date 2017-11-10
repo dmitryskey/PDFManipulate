@@ -27,7 +27,7 @@ class USI9Translator extends USI9Section1 {
             
         this._translatorYes = translatorYes
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('translator.tooltip')})
+        .tooltip({ content: this._('translator.tooltip') })
         .click(() => { 
             this.selectCheckmark(this._translatorYes, translator);
 
@@ -43,7 +43,7 @@ class USI9Translator extends USI9Section1 {
             
         this._translatorNo = translatorNo
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('translator.tooltip')})
+        .tooltip({ content: this._('translator.tooltip') })
         .click(() => {
             this.selectCheckmark(this._translatorNo, translator);
             
@@ -67,7 +67,7 @@ class USI9Translator extends USI9Section1 {
             
         this._sgnTranslator = sgnTranslator
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('sgntranslator.tooltip')});
+        .tooltip({ content: this._('sgntranslator.tooltip') });
 
         this._sgnTranslatorHelp = this.renderHelpIcon(
             sgnTranslatorHelp,
@@ -78,7 +78,7 @@ class USI9Translator extends USI9Section1 {
             
         this._translatorDate = translatorDate
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('translatordate.tooltip')})
+        .tooltip({ content: this._('translatordate.tooltip') })
         .datepicker({minDate: new Date()});
 
         this._translatorDateHelp = this.renderHelpIcon(
@@ -90,7 +90,7 @@ class USI9Translator extends USI9Section1 {
             
         this._translatorLastName = translatorLastName
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('translatorlastname.tooltip')})
+        .tooltip({ content: this._('translatorlastname.tooltip') })
         .prop('maxLength', 40)
         .keypress(e => this.nameFormat.test(String.fromCharCode(e.which)));
 
@@ -102,7 +102,8 @@ class USI9Translator extends USI9Section1 {
         );
             
         this._translatorFirstName = translatorFirstName
-        .prop('title', '').tooltip({content: this._('translatorfirstname.tooltip')})
+        .focus(e => this.hideTooltip()).prop('title', '')
+        .tooltip({ content: this._('translatorfirstname.tooltip') })
         .prop('maxLength', 25)
         .keypress(e => this.nameFormat.test(String.fromCharCode(e.which)));
 
@@ -115,7 +116,7 @@ class USI9Translator extends USI9Section1 {
             
         this._translatorAddress = translatorAddress
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('translatoraddress.tooltip')});
+        .tooltip({ content: this._('translatoraddress.tooltip') });
 
         this._translatorAddressHelp = this.renderHelpIcon(
             translatorAddressHelp,
@@ -126,7 +127,7 @@ class USI9Translator extends USI9Section1 {
             
         this._translatorCity = translatorCity
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('translatorcity.tooltip')});
+        .tooltip({ content: this._('translatorcity.tooltip') });
 
         this._translatorCityHelp = this.renderHelpIcon(
             translatorCityHelp,
@@ -136,7 +137,7 @@ class USI9Translator extends USI9Section1 {
         );
             
         this._translatorState = translatorState
-        .prop('title', '').tooltip({content: this._('translatorstate.tooltip')});
+        .prop('title', '').tooltip({ content: this._('translatorstate.tooltip') });
 
         this._translatorStateHelp = this.renderHelpIcon(
             translatorStateHelp,
@@ -147,7 +148,7 @@ class USI9Translator extends USI9Section1 {
             
         this._translatorZip = translatorZip
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('translatorzip.tooltip')})
+        .tooltip({ content: this._('translatorzip.tooltip') })
         .keypress(e => this.zipFormat.test(String.fromCharCode(e.which)));
 
         this._translatorZipHelp = this.renderHelpIcon(

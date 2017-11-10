@@ -195,6 +195,36 @@ class USI9Fields extends PDFForm {
 
     protected invalidFieldClass = 'invalid';
 
+    protected validateDateRange(field: JQuery<HTMLElement>, parameter: string, errorMessages: string[]) : boolean {
+        let maxDate = field.datepicker('option', 'maxDate') as Date;
+        let minDate = field.datepicker('option', 'minDate') as Date;
+        if (maxDate) {
+            maxDate.setHours(0, 0, 0, 0);
+        }
+
+        if (minDate) {
+            minDate.setHours(0, 0, 0, 0);
+        }
+
+        if (maxDate && (new Date(field.val() as string) > maxDate)) {
+            errorMessages.push(
+                this.paramMaxValueMsg
+                .replace('${parameter}', parameter)
+                .replace('${value}', maxDate.toDateString())
+            );
+        } else if (minDate && (new Date(field.val() as string) < minDate)) {
+            errorMessages.push(
+                this.paramMinValueMsg
+                .replace('${parameter}', parameter)
+                .replace('${value}', minDate.toDateString())
+            );
+        } else {
+            return true;
+        }
+
+        return false
+    }
+
     protected validateTextField(
         field: JQuery<HTMLElement>,
         parameter: string,
@@ -226,31 +256,7 @@ class USI9Fields extends PDFForm {
             errorFlag = !validFlag;
 
             if (!errorFlag) {
-                let maxDate = field.datepicker('option', 'maxDate') as Date;
-                let minDate = field.datepicker('option', 'minDate') as Date;
-                if (maxDate) {
-                    maxDate.setHours(0, 0, 0, 0);
-                }
-
-                if (minDate) {
-                    minDate.setHours(0, 0, 0, 0);
-                }
-
-                if (maxDate && (new Date(field.val()) > maxDate)) {
-                    errorMessages.push(
-                        this.paramMaxValueMsg
-                        .replace('${parameter}', parameter)
-                        .replace('${value}', maxDate.toDateString())
-                    );
-                } else if (minDate && (new Date(field.val()) < minDate)) {
-                    errorMessages.push(
-                        this.paramMinValueMsg
-                        .replace('${parameter}', parameter)
-                        .replace('${value}', minDate.toDateString())
-                    );
-                } else {
-                    errorFlag = false;
-                }
+                errorFlag = !this.validateDateRange(field, parameter, errorMessages);
             }
         } else {
             errorFlag = false;
@@ -258,6 +264,6 @@ class USI9Fields extends PDFForm {
 
         field.toggleClass(this.invalidFieldClass, errorFlag);
 
-        return errorFlag;
+        return !errorFlag;
     }
 }

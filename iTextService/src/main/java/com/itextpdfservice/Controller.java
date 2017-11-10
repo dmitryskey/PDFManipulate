@@ -36,7 +36,7 @@ public class Controller {
         }
 
         if (e.operation.equals("s")) {
-          a.setField(e.name, e.value);
+          a.setField(e.name, e.value, true);
         }
       }
 

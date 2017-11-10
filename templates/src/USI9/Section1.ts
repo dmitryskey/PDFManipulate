@@ -24,7 +24,7 @@ class USI9Section1 extends USI9Fields {
 
         this._lastName = lastName
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('lastnamehelp.tooltip')})
+        .tooltip({ content: this._('lastnamehelp.tooltip') })
         .keypress(e => this.nameFormat.test(String.fromCharCode(e.which)));
 
         this._lastNameHelp = this.renderHelpIcon(
@@ -36,7 +36,7 @@ class USI9Section1 extends USI9Fields {
 
         this._firstName = firstName
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('firstnamehelp.tooltip')})
+        .tooltip({ content: this._('firstnamehelp.tooltip') })
         .keypress(e => this.nameFormat.test(String.fromCharCode(e.which)));
 
         this._firstNameHelp = this.renderHelpIcon(
@@ -49,7 +49,7 @@ class USI9Section1 extends USI9Fields {
         // N/A option
         this._middleInitial = middleInitial
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('middleinitialhelp.tooltip')})
+        .tooltip({ content: this._('middleinitialhelp.tooltip') })
         .keypress(e =>
             this.nameFormat.test(String.fromCharCode(e.which)) ||
             this.NAFormat.test(String.fromCharCode(e.which)));
@@ -63,7 +63,7 @@ class USI9Section1 extends USI9Fields {
 
         this._otherNames = otherNames
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('othernameshelp.tooltip')})
+        .tooltip({ content: this._('othernameshelp.tooltip') })
         .keypress(e =>
             this.nameFormat.test(String.fromCharCode(e.which)) ||
             this.NAFormat.test(String.fromCharCode(e.which)));
@@ -77,7 +77,7 @@ class USI9Section1 extends USI9Fields {
 
         this._address = address
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('addresshelp.tooltip')});
+        .tooltip({ content: this._('addresshelp.tooltip') });
 
         this._addressHelp = this.renderHelpIcon(
             addressHelp,
@@ -88,7 +88,7 @@ class USI9Section1 extends USI9Fields {
 
         this._apptNumber = apptNumber
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('apartmentnumberhelp.tooltip')});
+        .tooltip({ content: this._('apartmentnumberhelp.tooltip') });
 
         this._apptNumberHelp = this.renderHelpIcon(
             apptNumberHelp,
@@ -99,7 +99,7 @@ class USI9Section1 extends USI9Fields {
 
         this._city = city
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('cityhelp.tooltip')});
+        .tooltip({ content: this._('cityhelp.tooltip') });
 
         this._cityHelp = this.renderHelpIcon(
             cityHelp,
@@ -124,7 +124,7 @@ class USI9Section1 extends USI9Fields {
             this._zip.prop('maxLength', zipCode ? 5 : 6);
         })
         .prop('title', '')
-        .tooltip({content: this._('statehelp.tooltip')})
+        .tooltip({ content: this._('statehelp.tooltip') })
 
         this._stateHelp = this.renderHelpIcon(
             stateHelp,
@@ -135,7 +135,7 @@ class USI9Section1 extends USI9Fields {
 
         this._zip = zip
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('ziphelp.tooltip')})
+        .tooltip({ content: this._('ziphelp.tooltip') })
         .keypress(e => this.zipFormat.test(String.fromCharCode(e.which)));
 
         this._zipHelp = this.renderHelpIcon(
@@ -152,7 +152,7 @@ class USI9Section1 extends USI9Fields {
             this._ssn[i]
             .attr('nextElement', (this._ssn[i + 1]).attr(this.annotationName))
             .focus(e => this.hideTooltip()).prop('title', '')
-            .tooltip({content: this._('ssnhelp.tooltip')})
+            .tooltip({ content: this._('ssnhelp.tooltip') })
             .keypress(e => {
                 if (this.numberFormat.test(String.fromCharCode(e.which))) {
                     $('[' + this.annotationName + '=' + $(e.target).attr('nextElement') + ']').focus();
@@ -166,7 +166,7 @@ class USI9Section1 extends USI9Fields {
 
         this._ssn[ssn.length - 1]
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('ssnhelp.tooltip')})
+        .tooltip({ content: this._('ssnhelp.tooltip') })
         .keypress(e => this.numberFormat.test(String.fromCharCode(e.which)));
     }
 
@@ -195,7 +195,7 @@ class USI9Section1 extends USI9Fields {
         // E-Verify requirements
         this._dob = dob
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('dobhelp.tooltip')})
+        .tooltip({ content: this._('dobhelp.tooltip') })
         .datepicker({
             changeMonth: true,
             changeYear: true,
@@ -221,7 +221,7 @@ class USI9Section1 extends USI9Fields {
 
         this._email = email
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('emailhelp.tooltip')})
+        .tooltip({ content: this._('emailhelp.tooltip') })
 
         this._emailHelp = this.renderHelpIcon(
             emailHelp,
@@ -232,7 +232,7 @@ class USI9Section1 extends USI9Fields {
     
         this._phone = phone
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('phonehelp.tooltip')})
+        .tooltip({ content: this._('phonehelp.tooltip') })
         .keypress(e => this.phoneFormat.test(String.fromCharCode(e.which)));
     
         this._phoneHelp = this.renderHelpIcon(
@@ -274,7 +274,7 @@ class USI9Section1 extends USI9Fields {
 
         this._citizen = citizen
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('citizenhelp.tooltip')});
+        .tooltip({ content: this._('citizenhelp.tooltip') });
 
         this._citizenHelp = this.renderHelpIcon(
             citizenHelp,
@@ -285,7 +285,7 @@ class USI9Section1 extends USI9Fields {
 
         this._national = national
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('nationalhelp.tooltip')});
+        .tooltip({ content: this._('nationalhelp.tooltip') });
 
         this._nationalHelp = this.renderHelpIcon(
             nationalHelp,
@@ -296,7 +296,7 @@ class USI9Section1 extends USI9Fields {
     
         this._lpr = lpr
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('lprhelp.tooltip')});
+        .tooltip({ content: this._('lprhelp.tooltip') });
     
         this._lprHelp = this.renderHelpIcon(
             lprHelp,
@@ -307,7 +307,7 @@ class USI9Section1 extends USI9Fields {
     
         this._alien = alien
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('alienhelp.tooltip')});
+        .tooltip({ content: this._('alienhelp.tooltip') });
     
         this._alienHelp = this.renderHelpIcon(
             alienHelp,
@@ -328,19 +328,19 @@ class USI9Section1 extends USI9Fields {
     
         this._lpruscisNum = lpruscisNum
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('uscisnumber.tooltip')})
+        .tooltip({ content: this._('uscisnumber.tooltip') })
         .keypress(e => this.numberFormat.test(String.fromCharCode(e.which)));
     
         this._lpruscisNumType = lpruscisNumType
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('uscisnumbertype.tooltip')});
+        .tooltip({ content: this._('uscisnumbertype.tooltip') });
 
         this.assignCombolistEventHandler(this._lpruscisNumType, (e: JQuery.Event) => 
             this._lpruscisNumPrefix.val((e.target as HTMLElement).getAttribute('value') === 'A' ? 'A' : ''));
     
         this._alienWorkAuthDate = alienWorkAuthDate
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('alienworkauthdate.tooltip')})
+        .tooltip({ content: this._('alienworkauthdate.tooltip') })
         .datepicker({
             changeMonth: true,
             changeYear: true,
@@ -356,19 +356,19 @@ class USI9Section1 extends USI9Fields {
     
         this._alienuscisNum = alienuscisNum
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('uscisnumber.tooltip')})
+        .tooltip({ content: this._('uscisnumber.tooltip') })
         .keypress(e => this.numberFormat.test(String.fromCharCode(e.which)));
     
         this._alienuscisNumType = alienuscisNumType
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('uscisnumbertype.tooltip')});
+        .tooltip({ content: this._('uscisnumbertype.tooltip') });
 
         this.assignCombolistEventHandler(this._alienuscisNumType, (e: JQuery.Event) => 
             this._alienuscisNumPrefix.val((e.target as HTMLElement).getAttribute('value') === 'A' ? 'A' : ''));
     
         this._admissionNum = admissionNum
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('admissionnumber.tooltip')})
+        .tooltip({ content: this._('admissionnumber.tooltip') })
         .keypress(e => this.numberFormat.test(String.fromCharCode(e.which)));
     
         this._admissionNumHelp = this.renderHelpIcon(
@@ -380,7 +380,7 @@ class USI9Section1 extends USI9Fields {
     
         this._passportNum = passportNum
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('passportnumber.tooltip')});
+        .tooltip({ content: this._('passportnumber.tooltip') });
 
         this._passportNumHelp = this.renderHelpIcon(
             passportNumHelp,
@@ -391,7 +391,7 @@ class USI9Section1 extends USI9Fields {
 
         this._countryOfIssuance = countryOfIssuance
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('coi.tooltip')});
+        .tooltip({ content: this._('coi.tooltip') });
 
         this._countryOfIssuanceHelp = this.renderHelpIcon(
             countryOfIssuanceHelp,
@@ -402,7 +402,7 @@ class USI9Section1 extends USI9Fields {
 
         this._sgnEmployee = sgnEmployee
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('sgnemployee.tooltip')});
+        .tooltip({ content: this._('sgnemployee.tooltip') });
   
         this._sgnEmployeeHelp = this.renderHelpIcon(
             sgnEmployeeHelp,
@@ -413,7 +413,7 @@ class USI9Section1 extends USI9Fields {
     
         this._sgnEmployeeDate = sgnEmployeeDate
         .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({content: this._('employeedate.tooltip')})
+        .tooltip({ content: this._('employeedate.tooltip') })
         .datepicker({minDate: new Date()});
 
         this._sgnEmployeeDateHelp = this.renderHelpIcon(
@@ -516,13 +516,8 @@ class USI9Section1 extends USI9Fields {
         let errorMessages: string[] = [];
 
         // Put N/A if required
-        let naFields = [this._middleInitial, this._otherNames, this._apptNumber, this._email, this._phone];
-
-        for (let idx in naFields) {
-            if (naFields[idx].val() === '') {
-                naFields[idx].val(this.na);
-            }
-        }
+        [this._middleInitial, this._otherNames, this._apptNumber, this._email, this._phone]
+           .filter(f => f.val() === '').forEach(f => f.val(this.na));
 
         this.validateTextField(this._lastName, this._('name.last'), [this.nameFormat], false, errorMessages);
         this.validateTextField(this._firstName, this._('name.first'), [this.nameFormat], false, errorMessages);
