@@ -26,13 +26,10 @@ class PDFForm {
     protected annotationRequired = 'annotation-required';
     protected na = this._('NA');
     protected blankItem = '&nbsp;';
+    protected backSpaceCode = 'Backspace';
 
     constructor() {
         let self = this;
-
-        $(document).tooltip({
-            show: { delay: 200 }
-        });
 
         let monthNames:string[] = [];
         let monthNamesShort:string[] = [];
@@ -143,11 +140,17 @@ class PDFForm {
         ctrl.parent().children().filter('.combo-content').click(f);
     }
 
-    protected hideTooltip() {
-        $('.ui-tooltip').hide();
+    protected renderControl(ctrl: JQuery<HTMLElement>, text: string) : JQuery<HTMLElement> {
+        return ctrl.focus(e => $(e.target).tooltip('close')).prop('title', '')
+        .tooltip({ content: text, show: { delay: 1000 } });
     }
 
-    protected renderHelpIcon(ctrl: JQuery<HTMLElement>, title: string, dialog: JQuery<HTMLElement>, text: string, minWidth = 50) {
+    protected renderHelpIcon(
+        ctrl: JQuery<HTMLElement>,
+        title: string,
+        dialog: JQuery<HTMLElement>,
+        text: string,
+        minWidth = 50) : JQuery<HTMLElement> {
         let self = this;
 
         let tag = 'div';
@@ -158,9 +161,7 @@ class PDFForm {
         .children(tag).prop('title', title)
         .css({'color': ctrl.css('color'),
         'font-size': ctrl.css('font-size')})
-        .toggleClass('icon').parent().click(() => {
-            self.hideTooltip();
-
+        .toggleClass('icon').parent().click(e => {
             $('.ui-dialog-titlebar-close').attr('title', '');
 
             dialog.text('').append(decodeURIComponent(text))

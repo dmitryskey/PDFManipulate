@@ -180,11 +180,9 @@ class USI9Section3 extends USI9Section2 {
         this.processLPR(false);
         this.processAlien(false);
 
-        this._newlastName = lastName
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('newlastname.tooltip') })
-        .keypress(e => this.nameFormat.test(String.fromCharCode(e.which)) ||
-                       this.NAFormat.test(String.fromCharCode(e.which)));
+        this._newlastName = this.renderControl(lastName, this._('newlastname.tooltip'))
+        .keypress(e => 
+            this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
 
         this._newlastNameHelp = this.renderHelpIcon(
             lastNameHelp,
@@ -193,11 +191,9 @@ class USI9Section3 extends USI9Section2 {
             this._('newlastnamehelp.text')
         );
 
-        this._newfirstName = firstName
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('newfirstname.tooltip') })
-        .keypress(e => this.nameFormat.test(String.fromCharCode(e.which)) ||
-                       this.NAFormat.test(String.fromCharCode(e.which)));
+        this._newfirstName = this.renderControl(firstName, this._('newfirstname.tooltip'))
+        .keypress(e => 
+            this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
 
         this._newfirstNameHelp = this.renderHelpIcon(
             firstNameHelp,
@@ -206,12 +202,9 @@ class USI9Section3 extends USI9Section2 {
             this._('newfirstnamehelp.text')
         );
 
-        this._newmiddleInitial = middleInitial
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('newmiddleinitial.tooltip') })
+        this._newmiddleInitial = this.renderControl(middleInitial, this._('newmiddleinitial.tooltip'))
         .keypress(e =>
-            this.nameFormat.test(String.fromCharCode(e.which)) ||
-            this.NAFormat.test(String.fromCharCode(e.which)));
+            this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
 
         this._newmiddleInitialHelp = this.renderHelpIcon(
             middleInitialHelp,
@@ -220,15 +213,11 @@ class USI9Section3 extends USI9Section2 {
             this._('newmiddleinitialhelp.text')
         );
 
-        this._rehireDate = rehireDate
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('rehiredate.tooltip') })
+        this._rehireDate = this.renderControl(rehireDate, this._('rehiredate.tooltip') )
         .datepicker()
         .unbind('keypress')
         .keypress(e =>
-            /[\d/]/g.test(String.fromCharCode(e.which)) ||
-            this.NAFormat.test(String.fromCharCode(e.which))
-        );
+            /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
 
         this._rehireDateHelp = this.renderHelpIcon(
             rehireDateHelp,
@@ -238,9 +227,7 @@ class USI9Section3 extends USI9Section2 {
             500
         );
 
-        this._docTitleSec3 = docTitleSec3
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('doctitlesec3.tooltip') });
+        this._docTitleSec3 = this.renderControl(docTitleSec3, this._('doctitlesec3.tooltip'));
 
         this.filterCombolist(this._docTitleSec3, {
             ' ': this.blankItem,
@@ -285,9 +272,7 @@ class USI9Section3 extends USI9Section2 {
             500
         );
 
-        this._docNumberSec3 = docNumberSec3
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('docnumbersec3.tooltip') });
+        this._docNumberSec3 = this.renderControl(docNumberSec3, this._('docnumbersec3.tooltip'));
 
         this._docNumberSec3Help = this.renderHelpIcon(
             docNumberSec3Help,
@@ -297,15 +282,11 @@ class USI9Section3 extends USI9Section2 {
             500
         );
 
-        this._expDateSec3 = expDateSec3
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('expdatesec3.tooltip') })
+        this._expDateSec3 = this.renderControl(expDateSec3, this._('expdatesec3.tooltip'))
         .datepicker({ minDate: new Date() })
         .unbind('keypress')
         .keypress(e =>
-            /[\d/]/g.test(String.fromCharCode(e.which)) ||
-            this.NAFormat.test(String.fromCharCode(e.which))
-        );
+            /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
 
         this._expDateSec3Help = this.renderHelpIcon(
             expDateSec3Help,
@@ -315,9 +296,7 @@ class USI9Section3 extends USI9Section2 {
             500
         );
 
-        this._sgnEmployerSec3 = sgnEmployerSec3
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('sgnemployersec3.tooltip') });
+        this._sgnEmployerSec3 = this.renderControl(sgnEmployerSec3, this._('sgnemployersec3.tooltip'));
 
         this._sgnEmployerSec3Help = this.renderHelpIcon(
             sgnEmployerSec3Help,
@@ -327,9 +306,7 @@ class USI9Section3 extends USI9Section2 {
             500
         );
 
-        this._employerSignDateSec3 = employerSignDateSec3
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('employersigndatesec3.tooltip') })
+        this._employerSignDateSec3 = this.renderControl(employerSignDateSec3, this._('employersigndatesec3.tooltip'))
         .datepicker({ minDate: new Date() })
         .attr(this.annotationRequired, 'true');
 
@@ -341,9 +318,7 @@ class USI9Section3 extends USI9Section2 {
             500
         );
 
-        this._employerNameSec3 = employerNameSec3
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('employernamesec3.tooltip') })
+        this._employerNameSec3 = this.renderControl(employerNameSec3, this._('employernamesec3.tooltip'))
         .attr(this.annotationRequired, 'true');
 
         this._employerNameSec3Help = this.renderHelpIcon(

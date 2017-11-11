@@ -179,9 +179,7 @@ class USI9Section2 extends USI9Translator {
             listCDocExpDateHelp
         );
         
-        this._additionalInfo = additionalInfo
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('additionalinfo.tooltip') })
+        this._additionalInfo = this.renderControl(additionalInfo, this._('additionalinfo.tooltip'))
 
         this._additionalInfoHelp = this.renderHelpIcon(
             additionalInfoHelp,
@@ -193,9 +191,7 @@ class USI9Section2 extends USI9Translator {
 
         this.clearListABC();
 
-        this._hireDate = hireDate
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('hiredate.tooltip') })
+        this._hireDate = this.renderControl(hireDate, this._('hiredate.tooltip'))
         .datepicker();
 
         this._hireDateHelp = this.renderHelpIcon(
@@ -429,9 +425,7 @@ class USI9Section2 extends USI9Translator {
         employerZip: JQuery<HTMLElement>,
         employerZipHelp: JQuery<HTMLElement>){
             
-        this._sgnEmployer = sgnEmployer
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('sgnemployer.tooltip') });
+        this._sgnEmployer = this.renderControl(sgnEmployer, this._('sgnemployer.tooltip'));
 
         this._sgnEmployerHelp = this.renderHelpIcon(
             sgnEmployerHelp,
@@ -441,9 +435,7 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._employerSignDate = employerSignDate
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('employersigndate.tooltip') })
+        this._employerSignDate = this.renderControl(employerSignDate, this._('employersigndate.tooltip'))
         .datepicker({ minDate: new Date() });
 
         this._employerSignDateHelp = this.renderHelpIcon(
@@ -454,9 +446,7 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._employerTitle = employerTitle
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('employertitle.tooltip') });
+        this._employerTitle = this.renderControl(employerTitle, this._('employertitle.tooltip'));
 
         this._employerTitleHelp = this.renderHelpIcon(
             employerTitleHelp,
@@ -466,9 +456,7 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._employerLastName = employerLastName
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('employerlastname.tooltip') });
+        this._employerLastName = this.renderControl(employerLastName, this._('employerlastname.tooltip'));
 
         this._employerLastNameHelp = this.renderHelpIcon(
             employerLastNameHelp,
@@ -478,9 +466,7 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._employerFirstName = employerFirstName
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('employerfirstname.tooltip') });
+        this._employerFirstName = this.renderControl(employerFirstName, this._('employerfirstname.tooltip'));
 
         this._employerFirstNameHelp = this.renderHelpIcon(
             employerFirstNameHelp,
@@ -490,9 +476,7 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._employerName = employerName
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('employername.tooltip') });
+        this._employerName = this.renderControl(employerName, this._('employername.tooltip'));
 
         this._employerNameHelp = this.renderHelpIcon(
             employerNameHelp,
@@ -502,9 +486,7 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._employerAddress = employerAddress
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('employeraddress.tooltip') });
+        this._employerAddress = this.renderControl(employerAddress, this._('employeraddress.tooltip'));
 
         this._employerAddressHelp = this.renderHelpIcon(
             employerAddressHelp,
@@ -514,9 +496,7 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._employerCity = employerCity
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('employercity.tooltip') });
+        this._employerCity = this.renderControl(employerCity, this._('employercity.tooltip'));
 
         this._employerCityHelp = this.renderHelpIcon(
             employerCityHelp,
@@ -526,9 +506,7 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._employerState = employerState
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('employerstate.tooltip') });
+        this._employerState = this.renderControl(employerState, this._('employerstate.tooltip'));
 
         this._employerStateHelp = this.renderHelpIcon(
             employerStateHelp,
@@ -538,10 +516,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._employerZip = employerZip
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('employerzip.tooltip') })
-        .keypress(e => this.zipFormat.test(String.fromCharCode(e.which)));
+        this._employerZip = this.renderControl(employerZip, this._('employerzip.tooltip'))
+        .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode);
 
         this._employerZipHelp = this.renderHelpIcon(
             employerZipHelp,
@@ -595,9 +571,7 @@ class USI9Section2 extends USI9Translator {
         listCDocExpDate: JQuery<HTMLElement>,
         listCDocExpDateHelp: JQuery<HTMLElement>){
 
-        this._listADoc = listADoc
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('listadoc.tooltip') });
+        this._listADoc = this.renderControl(listADoc, this._('listadoc.tooltip'));
     
         this._listADocHelp = this.renderHelpIcon(
             listADocHelp,
@@ -607,9 +581,7 @@ class USI9Section2 extends USI9Translator {
             500
         );
     
-        this._listAIssuingAuthority = listAIssuingAuthority
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('listaissuingauthority.tooltip') });
+        this._listAIssuingAuthority = this.renderControl(listAIssuingAuthority, this._('listaissuingauthority.tooltip'));
     
         this._listAIssuingAuthorityHelp = this.renderHelpIcon(
             listAIssuingAuthorityHelp,
@@ -619,9 +591,7 @@ class USI9Section2 extends USI9Translator {
             500
         );
     
-        this._listADocNumber = listADocNumber
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip( {content: this._('listadocnumber.tooltip') });
+        this._listADocNumber = this.renderControl(listADocNumber, this._('listadocnumber.tooltip'));
     
         this._listADocNumberHelp = this.renderHelpIcon(
             listADocNumberHelp,
@@ -631,14 +601,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
     
-        this._listADocExpDate = listADocExpDate
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('listaexpdate.tooltip') })
-        .datepicker({
-            changeMonth: true,
-            changeYear: true,
-            minDate: new Date()
-        });
+        this._listADocExpDate = this.renderControl(listADocExpDate, this._('listaexpdate.tooltip'))
+        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() });
     
         this._listADocExpDateHelp = this.renderHelpIcon(
             listADocExpDateHelp,
@@ -648,9 +612,7 @@ class USI9Section2 extends USI9Translator {
             500
         );
     
-        this._listADoc2 = listADoc2
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('listadoc2.tooltip') });
+        this._listADoc2 = this.renderControl(listADoc2, this._('listadoc2.tooltip'));
     
         this._listADoc2Help = this.renderHelpIcon(
             listADoc2Help,
@@ -660,9 +622,7 @@ class USI9Section2 extends USI9Translator {
             500
         );
     
-        this._listAIssuingAuthority2 = listAIssuingAuthority2
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('listaissuingauthority2.tooltip') });
+        this._listAIssuingAuthority2 = this.renderControl(listAIssuingAuthority2, this._('listaissuingauthority2.tooltip'));
         
         this._listAIssuingAuthority2Help = this.renderHelpIcon(
             listAIssuingAuthority2Help,
@@ -672,9 +632,7 @@ class USI9Section2 extends USI9Translator {
             500
         );
     
-        this._listADocNumber2 = listADocNumber2
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('listadocnumber2.tooltip') });
+        this._listADocNumber2 = this.renderControl(listADocNumber2, this._('listadocnumber2.tooltip'));
         
         this._listADocNumber2Help = this.renderHelpIcon(
             listADocNumber2Help,
@@ -684,14 +642,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
     
-        this._listADocExpDate2 = listADocExpDate2
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('listaexpdate2.tooltip') })
-        .datepicker({
-            changeMonth: true,
-            changeYear: true,
-            minDate: new Date()
-        });
+        this._listADocExpDate2 = this.renderControl(listADocExpDate2, this._('listaexpdate2.tooltip'))
+        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() });
         
         this._listADocExpDate2Help = this.renderHelpIcon(
             listADocExpDate2Help,
@@ -701,9 +653,7 @@ class USI9Section2 extends USI9Translator {
             500
         );
     
-        this._listADoc3 = listADoc3
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('listadoc3.tooltip') });
+        this._listADoc3 = this.renderControl(listADoc3, this._('listadoc3.tooltip'));
     
         this._listADoc3Help = this.renderHelpIcon(
             listADoc3Help,
@@ -713,9 +663,7 @@ class USI9Section2 extends USI9Translator {
             500
         );
         
-        this._listAIssuingAuthority3 = listAIssuingAuthority3
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('listaissuingauthority3.tooltip') });
+        this._listAIssuingAuthority3 = this.renderControl(listAIssuingAuthority3, this._('listaissuingauthority3.tooltip'));
         
         this._listAIssuingAuthority3Help = this.renderHelpIcon(
             listAIssuingAuthority3Help,
@@ -725,9 +673,7 @@ class USI9Section2 extends USI9Translator {
             500
         );
     
-        this._listADocNumber3 = listADocNumber3
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('listadocnumber3.tooltip') });
+        this._listADocNumber3 = this.renderControl(listADocNumber3, this._('listadocnumber3.tooltip'));
         
         this._listADocNumber3Help = this.renderHelpIcon(
             listADocNumber3Help,
@@ -737,14 +683,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
     
-        this._listADocExpDate3 = listADocExpDate3
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('listaexpdate3.tooltip') })
-        .datepicker({
-            changeMonth: true,
-            changeYear: true,
-            minDate: new Date()
-        });
+        this._listADocExpDate3 = this.renderControl(listADocExpDate3, this._('listaexpdate3.tooltip'))
+        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() });
         
         this._listADocExpDate3Help = this.renderHelpIcon(
             listADocExpDate3Help,
@@ -754,9 +694,7 @@ class USI9Section2 extends USI9Translator {
             500
         );
     
-        this._listBDoc = listBDoc
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('listbdoc.tooltip') });
+        this._listBDoc = this.renderControl(listBDoc, this._('listbdoc.tooltip'));
     
         this._listBDocHelp = this.renderHelpIcon(
             listBDocHelp,
@@ -768,9 +706,7 @@ class USI9Section2 extends USI9Translator {
     
         this.filterCombolist(this._listBDoc, this.getListBContent(null), null, this, this.processListABC);
     
-        this._listBIssuingAuthority = listBIssuingAuthority
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('listbissuingauthority.tooltip') });
+        this._listBIssuingAuthority = this.renderControl(listBIssuingAuthority, this._('listbissuingauthority.tooltip'));
         
         this._listBIssuingAuthorityHelp = this.renderHelpIcon(
             listBIssuingAuthorityHelp,
@@ -780,9 +716,7 @@ class USI9Section2 extends USI9Translator {
             500
         );
     
-        this._listBDocNumber = listBDocNumber
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('listbdocnumber.tooltip') });
+        this._listBDocNumber = this.renderControl(listBDocNumber, this._('listbdocnumber.tooltip'));
     
         this._listBDocNumberHelp = this.renderHelpIcon(
             listBDocNumberHelp,
@@ -791,14 +725,8 @@ class USI9Section2 extends USI9Translator {
             this._('listbdocnumberhelp.text'),
         );
     
-        this._listBDocExpDate = listBDocExpDate
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('listbexpdate.tooltip') })
-        .datepicker({
-            changeMonth: true,
-            changeYear: true,
-            minDate: new Date()
-        });
+        this._listBDocExpDate = this.renderControl(listBDocExpDate, this._('listbexpdate.tooltip'))
+        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() });
         
         this._listBDocExpDateHelp = this.renderHelpIcon(
             listBDocExpDateHelp,
@@ -808,9 +736,7 @@ class USI9Section2 extends USI9Translator {
             500
         );
     
-        this._listCDoc = listCDoc
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('listcdoc.tooltip') });
+        this._listCDoc = this.renderControl(listCDoc, this._('listcdoc.tooltip'));
     
         this._listCDocHelp = this.renderHelpIcon(
             listCDocHelp,
@@ -822,9 +748,7 @@ class USI9Section2 extends USI9Translator {
     
         this.filterCombolist(this._listCDoc, this.getListCContent(null), null, this, this.processListABC);
     
-        this._listCIssuingAuthority = listCIssuingAuthority
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('listcissuingauthority.tooltip') });
+        this._listCIssuingAuthority = this.renderControl(listCIssuingAuthority, this._('listcissuingauthority.tooltip'));
         
         this._listCIssuingAuthorityHelp = this.renderHelpIcon(
             listCIssuingAuthorityHelp,
@@ -834,9 +758,7 @@ class USI9Section2 extends USI9Translator {
             500
         );
     
-        this._listCDocNumber = listCDocNumber
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('listcdocnumber.tooltip') });
+        this._listCDocNumber = this.renderControl(listCDocNumber, this._('listcdocnumber.tooltip'));
     
         this._listCDocNumberHelp = this.renderHelpIcon(
             listCDocNumberHelp,
@@ -845,14 +767,8 @@ class USI9Section2 extends USI9Translator {
             this._('listcdocnumberhelp.text'),
         );
     
-        this._listCDocExpDate = listCDocExpDate
-        .focus(e => this.hideTooltip()).prop('title', '')
-        .tooltip({ content: this._('listcexpdate.tooltip') })
-        .datepicker({
-            changeMonth: true,
-            changeYear: true,
-            minDate: new Date()
-        });
+        this._listCDocExpDate = this.renderControl(listCDocExpDate, this._('listcexpdate.tooltip'))
+        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() });
         
         this._listCDocExpDateHelp = this.renderHelpIcon(
             listCDocExpDateHelp,
@@ -1265,14 +1181,13 @@ class USI9Section2 extends USI9Translator {
         
         this._listADocNumber
         .prop('maxLength', numberMaxLength)
-        .keypress(e => fieldFormat.test(String.fromCharCode(e.which)));
+        .keypress(e => fieldFormat.test(e.key) || e.key === this.backSpaceCode);
 
         this._listADocExpDate.unbind('keypress');
         if (!this._listADocExpDate.prop(this.freeTextProp)) {
             this._listADocExpDate
             .keypress(e =>
-                /[\d/]/g.test(String.fromCharCode(e.which)) ||
-                this.NAFormat.test(String.fromCharCode(e.which)))
+                /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
         }
 
         this._listADocNumber.prop(this.validationExpressionProp,  fieldValidationExpression);    
@@ -1349,7 +1264,7 @@ class USI9Section2 extends USI9Translator {
         this._listADocNumber2
         .prop('maxLength', numberMaxLength)
         .prop(this.requiredProp, true)
-        .keypress(e => fieldFormat.test(String.fromCharCode(e.which)));
+        .keypress(e => fieldFormat.test(e.key) || e.key === this.backSpaceCode);
 
         this._listADocExpDate2
         .unbind('keypress')
@@ -1384,8 +1299,7 @@ class USI9Section2 extends USI9Translator {
             this._listADocExpDate3.removeAttr('readOnly')
             .unbind('keypress')
             .keypress(e =>
-                /[\d/]/g.test(String.fromCharCode(e.which)) ||
-                this.NAFormat.test(String.fromCharCode(e.which)))
+                /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
             .val('').datepicker('option', 'showOn', 'focus');
         } else if (code === '2') {
             // 2 - Form DS-2019
@@ -1434,8 +1348,7 @@ class USI9Section2 extends USI9Translator {
             this._listBDocExpDate.removeAttr('readOnly')
             .unbind('keypress')
             .keypress(e =>
-                /[\d/]/g.test(String.fromCharCode(e.which)) ||
-                this.NAFormat.test(String.fromCharCode(e.which)))
+                /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
             .val('').datepicker('option', 'showOn', 'focus');
         }
 
@@ -1452,8 +1365,8 @@ class USI9Section2 extends USI9Translator {
             this._listBDocNumber
             .prop('maxLength', numberMaxLength)
             .unbind('keypress')
-            .keypress(e => fieldFormat.test(String.fromCharCode(e.which)) ||
-                           this.NAFormat.test(String.fromCharCode(e.which)));
+            .keypress(e => 
+                fieldFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
 
             fieldValidationExpression = this.driverLicenseNumberFormat;
             fieldValidationMessage = this._('section2.listbnumberformat');
@@ -1553,8 +1466,7 @@ class USI9Section2 extends USI9Translator {
         this._listCDocExpDate.removeAttr('readOnly')
         .unbind('keypress')
         .keypress(e =>
-            /[\d/]/g.test(String.fromCharCode(e.which)) ||
-            this.NAFormat.test(String.fromCharCode(e.which)))
+            /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
         .val('').datepicker('option', 'showOn', 'focus');
 
         this._listCDoc.prop('ssncard', false);
@@ -1627,7 +1539,7 @@ class USI9Section2 extends USI9Translator {
 
         this._listCDocNumber
         .prop('maxLength', numberMaxLength)
-        .keypress(e => fieldFormat.test(String.fromCharCode(e.which)));
+        .keypress(e => fieldFormat.test(e.key) || e.key === this.backSpaceCode);
 
         this.filterCombolist(
             this._listCIssuingAuthority,
