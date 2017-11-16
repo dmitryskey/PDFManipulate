@@ -1,30 +1,31 @@
 'use strict';
 
 var sqlite3 = require('sqlite3').verbose();
-var crypto = require('crypto');
 
 var db = new sqlite3.Database('db/database.db');
 db.serialize(() => {
 
-    db.run('CREATE TABLE IF NOT EXISTS User_Info (LoginName VARCHAR(50), Password VARCHAR(50), Salt VARCHAR(50))');
-    db.run('CREATE UNIQUE INDEX User_Info_LoginName ON User_Info (LoginName)');
     db.run('CREATE TABLE IF NOT EXISTS App_Config (LoginName VARCHAR(50), Name VARCHAR(50), Parameter VARCHAR(500))');
 
-    var stmt = db.prepare('INSERT INTO User_Info VALUES (?, ?, ?)');
+    db.run('DELETE FROM App_Config');
 
-    var salt = 'ef38c628449c5102';
+    db.run('INSERT INTO App_Config VALUES (NULL, \'tokenSecret\', \'fe1a1915a379f3be5394b64d14794932\')');
+    db.run('INSERT INTO App_Config VALUES (NULL, \'tokenAlg\', \'HS512\')');
 
-    stmt.run('admin', crypto.createHmac('sha256', salt).update('Password_123').digest('hex'), salt);
+    // Aspose credentials for dmitryskey@gmail.com/dmitryskataev
+    db.run('INSERT INTO App_Config VALUES (NULL, \'AsposeAppSID\', \'7a0214bb-4866-4686-a6b0-e933234c1886\')');
+    db.run('INSERT INTO App_Config VALUES (NULL, \'AsposeApiKey\', \'7ee74818ff99046cd6c10f3cb719c2f0\')');
 
-    salt = 'c0fa1bc00531bd78';
+    db.run('INSERT INTO App_Config VALUES (NULL, \'iTextService\', \'http://127.0.0.1:8080/update\')');
 
-    stmt.run('sysop', crypto.createHmac('sha256', salt).update('Password_123').digest('hex'), salt);
+    db.run('INSERT INTO App_Config VALUES (NULL, \'mariadb\', \'' + JSON.stringify({
+        host: '127.0.0.1',
+        user: 'root',
+        password: 'test_123',
+        db: 'wordpress'
+    }) + '\')');
 
-    stmt.finalize();
-
-    db.run('INSERT INTO App_Config VALUES (NULL, \'TokenSecret\', \'fe1a1915a379f3be5394b64d14794932\')');
-
-    db.each('SELECT rowid AS id, Password, Salt FROM user_info', (err, row) => console.log(row.id + ': ' + row.Password + ', ' + row.Salt));
+    db.each('SELECT Name, Parameter FROM App_Config', (err, row) => console.log(row.Name + ': ' + row.Parameter));
 });
 
 db.close();
