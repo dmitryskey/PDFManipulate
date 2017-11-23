@@ -1,4 +1,4 @@
-package com.itextpdfservice;
+package org.itextpdfservice;
 
 import com.itextpdf.text.pdf.*;
 import java.io.*;
@@ -18,8 +18,8 @@ public class Controller {
       Gson gson = new GsonBuilder().create();
       Fields f = gson.fromJson(jsonReader, Fields.class);
 
-      if (!(new File(".." + f.file)).exists()) {
-        return null;
+      if (f.file == null || !(new File(".." + f.file)).exists()) {
+        return "";
       }
 
       ByteArrayOutputStream w = new ByteArrayOutputStream();
@@ -28,19 +28,21 @@ public class Controller {
 
       AcroFields a = s.getAcroFields();
 
-      for (int i = 0; i < f.entries.length; i++) {
-        FieldEntry e = f.entries[i];
+      if (f.entries != null) {
+        for (int i = 0; i < f.entries.length; i++) {
+          FieldEntry e = f.entries[i];
 
-        if (e.operation.equals("d")) {
-          a.removeField(e.name);
-        }
+          if (e.operation.equals("d")) {
+            a.removeField(e.name);
+          }
 
-        if (e.operation.equals("s")) {
-          a.setField(e.name, e.value, true);
+          if (e.operation.equals("s")) {
+            a.setField(e.name, e.value, true);
+          }
         }
       }
 
-      if (f.operation.equals("f")) {
+      if (f.operation != null && f.operation.equals("f")) {
         s.setFormFlattening(true);
         s.setFreeTextFlattening(true);
         s.setAnnotationFlattening(true);
@@ -67,13 +69,13 @@ public class Controller {
       s.close();
       w.close();
 
-      logger.trace("Generate the form [" +  f.file + "]");
+      logger.debug("Generate the form [" +  f.file + "]");
 
       return new String(Base64.encodeBase64(w.toByteArray()));
     } catch (Exception ex) {
       logger.error(ex);
     }
 
-    return null;
+    return "";
   }
 }

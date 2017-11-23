@@ -9,8 +9,9 @@ const sqlite3 = require('sqlite3').verbose();
 const mariadb = require('mariasql');
 const uuidV4 = require('uuid/v4');
 const jwt = require('jwt-simple'); // used to create, sign, and verify tokens
-const request = require('request');
+const net = require('net');
 const log4js = require('log4js');
+const { exec } = require('child_process');
 const pdfApi = require('asposepdfcloud');
 const storageApi = require('asposestoragecloud');
 
@@ -36,12 +37,20 @@ app.post('/BeginSession', (req, res) => {
     });
 
     req.on('end', () => {
-        let data = JSON.parse(body);
+        let data = null;
+        
+        try {
+            data = JSON.parse(body);
+        }
+        catch(e) {
+            res.end(JSON.stringify({ token: '' }));
+            logger.error(e);
+        }
 
         let token = '';
         let tokenExpiration = moment().add(1, 'days').valueOf();
 
-        getParameter('mariadb', (conn) => {
+        getParameter('mariadb', conn => {
             if (conn) {
                 var c = new mariadb(JSON.parse(conn));
         
@@ -49,13 +58,12 @@ app.post('/BeginSession', (req, res) => {
                     if (err) {
                         logger.error(err);
                         res.end();
-                    }
-                    else if (rows && rows.length > 0) {
+                    } else if (rows && rows.length > 0) {
                         let row = rows[0];
                         if (row.user_pass === data.password) {
-                            getParameter('tokenSecret', (jwtTokenSecret) => {
+                            getParameter('tokenSecret', jwtTokenSecret => {
                                 if (jwtTokenSecret) {
-                                    getParameter('tokenAlg', (tokenAlg) => {
+                                    getParameter('tokenAlg', tokenAlg => {
                                         if (tokenAlg) {
                                             token = jwt.encode({
                                                 iss: data.login,
@@ -75,13 +83,11 @@ app.post('/BeginSession', (req, res) => {
                                     res.end();      
                                 }
                             });
-                        }
-                        else {
+                        } else {
                             logger.debug('Incorrect password for the [%s]', data.login);
                             res.end();
                         }
-                    }
-                    else {
+                    } else {
                         logger.debug('User [%s] is not found', data.login);
                         res.end();
                     }
@@ -105,14 +111,22 @@ app.post('/RichTextEditor', (req, res) => {
     });
 
     req.on('end', () => {
-        let data = JSON.parse(body);
+        let data = null;
+
+        try {
+            data = JSON.parse(body);
+        }
+        catch(e) {
+            res.end(JSON.stringify({ token: '' }));
+            logger.error(e);
+        }
 
         // check token
         let editorUrl = '';
 
-        getParameter('tokenSecret', (jwtTokenSecret) => {
+        getParameter('tokenSecret', jwtTokenSecret => {
             if (jwtTokenSecret) {
-                getParameter('tokenAlg', (tokenAlg) => {
+                getParameter('tokenAlg', tokenAlg => {
                     if (tokenAlg) {
                         let decoded = jwt.decode(data.token, jwtTokenSecret, false, tokenAlg);
         
@@ -125,8 +139,7 @@ app.post('/RichTextEditor', (req, res) => {
                                 if (err) {
                                     logger.error(err);
                                     res.end(JSON.stringify({ token: data.token, editorUrl: '' }));
-                                }
-                                else {
+                                } else {
                                     let host = server.address().address;
                                     let port = server.address().port;
                         
@@ -138,8 +151,7 @@ app.post('/RichTextEditor', (req, res) => {
                                     }));
                                 }       
                             });
-                        }
-                        else {
+                        } else {
                             logger.debug(sessionIsExpired, data.token);
                             res.end(JSON.stringify({ token: data.token, editorUrl: '' }));
                         }
@@ -167,14 +179,22 @@ app.post('/PDFEditor', (req, res) => {
     });
 
     req.on('end', () => {
-        let data = JSON.parse(body);
+        let data = null;
+        
+        try {
+            data = JSON.parse(body);
+        }
+        catch(e) {
+            res.end(JSON.stringify({ token: '' }));
+            logger.error(e);
+        }
 
         // check token
         let editorUrl = '';
 
-        getParameter('tokenSecret', (jwtTokenSecret) => {
+        getParameter('tokenSecret', jwtTokenSecret => {
             if (jwtTokenSecret) {
-                getParameter('tokenAlg', (tokenAlg) => {
+                getParameter('tokenAlg', tokenAlg => {
                     if (tokenAlg) {
                         let decoded = jwt.decode(data.token, jwtTokenSecret, false, tokenAlg);
                         let host = server.address().address;
@@ -182,15 +202,14 @@ app.post('/PDFEditor', (req, res) => {
                 
                         if (decoded && moment() <= decoded.exp) {
                             let uuid = uuidV4();
-                            let url = '/pdf.js/web/viewer.html?file=/data/' + uuid + '#locale=' + data.locale;
+                            let url = '/pdf.js/web/viewer.html?session=' + data.token + '&file=/data/' + uuid + '#locale=' + data.locale;
                 
                             if (data.type === 'application/pdf' && ['view', 'design'].includes(data.mode)) {
                                 fs.writeFile('data/' + uuid, base64.decode(data.content), 'binary', err => {
                                     if (err) {
                                         logger.error(err);
                                         res.end(JSON.stringify({ token: data.token, editorUrl: '' }));
-                                    }
-                                    else {
+                                    } else {
                                         editorUrl = 'http://' + (host !== '::' ? host : '127.0.0.1') + ':' + port + url + '&mode=' + data.mode;
                 
                                         if (data.data) {
@@ -208,36 +227,35 @@ app.post('/PDFEditor', (req, res) => {
                                                 });
                                             }
                 
-                                            getParameter('iTextService', (url) => {
-                                                request.post(
-                                                    url,
-                                                    (error, response, body)  => {
-                                                        if (!error && response.statusCode === 200) {
-                                                            fs.writeFile('data/' + uuid, base64.decode(body), 'binary', err => {
-                                                                if (err) {
-                                                                    logger.error(err);
-                                                                }
-                                                            });
+                                            generateForm(data, true, { end: body => {
+                                                try {
+                                                    data = JSON.parse(body);
+                                                    fs.writeFile('data/' + uuid, base64.decode(data.form), 'binary', err => {
+                                                        if (err) {
+                                                            logger.error(err);
+                                                            res.end(JSON.stringify({ token: data.token, editorUrl: '' }));
+                                                        } else {
+                                                            res.end(JSON.stringify({
+                                                                token: data.token,
+                                                                editorUrl: editorUrl 
+                                                            }));
                                                         }
-                                                    }
-                                                );
-                                            });
+                                                    });
+                                                }
+                                                catch(e) {
+                                                    logger.error(e);
+                                                    res.end(JSON.stringify({ token: data.token, editorUrl: '' }));
+                                                }    
+                                            }});
                                         }
-
-                                        res.end(JSON.stringify({
-                                            token: data.token,
-                                            editorUrl: editorUrl 
-                                        }));
                                     }
                                 });
-                            }
-                            else if (data.type === 'application/pdf' && data.mode === 'edit') {
+                            } else if (data.type === 'application/pdf' && data.mode === 'edit') {
                                 fs.copy('templates/forms/' + data.locale + '/' + data.templateid + '.pdf', 'data/' + uuid, err => {
                                     if (err) {
                                         logger.error(err);
                                         res.end(JSON.stringify({ token: data.token, editorUrl: '' }));
-                                    }
-                                    else {
+                                    } else {
                                         editorUrl = 'http://' + (host !== '::' ? host : '127.0.0.1') + ':' + port + url + '&mode=' + data.mode + 
                                         '&templateid=' + data.templateid;
 
@@ -247,17 +265,15 @@ app.post('/PDFEditor', (req, res) => {
                                         }));
                                     }
                                 });
-                            }
-                            else if (data.type === 'application/html' && ['view', 'edit'].includes(data.mode)) {
+                            } else if (data.type === 'application/html' && ['view', 'edit'].includes(data.mode)) {
                                 fs.writeFile('data/' + uuid + '.html', base64.decode(data.content), err => {
                                     if (err) {
                                         logger.error(err);
                                         res.end(JSON.stringify({ token: data.token, editorUrl: '' }));
-                                    }
-                                    else {
-                                        getParameter('AsposeAppSID', (appSid) => {
+                                    } else {
+                                        getParameter('AsposeAppSID', appSid => {
                                             if (appSid) {
-                                                getParameter('AsposeApiKey', (apiKey) => {
+                                                getParameter('AsposeApiKey', apiKey => {
                                                     if (apiKey) {
                                                         let config = {'appSid': appSid, 'apiKey': apiKey, 'debug': true};
                                 
@@ -268,26 +284,25 @@ app.post('/PDFEditor', (req, res) => {
                                 
                                                         // Upload file to aspose cloud storage
                                                         let fileName = uuid + '.html';
-                                                        sApi.PutCreate(fileName, null, null, 'data/' + uuid + '.html', (responseMessage) => {
+                                                        sApi.PutCreate(fileName, null, null, 'data/' + uuid + '.html', responseMessage => {
                                                             if (responseMessage.status === 'OK') {
                                                                 // Invoke Aspose.Pdf Cloud SDK API to create PDF file from HTML
                                                                 fileName = uuid + '.pdf';
-                                                                pApi.PutCreateDocument(fileName, uuid + '.html', null, 'html', null, null, (responseMessage) => {
+                                                                pApi.PutCreateDocument(fileName, uuid + '.html', null, 'html', null, null, responseMessage => {
                                                                     if (responseMessage.status === 'OK') {
                                                                         // Download pdf from cloud storage
-                                                                        sApi.GetDownload(fileName, null, null, (responseMessage) => {
+                                                                        sApi.GetDownload(fileName, null, null, responseMessage => {
                                                                             if (responseMessage.status === 'OK') {
                                                                                 fs.writeFile('data/' + uuid, responseMessage.body, 'binary', err => {
                                                                                     if (err) {
                                                                                         logger.error(err);
                                                                                         res.end(JSON.stringify({ token: data.token, editorUrl: '' }));
-                                                                                    }
-                                                                                    else {
+                                                                                    } else {
                                                                                         editorUrl = 'http://' + (host !== '::' ? host : '127.0.0.1') + ':' + port + url + '&mode=' + data.mode;
                                                                                     }
                                             
                                                                                     fileName = uuid + '.html';
-                                                                                    sApi.DeleteFile(fileName, null, null, (responseMessage) => {
+                                                                                    sApi.DeleteFile(fileName, null, null, responseMessage => {
                                                                                         if (responseMessage.status === 'OK') {
                                                                                             fileName = uuid + '.pdf';
 
@@ -335,13 +350,11 @@ app.post('/PDFEditor', (req, res) => {
                                         });
                                     }
                                 });
-                            }
-                            else {
+                            } else {
                                 logger.debug('Wrong conbination of the type [%s] and mode [%s]', data.type, data.mode);
                                 res.end(JSON.stringify({ token: data.token, editorUrl: '' }));
                             }
-                        }
-                        else {
+                        } else {
                             logger.debug(sessionIsExpired, data.token);
                             res.end(JSON.stringify({ token: data.token, editorUrl: '' }));
                         }
@@ -352,7 +365,53 @@ app.post('/PDFEditor', (req, res) => {
                 });
             } else {
                 logger.error(secretTokenNotFound);
-                res.end(JSON.stringify({ token: data.token, editorUrl: '' }));              
+                res.end(JSON.stringify({ token: data.token, editorUrl: '' }));
+            }
+        });
+    });
+});
+
+app.post('/UpdateForm', (req, res) => {
+    let body = '';
+    req.on('data', data => {
+        body += data;
+        if (body.length > 1e6) { 
+            // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
+            req.connection.destroy();
+        }
+    });
+
+    req.on('end', () => {
+        let data = null;
+
+        try {
+            data = JSON.parse(body);
+        }
+        catch(e) {
+            res.end(JSON.stringify({ token: '' }));
+            logger.error(e);
+        }
+
+        getParameter('tokenSecret', jwtTokenSecret => {
+            if (jwtTokenSecret) {
+                getParameter('tokenAlg', tokenAlg => {
+                    if (tokenAlg) {
+                        let decoded = jwt.decode(data.token, jwtTokenSecret, false, tokenAlg);
+                
+                        if (decoded && moment() <= decoded.exp) {
+                            generateForm(data, true, res);
+                        } else {
+                            logger.debug(sessionIsExpired, data.token);
+                            res.end(JSON.stringify({ token: data.token, form: '' }));
+                        }
+                    } else {
+                        logger.error(secretTokenAlgorithmNotFound);
+                        res.end(JSON.stringify({ token: data.token, form: '' }));
+                    }
+                });
+            } else {
+                logger.error(secretTokenNotFound);
+                res.end(JSON.stringify({ token: data.token, form: '' }));
             }
         });
     });
@@ -369,11 +428,19 @@ app.post('/GetTemplateList', (req, res) => {
     });
 
     req.on('end', () => {
-        let data = JSON.parse(body);
+        let data = null;
+        
+        try {
+            data = JSON.parse(body);
+        }
+        catch(e) {
+            res.end(JSON.stringify({ token: '' }));
+            logger.error(e);
+        }
 
-        getParameter('tokenSecret', (jwtTokenSecret) => {
+        getParameter('tokenSecret', jwtTokenSecret => {
             if (jwtTokenSecret) {
-                getParameter('tokenAlg', (tokenAlg) => {
+                getParameter('tokenAlg', tokenAlg => {
                     if (tokenAlg) {
                         let decoded = jwt.decode(data.token, jwtTokenSecret, false, tokenAlg);
             
@@ -415,8 +482,7 @@ function getParameter(name, callback) {
                 if (err) {
                     logger.error(err);
                     callback(null); 
-                }
-                else if (row) {
+                } else if (row) {
                     // HS256 secrets are typically 128-bit random strings, for example hex-encoded: 
                     // auth value for the token generation
                     callback(row.Parameter);
@@ -425,12 +491,46 @@ function getParameter(name, callback) {
     });
 }
 
+function generateForm(data, tryToRunServer, res){
+    let body = '';
+    
+    var socket = new net.Socket();
+
+    socket.connect(8086, '127.0.0.1', () => {
+        socket.write(JSON.stringify(data.fields));
+        socket.write('\n');
+    });
+    
+    socket.on('data', data => {
+        body += data.toString();
+
+        if (body.length > 0 && body[body.length - 1] === '\n'){
+            res.end(JSON.stringify({ token: '', form: body }));
+            socket.end();
+        }
+    });
+            
+    socket.on('close', () => {
+        console.log('Connection closed');
+    });
+
+    socket.on('error', err => {
+        logger.error(err);
+
+        if (tryToRunServer) {
+            exec('mvn clean package exec:java', { cwd: 'iTextService' });
+
+            generateForm(data, false, res.end);
+        }
+    });    
+}
+
 let server = app.listen(8305, () => {
     if (!fs.pathExists('data')) {
         fs.mkdir('data');
     }
 
-    fs.emptyDir('data');
+    // fs.emptyDir('data');
 
     // Where to serve static content
     app.use('/pdf.js', express.static(path.join(__dirname, 'pdf.js')));

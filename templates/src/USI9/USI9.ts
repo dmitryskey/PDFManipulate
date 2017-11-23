@@ -27,11 +27,14 @@ class USI9 extends USI9Section3 {
     }
 
     private prepareData() {
-        PDFViewerApplication.transformationService = 'http://' + window.location.hostname + ':8080/update';
+        PDFViewerApplication.transformationService = 'http://' + window.location.hostname + ':8305/UpdateForm';
         PDFViewerApplication.fieldsData = {
-            'file': PDFViewerApplication.url,
-            'operation': 'f',
-            'entries': []
+            'token': '',
+            'fields': {
+                'file': PDFViewerApplication.url,
+                'operation': 'f',
+                'entries': []
+            }
         }
 
         let readOnlyFieldsToFlat =
@@ -43,7 +46,7 @@ class USI9 extends USI9Section3 {
             let op = !ctrl.disabled ||
                 readOnlyFieldsToFlat.indexOf(ctrl.getAttribute(this.annotationName)) > -1;
 
-            PDFViewerApplication.fieldsData.entries.push({
+            PDFViewerApplication.fieldsData.fields.entries.push({
                 'name': ctrl.getAttribute('annotation-name'),
                 'value': op ? (ctrl.type === 'checkbox' ? ( ctrl.checked ? 'Yes' : 'No') : ctrl.value) : '',
                 'operation': op ? 's': 'd'});

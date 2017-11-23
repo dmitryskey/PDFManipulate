@@ -1,4 +1,4 @@
-package com.itextpdfservice;
+package org.itextpdfservice;
 
 public class Fields {
   public String file, operation;

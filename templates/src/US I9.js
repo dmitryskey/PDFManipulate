@@ -1648,7 +1648,7 @@ var USI9 = (function (_super) {
     }
     USI9.prototype.prepareData = function () {
         var _this = this;
-        PDFViewerApplication.transformationService = 'http://' + window.location.hostname + ':8080/update';
+        PDFViewerApplication.transformationService = 'http://' + window.location.hostname + ':8305/UpdateForm';
         PDFViewerApplication.fieldsData = {
             'file': PDFViewerApplication.url,
             'operation': 'f',
