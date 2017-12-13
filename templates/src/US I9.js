@@ -1640,15 +1640,25 @@ var USI9 = (function (_super) {
             buttons: [{
                     text: 'OK',
                     click: function () {
-                        $(this).dialog("close");
+                        $(this).dialog('close');
                     }
                 }]
         });
         return _this;
     }
+    USI9.prototype.urlParameter = function (name) {
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results === null) {
+            return null;
+        }
+        else {
+            return decodeURI(results[1]) || 0;
+        }
+    };
     USI9.prototype.prepareData = function () {
         var _this = this;
-        PDFViewerApplication.transformationService = 'http://' + window.location.hostname + ':8305/UpdateForm';
+        PDFViewerApplication.transformationService = '/?rest_route=/UpdateForm';
+        PDFViewerApplication.sessionID = this.urlParameter('session_id');
         PDFViewerApplication.fieldsData = {
             'file': PDFViewerApplication.url,
             'operation': 'f',

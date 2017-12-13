@@ -20,21 +20,29 @@ class USI9 extends USI9Section3 {
             buttons: [{
                   text: 'OK',
                   click: function() {
-                    $(this).dialog( "close" );
+                    $(this).dialog('close');
                   }
                 }]
-        });        
+        });
+    }
+
+    private urlParameter(name: string) {
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results === null) {
+           return null;
+        }
+        else {
+           return decodeURI(results[1]) || 0;
+        }
     }
 
     private prepareData() {
-        PDFViewerApplication.transformationService = 'http://' + window.location.hostname + ':8305/UpdateForm';
+        PDFViewerApplication.transformationService = '/?rest_route=/UpdateForm';
+        PDFViewerApplication.sessionID = this.urlParameter('session_id');
         PDFViewerApplication.fieldsData = {
-            'token': '',
-            'fields': {
-                'file': PDFViewerApplication.url,
-                'operation': 'f',
-                'entries': []
-            }
+            'file': PDFViewerApplication.url,
+            'operation': 'f',
+            'entries': []
         }
 
         let readOnlyFieldsToFlat =
@@ -46,7 +54,7 @@ class USI9 extends USI9Section3 {
             let op = !ctrl.disabled ||
                 readOnlyFieldsToFlat.indexOf(ctrl.getAttribute(this.annotationName)) > -1;
 
-            PDFViewerApplication.fieldsData.fields.entries.push({
+            PDFViewerApplication.fieldsData.entries.push({
                 'name': ctrl.getAttribute('annotation-name'),
                 'value': op ? (ctrl.type === 'checkbox' ? ( ctrl.checked ? 'Yes' : 'No') : ctrl.value) : '',
                 'operation': op ? 's': 'd'});
