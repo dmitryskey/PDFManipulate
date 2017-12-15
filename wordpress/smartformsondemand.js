@@ -12,6 +12,7 @@ function openPdf(loc, ctrl) {
             var p = JSON.parse(jsonData).editorUrl;
             if (p && p !== '') {
                 ctrl.attr('href', p);
+                ctrl.attr('target', '_blank')
             }
         }
     });

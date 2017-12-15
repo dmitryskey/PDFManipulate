@@ -45,24 +45,14 @@ function update_form($params) {
 
     $result = socket_connect($socket, $address, $service_port);
     if (!$result) {
-        exec('cd ' . plugin_dir_path( __FILE__ ) . 'iTextService && mvn clean package exec:java');
-
-        sleep(5);
-
-        $result = socket_connect($socket, $address, $service_port);
-        if (!$result) {
-            $msg = socket_strerror(socket_last_error($socket));
-            error_log('Smart-Forms-On-Demand: ' . $msg);
-            return '';
-        }
+        $msg = socket_strerror(socket_last_error($socket));
+        error_log('Smart-Forms-On-Demand: ' . $msg);
+        return '';
     }
 
     $in = json_encode($params) . PHP_EOL;
 
     $out = '';
-
-            error_log('Smart-Forms-On-Demand: 45456XXX');
-
 
     $result = socket_write($socket, $in, strlen($in));
     if (!$result) {
@@ -274,7 +264,7 @@ add_action('rest_api_init', function ($server) {
 add_action('wp_enqueue_scripts', function() {
     wp_enqueue_script(
         'smartformsondemand',
-        plugin_dir_url( __FILE__ ) . '/smartformsondemand.js?v=1',
+        plugin_dir_url( __FILE__ ) . 'smartformsondemand.js?v=1',
         array('jquery')
     );
 } );
