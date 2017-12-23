@@ -130,18 +130,22 @@ class USI9Section1 extends USI9Fields {
 
     private renderSSNFields(ssn : JQuery<HTMLElement>[]) {
         this._ssn = ssn;
-        for (var i = 0; i < ssn.length - 1; i++) {
+        for (let i = 0; i < ssn.length - 1; i++) {
             this._ssn[i]
-            .attr('nextElement', (this._ssn[i + 1]).attr(this.annotationName))
+            .attr(this.annotationNext, (this._ssn[i + 1]).attr(this.annotationName))
             .focus(e => $(e.target).tooltip('close')).prop('title', '')
             .tooltip({ content: this._('ssnhelp.tooltip') })
             .keypress(e => {
                 if (this.numberFormat.test(e.key)) {
-                    $('[' + this.annotationName + '=' + $(e.target).attr('nextElement') + ']').focus();
+                    $('[' + this.annotationName + '=' + $(e.target).attr(this.annotationNext) + ']').focus();
                     return true;
                 }
                 else {
                     return e.key === this.backSpaceCode;
+                }
+            }).keydown((e) => {
+                if (e.keyCode === 8) {
+                    $('[' + this.annotationNext + '=' + $(e.target).attr(this.annotationName) + ']').focus();
                 }
             });
         }
@@ -178,7 +182,7 @@ class USI9Section1 extends USI9Fields {
             changeMonth: true,
             changeYear: true,
             yearRange: '1908:' + maxDOB.getFullYear(),
-            maxDate: maxDOB});
+            maxDate: maxDOB}).attr('autocomplete', 'false').attr('autocomplete', 'false');
 
         this._dobHelp = this.renderHelpIcon(
             dobHelp,
@@ -301,7 +305,7 @@ class USI9Section1 extends USI9Fields {
             this._lpruscisNumPrefix.val((e.target as HTMLElement).getAttribute('value') === 'A' ? 'A' : ''));
     
         this._alienWorkAuthDate = this.renderControl(alienWorkAuthDate, this._('alienworkauthdate.tooltip'))
-        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() })
+        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false')
         .unbind('keypress')
         .keypress(e =>
             /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode
@@ -355,7 +359,7 @@ class USI9Section1 extends USI9Fields {
             700);
     
         this._sgnEmployeeDate = this.renderControl(sgnEmployeeDate, this._('employeedate.tooltip'))
-        .datepicker({ minDate: new Date() });
+        .datepicker({ minDate: new Date() }).attr('autocomplete', 'false');
 
         this._sgnEmployeeDateHelp = this.renderHelpIcon(
             sgnEmployeeDateHelp,

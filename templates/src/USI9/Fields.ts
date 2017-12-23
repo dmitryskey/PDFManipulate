@@ -180,8 +180,8 @@ class USI9Fields extends PDFForm {
     protected _expDateSec3Help: JQuery<HTMLElement>;
     protected _sgnEmployerSec3: JQuery<HTMLElement>;
     protected _sgnEmployerSec3Help: JQuery<HTMLElement>;
-    protected _employerSignDateSec3: JQuery<HTMLElement>;
-    protected _employerSignDateSec3Help: JQuery<HTMLElement>;
+    protected _signDateSec3: JQuery<HTMLElement>;
+    protected _signDateSec3Help: JQuery<HTMLElement>;
     protected _employerNameSec3: JQuery<HTMLElement>;
     protected _employerNameSec3Help: JQuery<HTMLElement>;
     //endregion
@@ -231,6 +231,7 @@ class USI9Fields extends PDFForm {
         regExs: RegExp[],
         validateIfEmpty: boolean,
         errorMessages: string[]): boolean {
+
         let errorFlag = true;
         let length = field.prop('maxLength') ? field.prop('maxLength') : 0;
 

@@ -34,6 +34,7 @@ var PDFForm = (function () {
         this.ssnFormat = /^\d{3}[-]*\d{2}[-]*\d{4}$/;
         this.annotationName = 'annotation-name';
         this.annotationRequired = 'annotation-required';
+        this.annotationNext = 'annotation-next';
         this.na = this._('NA');
         this.blankItem = '&nbsp;';
         this.backSpaceCode = 'Backspace';
@@ -271,16 +272,20 @@ var USI9Section1 = (function (_super) {
         this._ssn = ssn;
         for (var i = 0; i < ssn.length - 1; i++) {
             this._ssn[i]
-                .attr('nextElement', (this._ssn[i + 1]).attr(this.annotationName))
+                .attr(this.annotationNext, (this._ssn[i + 1]).attr(this.annotationName))
                 .focus(function (e) { return $(e.target).tooltip('close'); }).prop('title', '')
                 .tooltip({ content: this._('ssnhelp.tooltip') })
                 .keypress(function (e) {
                 if (_this.numberFormat.test(e.key)) {
-                    $('[' + _this.annotationName + '=' + $(e.target).attr('nextElement') + ']').focus();
+                    $('[' + _this.annotationName + '=' + $(e.target).attr(_this.annotationNext) + ']').focus();
                     return true;
                 }
                 else {
                     return e.key === _this.backSpaceCode;
+                }
+            }).keydown(function (e) {
+                if (e.keyCode === 8) {
+                    $('[' + _this.annotationNext + '=' + $(e.target).attr(_this.annotationName) + ']').focus();
                 }
             });
         }
@@ -297,7 +302,7 @@ var USI9Section1 = (function (_super) {
             changeYear: true,
             yearRange: '1908:' + maxDOB.getFullYear(),
             maxDate: maxDOB
-        });
+        }).attr('autocomplete', 'false').attr('autocomplete', 'false');
         this._dobHelp = this.renderHelpIcon(dobHelp, this._('dobhelp.caption'), dialog, this._('dobhelp.text'));
         this.renderSSNFields([ssn11, ssn12, ssn13, ssn21, ssn22, ssn31, ssn32, ssn33, ssn34]);
         this._ssnHelp = this.renderHelpIcon(ssnHelp, this._('ssnhelp.caption'), dialog, this._('ssnhelp.text'), 400);
@@ -326,7 +331,7 @@ var USI9Section1 = (function (_super) {
             return _this._lpruscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : '');
         });
         this._alienWorkAuthDate = this.renderControl(alienWorkAuthDate, this._('alienworkauthdate.tooltip'))
-            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() })
+            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false')
             .unbind('keypress')
             .keypress(function (e) {
             return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode;
@@ -348,7 +353,7 @@ var USI9Section1 = (function (_super) {
         this._sgnEmployee = this.renderControl(sgnEmployee, this._('sgnemployee.tooltip'));
         this._sgnEmployeeHelp = this.renderHelpIcon(sgnEmployeeHelp, this._('sgnemployeehelp.caption'), dialog, this._('sgnemployeehelp.text'), 700);
         this._sgnEmployeeDate = this.renderControl(sgnEmployeeDate, this._('employeedate.tooltip'))
-            .datepicker({ minDate: new Date() });
+            .datepicker({ minDate: new Date() }).attr('autocomplete', 'false');
         this._sgnEmployeeDateHelp = this.renderHelpIcon(sgnEmployeeDateHelp, this._('employeedatehelp.caption'), dialog, this._('employeedatehelp.text'));
     };
     USI9Section1.prototype.renderSection1 = function (dialog, lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, otherNames, otherNamesHelp, address, addressHelp, apptNumber, apptNumberHelp, city, cityHelp, state, stateHelp, zip, zipHelp, dob, dobHelp, ssn11, ssn12, ssn13, ssn21, ssn22, ssn31, ssn32, ssn33, ssn34, ssnHelp, email, emailHelp, phone, phoneHelp, citizen, citizenHelp, national, nationalHelp, lpr, lprHelp, alien, alienHelp, uscisNumberHelp, lpruscisNumPrefix, lpruscisNum, lpruscisNumType, alienWorkAuthDate, alienuscisNumPrefix, alienuscisNum, alienuscisNumType, admissionNum, admissionNumHelp, passportNum, passportNumHelp, countryOfIssuance, countryOfIssuanceHelp, sgnEmployee, sgnEmployeeHelp, sgnEmployeeDate, sgnEmployeeDateHelp) {
@@ -573,7 +578,7 @@ var USI9Section2 = (function (_super) {
         this._additionalInfoHelp = this.renderHelpIcon(additionalInfoHelp, this._('additionalinfohelp.caption'), dialog, this._('additionalinfohelp.text'), 500);
         this.clearListABC();
         this._hireDate = this.renderControl(hireDate, this._('hiredate.tooltip'))
-            .datepicker();
+            .datepicker().attr('autocomplete', 'false').attr('autocomplete', 'false');
         this._hireDateHelp = this.renderHelpIcon(hireDateHelp, this._('hiredatehelp.caption'), dialog, this._('hiredatehelp.text'));
         this.renderEmployerData(dialog, sgnEmployer, sgnEmployerHelp, employerSignDate, employerSignDateHelp, employerTitle, employerTitleHelp, employerLastName, employerLastNameHelp, employerFirstName, employerFirstNameHelp, employerName, employerNameHelp, employerAddress, employerAddressHelp, employerCity, employerCityHelp, employerState, employerStateHelp, employerZip, employerZipHelp);
     };
@@ -740,7 +745,7 @@ var USI9Section2 = (function (_super) {
         this._sgnEmployer = this.renderControl(sgnEmployer, this._('sgnemployer.tooltip'));
         this._sgnEmployerHelp = this.renderHelpIcon(sgnEmployerHelp, this._('sgnemployerhelp.caption'), dialog, this._('sgnemployerhelp.text'), 500);
         this._employerSignDate = this.renderControl(employerSignDate, this._('employersigndate.tooltip'))
-            .datepicker({ minDate: new Date() });
+            .datepicker({ minDate: new Date() }).attr('autocomplete', 'false');
         this._employerSignDateHelp = this.renderHelpIcon(employerSignDateHelp, this._('employersigndatehelp.caption'), dialog, this._('employersigndatehelp.text'), 500);
         this._employerTitle = this.renderControl(employerTitle, this._('employertitle.tooltip'));
         this._employerTitleHelp = this.renderHelpIcon(employerTitleHelp, this._('employertitlehelp.caption'), dialog, this._('employertitlehelp.text'), 500);
@@ -768,7 +773,7 @@ var USI9Section2 = (function (_super) {
         this._listADocNumber = this.renderControl(listADocNumber, this._('listadocnumber.tooltip'));
         this._listADocNumberHelp = this.renderHelpIcon(listADocNumberHelp, this._('listadocnumberhelp.caption'), dialog, this._('listadocnumberhelp.text'), 500);
         this._listADocExpDate = this.renderControl(listADocExpDate, this._('listaexpdate.tooltip'))
-            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() });
+            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false');
         this._listADocExpDateHelp = this.renderHelpIcon(listADocExpDateHelp, this._('listaexpdatehelp.caption'), dialog, this._('listaexpdatehelp.text'), 500);
         this._listADoc2 = this.renderControl(listADoc2, this._('listadoc2.tooltip'));
         this._listADoc2Help = this.renderHelpIcon(listADoc2Help, this._('listadoc2help.caption'), dialog, this._('listadoc2help.text'), 500);
@@ -777,7 +782,7 @@ var USI9Section2 = (function (_super) {
         this._listADocNumber2 = this.renderControl(listADocNumber2, this._('listadocnumber2.tooltip'));
         this._listADocNumber2Help = this.renderHelpIcon(listADocNumber2Help, this._('listadocnumber2help.caption'), dialog, this._('listadocnumber2help.text'), 500);
         this._listADocExpDate2 = this.renderControl(listADocExpDate2, this._('listaexpdate2.tooltip'))
-            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() });
+            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false');
         this._listADocExpDate2Help = this.renderHelpIcon(listADocExpDate2Help, this._('listaexpdate2help.caption'), dialog, this._('listaexpdate2help.text'), 500);
         this._listADoc3 = this.renderControl(listADoc3, this._('listadoc3.tooltip'));
         this._listADoc3Help = this.renderHelpIcon(listADoc3Help, this._('listadoc3help.caption'), dialog, this._('listadoc3help.text'), 500);
@@ -786,7 +791,7 @@ var USI9Section2 = (function (_super) {
         this._listADocNumber3 = this.renderControl(listADocNumber3, this._('listadocnumber3.tooltip'));
         this._listADocNumber3Help = this.renderHelpIcon(listADocNumber3Help, this._('listadocnumber3help.caption'), dialog, this._('listadocnumber3help.text'), 500);
         this._listADocExpDate3 = this.renderControl(listADocExpDate3, this._('listaexpdate3.tooltip'))
-            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() });
+            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false');
         this._listADocExpDate3Help = this.renderHelpIcon(listADocExpDate3Help, this._('listaexpdate3help.caption'), dialog, this._('listaexpdate3help.text'), 500);
         this._listBDoc = this.renderControl(listBDoc, this._('listbdoc.tooltip'));
         this._listBDocHelp = this.renderHelpIcon(listBDocHelp, this._('listbdochelp.caption'), dialog, this._('listbdochelp.text'), 600);
@@ -796,7 +801,7 @@ var USI9Section2 = (function (_super) {
         this._listBDocNumber = this.renderControl(listBDocNumber, this._('listbdocnumber.tooltip'));
         this._listBDocNumberHelp = this.renderHelpIcon(listBDocNumberHelp, this._('listbdocnumberhelp.caption'), dialog, this._('listbdocnumberhelp.text'));
         this._listBDocExpDate = this.renderControl(listBDocExpDate, this._('listbexpdate.tooltip'))
-            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() });
+            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false');
         this._listBDocExpDateHelp = this.renderHelpIcon(listBDocExpDateHelp, this._('listbexpdatehelp.caption'), dialog, this._('listbexpdatehelp.text'), 500);
         this._listCDoc = this.renderControl(listCDoc, this._('listcdoc.tooltip'));
         this._listCDocHelp = this.renderHelpIcon(listCDocHelp, this._('listcdochelp.caption'), dialog, this._('listcdochelp.text'), 600);
@@ -806,7 +811,7 @@ var USI9Section2 = (function (_super) {
         this._listCDocNumber = this.renderControl(listCDocNumber, this._('listcdocnumber.tooltip'));
         this._listCDocNumberHelp = this.renderHelpIcon(listCDocNumberHelp, this._('listcdocnumberhelp.caption'), dialog, this._('listcdocnumberhelp.text'));
         this._listCDocExpDate = this.renderControl(listCDocExpDate, this._('listcexpdate.tooltip'))
-            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() });
+            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false');
         this._listCDocExpDateHelp = this.renderHelpIcon(listCDocExpDateHelp, this._('listcexpdatehelp.caption'), dialog, this._('listcexpdatehelp.text'), 500);
     };
     USI9Section2.prototype.processListABC = function (ddl, code, self) {
@@ -970,7 +975,7 @@ var USI9Section2 = (function (_super) {
         this._listADocNumber2.prop(this.requiredProp, false);
         this._listADocExpDate2.prop(this.requiredProp, false);
         this._listADocExpDate
-            .datepicker('option', 'minDate', new Date())
+            .datepicker('option', 'minDate', new Date()).attr('autocomplete', 'false')
             .datepicker('option', 'maxDate', null).prop(this.requiredProp, true)
             .prop(this.freeTextProp, false);
         var tenYearsFromNow = new Date();
@@ -981,7 +986,7 @@ var USI9Section2 = (function (_super) {
             numberMaxLength = 9;
             fieldValidationExpression = this.usPassportNumberFormat;
             fieldValidationMessage = this._('section2.uspassportformat');
-            this._listADocExpDate.datepicker('option', 'maxDate', tenYearsFromNow);
+            this._listADocExpDate.datepicker('option', 'maxDate', tenYearsFromNow).attr('autocomplete', 'false');
         }
         else if (code === '3') {
             issuingAuthList = { USCIS: this._(USCIS), DOJINS: this._(DOJINS) };
@@ -989,7 +994,7 @@ var USI9Section2 = (function (_super) {
             numberMaxLength = 13;
             fieldValidationExpression = this.cardNumberFormat;
             fieldValidationMessage = this._('section2.cardformat');
-            this._listADocExpDate.datepicker('option', 'maxDate', tenYearsFromNow);
+            this._listADocExpDate.datepicker('option', 'maxDate', tenYearsFromNow).attr('autocomplete', 'false');
         }
         else if (code === '4') {
             issuingAuthList = { DOJINS: this._(DOJINS) };
@@ -997,7 +1002,7 @@ var USI9Section2 = (function (_super) {
             numberMaxLength = 13;
             fieldValidationExpression = this.cardNumberFormat;
             fieldValidationMessage = this._('section2.cardformat');
-            this._listADocExpDate.datepicker('option', 'maxDate', tenYearsFromNow);
+            this._listADocExpDate.datepicker('option', 'maxDate', tenYearsFromNow).attr('autocomplete', 'false');
         }
         else if (code === '5') {
             issuingAuthList = JSON.parse(this._('countries'));
@@ -1033,7 +1038,7 @@ var USI9Section2 = (function (_super) {
             numberMaxLength = 13;
             fieldValidationExpression = this.cardNumberFormat;
             fieldValidationMessage = this._('section2.cardformat');
-            this._listADocExpDate.datepicker('option', 'minDate', new Date(Date.now() - 180 * 24 * 3600 * 1000));
+            this._listADocExpDate.datepicker('option', 'minDate', new Date(Date.now() - 180 * 24 * 3600 * 1000)).attr('autocomplete', 'false');
             this._listADocExpDate.prop(this.freeTextProp, true);
         }
         else if (['7', '14'].indexOf(code) >= 0) {
@@ -1049,7 +1054,8 @@ var USI9Section2 = (function (_super) {
             this.filterCombolist(this._listADoc3, { 0: this.na, 1: this._('formI20'), 2: this._('formDS2019') }, '0', this, this.processListABC);
             this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber3.attr('readOnly', 'true').val(this.na);
-            this._listADocExpDate3.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+            this._listADocExpDate3.attr('readOnly', 'true')
+                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
         }
         else if (code === '8') {
             issuingAuthList = { FSM: this._(FSM) };
@@ -1122,23 +1128,27 @@ var USI9Section2 = (function (_super) {
             this.filterCombolist(this._listADoc2, { 0: this.na }, '0', this, this.processListABC);
             this.filterCombolist(this._listAIssuingAuthority2, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber2.attr('readOnly', 'true').val(this.na);
-            this._listADocExpDate2.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+            this._listADocExpDate2.attr('readOnly', 'true')
+                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
         }
         if (['1', '2', '3', '4', '5', '6', '8', '9', '10', '11', '12', '15', '16'].indexOf(code) >= 0) {
             this.filterCombolist(this._listADoc3, { 0: this.na }, '0', this, this.processListABC);
             this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber3.attr('readOnly', 'true').val(this.na);
-            this._listADocExpDate3.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+            this._listADocExpDate3.attr('readOnly', 'true')
+                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
         }
         if (code !== '0' && code.trim() !== '') {
             this.setCombolistValue(this._listBDoc, '0');
             this.filterCombolist(this._listBIssuingAuthority, { 0: this.na }, '0', this, null);
             this._listBDocNumber.attr('readOnly', 'true').val(this.na);
-            this._listBDocExpDate.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+            this._listBDocExpDate.attr('readOnly', 'true')
+                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
             this.setCombolistValue(this._listCDoc, '0');
             this.filterCombolist(this._listCIssuingAuthority, { 0: this.na }, '0', this, null);
             this._listCDocNumber.attr('readOnly', 'true').val(this.na);
-            this._listCDocExpDate.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+            this._listCDocExpDate.attr('readOnly', 'true')
+                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
         }
     };
     USI9Section2.prototype.listADocTitle2 = function (ddl, code) {
@@ -1164,7 +1174,7 @@ var USI9Section2 = (function (_super) {
         this._listADocExpDate2
             .unbind('keypress')
             .datepicker('option', 'minDate', new Date())
-            .datepicker('option', 'maxDate', null).val('')
+            .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
             .prop(this.requiredProp, true).prop(this.freeTextProp, false);
     };
     USI9Section2.prototype.listADocTitle3 = function (ddl, code) {
@@ -1177,7 +1187,8 @@ var USI9Section2 = (function (_super) {
         if (code === '0') {
             this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber3.attr('readOnly', 'true').val(this.na);
-            this._listADocExpDate3.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+            this._listADocExpDate3.attr('readOnly', 'true')
+                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
         }
         else if (code === '1') {
             this.filterCombolist(this._listAIssuingAuthority3, { ' ': this.blankItem, ICE: this._(ICE), DOJINS: this._(DOJINS) }, ICE, this, this.processListABC);
@@ -1187,7 +1198,7 @@ var USI9Section2 = (function (_super) {
                 .keypress(function (e) {
                 return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode;
             })
-                .val('').datepicker('option', 'showOn', 'focus');
+                .val('').datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false');
         }
         else if (code === '2') {
             this.filterCombolist(this._listAIssuingAuthority3, { ' ': this.blankItem, USDS: this._(USDS) }, USDS, this, this.processListABC);
@@ -1195,7 +1206,7 @@ var USI9Section2 = (function (_super) {
             this._listADocExpDate3.removeAttr('readOnly')
                 .unbind('keypress')
                 .datepicker('option', 'minDate', new Date())
-                .datepicker('option', 'maxDate', null).val('')
+                .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
                 .prop(this.requiredProp, true).prop(this.freeTextProp, false);
         }
     };
@@ -1224,7 +1235,7 @@ var USI9Section2 = (function (_super) {
                 .keypress(function (e) {
                 return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode;
             })
-                .val('').datepicker('option', 'showOn', 'focus');
+                .val('').datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false');
         }
         if (['1', '2', '21', '22'].indexOf(code) >= 0) {
             issuingAuthList = JSON.parse(this._('usstates'));
@@ -1259,7 +1270,8 @@ var USI9Section2 = (function (_super) {
             issuingAuthList = { '0': this.na };
             issuingAuth = '0';
             this._listBDocNumber.attr('readOnly', 'true').val(this.na);
-            this._listBDocExpDate.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+            this._listBDocExpDate.attr('readOnly', 'true')
+                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
         }
         this.filterCombolist(this._listBIssuingAuthority, $.extend({ ' ': this.blankItem }, issuingAuthList), issuingAuth, this, this.processListABC);
         this._listBDocNumber.prop(this.validationExpressionProp, fieldValidationExpression);
@@ -1291,7 +1303,7 @@ var USI9Section2 = (function (_super) {
             .keypress(function (e) {
             return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode;
         })
-            .val('').datepicker('option', 'showOn', 'focus');
+            .val('').datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false');
         this._listCDoc.prop('ssncard', false);
         if (code === '1') {
             issuingAuthList = { SSA: this._(SSA), USDHHS: this._(USDHHS), SSD: this._(SSD), DHEW: this._(DHEW) };
@@ -1300,7 +1312,8 @@ var USI9Section2 = (function (_super) {
             fieldFormat = /^[\d-]+$/;
             fieldValidationExpression = this.ssnFormat;
             fieldValidationMessage = this._('section2.ssnformat');
-            this._listCDocExpDate.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+            this._listCDocExpDate.attr('readOnly', 'true')
+                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
             this._listCDoc.prop('ssncard', true);
         }
         else if (['2', '3', '4'].indexOf(code) >= 0) {
@@ -1383,15 +1396,18 @@ var USI9Section2 = (function (_super) {
         this.setCombolistValue(this._listADoc, '0');
         this.filterCombolist(this._listAIssuingAuthority, { 0: this.na }, '0', this, this.processListABC);
         this._listADocNumber.attr('readOnly', 'true').val(this.na);
-        this._listADocExpDate.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+        this._listADocExpDate.attr('readOnly', 'true')
+            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
         this.filterCombolist(this._listADoc2, { 0: this.na }, '0', this, this.processListABC);
         this.filterCombolist(this._listAIssuingAuthority2, { 0: this.na }, '0', this, this.processListABC);
         this._listADocNumber2.attr('readOnly', 'true').val(this.na);
-        this._listADocExpDate2.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+        this._listADocExpDate2.attr('readOnly', 'true')
+            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
         this.filterCombolist(this._listADoc3, { 0: this.na }, '0', this, this.processListABC);
         this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
         this._listADocNumber3.attr('readOnly', 'true').val(this.na);
-        this._listADocExpDate3.attr('readOnly', 'true').datepicker('option', 'showOn', 'off').val(this.na);
+        this._listADocExpDate3.attr('readOnly', 'true')
+            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
     };
     return USI9Section2;
 }(USI9Translator));
@@ -1400,7 +1416,7 @@ var USI9Section3 = (function (_super) {
     function USI9Section3() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    USI9Section3.prototype.renderSection3 = function (dialog, lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, rehireDate, rehireDateHelp, docTitleSec3, docTitleSec3Help, docNumberSec3, docNumberSec3Help, expDateSec3, expDateSec3Help, sgnEmployerSec3, sgnEmployerSec3Help, employerSignDateSec3, employerSignDateSec3Help, employerNameSec3, employerNameSec3Help) {
+    USI9Section3.prototype.renderSection3 = function (dialog, lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, rehireDate, rehireDateHelp, docTitleSec3, docTitleSec3Help, docNumberSec3, docNumberSec3Help, expDateSec3, expDateSec3Help, sgnEmployerSec3, sgnEmployerSec3Help, signDateSec3, signDateSec3Help, employerNameSec3, employerNameSec3Help) {
         var _this = this;
         var citizenships = [this._citizen, this._national, this._lpr, this._alien];
         this._citizen.click(function () {
@@ -1522,7 +1538,7 @@ var USI9Section3 = (function (_super) {
         });
         this._newmiddleInitialHelp = this.renderHelpIcon(middleInitialHelp, this._('newmiddleinitialhelp.caption'), dialog, this._('newmiddleinitialhelp.text'));
         this._rehireDate = this.renderControl(rehireDate, this._('rehiredate.tooltip'))
-            .datepicker()
+            .datepicker().attr('autocomplete', 'false')
             .unbind('keypress')
             .keypress(function (e) {
             return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode;
@@ -1567,7 +1583,7 @@ var USI9Section3 = (function (_super) {
         this._docNumberSec3 = this.renderControl(docNumberSec3, this._('docnumbersec3.tooltip'));
         this._docNumberSec3Help = this.renderHelpIcon(docNumberSec3Help, this._('docnumbersec3help.caption'), dialog, this._('docnumbersec3help.text'), 500);
         this._expDateSec3 = this.renderControl(expDateSec3, this._('expdatesec3.tooltip'))
-            .datepicker({ minDate: new Date() })
+            .datepicker({ minDate: new Date() }).attr('autocomplete', 'false')
             .unbind('keypress')
             .keypress(function (e) {
             return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode;
@@ -1575,10 +1591,13 @@ var USI9Section3 = (function (_super) {
         this._expDateSec3Help = this.renderHelpIcon(expDateSec3Help, this._('expdatesec3help.caption'), dialog, this._('expdatesec3help.text'), 500);
         this._sgnEmployerSec3 = this.renderControl(sgnEmployerSec3, this._('sgnemployersec3.tooltip'));
         this._sgnEmployerSec3Help = this.renderHelpIcon(sgnEmployerSec3Help, this._('sgnemployersec3help.caption'), dialog, this._('sgnemployersec3help.text'), 500);
-        this._employerSignDateSec3 = this.renderControl(employerSignDateSec3, this._('employersigndatesec3.tooltip'))
-            .datepicker({ minDate: new Date() })
-            .attr(this.annotationRequired, 'true');
-        this._employerSignDateSec3Help = this.renderHelpIcon(employerSignDateSec3Help, this._('employersigndatesec3help.caption'), dialog, this._('employersigndatesec3help.text'), 500);
+        this._signDateSec3 = this.renderControl(signDateSec3, this._('employersigndatesec3.tooltip'))
+            .datepicker({ minDate: new Date() }).attr('autocomplete', 'off')
+            .attr(this.annotationRequired, 'true')
+            .attr('readonly', 'true')
+            .focus(function () { return _this._signDateSec3.removeAttr('readonly'); })
+            .blur(function () { return _this._signDateSec3.attr('readonly', 'true'); });
+        this._signDateSec3Help = this.renderHelpIcon(signDateSec3Help, this._('employersigndatesec3help.caption'), dialog, this._('employersigndatesec3help.text'), 500);
         this._employerNameSec3 = this.renderControl(employerNameSec3, this._('employernamesec3.tooltip'))
             .attr(this.annotationRequired, 'true');
         this._employerNameSec3Help = this.renderHelpIcon(employerNameSec3Help, this._('employernamesec3help.caption'), dialog, this._('employernamesec3help.text'), 500);
@@ -1588,7 +1607,7 @@ var USI9Section3 = (function (_super) {
         var errorMessages = _super.prototype.validateFields.call(this);
         var section3Fields = [this._newlastName, this._newfirstName, this._newmiddleInitial, this._rehireDate,
             this._docTitleSec3, this._docNumberSec3, this._expDateSec3, this._sgnEmployerSec3,
-            this._employerSignDateSec3, this._employerNameSec3];
+            this._signDateSec3, this._employerNameSec3];
         section3Fields.forEach(function (f) { return f.toggleClass(_this.invalidFieldClass, false); });
         if (section3Fields.filter(function (e) { return e.val() !== ''; }).length > 0) {
             [this._newlastName, this._newfirstName, this._newmiddleInitial, this._rehireDate,
@@ -1600,7 +1619,7 @@ var USI9Section3 = (function (_super) {
             this.validateTextField(this._rehireDate, this._('section3.rehire'), [this.dateFormat, this.NAString], true, errorMessages);
             this.validateTextField(this._docNumberSec3, this._('section3.docnumber') + ' ' + this._('section3.suffix'), [this.nameFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._expDateSec3, this._('section3.expdate') + ' ' + this._('section3.suffix'), [this.dateFormat, this.NAString], false, errorMessages);
-            this.validateTextField(this._employerSignDateSec3, this._('section3.today') + ' ' + this._('section3.suffix'), [this.dateFormat], true, errorMessages);
+            this.validateTextField(this._signDateSec3, this._('section3.today') + ' ' + this._('section3.suffix'), [this.dateFormat], true, errorMessages);
             this.validateTextField(this._employerNameSec3, this._('section3.employer') + ' ' + this._('section3.suffix'), [this.nameFormat], true, errorMessages);
         }
         return errorMessages;
@@ -1683,7 +1702,7 @@ var USI9 = (function (_super) {
     };
     USI9.prototype.prepareSecondPage = function () {
         this.renderSection2($('#dialogPage'), $('[' + this.annotationName + '=EmployeeInfoSection2Help]'), $('[' + this.annotationName + '=LastNameSection2]'), $('[' + this.annotationName + '=LastNameSection2Help]'), $('[' + this.annotationName + '=FirstNameSection2]'), $('[' + this.annotationName + '=FirstNameSection2Help]'), $('[' + this.annotationName + '=MiddleInitialSection2]'), $('[' + this.annotationName + '=MiddleInitialSection2Help]'), $('[' + this.annotationName + '=ImmigrationStatus]'), $('[' + this.annotationName + '=ImmigrationStatusHelp]'), $('[' + this.annotationName + '=ListADocTitle]'), $('[' + this.annotationName + '=ListADocTitleHelp]'), $('[' + this.annotationName + '=ListAIssuingAuthority]'), $('[' + this.annotationName + '=ListAIssuingAuthorityHelp]'), $('[' + this.annotationName + '=ListADocNumber]'), $('[' + this.annotationName + '=ListADocNumberHelp]'), $('[' + this.annotationName + '=ListAExpDate]'), $('[' + this.annotationName + '=ListAExpDateHelp]'), $('[' + this.annotationName + '=ListADocTitle2]'), $('[' + this.annotationName + '=ListADocTitle2Help]'), $('[' + this.annotationName + '=ListAIssuingAuthority2]'), $('[' + this.annotationName + '=ListAIssuingAuthority2Help]'), $('[' + this.annotationName + '=ListADocNumber2]'), $('[' + this.annotationName + '=ListADocNumber2Help]'), $('[' + this.annotationName + '=ListAExpDate2]'), $('[' + this.annotationName + '=ListAExpDate2Help]'), $('[' + this.annotationName + '=ListADocTitle3]'), $('[' + this.annotationName + '=ListADocTitle3Help]'), $('[' + this.annotationName + '=ListAIssuingAuthority3]'), $('[' + this.annotationName + '=ListAIssuingAuthority3Help]'), $('[' + this.annotationName + '=ListADocNumber3]'), $('[' + this.annotationName + '=ListADocNumber3Help]'), $('[' + this.annotationName + '=ListAExpDate3]'), $('[' + this.annotationName + '=ListAExpDate3Help]'), $('[' + this.annotationName + '=ListBDocTitle]'), $('[' + this.annotationName + '=ListBDocTitleHelp]'), $('[' + this.annotationName + '=ListBIssuingAuthority]'), $('[' + this.annotationName + '=ListBIssuingAuthorityHelp]'), $('[' + this.annotationName + '=ListBDocNumber]'), $('[' + this.annotationName + '=ListBDocNumberHelp]'), $('[' + this.annotationName + '=ListBExpDate]'), $('[' + this.annotationName + '=ListBExpDateHelp]'), $('[' + this.annotationName + '=ListCDocTitle]'), $('[' + this.annotationName + '=ListCDocTitleHelp]'), $('[' + this.annotationName + '=ListCIssuingAuthority]'), $('[' + this.annotationName + '=ListCIssuingAuthorityHelp]'), $('[' + this.annotationName + '=ListCDocNumber]'), $('[' + this.annotationName + '=ListCDocNumberHelp]'), $('[' + this.annotationName + '=ListCExpDate]'), $('[' + this.annotationName + '=ListCExpDateHelp]'), $('[' + this.annotationName + '=AdditionalInfo]'), $('[' + this.annotationName + '=AdditionalInfoHelp]'), $('[' + this.annotationName + '=HireDate]'), $('[' + this.annotationName + '=HireDateHelp]'), $('[' + this.annotationName + '=sgnEmployer]'), $('[' + this.annotationName + '=sgnEmployerHelp]'), $('[' + this.annotationName + '=EmployerSignDate]'), $('[' + this.annotationName + '=EmployerSignDateHelp]'), $('[' + this.annotationName + '=EmployerTitle]'), $('[' + this.annotationName + '=EmployerTitleHelp]'), $('[' + this.annotationName + '=EmployerLastName]'), $('[' + this.annotationName + '=EmployerLastNameHelp]'), $('[' + this.annotationName + '=EmployerFirstName]'), $('[' + this.annotationName + '=EmployerFirstNameHelp]'), $('[' + this.annotationName + '=EmployerName]'), $('[' + this.annotationName + '=EmployerNameHelp]'), $('[' + this.annotationName + '=EmployerAddress]'), $('[' + this.annotationName + '=EmployerAddressHelp]'), $('[' + this.annotationName + '=EmployerCity]'), $('[' + this.annotationName + '=EmployerCityHelp]'), $('[' + this.annotationName + '=EmployerState]'), $('[' + this.annotationName + '=EmployerStateHelp]'), $('[' + this.annotationName + '=EmployerZip]'), $('[' + this.annotationName + '=EmployerZipHelp]'));
-        this.renderSection3($('#dialogPage'), $('[' + this.annotationName + '=NewLastName]'), $('[' + this.annotationName + '=NewLastNameHelp]'), $('[' + this.annotationName + '=NewFirstName]'), $('[' + this.annotationName + '=NewFirstNameHelp]'), $('[' + this.annotationName + '=NewMiddleInitial]'), $('[' + this.annotationName + '=NewMiddleInitialHelp]'), $('[' + this.annotationName + '=RehireDate]'), $('[' + this.annotationName + '=RehireDateHelp]'), $('[' + this.annotationName + '=DocTitleSec3]'), $('[' + this.annotationName + '=DocTitleSec3Help]'), $('[' + this.annotationName + '=DocNumberSec3]'), $('[' + this.annotationName + '=DocNumberSec3Help]'), $('[' + this.annotationName + '=ExpDateSec3]'), $('[' + this.annotationName + '=ExpDateSec3Help]'), $('[' + this.annotationName + '=sgnEmployerSec3]'), $('[' + this.annotationName + '=sgnEmployerSec3Help]'), $('[' + this.annotationName + '=EmployerSignDateSec3]'), $('[' + this.annotationName + '=EmployerSignDateSec3Help]'), $('[' + this.annotationName + '=EmployerNameSec3]'), $('[' + this.annotationName + '=EmployerNameSec3Help]'));
+        this.renderSection3($('#dialogPage'), $('[' + this.annotationName + '=NewLastName]'), $('[' + this.annotationName + '=NewLastNameHelp]'), $('[' + this.annotationName + '=NewFirstName]'), $('[' + this.annotationName + '=NewFirstNameHelp]'), $('[' + this.annotationName + '=NewMiddleInitial]'), $('[' + this.annotationName + '=NewMiddleInitialHelp]'), $('[' + this.annotationName + '=RehireDate]'), $('[' + this.annotationName + '=RehireDateHelp]'), $('[' + this.annotationName + '=DocTitleSec3]'), $('[' + this.annotationName + '=DocTitleSec3Help]'), $('[' + this.annotationName + '=DocNumberSec3]'), $('[' + this.annotationName + '=DocNumberSec3Help]'), $('[' + this.annotationName + '=ExpDateSec3]'), $('[' + this.annotationName + '=ExpDateSec3Help]'), $('[' + this.annotationName + '=sgnEmployerSec3]'), $('[' + this.annotationName + '=sgnEmployerSec3Help]'), $('[' + this.annotationName + '=SignDateSec3]'), $('[' + this.annotationName + '=SignDateSec3Help]'), $('[' + this.annotationName + '=EmployerNameSec3]'), $('[' + this.annotationName + '=EmployerNameSec3Help]'));
     };
     USI9.prototype.validateForm = function (dialog) {
         var errorMessages = _super.prototype.validateFields.call(this);

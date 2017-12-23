@@ -246,8 +246,8 @@ class USI9 extends USI9Section3 {
             $('[' + this.annotationName + '=ExpDateSec3Help]'),
             $('[' + this.annotationName + '=sgnEmployerSec3]'),
             $('[' + this.annotationName + '=sgnEmployerSec3Help]'),
-            $('[' + this.annotationName + '=EmployerSignDateSec3]'),
-            $('[' + this.annotationName + '=EmployerSignDateSec3Help]'),
+            $('[' + this.annotationName + '=SignDateSec3]'),
+            $('[' + this.annotationName + '=SignDateSec3Help]'),
             $('[' + this.annotationName + '=EmployerNameSec3]'),
             $('[' + this.annotationName + '=EmployerNameSec3Help]')
         );
@@ -292,7 +292,6 @@ class USI9 extends USI9Section3 {
 
         $(document).on('textlayerrendered', (e: any) => {
             this.prepareFirstPage();
-            //this.prepareSecondPage();
         });
 
         $(document).on('pagerendered', (e: any) => {
@@ -305,7 +304,7 @@ class USI9 extends USI9Section3 {
 
             if (e.detail.pageNumber === 1) {
                 this.prepareFirstPage();
-                if (this.renderedPages[1]) {
+                if (this.renderedPages[1]) {                 
                     this.prepareSecondPage();
                 }
             }

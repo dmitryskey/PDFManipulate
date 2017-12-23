@@ -8,6 +8,10 @@ for (let i = 0, ii = parts.length; i < ii; ++i) {
     params[decodeURIComponent(key)] = decodeURIComponent(value);
 }
 
+require.config({
+    urlArgs: 'bust=' + (new Date()).getTime()
+});
+
 if ('templateid' in params) {
     require(['/templates/' + params['templateid'] + '.js']);
 }

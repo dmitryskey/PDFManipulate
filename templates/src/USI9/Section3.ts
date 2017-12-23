@@ -19,8 +19,8 @@ class USI9Section3 extends USI9Section2 {
         expDateSec3Help: JQuery<HTMLElement>,
         sgnEmployerSec3: JQuery<HTMLElement>,
         sgnEmployerSec3Help: JQuery<HTMLElement>,
-        employerSignDateSec3: JQuery<HTMLElement>,
-        employerSignDateSec3Help: JQuery<HTMLElement>,
+        signDateSec3: JQuery<HTMLElement>,
+        signDateSec3Help: JQuery<HTMLElement>,
         employerNameSec3: JQuery<HTMLElement>,
         employerNameSec3Help: JQuery<HTMLElement>)
     {
@@ -107,11 +107,11 @@ class USI9Section3 extends USI9Section2 {
                     null,
                     this,
                     this.processListABC);
-    
+
                     this.fillListABC('4');
                 }
         });
-    
+
         this._alienuscisNum.change(() => {
             if (!this.EmptyOrNA(this._alienuscisNum)) {
                 if (this.EmptyOrNA(this._alienuscisNumType)) {
@@ -122,7 +122,7 @@ class USI9Section3 extends USI9Section2 {
                         this,
                         this.processListABC);
                 }
-        
+
                 this._admissionNum.val(this.na);
                 this._passportNum.val(this.na);
                 this.filterCombolist(this._countryOfIssuance, {0:this.na}, '0', this, this.processListABC);
@@ -134,13 +134,13 @@ class USI9Section3 extends USI9Section2 {
                 this.filterCombolist(this._countryOfIssuance, {}, null, this, this.processListABC);
             }
         });
-    
+
         this._admissionNum.change(() => {
             if (!this.EmptyOrNA(this._admissionNum)) {
                 this._alienuscisNum.val(this.na);
                 this._alienuscisNumPrefix.val('');
                 this.filterCombolist(this._alienuscisNumType, {}, null, this, this.processListABC);
-        
+
                 this._passportNum.val(this.na);
                 this.filterCombolist(this._countryOfIssuance, {0:this.na}, '0', this, this.processListABC);
             }
@@ -152,15 +152,15 @@ class USI9Section3 extends USI9Section2 {
                 this.filterCombolist(this._countryOfIssuance, {}, null, this, this.processListABC);
             }
         });
-    
+
         this._passportNum.change(() => {
             if (!this.EmptyOrNA(this._passportNum)) {
                 this._alienuscisNum.val(this.na);
                 this._alienuscisNumPrefix.val('');
                 this.filterCombolist(this._alienuscisNumType, {0:this.na}, this.na, this, this.processListABC);
-        
+
                 this._admissionNum.val(this.na);
-            
+
                 if (this.EmptyOrNA(this._countryOfIssuance)) {
                     this.filterCombolist(
                         this._countryOfIssuance,
@@ -176,7 +176,7 @@ class USI9Section3 extends USI9Section2 {
                 this._admissionNum.val('');
             }
         });
-    
+
         this.processLPR(false);
         this.processAlien(false);
 
@@ -214,7 +214,7 @@ class USI9Section3 extends USI9Section2 {
         );
 
         this._rehireDate = this.renderControl(rehireDate, this._('rehiredate.tooltip') )
-        .datepicker()
+        .datepicker().attr('autocomplete', 'false')
         .unbind('keypress')
         .keypress(e =>
             /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
@@ -283,7 +283,7 @@ class USI9Section3 extends USI9Section2 {
         );
 
         this._expDateSec3 = this.renderControl(expDateSec3, this._('expdatesec3.tooltip'))
-        .datepicker({ minDate: new Date() })
+        .datepicker({ minDate: new Date() }).attr('autocomplete', 'false')
         .unbind('keypress')
         .keypress(e =>
             /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
@@ -306,12 +306,16 @@ class USI9Section3 extends USI9Section2 {
             500
         );
 
-        this._employerSignDateSec3 = this.renderControl(employerSignDateSec3, this._('employersigndatesec3.tooltip'))
-        .datepicker({ minDate: new Date() })
-        .attr(this.annotationRequired, 'true');
+        this._signDateSec3 = this.renderControl(signDateSec3, this._('employersigndatesec3.tooltip'))
+        .datepicker({ minDate: new Date() }).attr('autocomplete', 'off')
+        .attr(this.annotationRequired, 'true')
+        // work around for the Chrome auto-fill bug
+        .attr('readonly', 'true')
+        .focus(() => this._signDateSec3.removeAttr('readonly'))
+        .blur(() => this._signDateSec3.attr('readonly', 'true'));
 
-        this._employerSignDateSec3Help = this.renderHelpIcon(
-            employerSignDateSec3Help,
+        this._signDateSec3Help = this.renderHelpIcon(
+            signDateSec3Help,
             this._('employersigndatesec3help.caption'),
             dialog,
             this._('employersigndatesec3help.text'),
@@ -335,7 +339,7 @@ class USI9Section3 extends USI9Section2 {
 
         let section3Fields = [this._newlastName, this._newfirstName, this._newmiddleInitial, this._rehireDate,
             this._docTitleSec3, this._docNumberSec3, this._expDateSec3, this._sgnEmployerSec3,
-            this._employerSignDateSec3, this._employerNameSec3];
+            this._signDateSec3, this._employerNameSec3];
 
         section3Fields.forEach(f => f.toggleClass(this.invalidFieldClass, false));
 
@@ -350,7 +354,7 @@ class USI9Section3 extends USI9Section2 {
             this.validateTextField(this._rehireDate, this._('section3.rehire'), [this.dateFormat, this.NAString], true, errorMessages);            
             this.validateTextField(this._docNumberSec3, this._('section3.docnumber') + ' ' + this._('section3.suffix'), [this.nameFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._expDateSec3, this._('section3.expdate') + ' ' + this._('section3.suffix'), [this.dateFormat, this.NAString], false, errorMessages);
-            this.validateTextField(this._employerSignDateSec3, this._('section3.today') + ' ' + this._('section3.suffix'), [this.dateFormat], true, errorMessages);
+            this.validateTextField(this._signDateSec3, this._('section3.today') + ' ' + this._('section3.suffix'), [this.dateFormat], true, errorMessages);
             this.validateTextField(this._employerNameSec3, this._('section3.employer') + ' ' + this._('section3.suffix'), [this.nameFormat], true, errorMessages);
         }
 

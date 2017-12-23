@@ -24,6 +24,7 @@ class PDFForm {
 
     protected annotationName = 'annotation-name';
     protected annotationRequired = 'annotation-required';
+    protected annotationNext = 'annotation-next';
     protected na = this._('NA');
     protected blankItem = '&nbsp;';
     protected backSpaceCode = 'Backspace';
