@@ -182,7 +182,7 @@ class USI9Section1 extends USI9Fields {
             changeMonth: true,
             changeYear: true,
             yearRange: '1908:' + maxDOB.getFullYear(),
-            maxDate: maxDOB}).attr('autocomplete', 'false').attr('autocomplete', 'false');
+            maxDate: maxDOB}).attr('autocomplete', 'false');
 
         this._dobHelp = this.renderHelpIcon(
             dobHelp,
@@ -519,6 +519,7 @@ class USI9Section1 extends USI9Fields {
         if (!statusSelected) {
             errorMessages.push(this._('citizenship.status'));
         }
+        
         citizenship.forEach(status => status.toggleClass(this.invalidFieldClass, !statusSelected));
 
         if (this._lpr.prop('checked')) {

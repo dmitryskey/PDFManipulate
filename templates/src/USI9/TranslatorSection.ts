@@ -146,6 +146,7 @@ class USI9Translator extends USI9Section1 {
         if (!statusSelected) {
             errorMessages.push(this._('translator.status'));
         }
+        
         translator.forEach(status => status.toggleClass(this.invalidFieldClass, !statusSelected));
         
         if (this._translatorYes.prop('checked')) {

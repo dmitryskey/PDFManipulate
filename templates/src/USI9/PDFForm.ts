@@ -29,6 +29,10 @@ class PDFForm {
     protected blankItem = '&nbsp;';
     protected backSpaceCode = 'Backspace';
 
+    protected _(t: string): string {
+        return (document as any).webL10n.get(t);
+    }
+
     constructor() {
         let self = this;
 
@@ -68,10 +72,6 @@ class PDFForm {
             showMonthAfterYear: false,
             yearSuffix: '' }
         )
-    }
-
-    protected _(t: string): string {
-        return (document as any).webL10n.get(t);
     }
 
     protected selectCheckmark(ctrl: JQuery<HTMLElement>, arr: Array<JQuery<HTMLElement>>) {

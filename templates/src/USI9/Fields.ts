@@ -195,9 +195,13 @@ class USI9Fields extends PDFForm {
 
     protected invalidFieldClass = 'invalid';
 
-    protected validateDateRange(field: JQuery<HTMLElement>, parameter: string, errorMessages: string[]) : boolean {
-        let maxDate = field.datepicker('option', 'maxDate') as Date;
-        let minDate = field.datepicker('option', 'minDate') as Date;
+    protected validateDateRange(f: JQuery<HTMLElement>, parameter: string, errorMessages: string[]) : boolean {
+        if (!f) {
+            return true;
+        }
+
+        let maxDate = f.datepicker('option', 'maxDate') as Date;
+        let minDate = f.datepicker('option', 'minDate') as Date;
         if (maxDate) {
             maxDate.setHours(0, 0, 0, 0);
         }
@@ -206,13 +210,13 @@ class USI9Fields extends PDFForm {
             minDate.setHours(0, 0, 0, 0);
         }
 
-        if (maxDate && (new Date(field.val() as string) > maxDate)) {
+        if (maxDate && f && f.val() && (new Date(f.val() as string) > maxDate)) {
             errorMessages.push(
                 this.paramMaxValueMsg
                 .replace('${parameter}', parameter)
                 .replace('${value}', maxDate.toDateString())
             );
-        } else if (minDate && (new Date(field.val() as string) < minDate)) {
+        } else if (minDate && f && f.val() && (new Date(f.val() as string) < minDate)) {
             errorMessages.push(
                 this.paramMinValueMsg
                 .replace('${parameter}', parameter)
@@ -226,25 +230,25 @@ class USI9Fields extends PDFForm {
     }
 
     protected validateTextField(
-        field: JQuery<HTMLElement>,
+        f: JQuery<HTMLElement>,
         parameter: string,
         regExs: RegExp[],
         validateIfEmpty: boolean,
         errorMessages: string[]): boolean {
 
         let errorFlag = true;
-        let length = field.prop('maxLength') ? field.prop('maxLength') : 0;
+        let length = f.prop('maxLength') ? f.prop('maxLength') : 0;
 
-        if (field.attr(this.annotationRequired) && (field.val() as string).trim() === '') {   
+        if (!f || !f.val() || (f.attr(this.annotationRequired) && (f.val() as string).trim() === '')) {   
             errorMessages.push(this.paramExistsMsg.replace('${parameter}', parameter));
-        } else if ((field.val() as string).length > length && length > 0) {
+        } else if (f && f.val() && (f.val() as string).length > length && length > 0) {
             errorMessages.push(this.paramLengthMsg
               .replace('${parameter}', parameter)
               .replace('${length}', length.toString()));
-        } else if ((field.val() !== '' || validateIfEmpty) && regExs.length > 0) {
+        } else if ((f && f.val() !== '' || validateIfEmpty) && regExs.length > 0) {
             let validFlag = false;
             for (let i in regExs) {
-                if (regExs[i].test(field.val() as string)) {
+                if (f && regExs[i].test(f.val() as string)) {
                     validFlag = true;
                     break;
                 }
@@ -257,13 +261,15 @@ class USI9Fields extends PDFForm {
             errorFlag = !validFlag;
 
             if (!errorFlag) {
-                errorFlag = !this.validateDateRange(field, parameter, errorMessages);
+                errorFlag = !this.validateDateRange(f, parameter, errorMessages);
             }
         } else {
             errorFlag = false;
         }
 
-        field.toggleClass(this.invalidFieldClass, errorFlag);
+        if (f) {
+            f.toggleClass(this.invalidFieldClass, errorFlag);
+        }
 
         return !errorFlag;
     }

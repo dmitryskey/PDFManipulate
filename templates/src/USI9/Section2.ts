@@ -189,7 +189,10 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this.clearListABC();
+        if (!this._citizen.prop('checked') && !this._national.prop('checked') &&
+            !this._lpr.prop('checked') && this._alien.prop('checked')) {
+            this.clearListABC();
+        }
 
         this._hireDate = this.renderControl(hireDate, this._('hiredate.tooltip'))
         .datepicker().attr('autocomplete', 'false').attr('autocomplete', 'false');
@@ -230,29 +233,30 @@ class USI9Section2 extends USI9Translator {
         let errorMessages = super.validateFields();
 
         // List A, B, C Fields
-        let section2Fields = [this._listADoc,
-                              this._listAIssuingAuthority,
-                              this._listADocNumber,
-                              this._listADocExpDate,
-                              this._listADoc2,
-                              this._listAIssuingAuthority2,
-                              this._listADocNumber2,
-                              this._listADocExpDate2,
-                              this._listADoc3,
-                              this._listAIssuingAuthority3,
-                              this._listADocNumber3,
-                              this._listADocExpDate3,
-                              this._listBDoc,
-                              this._listBIssuingAuthority,
-                              this._listBDocNumber,
-                              this._listBDocExpDate,
-                              this._listCDoc,
-                              this._listCIssuingAuthority,
-                              this._listCDocNumber,
-                              this._listCDocExpDate,
-                              this._additionalInfo];
-                              
-        if (section2Fields.filter(f => (f.val() as string).trim() !== '').length == 0) {
+        let section2Fields = [
+            this._listADoc,
+            this._listAIssuingAuthority,
+            this._listADocNumber,
+            this._listADocExpDate,
+            this._listADoc2,
+            this._listAIssuingAuthority2,
+            this._listADocNumber2,
+            this._listADocExpDate2,
+            this._listADoc3,
+            this._listAIssuingAuthority3,
+            this._listADocNumber3,
+            this._listADocExpDate3,
+            this._listBDoc,
+            this._listBIssuingAuthority,
+            this._listBDocNumber,
+            this._listBDocExpDate,
+            this._listCDoc,
+            this._listCIssuingAuthority,
+            this._listCDocNumber,
+            this._listCDocExpDate,
+            this._additionalInfo];       
+            
+        if (section2Fields.filter(f => f && f.val() && (f.val() as string).trim() !== '').length == 0) {
             return errorMessages;
         }
 
@@ -314,7 +318,7 @@ class USI9Section2 extends USI9Translator {
 
             if (!this.validateDateRange(this._listADocExpDate, '', []) ||
                (!this._listADocExpDate.prop(this.freeTextProp) &&
-                !this.validateTextField(this._listADocExpDate, '', [this.dateFormat], true, [])) ||
+                !this.validateTextField(this._listADocExpDate, '', [this.dateFormat, this.NAFormat], true, [])) ||
                 (this._listADocExpDate.prop(this.freeTextProp) && this._listADocExpDate.val() === '')) {
                 errorMessages.push(this._('section2.listafirstexpdate'));
                 this._listADocExpDate.toggleClass(this.invalidFieldClass, true);
@@ -322,7 +326,7 @@ class USI9Section2 extends USI9Translator {
             
             if (!this.validateDateRange(this._listADocExpDate2, '', []) ||
                (!this._listADocExpDate2.prop(this.freeTextProp) &&
-                !this.validateTextField(this._listADocExpDate2, '', [this.dateFormat], true, [])) ||
+                !this.validateTextField(this._listADocExpDate2, '', [this.dateFormat, this.NAFormat], true, [])) ||
                 (this._listADocExpDate2.prop(this.freeTextProp) && this._listADocExpDate2.val() === '')) {
                 errorMessages.push(this._('section2.listasecondexpdate'));
                 this._listADocExpDate2.toggleClass(this.invalidFieldClass, true);
@@ -330,7 +334,7 @@ class USI9Section2 extends USI9Translator {
             
             if (!this.validateDateRange(this._listADocExpDate3, '', []) ||
                (!this._listADocExpDate3.prop(this.freeTextProp) &&
-                !this.validateTextField(this._listADocExpDate3, '', [this.dateFormat], true, [])) ||
+                !this.validateTextField(this._listADocExpDate3, '', [this.dateFormat, this.NAFormat], true, [])) ||
                 (this._listADocExpDate3.prop(this.freeTextProp) && this._listADocExpDate3.val() === '')) {
                 errorMessages.push(this._('section2.listathirdexpdate'));
                 this._listADocExpDate3.toggleClass(this.invalidFieldClass, true);

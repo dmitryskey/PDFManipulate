@@ -1,31 +1,52 @@
-function openPdf(loc, ctrl) {
+function updateDocUrl(locale, url) {
     jQuery.ajax({
         url: '/?rest_route=/PDFEditor',
         type: 'POST',
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify({type: 'application/pdf', mode: 'edit', locale: loc, templateid: 'US I9'}),
+        data: JSON.stringify({type: 'application/pdf', mode: 'edit', locale: locale, templateid: 'US I9'}),
         async: true,
         cache: false,
         timeout: 3000,
         success: function (jsonData) {
             var p = JSON.parse(jsonData).editorUrl;
             if (p && p !== '') {
-                ctrl.attr('href', p);
-                ctrl.attr('target', '_blank')
+                jQuery(url).each(function() {
+                    jQuery(this).attr('href', p);
+                });
             }
         }
     });
 }
 
 jQuery(document).ready(function() {
-    jQuery('a[href=\"https://www.uscis.gov/system/files_force/files/form/i-9-paper-version.pdf\"]')
-    .each(function() {
-        openPdf('en-US', jQuery(this));
-    });
+    // Check if browser is IE version < 10
+    var updateUrl = true;
+    var uAgent = navigator.userAgent;
+    if (uAgent.search('MSIE') >= 0) {
+        // insert conditional IE code here
+        var m = uAgent.match('MSIE ([^;]+)');
+        if (m) {
+            var v = parseFloat(m[1]);
+            if (v < 10.0) {
+                updateUrl = false;
+            }
+        }
+    }
 
-    jQuery('a[href=\"https://www.uscis.gov/system/files_force/files/form/i-9-spanish.pdf\"]')
-    .each(function() {
-        openPdf('es-MX', jQuery(this));
-    });
+    var locales = {
+        'en-US': 'a[href=\"https://www.uscis.gov/system/files_force/files/form/i-9-paper-version.pdf\"]',
+        'es-MX': 'a[href=\"https://www.uscis.gov/system/files_force/files/form/i-9-spanish.pdf\"]'
+    }
+
+    for (var locale in locales) {
+        var url = locales[locale];
+        jQuery(url).each(function() {
+            jQuery(this).attr('target', '_blank')
+        });
+
+        if (updateUrl) {
+            updateDocUrl(locale, url);
+        }
+    }
 });

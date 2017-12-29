@@ -3,9 +3,9 @@
 // Global PDF.JS object references.
 declare var PDFViewerApplication: any;
 
-class USI9 extends USI9Section3 {
-    private renderedPages = [false, false, false];
+let renderedPages = [false, false, false];
 
+class USI9 extends USI9Section3 {
     constructor() {
         super();
 
@@ -290,32 +290,22 @@ class USI9 extends USI9Section3 {
             }
         });
 
-        $(document).on('textlayerrendered', (e: any) => {
-            this.prepareFirstPage();
-        });
-
-        $(document).on('pagerendered', (e: any) => {
-            this.renderedPages[e.detail.pageNumber - 1] = true;
-        
-            if (e.detail.pageNumber >= 2 && !this.renderedPages[0]) {
-                PDFViewerApplication.eventBus.dispatch('firstpage');
-                return;
-            }
-
-            if (e.detail.pageNumber === 1) {
-                this.prepareFirstPage();
-                if (this.renderedPages[1]) {                 
-                    this.prepareSecondPage();
-                }
-            }
-
-            if (e.detail.pageNumber === 2 && this.renderedPages[0]) {
-                this.prepareSecondPage();
-            }
-        });
+        this.prepareFirstPage();
+        this.prepareSecondPage();
     }
 }
 
-var form = new USI9();
+$(document).on('textlayerrendered', (e: any) => {
+    renderedPages[e.detail.pageNumber - 1] = true;
 
-form.renderSections();
+    // if refresh is done while page = 2 or 3 go to the first page
+    if (e.detail.pageNumber >= 2 && !renderedPages[0]) {
+        PDFViewerApplication.eventBus.dispatch('firstpage');
+        return;
+    }
+
+    if (renderedPages[0] && renderedPages[1]) {
+        var form = new USI9();
+        form.renderSections();
+    }
+});

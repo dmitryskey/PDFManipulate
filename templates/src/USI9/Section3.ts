@@ -341,12 +341,12 @@ class USI9Section3 extends USI9Section2 {
             this._docTitleSec3, this._docNumberSec3, this._expDateSec3, this._sgnEmployerSec3,
             this._signDateSec3, this._employerNameSec3];
 
-        section3Fields.forEach(f => f.toggleClass(this.invalidFieldClass, false));
+        section3Fields.forEach(f => f && f.toggleClass(this.invalidFieldClass, false));
 
-        if (section3Fields.filter(e => e.val() !== '').length > 0) {
+        if (section3Fields.filter(e => e && e.val() && e.val() !== '').length > 0) {
             [this._newlastName, this._newfirstName, this._newmiddleInitial, this._rehireDate,
              this._docTitleSec3, this._docNumberSec3, this._expDateSec3].filter(f => f.val() === '')
-            .forEach(f => f.val(this.na));
+            .forEach(f => f && f.val(this.na));
 
             this.validateTextField(this._newlastName, this._('name.last') + ' ' + this._('section3.suffix'), [this.nameFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._newfirstName, this._('name.first') + ' ' + this._('section3.suffix'), [this.nameFormat, this.NAString], false, errorMessages);

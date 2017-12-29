@@ -160,21 +160,24 @@ var USI9Fields = (function (_super) {
         _this.invalidFieldClass = 'invalid';
         return _this;
     }
-    USI9Fields.prototype.validateDateRange = function (field, parameter, errorMessages) {
-        var maxDate = field.datepicker('option', 'maxDate');
-        var minDate = field.datepicker('option', 'minDate');
+    USI9Fields.prototype.validateDateRange = function (f, parameter, errorMessages) {
+        if (!f) {
+            return true;
+        }
+        var maxDate = f.datepicker('option', 'maxDate');
+        var minDate = f.datepicker('option', 'minDate');
         if (maxDate) {
             maxDate.setHours(0, 0, 0, 0);
         }
         if (minDate) {
             minDate.setHours(0, 0, 0, 0);
         }
-        if (maxDate && (new Date(field.val()) > maxDate)) {
+        if (maxDate && f && f.val() && (new Date(f.val()) > maxDate)) {
             errorMessages.push(this.paramMaxValueMsg
                 .replace('${parameter}', parameter)
                 .replace('${value}', maxDate.toDateString()));
         }
-        else if (minDate && (new Date(field.val()) < minDate)) {
+        else if (minDate && f && f.val() && (new Date(f.val()) < minDate)) {
             errorMessages.push(this.paramMinValueMsg
                 .replace('${parameter}', parameter)
                 .replace('${value}', minDate.toDateString()));
@@ -184,21 +187,21 @@ var USI9Fields = (function (_super) {
         }
         return false;
     };
-    USI9Fields.prototype.validateTextField = function (field, parameter, regExs, validateIfEmpty, errorMessages) {
+    USI9Fields.prototype.validateTextField = function (f, parameter, regExs, validateIfEmpty, errorMessages) {
         var errorFlag = true;
-        var length = field.prop('maxLength') ? field.prop('maxLength') : 0;
-        if (field.attr(this.annotationRequired) && field.val().trim() === '') {
+        var length = f.prop('maxLength') ? f.prop('maxLength') : 0;
+        if (!f || !f.val() || (f.attr(this.annotationRequired) && f.val().trim() === '')) {
             errorMessages.push(this.paramExistsMsg.replace('${parameter}', parameter));
         }
-        else if (field.val().length > length && length > 0) {
+        else if (f && f.val() && f.val().length > length && length > 0) {
             errorMessages.push(this.paramLengthMsg
                 .replace('${parameter}', parameter)
                 .replace('${length}', length.toString()));
         }
-        else if ((field.val() !== '' || validateIfEmpty) && regExs.length > 0) {
+        else if ((f && f.val() !== '' || validateIfEmpty) && regExs.length > 0) {
             var validFlag = false;
             for (var i in regExs) {
-                if (regExs[i].test(field.val())) {
+                if (f && regExs[i].test(f.val())) {
                     validFlag = true;
                     break;
                 }
@@ -208,13 +211,15 @@ var USI9Fields = (function (_super) {
             }
             errorFlag = !validFlag;
             if (!errorFlag) {
-                errorFlag = !this.validateDateRange(field, parameter, errorMessages);
+                errorFlag = !this.validateDateRange(f, parameter, errorMessages);
             }
         }
         else {
             errorFlag = false;
         }
-        field.toggleClass(this.invalidFieldClass, errorFlag);
+        if (f) {
+            f.toggleClass(this.invalidFieldClass, errorFlag);
+        }
         return !errorFlag;
     };
     return USI9Fields;
@@ -302,7 +307,7 @@ var USI9Section1 = (function (_super) {
             changeYear: true,
             yearRange: '1908:' + maxDOB.getFullYear(),
             maxDate: maxDOB
-        }).attr('autocomplete', 'false').attr('autocomplete', 'false');
+        }).attr('autocomplete', 'false');
         this._dobHelp = this.renderHelpIcon(dobHelp, this._('dobhelp.caption'), dialog, this._('dobhelp.text'));
         this.renderSSNFields([ssn11, ssn12, ssn13, ssn21, ssn22, ssn31, ssn32, ssn33, ssn34]);
         this._ssnHelp = this.renderHelpIcon(ssnHelp, this._('ssnhelp.caption'), dialog, this._('ssnhelp.text'), 400);
@@ -576,7 +581,10 @@ var USI9Section2 = (function (_super) {
         this.renderListABC(dialog, listADoc, listADocHelp, listAIssuingAuthority, listAIssuingAuthorityHelp, listADocNumber, listADocNumberHelp, listADocExpDate, listADocExpDateHelp, listADoc2, listADoc2Help, listAIssuingAuthority2, listAIssuingAuthority2Help, listADocNumber2, listADocNumber2Help, listADocExpDate2, listADocExpDate2Help, listADoc3, listADoc3Help, listAIssuingAuthority3, listAIssuingAuthority3Help, listADocNumber3, listADocNumber3Help, listADocExpDate3, listADocExpDate3Help, listBDoc, listBDocHelp, listBIssuingAuthority, listBIssuingAuthorityHelp, listBDocNumber, listBDocNumberHelp, listBDocExpDate, listBDocExpDateHelp, listCDoc, listCDocHelp, listCIssuingAuthority, listCIssuingAuthorityHelp, listCDocNumber, listCDocNumberHelp, listCDocExpDate, listCDocExpDateHelp);
         this._additionalInfo = this.renderControl(additionalInfo, this._('additionalinfo.tooltip'));
         this._additionalInfoHelp = this.renderHelpIcon(additionalInfoHelp, this._('additionalinfohelp.caption'), dialog, this._('additionalinfohelp.text'), 500);
-        this.clearListABC();
+        if (!this._citizen.prop('checked') && !this._national.prop('checked') &&
+            !this._lpr.prop('checked') && this._alien.prop('checked')) {
+            this.clearListABC();
+        }
         this._hireDate = this.renderControl(hireDate, this._('hiredate.tooltip'))
             .datepicker().attr('autocomplete', 'false').attr('autocomplete', 'false');
         this._hireDateHelp = this.renderHelpIcon(hireDateHelp, this._('hiredatehelp.caption'), dialog, this._('hiredatehelp.text'));
@@ -585,7 +593,8 @@ var USI9Section2 = (function (_super) {
     USI9Section2.prototype.validateFields = function () {
         var _this = this;
         var errorMessages = _super.prototype.validateFields.call(this);
-        var section2Fields = [this._listADoc,
+        var section2Fields = [
+            this._listADoc,
             this._listAIssuingAuthority,
             this._listADocNumber,
             this._listADocExpDate,
@@ -605,8 +614,9 @@ var USI9Section2 = (function (_super) {
             this._listCIssuingAuthority,
             this._listCDocNumber,
             this._listCDocExpDate,
-            this._additionalInfo];
-        if (section2Fields.filter(function (f) { return f.val().trim() !== ''; }).length == 0) {
+            this._additionalInfo
+        ];
+        if (section2Fields.filter(function (f) { return f && f.val() && f.val().trim() !== ''; }).length == 0) {
             return errorMessages;
         }
         section2Fields.filter(function (f) { return f.val().trim() === '' && !f.prop(_this.requiredProp); }).forEach(function (f) { return f.val(_this.na); });
@@ -659,21 +669,21 @@ var USI9Section2 = (function (_super) {
             }
             if (!this.validateDateRange(this._listADocExpDate, '', []) ||
                 (!this._listADocExpDate.prop(this.freeTextProp) &&
-                    !this.validateTextField(this._listADocExpDate, '', [this.dateFormat], true, [])) ||
+                    !this.validateTextField(this._listADocExpDate, '', [this.dateFormat, this.NAFormat], true, [])) ||
                 (this._listADocExpDate.prop(this.freeTextProp) && this._listADocExpDate.val() === '')) {
                 errorMessages.push(this._('section2.listafirstexpdate'));
                 this._listADocExpDate.toggleClass(this.invalidFieldClass, true);
             }
             if (!this.validateDateRange(this._listADocExpDate2, '', []) ||
                 (!this._listADocExpDate2.prop(this.freeTextProp) &&
-                    !this.validateTextField(this._listADocExpDate2, '', [this.dateFormat], true, [])) ||
+                    !this.validateTextField(this._listADocExpDate2, '', [this.dateFormat, this.NAFormat], true, [])) ||
                 (this._listADocExpDate2.prop(this.freeTextProp) && this._listADocExpDate2.val() === '')) {
                 errorMessages.push(this._('section2.listasecondexpdate'));
                 this._listADocExpDate2.toggleClass(this.invalidFieldClass, true);
             }
             if (!this.validateDateRange(this._listADocExpDate3, '', []) ||
                 (!this._listADocExpDate3.prop(this.freeTextProp) &&
-                    !this.validateTextField(this._listADocExpDate3, '', [this.dateFormat], true, [])) ||
+                    !this.validateTextField(this._listADocExpDate3, '', [this.dateFormat, this.NAFormat], true, [])) ||
                 (this._listADocExpDate3.prop(this.freeTextProp) && this._listADocExpDate3.val() === '')) {
                 errorMessages.push(this._('section2.listathirdexpdate'));
                 this._listADocExpDate3.toggleClass(this.invalidFieldClass, true);
@@ -1608,11 +1618,11 @@ var USI9Section3 = (function (_super) {
         var section3Fields = [this._newlastName, this._newfirstName, this._newmiddleInitial, this._rehireDate,
             this._docTitleSec3, this._docNumberSec3, this._expDateSec3, this._sgnEmployerSec3,
             this._signDateSec3, this._employerNameSec3];
-        section3Fields.forEach(function (f) { return f.toggleClass(_this.invalidFieldClass, false); });
-        if (section3Fields.filter(function (e) { return e.val() !== ''; }).length > 0) {
+        section3Fields.forEach(function (f) { return f && f.toggleClass(_this.invalidFieldClass, false); });
+        if (section3Fields.filter(function (e) { return e && e.val() && e.val() !== ''; }).length > 0) {
             [this._newlastName, this._newfirstName, this._newmiddleInitial, this._rehireDate,
                 this._docTitleSec3, this._docNumberSec3, this._expDateSec3].filter(function (f) { return f.val() === ''; })
-                .forEach(function (f) { return f.val(_this.na); });
+                .forEach(function (f) { return f && f.val(_this.na); });
             this.validateTextField(this._newlastName, this._('name.last') + ' ' + this._('section3.suffix'), [this.nameFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._newfirstName, this._('name.first') + ' ' + this._('section3.suffix'), [this.nameFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._newmiddleInitial, this._('name.middleinitial') + ' ' + this._('section3.suffix'), [this.nameInitialFormat, this.NAString], false, errorMessages);
@@ -1645,11 +1655,11 @@ var USI9Section3 = (function (_super) {
     };
     return USI9Section3;
 }(USI9Section2));
+var renderedPages = [false, false, false];
 var USI9 = (function (_super) {
     __extends(USI9, _super);
     function USI9() {
         var _this = _super.call(this) || this;
-        _this.renderedPages = [false, false, false];
         $('body').append('<div id="dialogPage"></div>');
         var self = _this;
         $('#dialogPage').dialog({
@@ -1735,27 +1745,19 @@ var USI9 = (function (_super) {
                 PDFViewerApplication.download();
             }
         });
-        $(document).on('textlayerrendered', function (e) {
-            _this.prepareFirstPage();
-        });
-        $(document).on('pagerendered', function (e) {
-            _this.renderedPages[e.detail.pageNumber - 1] = true;
-            if (e.detail.pageNumber >= 2 && !_this.renderedPages[0]) {
-                PDFViewerApplication.eventBus.dispatch('firstpage');
-                return;
-            }
-            if (e.detail.pageNumber === 1) {
-                _this.prepareFirstPage();
-                if (_this.renderedPages[1]) {
-                    _this.prepareSecondPage();
-                }
-            }
-            if (e.detail.pageNumber === 2 && _this.renderedPages[0]) {
-                _this.prepareSecondPage();
-            }
-        });
+        this.prepareFirstPage();
+        this.prepareSecondPage();
     };
     return USI9;
 }(USI9Section3));
-var form = new USI9();
-form.renderSections();
+$(document).on('textlayerrendered', function (e) {
+    renderedPages[e.detail.pageNumber - 1] = true;
+    if (e.detail.pageNumber >= 2 && !renderedPages[0]) {
+        PDFViewerApplication.eventBus.dispatch('firstpage');
+        return;
+    }
+    if (renderedPages[0] && renderedPages[1]) {
+        var form = new USI9();
+        form.renderSections();
+    }
+});
