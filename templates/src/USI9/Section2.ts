@@ -511,6 +511,7 @@ class USI9Section2 extends USI9Translator {
         );
 
         this._employerState = this.renderControl(employerState, this._('employerstate.tooltip'));
+        this.setCombolistText(this._employerState, this.space, this.blankItem);
 
         this._employerStateHelp = this.renderHelpIcon(
             employerStateHelp,
@@ -814,9 +815,10 @@ class USI9Section2 extends USI9Translator {
     }
 
     protected getListAContent(citizenship: string) : { [index: string]: string; } {
-        let usCitizenOrNational = {' ': this.blankItem, 0: this.na, 1: this._('uspassport'), 2: this._('uspassportcard')};
+        let spaceSymbol = this.space;
+        let usCitizenOrNational = {spaceSymbol: this.blankItem, 0: this.na, 1: this._('uspassport'), 2: this._('uspassportcard')};
         let lpr = {
-            ' ': this.blankItem,
+            spaceSymbol: this.blankItem,
             0: this.na,
             3: this._('permanentresidentcard'),
             4: this._('alienresidentcard'),
@@ -825,7 +827,7 @@ class USI9Section2 extends USI9Translator {
             12: this._('I551receipt')
         };
         let alien = {
-            ' ': this.blankItem,
+            spaceSymbol: this.blankItem,
             0: this.na,
             6: this._('eadI766'),
             7: this._('foreinpassportnonimmigrant'),
@@ -852,16 +854,18 @@ class USI9Section2 extends USI9Translator {
     }
 
     protected getListBContent(dob: string) {
-        var isMinorUnderAge18 = false;
-        var ms = Date.parse(dob);
+        let isMinorUnderAge18 = false;
+        let ms = Date.parse(dob);
         if (!isNaN(ms)) {
             var ageDifMs = Date.now() - ms;
             var ageDate = new Date(ageDifMs);
             isMinorUnderAge18 = Math.abs(ageDate.getUTCFullYear() - 1970) < 18;
         }
 
-        var listB = {
-            ' ': this.blankItem,
+        let spaceSymbol = this.space;
+
+        let listB = {
+            spaceSymbol: this.blankItem,
             0: this._('NA'),
             1: this._('driverlicence'),
             2: this._('idcard'),
@@ -914,8 +918,10 @@ class USI9Section2 extends USI9Translator {
     }
 
     protected getListCContent(citizenship: string) {
-        var listC = {
-            ' ': this.blankItem,
+        let spaceSymbol = this.space;
+
+        let listC = {
+            spaceSymbol: this.blankItem,
             0: this._('NA'),
             1: this._('ssncard'),
             10: this._('ssnCardReceipt')
@@ -963,7 +969,8 @@ class USI9Section2 extends USI9Translator {
         let issuingAuthList: { [index: string]: string; };
         let issuingAuth: string = null;
 
-        this._listADocNumber.prop(this.requiredProp, true);
+        this._listADocNumber.prop(this.requiredProp, true)
+        .removeAttr('readOnly').val('');
 
         this._listADocNumber2.prop(this.requiredProp, false);
         this._listADocExpDate2.prop(this.requiredProp, false);
@@ -1198,9 +1205,11 @@ class USI9Section2 extends USI9Translator {
         this._listADocNumber.prop(this.validationExpressionProp,  fieldValidationExpression);    
         this._listADocNumber.prop(this.validationMessageProp, fieldValidationMessage);
 
+        let spaceSymbol = this.space;
+
         this.filterCombolist(
             this._listAIssuingAuthority.prop(this.requiredProp, true),
-            $.extend({' ': this.blankItem}, issuingAuthList),
+            $.extend({spaceSymbol: this.blankItem}, issuingAuthList),
             issuingAuth,
             this,
             this.processListABC);
@@ -1245,12 +1254,14 @@ class USI9Section2 extends USI9Translator {
 
         let numberMaxLength = 11;
         let fieldFormat = /^[a-zA-Z0-9]+$/;
+
+        let spaceSymbol = this.space;
       
         if (code === '1') {
             // 1 - Temporary I-551 Stamp
             this.filterCombolist(
                 this._listAIssuingAuthority2,
-                { ' ': this.blankItem, USCIS: this._(USCIS), DOJINS: this._(DOJINS) },
+                { spaceSymbol: this.blankItem, USCIS: this._(USCIS), DOJINS: this._(DOJINS) },
                 USCIS,
                 this,
                 this.processListABC);
@@ -1258,7 +1269,7 @@ class USI9Section2 extends USI9Translator {
             // 2 - Machine-readable immigrant visa (MRIV)
             this.filterCombolist(
                 this._listAIssuingAuthority2,
-                { ' ': this.blankItem, USDS: this._(USDS) },
+                { spaceSymbol: this.blankItem, USDS: this._(USDS) },
                 USDS,
                 this,
                 this.processListABC);
@@ -1290,6 +1301,8 @@ class USI9Section2 extends USI9Translator {
         this._listADocNumber3.prop(this.requiredProp, true);
         this._listADocExpDate3.prop(this.requiredProp, true);
 
+        let spaceSymbol = this.space;
+
         // 0 - N/A
         if (code === '0') {
             this.filterCombolist(this._listAIssuingAuthority3, {0:this.na}, '0', this, this.processListABC);
@@ -1300,7 +1313,7 @@ class USI9Section2 extends USI9Translator {
             // 1 - Form I-20
             this.filterCombolist(
                 this._listAIssuingAuthority3,
-                { ' ': this.blankItem, ICE: this._(ICE), DOJINS: this._(DOJINS) },
+                { spaceSymbol: this.blankItem, ICE: this._(ICE), DOJINS: this._(DOJINS) },
                 ICE,
                 this,
                 this.processListABC);
@@ -1315,7 +1328,7 @@ class USI9Section2 extends USI9Translator {
             // 2 - Form DS-2019
             this.filterCombolist(
                 this._listAIssuingAuthority3,
-                { ' ': this.blankItem, USDS: this._(USDS) },
+                { spaceSymbol: this.blankItem, USDS: this._(USDS) },
                 USDS,
                 this,
                 this.processListABC);
@@ -1338,6 +1351,8 @@ class USI9Section2 extends USI9Translator {
         let fieldValidationMessage: string = null;
         let issuingAuthList: { [index: string]: string; };
         let issuingAuth: string = null;
+
+        let spaceSymbol = this.space;
 
         this._listBDocNumber
         .prop('maxLength', '100')
@@ -1441,7 +1456,7 @@ class USI9Section2 extends USI9Translator {
 
         this.filterCombolist(
             this._listBIssuingAuthority,
-            $.extend({' ': this.blankItem}, issuingAuthList),
+            $.extend({ spaceSymbol: this.blankItem }, issuingAuthList),
             issuingAuth,
             this,
             this.processListABC);
@@ -1464,6 +1479,8 @@ class USI9Section2 extends USI9Translator {
         let fieldValidationMessage: string = null;        
         let issuingAuthList: { [index: string]: string; };
         let issuingAuth: string;
+
+        let spaceSymbol = this.space;
 
         if (code !== '0' && code.trim() !== '') {
             this.clearListA();
@@ -1551,11 +1568,12 @@ class USI9Section2 extends USI9Translator {
 
         this._listCDocNumber
         .prop('maxLength', numberMaxLength)
+        .removeAttr('readOnly').val('')
         .keypress(e => fieldFormat.test(e.key) || e.key === this.backSpaceCode);
 
         this.filterCombolist(
             this._listCIssuingAuthority,
-            $.extend({' ': this.blankItem}, issuingAuthList),
+            $.extend({ spaceSymbol: this.blankItem }, issuingAuthList),
             issuingAuth,
             this,
             this.processListABC);

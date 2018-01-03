@@ -274,7 +274,7 @@ class USI9 extends USI9Section3 {
     }
 
     public renderSections() {
-        $('#print').click(() => {
+        $('#print').off('click').click(() => {
             if (this.validateForm($('#dialogPage'))) {
                 this.prepareData();
 
@@ -282,7 +282,7 @@ class USI9 extends USI9Section3 {
             }
         });
 
-        $('#download').click(() => {
+        $('#download').off('click').click(() => {
             if (this.validateForm($('#dialogPage'))) {
                 this.prepareData();
 

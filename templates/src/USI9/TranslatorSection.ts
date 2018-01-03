@@ -119,6 +119,7 @@ class USI9Translator extends USI9Section1 {
         );
             
         this._translatorState = this.renderControl(translatorState, this._('translatorstate.tooltip'));
+        this.setCombolistText(this._translatorState, ' ', this.blankItem);
 
         this._translatorStateHelp = this.renderHelpIcon(
             translatorStateHelp,

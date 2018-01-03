@@ -26,6 +26,7 @@ class PDFForm {
     protected annotationRequired = 'annotation-required';
     protected annotationNext = 'annotation-next';
     protected na = this._('NA');
+    protected space = ' ';
     protected blankItem = '&nbsp;';
     protected backSpaceCode = 'Backspace';
 
@@ -90,6 +91,11 @@ class PDFForm {
         });
     }
 
+    protected setCombolistText(ctrl: JQuery<HTMLElement>, val: string, txt: string) {
+        var options = ctrl.parent().children().filter('.combo-content');
+        options.children().filter('[value="' + val + '"]').html(txt);
+    }
+
     protected filterCombolist(
         ctrl: JQuery<HTMLElement>,
         items: { [index: string]: string; },
@@ -142,8 +148,12 @@ class PDFForm {
     }
 
     protected renderControl(ctrl: JQuery<HTMLElement>, text: string) : JQuery<HTMLElement> {
-        return ctrl.focus(e => $(e.target).tooltip('close')).prop('title', '')
-        .tooltip({ content: text, show: { delay: 1000 } });
+        if (navigator.platform.indexOf('iPad') != -1 || navigator.platform.indexOf('iPhone') != -1) {
+            return ctrl;
+        } else {
+            return ctrl.focus(e => $(e.target).tooltip('close')).prop('title', '')
+            .tooltip({ content: text, show: { delay: 1000 } });
+        }
     }
 
     protected renderHelpIcon(

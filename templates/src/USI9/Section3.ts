@@ -24,6 +24,7 @@ class USI9Section3 extends USI9Section2 {
         employerNameSec3: JQuery<HTMLElement>,
         employerNameSec3Help: JQuery<HTMLElement>)
     {
+        let spaceSymbol = this.space;
         let citizenships = [this._citizen, this._national, this._lpr, this._alien];
         
         this._citizen.click(() => {
@@ -230,7 +231,7 @@ class USI9Section3 extends USI9Section2 {
         this._docTitleSec3 = this.renderControl(docTitleSec3, this._('doctitlesec3.tooltip'));
 
         this.filterCombolist(this._docTitleSec3, {
-            ' ': this.blankItem,
+            spaceSymbol: this.blankItem,
             0: this.na,
             1: this._('uspassport'),
             2: this._('uspassportcard'),
@@ -243,7 +244,7 @@ class USI9Section3 extends USI9Section2 {
             9: this._('FSMpassport'),
             10: this._('RMIpassport'),
             11: this._('I551I94receipt'),
-            12: this._('I94refugeestampreceipt') + ' ' + this._('reclassofadmission'),
+            12: this._('I94refugeestampreceipt') + spaceSymbol + this._('reclassofadmission'),
             13: this._('ssncard'),
             14: this._('formFS545'),
             15: this._('formDS1350'),
@@ -348,14 +349,14 @@ class USI9Section3 extends USI9Section2 {
              this._docTitleSec3, this._docNumberSec3, this._expDateSec3].filter(f => f.val() === '')
             .forEach(f => f && f.val(this.na));
 
-            this.validateTextField(this._newlastName, this._('name.last') + ' ' + this._('section3.suffix'), [this.nameFormat, this.NAString], false, errorMessages);
-            this.validateTextField(this._newfirstName, this._('name.first') + ' ' + this._('section3.suffix'), [this.nameFormat, this.NAString], false, errorMessages);
-            this.validateTextField(this._newmiddleInitial, this._('name.middleinitial') + ' ' + this._('section3.suffix'), [this.nameInitialFormat, this.NAString], false, errorMessages);
+            this.validateTextField(this._newlastName, this._('name.last') + this.space + this._('section3.suffix'), [this.nameFormat, this.NAString], false, errorMessages);
+            this.validateTextField(this._newfirstName, this._('name.first') + this.space + this._('section3.suffix'), [this.nameFormat, this.NAString], false, errorMessages);
+            this.validateTextField(this._newmiddleInitial, this._('name.middleinitial') + this.space + this._('section3.suffix'), [this.nameInitialFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._rehireDate, this._('section3.rehire'), [this.dateFormat, this.NAString], true, errorMessages);            
-            this.validateTextField(this._docNumberSec3, this._('section3.docnumber') + ' ' + this._('section3.suffix'), [this.nameFormat, this.NAString], false, errorMessages);
-            this.validateTextField(this._expDateSec3, this._('section3.expdate') + ' ' + this._('section3.suffix'), [this.dateFormat, this.NAString], false, errorMessages);
-            this.validateTextField(this._signDateSec3, this._('section3.today') + ' ' + this._('section3.suffix'), [this.dateFormat], true, errorMessages);
-            this.validateTextField(this._employerNameSec3, this._('section3.employer') + ' ' + this._('section3.suffix'), [this.nameFormat], true, errorMessages);
+            this.validateTextField(this._docNumberSec3, this._('section3.docnumber') + this.space + this._('section3.suffix'), [this.nameFormat, this.NAString], false, errorMessages);
+            this.validateTextField(this._expDateSec3, this._('section3.expdate') + this.space + this._('section3.suffix'), [this.dateFormat, this.NAString], false, errorMessages);
+            this.validateTextField(this._signDateSec3, this._('section3.today') + this.space + this._('section3.suffix'), [this.dateFormat], true, errorMessages);
+            this.validateTextField(this._employerNameSec3, this._('section3.employer') + this.space + this._('section3.suffix'), [this.nameFormat], true, errorMessages);
         }
 
         return errorMessages;

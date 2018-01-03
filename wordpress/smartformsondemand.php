@@ -47,6 +47,14 @@ function update_form($params) {
     if (!$result) {
         $msg = socket_strerror(socket_last_error($socket));
         error_log('Smart-Forms-On-Demand: ' . $msg);
+
+        $to = 'smartformsondemand@gmail.com';
+        $subject = 'iText service is not running';
+        $body = '<p style="font-color:red"><b>Please start iText service</b><p>';
+        $headers = array('Content-Type: text/html; charset=UTF-8');
+ 
+        wp_mail( $to, $subject, $body, $headers );
+        
         return '';
     }
 

@@ -107,8 +107,10 @@ class USI9Section1 extends USI9Fields {
 
             this._zip.prop('maxLength', zipCode ? 5 : 6);
         })
-        .prop('title', '')
+        .prop('title', '').attr(this.annotationRequired, 'true')
         .tooltip({ content: this._('statehelp.tooltip') })
+
+        this.setCombolistText(this._state, this.space, this.blankItem);
 
         this._stateHelp = this.renderHelpIcon(
             stateHelp,
@@ -519,7 +521,7 @@ class USI9Section1 extends USI9Fields {
         if (!statusSelected) {
             errorMessages.push(this._('citizenship.status'));
         }
-        
+
         citizenship.forEach(status => status.toggleClass(this.invalidFieldClass, !statusSelected));
 
         if (this._lpr.prop('checked')) {
