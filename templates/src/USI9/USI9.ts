@@ -9,31 +9,7 @@ class USI9 extends USI9Section3 {
     constructor() {
         super();
 
-        $('body').append('<div id="dialogPage"></div>');
-
-        let self = this;
-
-        $('#dialogPage').dialog({
-            minHeight: 50,
-            minWidth: 50,
-            autoOpen: false,
-            buttons: [{
-                  text: 'OK',
-                  click: function() {
-                    $(this).dialog('close');
-                  }
-                }]
-        });
-    }
-
-    private urlParameter(name: string) {
-        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-        if (results === null) {
-           return null;
-        }
-        else {
-           return decodeURI(results[1]) || 0;
-        }
+        this.addDialog();
     }
 
     private prepareData() {
@@ -55,7 +31,7 @@ class USI9 extends USI9Section3 {
                 readOnlyFieldsToFlat.indexOf(ctrl.getAttribute(this.annotationName)) > -1;
 
             PDFViewerApplication.fieldsData.entries.push({
-                'name': ctrl.getAttribute('annotation-name'),
+                'name': ctrl.getAttribute(this.annotationName),
                 'value': op ? (ctrl.type === 'checkbox' ? ( ctrl.checked ? 'Yes' : 'No') : ctrl.value) : '',
                 'operation': op ? 's': 'd'});
         });

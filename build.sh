@@ -9,7 +9,9 @@ mkdir -p $p/db
 
 chmod -R 777 $p
 
-./node_modules/.bin/tsc -p "./templates/src/USI9/tsconfig.json" 
+./node_modules/.bin/tsc -p "./templates/src/USI9/tsconfig.json"
+./node_modules/.bin/tsc -p "./templates/src/USI9Supplement/tsconfig.json"
+
 ./node_modules/.bin/babel templates/src --out-dir templates/lib --comments=false --minified
 node managedb.js
 

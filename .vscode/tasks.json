@@ -19,9 +19,18 @@
             "isBackground": true
         },
         {
-            "label": "typescript",
+            "label": "USI9",
             "type": "typescript",
             "tsconfig": "templates/src/USI9/tsconfig.json",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "USI9Supplement",
+            "type": "typescript",
+            "tsconfig": "templates/src/USI9Supplement/tsconfig.json",
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -31,10 +40,10 @@
             "label": "maven",
             "type": "shell",
             "command": "cd ${workspaceRoot}/iTextService; mvn",
-			"args": [
-				"clean package exec:java"
+            "args": [
+                "clean package exec:java"
             ],
             "group": "build"
-		}
+        }
     ]
 }

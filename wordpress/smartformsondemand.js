@@ -1,10 +1,10 @@
-function updateDocUrl(locale, url) {
+function updateDocUrl(locale, url, template) {
     jQuery.ajax({
         url: '/?rest_route=/PDFEditor',
         type: 'POST',
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify({type: 'application/pdf', mode: 'edit', locale: locale, templateid: 'US I9'}),
+        data: JSON.stringify({type: 'application/pdf', mode: 'edit', locale: locale, templateid: template}),
         async: true,
         cache: false,
         timeout: 3000,
@@ -37,16 +37,32 @@ jQuery(document).ready(function() {
     var locales = {
         'en-US': 'a[href=\"https://www.uscis.gov/system/files_force/files/form/i-9-paper-version.pdf\"]',
         'es-MX': 'a[href=\"https://www.uscis.gov/system/files_force/files/form/i-9-spanish.pdf\"]'
-    }
+    };
 
     for (var locale in locales) {
         var url = locales[locale];
         jQuery(url).each(function() {
-            jQuery(this).attr('target', '_blank')
+            jQuery(this).attr('target', '_blank');
         });
 
         if (updateUrl) {
-            updateDocUrl(locale, url);
+            updateDocUrl(locale, url, 'US I9');
+        }
+    }
+
+    locales = {
+        'en-US': 'a[href=\"https://www.uscis.gov/system/files_force/files/form/i-9supinstr.pdf\"]',
+        'es-MX': 'a[href=\"https://www.uscis.gov/system/files_force/files/form/i9-frm-supp1-spanish.pdf\"]'
+    };
+
+    for (var locale in locales) {
+        var url = locales[locale];
+        jQuery(url).each(function() {
+            jQuery(this).attr('target', '_blank');
+        });
+
+        if (updateUrl) {
+            updateDocUrl(locale, url, 'US I9 Supplement');
         }
     }
 });

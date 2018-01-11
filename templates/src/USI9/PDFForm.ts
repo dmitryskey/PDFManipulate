@@ -96,53 +96,6 @@ class PDFForm {
         options.children().filter('[value="' + val + '"]').html(txt);
     }
 
-    protected filterCombolist(
-        ctrl: JQuery<HTMLElement>,
-        items: { [index: string]: string; },
-        defaultValue: string,
-        fields: USI9Section2,
-        callback: (ddl: string, code: string, parent: USI9Section2) => any) {
-        if (!ctrl) {
-            return;
-        }
-
-        var options = ctrl.parent().children().filter('.combo-content');
-
-        for (let index in items) {
-            options.children().filter('[value="' + index + '"]').html(items[index]);
-        }
-
-        options.children().show();
-        options.children().each((code: number, item: HTMLElement) => {
-            var val = item.getAttribute('value');
-            if (items && !(val in items)) {
-                options.children().filter('[value="' + val + '"]').hide();
-            }
-        });
-
-        if (callback) {
-            options.children().click(e => {
-                let inputText = (e.target.parentNode.parentNode as HTMLElement).getElementsByTagName('input')[0];
-                if (e.target.innerHTML === this.blankItem) {
-                    inputText.value = '';
-                }
-
-                callback(
-                    inputText.getAttribute(this.annotationName),
-                    e.target.getAttribute('value'),
-                    fields
-                );
-            });
-        }
-
-        if (defaultValue) {
-            this.setCombolistValue(ctrl, defaultValue);
-        }
-        else {
-            ctrl.val('');
-        }
-    }
-
     protected assignCombolistEventHandler(ctrl: JQuery<HTMLElement>, f: JQuery.EventHandler<HTMLElement>) {
         ctrl.parent().children().filter('.combo-content').click(f);
     }
@@ -178,6 +131,32 @@ class PDFForm {
             dialog.text('').append(decodeURIComponent(text))
                 .dialog('option', 'title', self._('help'))
                 .dialog('option', 'minWidth', minWidth).dialog('open');
+        });
+    }
+
+    protected urlParameter(name: string) {
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results === null) {
+           return null;
+        }
+        else {
+           return decodeURI(results[1]) || 0;
+        }
+    }
+
+    protected addDialog() {
+        $('body').append('<div id="dialogPage"></div>');
+
+        $('#dialogPage').dialog({
+            minHeight: 50,
+            minWidth: 50,
+            autoOpen: false,
+            buttons: [{
+                  text: 'OK',
+                  click: function() {
+                    $(this).dialog('close');
+                  }
+                }]
         });
     }
 }

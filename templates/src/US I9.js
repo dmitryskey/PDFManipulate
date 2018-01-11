@@ -95,7 +95,144 @@ var PDFForm = (function () {
         var options = ctrl.parent().children().filter('.combo-content');
         options.children().filter('[value="' + val + '"]').html(txt);
     };
-    PDFForm.prototype.filterCombolist = function (ctrl, items, defaultValue, fields, callback) {
+    PDFForm.prototype.assignCombolistEventHandler = function (ctrl, f) {
+        ctrl.parent().children().filter('.combo-content').click(f);
+    };
+    PDFForm.prototype.renderControl = function (ctrl, text) {
+        if (navigator.platform.indexOf('iPad') != -1 || navigator.platform.indexOf('iPhone') != -1) {
+            return ctrl;
+        }
+        else {
+            return ctrl.focus(function (e) { return $(e.target).tooltip('close'); }).prop('title', '')
+                .tooltip({ content: text, show: { delay: 1000 } });
+        }
+    };
+    PDFForm.prototype.renderHelpIcon = function (ctrl, title, dialog, text, minWidth) {
+        if (minWidth === void 0) { minWidth = 50; }
+        var self = this;
+        var tag = 'div';
+        ctrl.hide().parent().children(tag).remove();
+        return ctrl.parent().append('<' + tag + '>�</' + tag + '>')
+            .children(tag).prop('title', title)
+            .css({ 'color': ctrl.css('color'),
+            'font-size': ctrl.css('font-size') })
+            .toggleClass('icon').parent().click(function (e) {
+            $('.ui-dialog-titlebar-close').attr('title', '');
+            dialog.text('').append(decodeURIComponent(text))
+                .dialog('option', 'title', self._('help'))
+                .dialog('option', 'minWidth', minWidth).dialog('open');
+        });
+    };
+    PDFForm.prototype.urlParameter = function (name) {
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results === null) {
+            return null;
+        }
+        else {
+            return decodeURI(results[1]) || 0;
+        }
+    };
+    PDFForm.prototype.addDialog = function () {
+        $('body').append('<div id="dialogPage"></div>');
+        $('#dialogPage').dialog({
+            minHeight: 50,
+            minWidth: 50,
+            autoOpen: false,
+            buttons: [{
+                    text: 'OK',
+                    click: function () {
+                        $(this).dialog('close');
+                    }
+                }]
+        });
+    };
+    return PDFForm;
+}());
+var USI9Fields = (function (_super) {
+    __extends(USI9Fields, _super);
+    function USI9Fields() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.paramExistsMsg = _this._('parameter.exists');
+        _this.paramLengthMsg = _this._('parameter.length');
+        _this.paramFormatMsg = _this._('parameter.format');
+        _this.paramMaxValueMsg = _this._('parameter.max');
+        _this.paramMinValueMsg = _this._('parameter.min');
+        _this.dateFormatMsg = _this._('date.format');
+        _this.invalidFieldClass = 'invalid';
+        return _this;
+    }
+    USI9Fields.prototype.validateDateRange = function (f, parameter, errorMessages, prefix) {
+        if (prefix === void 0) { prefix = ''; }
+        if (!f) {
+            return true;
+        }
+        var maxDate = f.datepicker('option', 'maxDate');
+        var minDate = f.datepicker('option', 'minDate');
+        if (maxDate) {
+            maxDate.setHours(0, 0, 0, 0);
+        }
+        if (minDate) {
+            minDate.setHours(0, 0, 0, 0);
+        }
+        if (maxDate && f && f.val() && (new Date(f.val()) > maxDate)) {
+            errorMessages.push(this.paramMaxValueMsg
+                .replace('${prefix}', prefix)
+                .replace('${parameter}', parameter)
+                .replace('${value}', maxDate.toDateString()));
+        }
+        else if (minDate && f && f.val() && (new Date(f.val()) < minDate)) {
+            errorMessages.push(this.paramMinValueMsg
+                .replace('${prefix}', prefix)
+                .replace('${parameter}', parameter)
+                .replace('${value}', minDate.toDateString()));
+        }
+        else {
+            return true;
+        }
+        return false;
+    };
+    USI9Fields.prototype.validateTextField = function (f, parameter, regExs, validateIfEmpty, errorMessages, prefix) {
+        if (prefix === void 0) { prefix = ''; }
+        var errorFlag = true;
+        var length = f.prop('maxLength') ? f.prop('maxLength') : 0;
+        if (!f || !f.val() || (f.attr(this.annotationRequired) && f.val().trim() === '')) {
+            errorMessages.push(this.paramExistsMsg
+                .replace('${prefix}', prefix)
+                .replace('${parameter}', parameter));
+        }
+        else if (f && f.val() && f.val().length > length && length > 0) {
+            errorMessages.push(this.paramLengthMsg
+                .replace('${prefix}', prefix)
+                .replace('${parameter}', parameter)
+                .replace('${length}', length.toString()));
+        }
+        else if ((f && f.val() !== '' || validateIfEmpty) && regExs.length > 0) {
+            var validFlag = false;
+            for (var i in regExs) {
+                if (f && regExs[i].test(f.val())) {
+                    validFlag = true;
+                    break;
+                }
+            }
+            if (!validFlag) {
+                errorMessages.push(this.paramFormatMsg
+                    .replace('${prefix}', prefix)
+                    .replace('${parameter}', parameter));
+            }
+            errorFlag = !validFlag;
+            if (!errorFlag) {
+                errorFlag = !this.validateDateRange(f, parameter, errorMessages, prefix);
+            }
+        }
+        else {
+            errorFlag = false;
+        }
+        if (f) {
+            f.toggleClass(this.invalidFieldClass, errorFlag);
+        }
+        return !errorFlag;
+    };
+    USI9Fields.prototype.filterCombolist = function (ctrl, items, defaultValue, fields, callback) {
         var _this = this;
         if (!ctrl) {
             return;
@@ -126,111 +263,6 @@ var PDFForm = (function () {
         else {
             ctrl.val('');
         }
-    };
-    PDFForm.prototype.assignCombolistEventHandler = function (ctrl, f) {
-        ctrl.parent().children().filter('.combo-content').click(f);
-    };
-    PDFForm.prototype.renderControl = function (ctrl, text) {
-        if (navigator.platform.indexOf('iPad') != -1 || navigator.platform.indexOf('iPhone') != -1) {
-            return ctrl;
-        }
-        else {
-            return ctrl.focus(function (e) { return $(e.target).tooltip('close'); }).prop('title', '')
-                .tooltip({ content: text, show: { delay: 1000 } });
-        }
-    };
-    PDFForm.prototype.renderHelpIcon = function (ctrl, title, dialog, text, minWidth) {
-        if (minWidth === void 0) { minWidth = 50; }
-        var self = this;
-        var tag = 'div';
-        ctrl.hide().parent().children(tag).remove();
-        return ctrl.parent().append('<' + tag + '>�</' + tag + '>')
-            .children(tag).prop('title', title)
-            .css({ 'color': ctrl.css('color'),
-            'font-size': ctrl.css('font-size') })
-            .toggleClass('icon').parent().click(function (e) {
-            $('.ui-dialog-titlebar-close').attr('title', '');
-            dialog.text('').append(decodeURIComponent(text))
-                .dialog('option', 'title', self._('help'))
-                .dialog('option', 'minWidth', minWidth).dialog('open');
-        });
-    };
-    return PDFForm;
-}());
-var USI9Fields = (function (_super) {
-    __extends(USI9Fields, _super);
-    function USI9Fields() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.paramExistsMsg = _this._('parameter.exists');
-        _this.paramLengthMsg = _this._('parameter.length');
-        _this.paramFormatMsg = _this._('parameter.format');
-        _this.paramMaxValueMsg = _this._('parameter.max');
-        _this.paramMinValueMsg = _this._('parameter.min');
-        _this.dateFormatMsg = _this._('date.format');
-        _this.invalidFieldClass = 'invalid';
-        return _this;
-    }
-    USI9Fields.prototype.validateDateRange = function (f, parameter, errorMessages) {
-        if (!f) {
-            return true;
-        }
-        var maxDate = f.datepicker('option', 'maxDate');
-        var minDate = f.datepicker('option', 'minDate');
-        if (maxDate) {
-            maxDate.setHours(0, 0, 0, 0);
-        }
-        if (minDate) {
-            minDate.setHours(0, 0, 0, 0);
-        }
-        if (maxDate && f && f.val() && (new Date(f.val()) > maxDate)) {
-            errorMessages.push(this.paramMaxValueMsg
-                .replace('${parameter}', parameter)
-                .replace('${value}', maxDate.toDateString()));
-        }
-        else if (minDate && f && f.val() && (new Date(f.val()) < minDate)) {
-            errorMessages.push(this.paramMinValueMsg
-                .replace('${parameter}', parameter)
-                .replace('${value}', minDate.toDateString()));
-        }
-        else {
-            return true;
-        }
-        return false;
-    };
-    USI9Fields.prototype.validateTextField = function (f, parameter, regExs, validateIfEmpty, errorMessages) {
-        var errorFlag = true;
-        var length = f.prop('maxLength') ? f.prop('maxLength') : 0;
-        if (!f || !f.val() || (f.attr(this.annotationRequired) && f.val().trim() === '')) {
-            errorMessages.push(this.paramExistsMsg.replace('${parameter}', parameter));
-        }
-        else if (f && f.val() && f.val().length > length && length > 0) {
-            errorMessages.push(this.paramLengthMsg
-                .replace('${parameter}', parameter)
-                .replace('${length}', length.toString()));
-        }
-        else if ((f && f.val() !== '' || validateIfEmpty) && regExs.length > 0) {
-            var validFlag = false;
-            for (var i in regExs) {
-                if (f && regExs[i].test(f.val())) {
-                    validFlag = true;
-                    break;
-                }
-            }
-            if (!validFlag) {
-                errorMessages.push(this.paramFormatMsg.replace('${parameter}', parameter));
-            }
-            errorFlag = !validFlag;
-            if (!errorFlag) {
-                errorFlag = !this.validateDateRange(f, parameter, errorMessages);
-            }
-        }
-        else {
-            errorFlag = false;
-        }
-        if (f) {
-            f.toggleClass(this.invalidFieldClass, errorFlag);
-        }
-        return !errorFlag;
     };
     return USI9Fields;
 }(PDFForm));
@@ -382,7 +414,7 @@ var USI9Section1 = (function (_super) {
         var _this = this;
         var errorMessages = [];
         [this._middleInitial, this._otherNames, this._apptNumber, this._email, this._phone]
-            .filter(function (f) { return f.val() === ''; }).forEach(function (f) { return f.val(_this.na); });
+            .filter(function (f) { return f.val().trim() === ''; }).forEach(function (f) { return f.val(_this.na); });
         this.validateTextField(this._lastName, this._('name.last'), [this.nameFormat], false, errorMessages);
         this.validateTextField(this._firstName, this._('name.first'), [this.nameFormat], false, errorMessages);
         this.validateTextField(this._middleInitial, this._('name.middleinitial'), [this.nameInitialFormat, this.NAString], false, errorMessages);
@@ -1684,30 +1716,9 @@ var USI9 = (function (_super) {
     __extends(USI9, _super);
     function USI9() {
         var _this = _super.call(this) || this;
-        $('body').append('<div id="dialogPage"></div>');
-        var self = _this;
-        $('#dialogPage').dialog({
-            minHeight: 50,
-            minWidth: 50,
-            autoOpen: false,
-            buttons: [{
-                    text: 'OK',
-                    click: function () {
-                        $(this).dialog('close');
-                    }
-                }]
-        });
+        _this.addDialog();
         return _this;
     }
-    USI9.prototype.urlParameter = function (name) {
-        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-        if (results === null) {
-            return null;
-        }
-        else {
-            return decodeURI(results[1]) || 0;
-        }
-    };
     USI9.prototype.prepareData = function () {
         var _this = this;
         PDFViewerApplication.transformationService = '/?rest_route=/UpdateForm';
@@ -1724,7 +1735,7 @@ var USI9 = (function (_super) {
             var op = !ctrl.disabled ||
                 readOnlyFieldsToFlat.indexOf(ctrl.getAttribute(_this.annotationName)) > -1;
             PDFViewerApplication.fieldsData.entries.push({
-                'name': ctrl.getAttribute('annotation-name'),
+                'name': ctrl.getAttribute(_this.annotationName),
                 'value': op ? (ctrl.type === 'checkbox' ? (ctrl.checked ? 'Yes' : 'No') : ctrl.value) : '',
                 'operation': op ? 's' : 'd'
             });

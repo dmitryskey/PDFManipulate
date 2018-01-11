@@ -464,7 +464,7 @@ class USI9Section1 extends USI9Fields {
 
         // Put N/A if required
         [this._middleInitial, this._otherNames, this._apptNumber, this._email, this._phone]
-           .filter(f => f.val() === '').forEach(f => f.val(this.na));
+           .filter(f => (f.val() as string).trim() === '').forEach(f => f.val(this.na));
 
         this.validateTextField(this._lastName, this._('name.last'), [this.nameFormat], false, errorMessages);
         this.validateTextField(this._firstName, this._('name.first'), [this.nameFormat], false, errorMessages);

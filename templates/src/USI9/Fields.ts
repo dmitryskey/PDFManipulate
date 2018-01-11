@@ -195,7 +195,7 @@ class USI9Fields extends PDFForm {
 
     protected invalidFieldClass = 'invalid';
 
-    protected validateDateRange(f: JQuery<HTMLElement>, parameter: string, errorMessages: string[]) : boolean {
+    protected validateDateRange(f: JQuery<HTMLElement>, parameter: string, errorMessages: string[], prefix: string = '') : boolean {
         if (!f) {
             return true;
         }
@@ -213,12 +213,14 @@ class USI9Fields extends PDFForm {
         if (maxDate && f && f.val() && (new Date(f.val() as string) > maxDate)) {
             errorMessages.push(
                 this.paramMaxValueMsg
+                .replace('${prefix}', prefix)
                 .replace('${parameter}', parameter)
                 .replace('${value}', maxDate.toDateString())
             );
         } else if (minDate && f && f.val() && (new Date(f.val() as string) < minDate)) {
             errorMessages.push(
                 this.paramMinValueMsg
+                .replace('${prefix}', prefix)
                 .replace('${parameter}', parameter)
                 .replace('${value}', minDate.toDateString())
             );
@@ -234,17 +236,23 @@ class USI9Fields extends PDFForm {
         parameter: string,
         regExs: RegExp[],
         validateIfEmpty: boolean,
-        errorMessages: string[]): boolean {
+        errorMessages: string[],
+        prefix: string = ''): boolean {
 
         let errorFlag = true;
         let length = f.prop('maxLength') ? f.prop('maxLength') : 0;
 
         if (!f || !f.val() || (f.attr(this.annotationRequired) && (f.val() as string).trim() === '')) {   
-            errorMessages.push(this.paramExistsMsg.replace('${parameter}', parameter));
+            errorMessages.push(
+                this.paramExistsMsg
+                .replace('${prefix}', prefix)
+                .replace('${parameter}', parameter));
         } else if (f && f.val() && (f.val() as string).length > length && length > 0) {
-            errorMessages.push(this.paramLengthMsg
-              .replace('${parameter}', parameter)
-              .replace('${length}', length.toString()));
+            errorMessages.push(
+                this.paramLengthMsg
+                .replace('${prefix}', prefix)
+                .replace('${parameter}', parameter)
+                .replace('${length}', length.toString()));
         } else if ((f && f.val() !== '' || validateIfEmpty) && regExs.length > 0) {
             let validFlag = false;
             for (let i in regExs) {
@@ -255,13 +263,16 @@ class USI9Fields extends PDFForm {
             }
 
             if (!validFlag) {
-                errorMessages.push(this.paramFormatMsg.replace('${parameter}', parameter));
+                errorMessages.push(
+                    this.paramFormatMsg
+                    .replace('${prefix}', prefix)
+                    .replace('${parameter}', parameter));
             }
 
             errorFlag = !validFlag;
 
             if (!errorFlag) {
-                errorFlag = !this.validateDateRange(f, parameter, errorMessages);
+                errorFlag = !this.validateDateRange(f, parameter, errorMessages, prefix);
             }
         } else {
             errorFlag = false;
@@ -272,5 +283,52 @@ class USI9Fields extends PDFForm {
         }
 
         return !errorFlag;
+    }
+
+    protected filterCombolist(
+        ctrl: JQuery<HTMLElement>,
+        items: { [index: string]: string; },
+        defaultValue: string,
+        fields: USI9Section2,
+        callback: (ddl: string, code: string, parent: USI9Section2) => any) {
+        if (!ctrl) {
+            return;
+        }
+
+        var options = ctrl.parent().children().filter('.combo-content');
+
+        for (let index in items) {
+            options.children().filter('[value="' + index + '"]').html(items[index]);
+        }
+
+        options.children().show();
+        options.children().each((code: number, item: HTMLElement) => {
+            var val = item.getAttribute('value');
+            if (items && !(val in items)) {
+                options.children().filter('[value="' + val + '"]').hide();
+            }
+        });
+
+        if (callback) {
+            options.children().click(e => {
+                let inputText = (e.target.parentNode.parentNode as HTMLElement).getElementsByTagName('input')[0];
+                if (e.target.innerHTML === this.blankItem) {
+                    inputText.value = '';
+                }
+
+                callback(
+                    inputText.getAttribute(this.annotationName),
+                    e.target.getAttribute('value'),
+                    fields
+                );
+            });
+        }
+
+        if (defaultValue) {
+            this.setCombolistValue(ctrl, defaultValue);
+        }
+        else {
+            ctrl.val('');
+        }
     }
 }

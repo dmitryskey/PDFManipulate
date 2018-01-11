@@ -1,0 +1,21 @@
+{
+    "files": [
+        "PDFForm",
+        "Fields",
+        "TranslatorSection",
+        "USI9Supplement"
+    ],
+    "compilerOptions": {
+        "module": "amd",
+        "target": "es5",
+        "outFile": "../../src/US I9 Supplement.js",
+        "removeComments": true,
+        "noImplicitAny": true,
+        "lib": [
+            "dom",
+            "es5",
+            "scripthost",
+            "es2015.iterable"
+        ]
+    }
+}

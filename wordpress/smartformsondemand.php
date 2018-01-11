@@ -188,7 +188,7 @@ add_action('rest_api_init', function ($server) {
                 if ($readOnly === 0) {
                     if (!copy($pluginPath . 'templates/forms/' . $data['locale'] . '/' . $data['templateid'] . '.pdf',
                        $pluginPath . 'data/' . $pdf)) {
-                        $errors= error_get_last();
+                        $errors = error_get_last();
                         error_log('Smart-Forms-On-Demand: ' . $errors['type'] . ', ' . $errors['message']);
                         return '{"editorUrl": ""}';
                     }
