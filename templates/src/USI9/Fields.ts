@@ -234,7 +234,7 @@ class USI9Fields extends PDFForm {
     protected validateTextField(
         f: JQuery<HTMLElement>,
         parameter: string,
-        regExs: RegExp[],
+        regExp: RegExp[],
         validateIfEmpty: boolean,
         errorMessages: string[],
         prefix: string = ''): boolean {
@@ -253,10 +253,10 @@ class USI9Fields extends PDFForm {
                 .replace('${prefix}', prefix)
                 .replace('${parameter}', parameter)
                 .replace('${length}', length.toString()));
-        } else if ((f && f.val() !== '' || validateIfEmpty) && regExs.length > 0) {
+        } else if ((f && f.val() !== '' || validateIfEmpty) && regExp.length > 0) {
             let validFlag = false;
-            for (let i in regExs) {
-                if (f && regExs[i].test(f.val() as string)) {
+            for (let i in regExp) {
+                if (f && regExp[i].test(f.val() as string)) {
                     validFlag = true;
                     break;
                 }

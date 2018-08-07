@@ -2,9 +2,8 @@ class PDFForm {
     protected nameFormat = /^[A-Za-z ']+$/;
     protected nameInitialFormat = /^[A-Za-z]{1}$/;
     protected stateFormat = /^[A-Z]{2,3}$/;
-    protected NAFormat = /^[NA/]+$/;
+    protected NAFormat = /^[NnAa/]+$/;
     protected NAString = /^N\/A$/;
-    protected DSFormat = /^[DS/]+$/;
     protected zipFormat = /^\d+$/;
     protected postalFormat = /^[A-Za-z0-9]+$/;
     protected zipNumberFormat = /^\d{5}$/;
@@ -44,14 +43,14 @@ class PDFForm {
         let dayNamesMin:string[] = [];
 
         $.each(JSON.parse(this._('monthNames')), (index, value) => {
-            monthNamesShort.push(index);
+            monthNamesShort.push(index as string);
             monthNames.push(value);
         })
 
         $.each(JSON.parse(this._('dayNames')), (index, value) => {
-            dayNamesMin.push(index);
+            dayNamesMin.push(index as string);
             $.each(value, (i, v) => {
-                dayNamesShort.push(i);
+                dayNamesShort.push(i as string);
                 dayNames.push(v);
             });
         });

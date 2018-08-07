@@ -274,6 +274,11 @@ class USI9 extends USI9Section3 {
 $(document).on('textlayerrendered', (e: any) => {
     renderedPages[e.detail.pageNumber - 1] = true;
 
+    if (e.detail.pageNumber == 1 && !renderedPages[1]) {
+        PDFViewerApplication.eventBus.dispatch('nextpage');
+        return;
+    }
+
     // if refresh is done while page = 2 or 3 go to the first page
     if (e.detail.pageNumber >= 2 && !renderedPages[0]) {
         PDFViewerApplication.eventBus.dispatch('firstpage');

@@ -84,10 +84,10 @@ class USI9Section2 extends USI9Translator {
 
         $('a').prop('target', '_blank');
 
-        this._dob.change(e =>
+        this._dob.change((e : JQuery.Event<HTMLInputElement>) =>
             this.filterCombolist(
                 this._listBDoc,
-                this.getListBContent((e.target as HTMLInputElement).value),
+                this.getListBContent(e.target.value),
                 this.na,
                 this,
                 this.processListABC));
@@ -318,7 +318,7 @@ class USI9Section2 extends USI9Translator {
 
             if (!this.validateDateRange(this._listADocExpDate, '', []) ||
                (!this._listADocExpDate.prop(this.freeTextProp) &&
-                !this.validateTextField(this._listADocExpDate, '', [this.dateFormat, this.NAFormat], true, [])) ||
+                !this.validateTextField(this._listADocExpDate, '', [this.dateFormat, this.NAString], true, [])) ||
                 (this._listADocExpDate.prop(this.freeTextProp) && this._listADocExpDate.val() === '')) {
                 errorMessages.push(this._('section2.listafirstexpdate'));
                 this._listADocExpDate.toggleClass(this.invalidFieldClass, true);
@@ -326,7 +326,7 @@ class USI9Section2 extends USI9Translator {
             
             if (!this.validateDateRange(this._listADocExpDate2, '', []) ||
                (!this._listADocExpDate2.prop(this.freeTextProp) &&
-                !this.validateTextField(this._listADocExpDate2, '', [this.dateFormat, this.NAFormat], true, [])) ||
+                !this.validateTextField(this._listADocExpDate2, '', [this.dateFormat, this.NAString], true, [])) ||
                 (this._listADocExpDate2.prop(this.freeTextProp) && this._listADocExpDate2.val() === '')) {
                 errorMessages.push(this._('section2.listasecondexpdate'));
                 this._listADocExpDate2.toggleClass(this.invalidFieldClass, true);
@@ -334,7 +334,7 @@ class USI9Section2 extends USI9Translator {
             
             if (!this.validateDateRange(this._listADocExpDate3, '', []) ||
                (!this._listADocExpDate3.prop(this.freeTextProp) &&
-                !this.validateTextField(this._listADocExpDate3, '', [this.dateFormat, this.NAFormat], true, [])) ||
+                !this.validateTextField(this._listADocExpDate3, '', [this.dateFormat, this.NAString], true, [])) ||
                 (this._listADocExpDate3.prop(this.freeTextProp) && this._listADocExpDate3.val() === '')) {
                 errorMessages.push(this._('section2.listathirdexpdate'));
                 this._listADocExpDate3.toggleClass(this.invalidFieldClass, true);
@@ -357,7 +357,7 @@ class USI9Section2 extends USI9Translator {
                     this._listBDocNumber.toggleClass(this.invalidFieldClass, true);
                 }
 
-                if (!this.validateTextField(this._listBDocExpDate, '', [this.dateFormat, this.NAFormat], true, [])) {
+                if (!this.validateTextField(this._listBDocExpDate, '', [this.dateFormat, this.NAString], true, [])) {
                      errorMessages.push(this._('section2.listbexpdate'));
                      this._listBDocExpDate.toggleClass(this.invalidFieldClass, true);
                  }
@@ -380,7 +380,7 @@ class USI9Section2 extends USI9Translator {
                     this._listCDocNumber.toggleClass(this.invalidFieldClass, true);
                 }
 
-                if (!this.validateTextField(this._listCDocExpDate, '', [this.dateFormat, this.NAFormat], true, [])) {
+                if (!this.validateTextField(this._listCDocExpDate, '', [this.dateFormat, this.NAString], true, [])) {
                     errorMessages.push(this._('section2.listcexpdate'));
                     this._listCDocExpDate.toggleClass(this.invalidFieldClass, true);
                 }
@@ -788,34 +788,28 @@ class USI9Section2 extends USI9Translator {
         switch(ddl)
         {
         case 'ListADocTitle':
-            self.listADocTitle(ddl, code);
-
+            self.listADocTitle(code);
             break;
 
         case 'ListADocTitle2':
-            self.listADocTitle2(ddl, code);
-
+            self.listADocTitle2(code);
             break;
         
         case 'ListADocTitle3':
-            self.listADocTitle3(ddl, code);
-
+            self.listADocTitle3(code);
             break;
 
         case 'ListBDocTitle':
-            self.listBDocTitle(ddl, code);
-
+            self.listBDocTitle(code);
             break;
 
         case 'ListCDocTitle':
-            self.listCDocTitle(ddl, code);
-
+            self.listCDocTitle(code);
             break;
         }
     }
 
     protected getListAContent(citizenship: string) : { [index: string]: string; } {
-        let spaceSymbol = this.space;
         let usCitizenOrNational = {spaceSymbol: this.blankItem, 0: this.na, 1: this._('uspassport'), 2: this._('uspassportcard')};
         let lpr = {
             spaceSymbol: this.blankItem,
@@ -861,8 +855,6 @@ class USI9Section2 extends USI9Translator {
             var ageDate = new Date(ageDifMs);
             isMinorUnderAge18 = Math.abs(ageDate.getUTCFullYear() - 1970) < 18;
         }
-
-        let spaceSymbol = this.space;
 
         let listB = {
             spaceSymbol: this.blankItem,
@@ -918,8 +910,6 @@ class USI9Section2 extends USI9Translator {
     }
 
     protected getListCContent(citizenship: string) {
-        let spaceSymbol = this.space;
-
         let listC = {
             spaceSymbol: this.blankItem,
             0: this._('NA'),
@@ -953,7 +943,7 @@ class USI9Section2 extends USI9Translator {
         return listC;
     }
 
-    private listADocTitle(ddl: string, code: string) {
+    private listADocTitle(code: string) {
         let USDS = 'USDS';
         let USCIS = 'USCIS'
         let DOJINS = 'DOJINS';
@@ -1036,7 +1026,12 @@ class USI9Section2 extends USI9Translator {
 
             this._listADocNumber2.attr('readOnly', 'true').val(this.na);
 
-            this._listADocExpDate2.prop(this.requiredProp, true);
+            this._listADocExpDate2
+                .datepicker('option', 'minDate', new Date())
+                .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
+                .unbind('keypress')
+                .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
+                .prop(this.requiredProp, true).prop(this.freeTextProp, true);
         } else if (code === '10') {
             // 10 - Receipt: Form I-94/I-94A w/I-551 stamp, photo
             issuingAuthList = {DHS: this._(DHS)};
@@ -1094,7 +1089,12 @@ class USI9Section2 extends USI9Translator {
                 this.processListABC);
 
             this._listADocNumber2.prop(this.requiredProp, true);
-            this._listADocExpDate2.prop(this.requiredProp, true);
+            this._listADocExpDate2
+                .datepicker('option', 'minDate', new Date())
+                .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
+                .unbind('keypress')
+                .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
+                .prop(this.requiredProp, true).prop(this.freeTextProp, true);
         
             this.filterCombolist(
                 this._listADoc3,
@@ -1130,7 +1130,12 @@ class USI9Section2 extends USI9Translator {
                 this.processListABC);
 
             this._listADocNumber2.prop(this.requiredProp, true);
-            this._listADocExpDate2.prop(this.requiredProp, true);
+            this._listADocExpDate2
+                .datepicker('option', 'minDate', new Date())
+                .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
+                .unbind('keypress')
+                .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
+                .prop(this.requiredProp, true).prop(this.freeTextProp, true);
         } else if (code === '9') {
             // 9 - RMI Passport with Form I-94
             issuingAuthList = { RMI: this._(RMI) };
@@ -1154,7 +1159,12 @@ class USI9Section2 extends USI9Translator {
                 this.processListABC);
 
             this._listADocNumber2.prop(this.requiredProp, true);
-            this._listADocExpDate2.prop(this.requiredProp, true);
+            this._listADocExpDate2
+                .datepicker('option', 'minDate', new Date())
+                .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
+                .unbind('keypress')
+                .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
+                .prop(this.requiredProp, true).prop(this.freeTextProp, true);
         } else if (code === '11') {
             // 11 - Receipt: Form I-94/I-94A w/refugee stamp
             issuingAuthList = { DHS: this._(DHS) };
@@ -1198,14 +1208,12 @@ class USI9Section2 extends USI9Translator {
         this._listADocExpDate.unbind('keypress');
         if (!this._listADocExpDate.prop(this.freeTextProp)) {
             this._listADocExpDate
-            .keypress(e =>
-                /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+            .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+            .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
         }
 
         this._listADocNumber.prop(this.validationExpressionProp,  fieldValidationExpression);    
         this._listADocNumber.prop(this.validationMessageProp, fieldValidationMessage);
-
-        let spaceSymbol = this.space;
 
         this.filterCombolist(
             this._listAIssuingAuthority.prop(this.requiredProp, true),
@@ -1219,7 +1227,8 @@ class USI9Section2 extends USI9Translator {
             this.filterCombolist(this._listAIssuingAuthority2, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber2.attr('readOnly', 'true').val(this.na);
             this._listADocExpDate2.attr('readOnly', 'true')
-            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false')
+            .val(this.na);
         }
         
         if (['1', '2', '3', '4', '5', '6', '8', '9', '10', '11', '12', '15', '16'].indexOf(code) >= 0) {
@@ -1247,15 +1256,13 @@ class USI9Section2 extends USI9Translator {
         }
     }
 
-    private listADocTitle2(ddl: string, code: string) {
+    private listADocTitle2(code: string) {
         let USDS = 'USDS';
         let USCIS = 'USCIS';
         let DOJINS = 'DOJINS';
 
         let numberMaxLength = 11;
         let fieldFormat = /^[a-zA-Z0-9]+$/;
-
-        let spaceSymbol = this.space;
       
         if (code === '1') {
             // 1 - Temporary I-551 Stamp
@@ -1285,15 +1292,9 @@ class USI9Section2 extends USI9Translator {
         .prop('maxLength', numberMaxLength)
         .prop(this.requiredProp, true)
         .keypress(e => fieldFormat.test(e.key) || e.key === this.backSpaceCode);
-
-        this._listADocExpDate2
-        .unbind('keypress')
-        .datepicker('option', 'minDate', new Date())
-        .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
-        .prop(this.requiredProp, true).prop(this.freeTextProp, false);
     }
 
-    private listADocTitle3(ddl: string, code: string) {
+    private listADocTitle3(code: string) {
         let ICE = 'ICE';
         let DOJINS = 'DOJINS';
         let USDS = 'USDS';
@@ -1301,11 +1302,9 @@ class USI9Section2 extends USI9Translator {
         this._listADocNumber3.prop(this.requiredProp, true);
         this._listADocExpDate3.prop(this.requiredProp, true);
 
-        let spaceSymbol = this.space;
-
         // 0 - N/A
         if (code === '0') {
-            this.filterCombolist(this._listAIssuingAuthority3, {0:this.na}, '0', this, this.processListABC);
+            this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber3.attr('readOnly', 'true').val(this.na);
             this._listADocExpDate3.attr('readOnly', 'true')
             .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
@@ -1319,11 +1318,9 @@ class USI9Section2 extends USI9Translator {
                 this.processListABC);
             
             this._listADocNumber3.removeAttr('readOnly').val('');
-            this._listADocExpDate3.removeAttr('readOnly')
-            .unbind('keypress')
-            .keypress(e =>
-                /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-            .val('').datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false');
+            this._listADocExpDate3.removeAttr('readOnly').val('')
+            .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false')
+            .prop(this.requiredProp, true).prop(this.freeTextProp, false);
         } else if (code === '2') {
             // 2 - Form DS-2019
             this.filterCombolist(
@@ -1334,15 +1331,13 @@ class USI9Section2 extends USI9Translator {
                 this.processListABC);
             
             this._listADocNumber3.removeAttr('readOnly').val('');
-            this._listADocExpDate3.removeAttr('readOnly')
-            .unbind('keypress')
-            .datepicker('option', 'minDate', new Date())
-            .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
+            this._listADocExpDate3.removeAttr('readOnly').val('')
+            .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false')
             .prop(this.requiredProp, true).prop(this.freeTextProp, false);
         }
     }
 
-    private listBDocTitle(ddl: string, code: string) {
+    private listBDocTitle(code: string) {
         let USCG = 'USCG';
 
         let numberMaxLength = 15;
@@ -1352,11 +1347,7 @@ class USI9Section2 extends USI9Translator {
         let issuingAuthList: { [index: string]: string; };
         let issuingAuth: string = null;
 
-        let spaceSymbol = this.space;
-
-        this._listBDocNumber
-        .prop('maxLength', '100')
-        .unbind('keypress');
+        this._listBDocNumber.prop('maxLength', '100').unbind('keypress');
 
         if (code !== '0' && code.trim() !== '') {
             this.clearListA();
@@ -1371,10 +1362,10 @@ class USI9Section2 extends USI9Translator {
         if (['19', '20'].indexOf(code) < 0) {
             this._listBDocNumber.removeAttr('readOnly').val('');
             this._listBDocExpDate.removeAttr('readOnly')
+            .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false').val('')
             .unbind('keypress')
-            .keypress(e =>
-                /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-            .val('').datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false');
+            .keypress((e : JQuery.Event<HTMLElement>) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+            .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
         }
 
         if (['1', '2', '21', '22'].indexOf(code) >= 0) {
@@ -1390,8 +1381,8 @@ class USI9Section2 extends USI9Translator {
             this._listBDocNumber
             .prop('maxLength', numberMaxLength)
             .unbind('keypress')
-            .keypress(e => 
-                fieldFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
+            .keypress(e => fieldFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+            .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
 
             fieldValidationExpression = this.driverLicenseNumberFormat;
             fieldValidationMessage = this._('section2.listbnumberformat');
@@ -1465,7 +1456,7 @@ class USI9Section2 extends USI9Translator {
         this._listBDocNumber.prop(this.validationMessageProp, fieldValidationMessage);
     }
 
-    private listCDocTitle(ddl: string, code: string) {
+    private listCDocTitle(code: string) {
         let SSA = 'SSA';
         let USDHHS = 'USDHHS';
         let SSD = 'SSD';
@@ -1480,8 +1471,6 @@ class USI9Section2 extends USI9Translator {
         let issuingAuthList: { [index: string]: string; };
         let issuingAuth: string;
 
-        let spaceSymbol = this.space;
-
         if (code !== '0' && code.trim() !== '') {
             this.clearListA();
         }
@@ -1492,10 +1481,11 @@ class USI9Section2 extends USI9Translator {
 
         this._listCIssuingAuthority.attr('readOnly', 'true');
         this._listCDocExpDate.removeAttr('readOnly')
+        .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false')
         .unbind('keypress')
-        .keypress(e =>
-            /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-        .val('').datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false');
+        .keypress((e : JQuery.Event<HTMLElement>) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+        .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
+        .val('');
 
         this._listCDoc.prop('ssncard', false);
     

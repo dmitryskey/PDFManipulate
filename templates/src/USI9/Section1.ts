@@ -44,8 +44,8 @@ class USI9Section1 extends USI9Fields {
 
         // N/A option
         this._middleInitial = this.renderControl(middleInitial, this._('middleinitialhelp.tooltip'))
-        .keypress(e =>
-            this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
+        .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+        .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
 
         this._middleInitialHelp = this.renderHelpIcon(
             middleInitialHelp,
@@ -55,8 +55,8 @@ class USI9Section1 extends USI9Fields {
         );
 
         this._otherNames = this.renderControl(otherNames,this._('othernameshelp.tooltip'))
-        .keypress(e =>
-            this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
+        .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+        .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
 
         this._otherNamesHelp = this.renderHelpIcon(
             otherNamesHelp,
@@ -303,15 +303,14 @@ class USI9Section1 extends USI9Fields {
     
         this._lpruscisNumType = this.renderControl(lpruscisNumType, this._('uscisnumbertype.tooltip'));
 
-        this.assignCombolistEventHandler(this._lpruscisNumType, (e: JQuery.Event) => 
-            this._lpruscisNumPrefix.val((e.target as HTMLElement).getAttribute('value') === 'A' ? 'A' : ''));
+        this.assignCombolistEventHandler(this._lpruscisNumType, e => 
+            this._lpruscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : ''));
     
         this._alienWorkAuthDate = this.renderControl(alienWorkAuthDate, this._('alienworkauthdate.tooltip'))
         .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false')
         .unbind('keypress')
-        .keypress(e =>
-            /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode
-        );
+        .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+        .blur((e: JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
     
         this._alienuscisNumPrefix = alienuscisNumPrefix;
     
@@ -320,8 +319,8 @@ class USI9Section1 extends USI9Fields {
     
         this._alienuscisNumType = this.renderControl(alienuscisNumType, this._('uscisnumbertype.tooltip'));
 
-        this.assignCombolistEventHandler(this._alienuscisNumType, (e: JQuery.Event) => 
-            this._alienuscisNumPrefix.val((e.target as HTMLElement).getAttribute('value') === 'A' ? 'A' : ''));
+        this.assignCombolistEventHandler(this._alienuscisNumType, e => 
+            this._alienuscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : ''));
     
         this._admissionNum = this.renderControl(admissionNum, this._('admissionnumber.tooltip'))
         .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode);
@@ -543,22 +542,24 @@ class USI9Section1 extends USI9Fields {
             [this._alienuscisNum, this._admissionNum, this._passportNum, this._countryOfIssuance].forEach(field =>
                 field.toggleClass(this.invalidFieldClass, false));
             
-            this.validateTextField(this._alienuscisNum, this._('citizenship.uscis'), [this.NAFormat, this.uscisNumberFormat], false, errorMessages);
-            this.validateTextField(this._admissionNum, this._('citizenship.admission'), [this.NAFormat, this.admissionNumberFormat], false, errorMessages);
-            this.validateTextField(this._passportNum, this._('citizenship.passport'), [this.NAFormat, this.passportNumberFormat], false, errorMessages);
+            this.validateTextField(this._alienuscisNum, this._('citizenship.uscis'), [this.NAString, this.uscisNumberFormat], false, errorMessages);
+            this.validateTextField(this._admissionNum, this._('citizenship.admission'), [this.NAString, this.admissionNumberFormat], false, errorMessages);
+            this.validateTextField(this._passportNum, this._('citizenship.passport'), [this.NAString, this.passportNumberFormat], false, errorMessages);
             
             if (this.EmptyOrNA(this._alienuscisNum) && this.EmptyOrNA(this._admissionNum) &&
                 this.EmptyOrNA(this._passportNum) && this.EmptyOrNA(this._countryOfIssuance)) {
                 [this._alienuscisNum, this._admissionNum, this._passportNum, this._countryOfIssuance].forEach(field =>
                     field.toggleClass(this.invalidFieldClass, true));
 
-                errorMessages.push(this.paramExistsMsg.replace('${parameter}', this._('citizenship.alienadmissionpassport')));
+                errorMessages.push(this.paramExistsMsg.replace('${prefix}', '')
+                    .replace('${parameter}', this._('citizenship.alienadmissionpassport')));
             } else if (this.EmptyOrNA(this._alienuscisNum) && this.EmptyOrNA(this._admissionNum) &&
                (this.EmptyOrNA(this._passportNum) || this.EmptyOrNA(this._countryOfIssuance))) {
                 [this._passportNum, this._countryOfIssuance].forEach(field =>
                 field.toggleClass(this.invalidFieldClass, true));
 
-                errorMessages.push(this.paramExistsMsg.replace('${parameter}', this._('citizenship.passportcountry')));
+                errorMessages.push(this.paramExistsMsg.replace('${prefix}', '')
+                    .replace('${parameter}', this._('citizenship.passportcountry')));
             }
         } else {
             this._alienWorkAuthDate.removeAttr(this.annotationRequired);

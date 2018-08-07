@@ -13,9 +13,8 @@ var PDFForm = (function () {
         this.nameFormat = /^[A-Za-z ']+$/;
         this.nameInitialFormat = /^[A-Za-z]{1}$/;
         this.stateFormat = /^[A-Z]{2,3}$/;
-        this.NAFormat = /^[NA/]+$/;
+        this.NAFormat = /^[NnAa/]+$/;
         this.NAString = /^N\/A$/;
-        this.DSFormat = /^[DS/]+$/;
         this.zipFormat = /^\d+$/;
         this.postalFormat = /^[A-Za-z0-9]+$/;
         this.zipNumberFormat = /^\d{5}$/;
@@ -191,7 +190,7 @@ var USI9Fields = (function (_super) {
         }
         return false;
     };
-    USI9Fields.prototype.validateTextField = function (f, parameter, regExs, validateIfEmpty, errorMessages, prefix) {
+    USI9Fields.prototype.validateTextField = function (f, parameter, regExp, validateIfEmpty, errorMessages, prefix) {
         if (prefix === void 0) { prefix = ''; }
         var errorFlag = true;
         var length = f.prop('maxLength') ? f.prop('maxLength') : 0;
@@ -206,10 +205,10 @@ var USI9Fields = (function (_super) {
                 .replace('${parameter}', parameter)
                 .replace('${length}', length.toString()));
         }
-        else if ((f && f.val() !== '' || validateIfEmpty) && regExs.length > 0) {
+        else if ((f && f.val() !== '' || validateIfEmpty) && regExp.length > 0) {
             var validFlag = false;
-            for (var i in regExs) {
-                if (f && regExs[i].test(f.val())) {
+            for (var i in regExp) {
+                if (f && regExp[i].test(f.val())) {
                     validFlag = true;
                     break;
                 }
@@ -280,14 +279,12 @@ var USI9Section1 = (function (_super) {
             .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
         this._firstNameHelp = this.renderHelpIcon(firstNameHelp, this._('firstnamehelp.caption'), dialog, this._('firstnamehelp.text'));
         this._middleInitial = this.renderControl(middleInitial, this._('middleinitialhelp.tooltip'))
-            .keypress(function (e) {
-            return _this.nameFormat.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode;
-        });
+            .keypress(function (e) { return _this.nameFormat.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
+            .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); });
         this._middleInitialHelp = this.renderHelpIcon(middleInitialHelp, this._('middleinitialhelp.caption'), dialog, this._('middleinitialhelp.text'));
         this._otherNames = this.renderControl(otherNames, this._('othernameshelp.tooltip'))
-            .keypress(function (e) {
-            return _this.nameFormat.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode;
-        });
+            .keypress(function (e) { return _this.nameFormat.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
+            .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); });
         this._otherNamesHelp = this.renderHelpIcon(otherNamesHelp, this._('othernameshelp.caption'), dialog, this._('othernameshelp.text'));
         this._address = this.renderControl(address, this._('addresshelp.tooltip'));
         this._addressHelp = this.renderHelpIcon(addressHelp, this._('addresshelp.caption'), dialog, this._('addresshelp.text'));
@@ -381,9 +378,8 @@ var USI9Section1 = (function (_super) {
         this._alienWorkAuthDate = this.renderControl(alienWorkAuthDate, this._('alienworkauthdate.tooltip'))
             .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false')
             .unbind('keypress')
-            .keypress(function (e) {
-            return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode;
-        });
+            .keypress(function (e) { return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
+            .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); });
         this._alienuscisNumPrefix = alienuscisNumPrefix;
         this._alienuscisNum = this.renderControl(alienuscisNum, this._('uscisnumber.tooltip'))
             .keypress(function (e) { return _this.numberFormat.test(e.key) || e.key === _this.backSpaceCode; });
@@ -475,22 +471,24 @@ var USI9Section1 = (function (_super) {
             [this._alienuscisNum, this._admissionNum, this._passportNum, this._countryOfIssuance].forEach(function (field) {
                 return field.toggleClass(_this.invalidFieldClass, false);
             });
-            this.validateTextField(this._alienuscisNum, this._('citizenship.uscis'), [this.NAFormat, this.uscisNumberFormat], false, errorMessages);
-            this.validateTextField(this._admissionNum, this._('citizenship.admission'), [this.NAFormat, this.admissionNumberFormat], false, errorMessages);
-            this.validateTextField(this._passportNum, this._('citizenship.passport'), [this.NAFormat, this.passportNumberFormat], false, errorMessages);
+            this.validateTextField(this._alienuscisNum, this._('citizenship.uscis'), [this.NAString, this.uscisNumberFormat], false, errorMessages);
+            this.validateTextField(this._admissionNum, this._('citizenship.admission'), [this.NAString, this.admissionNumberFormat], false, errorMessages);
+            this.validateTextField(this._passportNum, this._('citizenship.passport'), [this.NAString, this.passportNumberFormat], false, errorMessages);
             if (this.EmptyOrNA(this._alienuscisNum) && this.EmptyOrNA(this._admissionNum) &&
                 this.EmptyOrNA(this._passportNum) && this.EmptyOrNA(this._countryOfIssuance)) {
                 [this._alienuscisNum, this._admissionNum, this._passportNum, this._countryOfIssuance].forEach(function (field) {
                     return field.toggleClass(_this.invalidFieldClass, true);
                 });
-                errorMessages.push(this.paramExistsMsg.replace('${parameter}', this._('citizenship.alienadmissionpassport')));
+                errorMessages.push(this.paramExistsMsg.replace('${prefix}', '')
+                    .replace('${parameter}', this._('citizenship.alienadmissionpassport')));
             }
             else if (this.EmptyOrNA(this._alienuscisNum) && this.EmptyOrNA(this._admissionNum) &&
                 (this.EmptyOrNA(this._passportNum) || this.EmptyOrNA(this._countryOfIssuance))) {
                 [this._passportNum, this._countryOfIssuance].forEach(function (field) {
                     return field.toggleClass(_this.invalidFieldClass, true);
                 });
-                errorMessages.push(this.paramExistsMsg.replace('${parameter}', this._('citizenship.passportcountry')));
+                errorMessages.push(this.paramExistsMsg.replace('${prefix}', '')
+                    .replace('${parameter}', this._('citizenship.passportcountry')));
             }
         }
         else {
@@ -713,21 +711,21 @@ var USI9Section2 = (function (_super) {
             }
             if (!this.validateDateRange(this._listADocExpDate, '', []) ||
                 (!this._listADocExpDate.prop(this.freeTextProp) &&
-                    !this.validateTextField(this._listADocExpDate, '', [this.dateFormat, this.NAFormat], true, [])) ||
+                    !this.validateTextField(this._listADocExpDate, '', [this.dateFormat, this.NAString], true, [])) ||
                 (this._listADocExpDate.prop(this.freeTextProp) && this._listADocExpDate.val() === '')) {
                 errorMessages.push(this._('section2.listafirstexpdate'));
                 this._listADocExpDate.toggleClass(this.invalidFieldClass, true);
             }
             if (!this.validateDateRange(this._listADocExpDate2, '', []) ||
                 (!this._listADocExpDate2.prop(this.freeTextProp) &&
-                    !this.validateTextField(this._listADocExpDate2, '', [this.dateFormat, this.NAFormat], true, [])) ||
+                    !this.validateTextField(this._listADocExpDate2, '', [this.dateFormat, this.NAString], true, [])) ||
                 (this._listADocExpDate2.prop(this.freeTextProp) && this._listADocExpDate2.val() === '')) {
                 errorMessages.push(this._('section2.listasecondexpdate'));
                 this._listADocExpDate2.toggleClass(this.invalidFieldClass, true);
             }
             if (!this.validateDateRange(this._listADocExpDate3, '', []) ||
                 (!this._listADocExpDate3.prop(this.freeTextProp) &&
-                    !this.validateTextField(this._listADocExpDate3, '', [this.dateFormat, this.NAFormat], true, [])) ||
+                    !this.validateTextField(this._listADocExpDate3, '', [this.dateFormat, this.NAString], true, [])) ||
                 (this._listADocExpDate3.prop(this.freeTextProp) && this._listADocExpDate3.val() === '')) {
                 errorMessages.push(this._('section2.listathirdexpdate'));
                 this._listADocExpDate3.toggleClass(this.invalidFieldClass, true);
@@ -750,7 +748,7 @@ var USI9Section2 = (function (_super) {
                     errorMessages.push(this._listBDocNumber.prop(this.validationMessageProp));
                     this._listBDocNumber.toggleClass(this.invalidFieldClass, true);
                 }
-                if (!this.validateTextField(this._listBDocExpDate, '', [this.dateFormat, this.NAFormat], true, [])) {
+                if (!this.validateTextField(this._listBDocExpDate, '', [this.dateFormat, this.NAString], true, [])) {
                     errorMessages.push(this._('section2.listbexpdate'));
                     this._listBDocExpDate.toggleClass(this.invalidFieldClass, true);
                 }
@@ -771,7 +769,7 @@ var USI9Section2 = (function (_super) {
                     errorMessages.push(this._listCDocNumber.prop(this.validationMessageProp));
                     this._listCDocNumber.toggleClass(this.invalidFieldClass, true);
                 }
-                if (!this.validateTextField(this._listCDocExpDate, '', [this.dateFormat, this.NAFormat], true, [])) {
+                if (!this.validateTextField(this._listCDocExpDate, '', [this.dateFormat, this.NAString], true, [])) {
                     errorMessages.push(this._('section2.listcexpdate'));
                     this._listCDocExpDate.toggleClass(this.invalidFieldClass, true);
                 }
@@ -872,24 +870,23 @@ var USI9Section2 = (function (_super) {
     USI9Section2.prototype.processListABC = function (ddl, code, self) {
         switch (ddl) {
             case 'ListADocTitle':
-                self.listADocTitle(ddl, code);
+                self.listADocTitle(code);
                 break;
             case 'ListADocTitle2':
-                self.listADocTitle2(ddl, code);
+                self.listADocTitle2(code);
                 break;
             case 'ListADocTitle3':
-                self.listADocTitle3(ddl, code);
+                self.listADocTitle3(code);
                 break;
             case 'ListBDocTitle':
-                self.listBDocTitle(ddl, code);
+                self.listBDocTitle(code);
                 break;
             case 'ListCDocTitle':
-                self.listCDocTitle(ddl, code);
+                self.listCDocTitle(code);
                 break;
         }
     };
     USI9Section2.prototype.getListAContent = function (citizenship) {
-        var spaceSymbol = this.space;
         var usCitizenOrNational = { spaceSymbol: this.blankItem, 0: this.na, 1: this._('uspassport'), 2: this._('uspassportcard') };
         var lpr = {
             spaceSymbol: this.blankItem,
@@ -934,7 +931,6 @@ var USI9Section2 = (function (_super) {
             var ageDate = new Date(ageDifMs);
             isMinorUnderAge18 = Math.abs(ageDate.getUTCFullYear() - 1970) < 18;
         }
-        var spaceSymbol = this.space;
         var listB = {
             spaceSymbol: this.blankItem,
             0: this._('NA'),
@@ -985,7 +981,6 @@ var USI9Section2 = (function (_super) {
         return listB;
     };
     USI9Section2.prototype.getListCContent = function (citizenship) {
-        var spaceSymbol = this.space;
         var listC = {
             spaceSymbol: this.blankItem,
             0: this._('NA'),
@@ -1014,7 +1009,7 @@ var USI9Section2 = (function (_super) {
         $.each(listC, function (i, v) { return listC[i] = decodeURIComponent(v); });
         return listC;
     };
-    USI9Section2.prototype.listADocTitle = function (ddl, code) {
+    USI9Section2.prototype.listADocTitle = function (code) {
         var _this = this;
         var USDS = 'USDS';
         var USCIS = 'USCIS';
@@ -1072,7 +1067,12 @@ var USI9Section2 = (function (_super) {
             this.filterCombolist(this._listADoc2, { 1: this._('temporaryI551stamp'), 2: this._('mrivstamp') }, '1', this, this.processListABC);
             this.filterCombolist(this._listAIssuingAuthority2, { USCIS: this._(USCIS), DOJINS: this._(DOJINS) }, USCIS, this, this.processListABC);
             this._listADocNumber2.attr('readOnly', 'true').val(this.na);
-            this._listADocExpDate2.prop(this.requiredProp, true);
+            this._listADocExpDate2
+                .datepicker('option', 'minDate', new Date())
+                .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
+                .unbind('keypress')
+                .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
+                .prop(this.requiredProp, true).prop(this.freeTextProp, true);
         }
         else if (code === '10') {
             issuingAuthList = { DHS: this._(DHS) };
@@ -1109,7 +1109,12 @@ var USI9Section2 = (function (_super) {
             this.filterCombolist(this._listADoc2, { 3: this._('formI94'), 4: this._('formI94receipt') }, '3', this, this.processListABC);
             this.filterCombolist(this._listAIssuingAuthority2, { USCIS: this._(USCIS), CBP: this._(CBP) }, USCIS, this, this.processListABC);
             this._listADocNumber2.prop(this.requiredProp, true);
-            this._listADocExpDate2.prop(this.requiredProp, true);
+            this._listADocExpDate2
+                .datepicker('option', 'minDate', new Date())
+                .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
+                .unbind('keypress')
+                .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
+                .prop(this.requiredProp, true).prop(this.freeTextProp, true);
             this.filterCombolist(this._listADoc3, { 0: this.na, 1: this._('formI20'), 2: this._('formDS2019') }, '0', this, this.processListABC);
             this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber3.attr('readOnly', 'true').val(this.na);
@@ -1125,7 +1130,12 @@ var USI9Section2 = (function (_super) {
             this.filterCombolist(this._listADoc2, { 3: this._('formI94'), 4: this._('formI94receipt') }, '3', this, this.processListABC);
             this.filterCombolist(this._listAIssuingAuthority2, { USCIS: this._(USCIS), CBP: this._(CBP) }, USCIS, this, this.processListABC);
             this._listADocNumber2.prop(this.requiredProp, true);
-            this._listADocExpDate2.prop(this.requiredProp, true);
+            this._listADocExpDate2
+                .datepicker('option', 'minDate', new Date())
+                .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
+                .unbind('keypress')
+                .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
+                .prop(this.requiredProp, true).prop(this.freeTextProp, true);
         }
         else if (code === '9') {
             issuingAuthList = { RMI: this._(RMI) };
@@ -1136,7 +1146,12 @@ var USI9Section2 = (function (_super) {
             this.filterCombolist(this._listADoc2, { 3: this._('formI94'), 4: this._('formI94receipt') }, '3', this, this.processListABC);
             this.filterCombolist(this._listAIssuingAuthority2, { USCIS: this._(USCIS), CBP: this._(CBP) }, USCIS, this, this.processListABC);
             this._listADocNumber2.prop(this.requiredProp, true);
-            this._listADocExpDate2.prop(this.requiredProp, true);
+            this._listADocExpDate2
+                .datepicker('option', 'minDate', new Date())
+                .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
+                .unbind('keypress')
+                .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
+                .prop(this.requiredProp, true).prop(this.freeTextProp, true);
         }
         else if (code === '11') {
             issuingAuthList = { DHS: this._(DHS) };
@@ -1176,20 +1191,19 @@ var USI9Section2 = (function (_super) {
         this._listADocExpDate.unbind('keypress');
         if (!this._listADocExpDate.prop(this.freeTextProp)) {
             this._listADocExpDate
-                .keypress(function (e) {
-                return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode;
-            });
+                .keypress(function (e) { return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
+                .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); });
         }
         this._listADocNumber.prop(this.validationExpressionProp, fieldValidationExpression);
         this._listADocNumber.prop(this.validationMessageProp, fieldValidationMessage);
-        var spaceSymbol = this.space;
         this.filterCombolist(this._listAIssuingAuthority.prop(this.requiredProp, true), $.extend({ spaceSymbol: this.blankItem }, issuingAuthList), issuingAuth, this, this.processListABC);
         if (['1', '2', '3', '4', '6', '10', '11', '12'].indexOf(code) >= 0) {
             this.filterCombolist(this._listADoc2, { 0: this.na }, '0', this, this.processListABC);
             this.filterCombolist(this._listAIssuingAuthority2, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber2.attr('readOnly', 'true').val(this.na);
             this._listADocExpDate2.attr('readOnly', 'true')
-                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false')
+                .val(this.na);
         }
         if (['1', '2', '3', '4', '5', '6', '8', '9', '10', '11', '12', '15', '16'].indexOf(code) >= 0) {
             this.filterCombolist(this._listADoc3, { 0: this.na }, '0', this, this.processListABC);
@@ -1211,14 +1225,13 @@ var USI9Section2 = (function (_super) {
                 .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
         }
     };
-    USI9Section2.prototype.listADocTitle2 = function (ddl, code) {
+    USI9Section2.prototype.listADocTitle2 = function (code) {
         var _this = this;
         var USDS = 'USDS';
         var USCIS = 'USCIS';
         var DOJINS = 'DOJINS';
         var numberMaxLength = 11;
         var fieldFormat = /^[a-zA-Z0-9]+$/;
-        var spaceSymbol = this.space;
         if (code === '1') {
             this.filterCombolist(this._listAIssuingAuthority2, { spaceSymbol: this.blankItem, USCIS: this._(USCIS), DOJINS: this._(DOJINS) }, USCIS, this, this.processListABC);
         }
@@ -1232,20 +1245,13 @@ var USI9Section2 = (function (_super) {
             .prop('maxLength', numberMaxLength)
             .prop(this.requiredProp, true)
             .keypress(function (e) { return fieldFormat.test(e.key) || e.key === _this.backSpaceCode; });
-        this._listADocExpDate2
-            .unbind('keypress')
-            .datepicker('option', 'minDate', new Date())
-            .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
-            .prop(this.requiredProp, true).prop(this.freeTextProp, false);
     };
-    USI9Section2.prototype.listADocTitle3 = function (ddl, code) {
-        var _this = this;
+    USI9Section2.prototype.listADocTitle3 = function (code) {
         var ICE = 'ICE';
         var DOJINS = 'DOJINS';
         var USDS = 'USDS';
         this._listADocNumber3.prop(this.requiredProp, true);
         this._listADocExpDate3.prop(this.requiredProp, true);
-        var spaceSymbol = this.space;
         if (code === '0') {
             this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber3.attr('readOnly', 'true').val(this.na);
@@ -1255,24 +1261,19 @@ var USI9Section2 = (function (_super) {
         else if (code === '1') {
             this.filterCombolist(this._listAIssuingAuthority3, { spaceSymbol: this.blankItem, ICE: this._(ICE), DOJINS: this._(DOJINS) }, ICE, this, this.processListABC);
             this._listADocNumber3.removeAttr('readOnly').val('');
-            this._listADocExpDate3.removeAttr('readOnly')
-                .unbind('keypress')
-                .keypress(function (e) {
-                return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode;
-            })
-                .val('').datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false');
+            this._listADocExpDate3.removeAttr('readOnly').val('')
+                .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false')
+                .prop(this.requiredProp, true).prop(this.freeTextProp, false);
         }
         else if (code === '2') {
             this.filterCombolist(this._listAIssuingAuthority3, { spaceSymbol: this.blankItem, USDS: this._(USDS) }, USDS, this, this.processListABC);
             this._listADocNumber3.removeAttr('readOnly').val('');
-            this._listADocExpDate3.removeAttr('readOnly')
-                .unbind('keypress')
-                .datepicker('option', 'minDate', new Date())
-                .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
+            this._listADocExpDate3.removeAttr('readOnly').val('')
+                .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false')
                 .prop(this.requiredProp, true).prop(this.freeTextProp, false);
         }
     };
-    USI9Section2.prototype.listBDocTitle = function (ddl, code) {
+    USI9Section2.prototype.listBDocTitle = function (code) {
         var _this = this;
         var USCG = 'USCG';
         var numberMaxLength = 15;
@@ -1281,10 +1282,7 @@ var USI9Section2 = (function (_super) {
         var fieldValidationMessage = null;
         var issuingAuthList;
         var issuingAuth = null;
-        var spaceSymbol = this.space;
-        this._listBDocNumber
-            .prop('maxLength', '100')
-            .unbind('keypress');
+        this._listBDocNumber.prop('maxLength', '100').unbind('keypress');
         if (code !== '0' && code.trim() !== '') {
             this.clearListA();
         }
@@ -1294,11 +1292,10 @@ var USI9Section2 = (function (_super) {
         if (['19', '20'].indexOf(code) < 0) {
             this._listBDocNumber.removeAttr('readOnly').val('');
             this._listBDocExpDate.removeAttr('readOnly')
+                .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false').val('')
                 .unbind('keypress')
-                .keypress(function (e) {
-                return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode;
-            })
-                .val('').datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false');
+                .keypress(function (e) { return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
+                .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); });
         }
         if (['1', '2', '21', '22'].indexOf(code) >= 0) {
             issuingAuthList = JSON.parse(this._('usstates'));
@@ -1307,9 +1304,8 @@ var USI9Section2 = (function (_super) {
             this._listBDocNumber
                 .prop('maxLength', numberMaxLength)
                 .unbind('keypress')
-                .keypress(function (e) {
-                return fieldFormat.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode;
-            });
+                .keypress(function (e) { return fieldFormat.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
+                .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); });
             fieldValidationExpression = this.driverLicenseNumberFormat;
             fieldValidationMessage = this._('section2.listbnumberformat');
         }
@@ -1340,7 +1336,7 @@ var USI9Section2 = (function (_super) {
         this._listBDocNumber.prop(this.validationExpressionProp, fieldValidationExpression);
         this._listBDocNumber.prop(this.validationMessageProp, fieldValidationMessage);
     };
-    USI9Section2.prototype.listCDocTitle = function (ddl, code) {
+    USI9Section2.prototype.listCDocTitle = function (code) {
         var _this = this;
         var SSA = 'SSA';
         var USDHHS = 'USDHHS';
@@ -1354,7 +1350,6 @@ var USI9Section2 = (function (_super) {
         var fieldValidationMessage = null;
         var issuingAuthList;
         var issuingAuth;
-        var spaceSymbol = this.space;
         if (code !== '0' && code.trim() !== '') {
             this.clearListA();
         }
@@ -1363,11 +1358,11 @@ var USI9Section2 = (function (_super) {
         this._listCDocExpDate.prop(this.requiredProp, true);
         this._listCIssuingAuthority.attr('readOnly', 'true');
         this._listCDocExpDate.removeAttr('readOnly')
+            .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false')
             .unbind('keypress')
-            .keypress(function (e) {
-            return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode;
-        })
-            .val('').datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false');
+            .keypress(function (e) { return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
+            .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
+            .val('');
         this._listCDoc.prop('ssncard', false);
         if (code === '1') {
             issuingAuthList = { SSA: this._(SSA), USDHHS: this._(USDHHS), SSD: this._(SSD), DHEW: this._(DHEW) };
@@ -1589,26 +1584,22 @@ var USI9Section3 = (function (_super) {
         this.processLPR(false);
         this.processAlien(false);
         this._newlastName = this.renderControl(lastName, this._('newlastname.tooltip'))
-            .keypress(function (e) {
-            return _this.nameFormat.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode;
-        });
+            .keypress(function (e) { return _this.nameFormat.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
+            .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); });
         this._newlastNameHelp = this.renderHelpIcon(lastNameHelp, this._('newlastnamehelp.caption'), dialog, this._('newlastnamehelp.text'));
         this._newfirstName = this.renderControl(firstName, this._('newfirstname.tooltip'))
-            .keypress(function (e) {
-            return _this.nameFormat.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode;
-        });
+            .keypress(function (e) { return _this.nameFormat.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
+            .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); });
         this._newfirstNameHelp = this.renderHelpIcon(firstNameHelp, this._('newfirstnamehelp.caption'), dialog, this._('newfirstnamehelp.text'));
         this._newmiddleInitial = this.renderControl(middleInitial, this._('newmiddleinitial.tooltip'))
-            .keypress(function (e) {
-            return _this.nameFormat.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode;
-        });
+            .keypress(function (e) { return _this.nameFormat.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
+            .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); });
         this._newmiddleInitialHelp = this.renderHelpIcon(middleInitialHelp, this._('newmiddleinitialhelp.caption'), dialog, this._('newmiddleinitialhelp.text'));
         this._rehireDate = this.renderControl(rehireDate, this._('rehiredate.tooltip'))
             .datepicker().attr('autocomplete', 'false')
             .unbind('keypress')
-            .keypress(function (e) {
-            return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode;
-        });
+            .keypress(function (e) { return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
+            .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); });
         this._rehireDateHelp = this.renderHelpIcon(rehireDateHelp, this._('rehiredatehelp.caption'), dialog, this._('rehiredatehelp.text'), 500);
         this._docTitleSec3 = this.renderControl(docTitleSec3, this._('doctitlesec3.tooltip'));
         this.filterCombolist(this._docTitleSec3, {
@@ -1651,9 +1642,8 @@ var USI9Section3 = (function (_super) {
         this._expDateSec3 = this.renderControl(expDateSec3, this._('expdatesec3.tooltip'))
             .datepicker({ minDate: new Date() }).attr('autocomplete', 'false')
             .unbind('keypress')
-            .keypress(function (e) {
-            return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode;
-        });
+            .keypress(function (e) { return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
+            .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); });
         this._expDateSec3Help = this.renderHelpIcon(expDateSec3Help, this._('expdatesec3help.caption'), dialog, this._('expdatesec3help.text'), 500);
         this._sgnEmployerSec3 = this.renderControl(sgnEmployerSec3, this._('sgnemployersec3.tooltip'));
         this._sgnEmployerSec3Help = this.renderHelpIcon(sgnEmployerSec3Help, this._('sgnemployersec3help.caption'), dialog, this._('sgnemployersec3help.text'), 500);
@@ -1787,6 +1777,10 @@ var USI9 = (function (_super) {
 }(USI9Section3));
 $(document).on('textlayerrendered', function (e) {
     renderedPages[e.detail.pageNumber - 1] = true;
+    if (e.detail.pageNumber == 1 && !renderedPages[1]) {
+        PDFViewerApplication.eventBus.dispatch('nextpage');
+        return;
+    }
     if (e.detail.pageNumber >= 2 && !renderedPages[0]) {
         PDFViewerApplication.eventBus.dispatch('firstpage');
         return;

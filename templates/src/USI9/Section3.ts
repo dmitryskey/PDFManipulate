@@ -182,8 +182,8 @@ class USI9Section3 extends USI9Section2 {
         this.processAlien(false);
 
         this._newlastName = this.renderControl(lastName, this._('newlastname.tooltip'))
-        .keypress(e => 
-            this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
+        .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+        .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
 
         this._newlastNameHelp = this.renderHelpIcon(
             lastNameHelp,
@@ -193,8 +193,8 @@ class USI9Section3 extends USI9Section2 {
         );
 
         this._newfirstName = this.renderControl(firstName, this._('newfirstname.tooltip'))
-        .keypress(e => 
-            this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
+        .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+        .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
 
         this._newfirstNameHelp = this.renderHelpIcon(
             firstNameHelp,
@@ -204,8 +204,8 @@ class USI9Section3 extends USI9Section2 {
         );
 
         this._newmiddleInitial = this.renderControl(middleInitial, this._('newmiddleinitial.tooltip'))
-        .keypress(e =>
-            this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
+        .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+        .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
 
         this._newmiddleInitialHelp = this.renderHelpIcon(
             middleInitialHelp,
@@ -217,8 +217,8 @@ class USI9Section3 extends USI9Section2 {
         this._rehireDate = this.renderControl(rehireDate, this._('rehiredate.tooltip') )
         .datepicker().attr('autocomplete', 'false')
         .unbind('keypress')
-        .keypress(e =>
-            /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
+        .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+        .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
 
         this._rehireDateHelp = this.renderHelpIcon(
             rehireDateHelp,
@@ -286,8 +286,8 @@ class USI9Section3 extends USI9Section2 {
         this._expDateSec3 = this.renderControl(expDateSec3, this._('expdatesec3.tooltip'))
         .datepicker({ minDate: new Date() }).attr('autocomplete', 'false')
         .unbind('keypress')
-        .keypress(e =>
-            /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
+        .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+        .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
 
         this._expDateSec3Help = this.renderHelpIcon(
             expDateSec3Help,

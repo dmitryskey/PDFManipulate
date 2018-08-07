@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@types/jquery": "^3.2.12",
-    "@types/jqueryui": "^1.11.36",
+    "@types/jqueryui": "^1.12.3",
     "asposepdfcloud": "^1.0.2",
     "assert": "^1.4.1",
     "babel-cli": "^6.26.0",
@@ -23,20 +23,22 @@
     "eslint-plugin-jquery": "^1.2.1",
     "express": "^4.15.4",
     "fs-extra": "^4.0.1",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.0",
     "gulp-typescript": "^3.2.2",
     "jquery": "^3.2.1",
     "jwt-simple": "^0.5.1",
-    "log4js": "^2.3.8",
+    "log4js": "^3.0.4",
     "mariasql": "^0.2.6",
     "md5": "^2.2.1",
     "moment": "^2.18.1",
     "net": "^1.0.2",
     "path": "^0.12.7",
-    "sqlite3": "^3.1.9",
     "tsify": "^3.0.1",
     "typescript": "^2.4.2",
     "uuid": "^3.1.0",
     "vinyl-source-stream": "^1.1.0"
+  },
+  "dependencies": {
+    "sqlite3": "^4.0.2"
   }
 }
