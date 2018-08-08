@@ -4,6 +4,8 @@
 declare var PDFViewerApplication: any;
 
 let renderedPages = [false, false, false];
+let form : USI9 = null;
+let pageToLoad : string;
 
 class USI9 extends USI9Section3 {
     constructor() {
@@ -276,6 +278,7 @@ $(document).on('textlayerrendered', (e: any) => {
 
     if (e.detail.pageNumber == 1 && !renderedPages[1]) {
         PDFViewerApplication.eventBus.dispatch('nextpage');
+        pageToLoad = 'firstpage'
         return;
     }
 
@@ -285,8 +288,12 @@ $(document).on('textlayerrendered', (e: any) => {
         return;
     }
 
-    if (renderedPages[0] && renderedPages[1]) {
-        var form = new USI9();
+    if (pageToLoad) {
+        PDFViewerApplication.eventBus.dispatch(pageToLoad);
+    }
+
+    if (renderedPages[0] && renderedPages[1] && form == null) {
+        form = new USI9();
         form.renderSections();
     }
 });

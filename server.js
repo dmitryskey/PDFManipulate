@@ -41,7 +41,7 @@ app.post('/BeginSession', (req, res) => {
 
     req.on('end', () => {
         let data = null;
-        
+
         try {
             data = JSON.parse(body);
         }
@@ -56,7 +56,7 @@ app.post('/BeginSession', (req, res) => {
         getParameter('mariadb', conn => {
             if (conn) {
                 var c = new mariadb(JSON.parse(conn));
-        
+
                 // WordPress password encryption schema
                 c.query('SELECT user_pass FROM wp_users WHERE user_login = :login', { login: data.login }, (err, rows) => {
                     if (err) {
@@ -64,17 +64,17 @@ app.post('/BeginSession', (req, res) => {
                         res.end(JSON.stringify({ token: '' }));
                     } else if (rows && rows.length > 0) {
                         let row = rows[0];
-            
+
                         const itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-                        
+
                         let hash = Buffer.from(md5(row.user_pass.substr(4, 8) + data.password), 'hex');
-                    
+
                         for (let i = 0; i < 1 << itoa64.indexOf(row.user_pass[3]); i++) {
                             hash = Buffer.from(md5(Buffer.concat([hash, Buffer.from(data.password, 'utf8')])), 'hex');
                         }
-                    
+
                         let output = '';
-                    
+
                         let i = 0;
                         let count = 16;
                         do {
@@ -83,21 +83,21 @@ app.post('/BeginSession', (req, res) => {
                             if (i < count) {
                                 value |= hash[i] << 8;
                             }
-                    
+
                             output += itoa64[(value >> 6) & 0x3f];
                             if (i++ >= count) {
                                 break;
                             }
-                    
+
                             if (i < count) {
                                 value |= hash[i] << 16;
                             }
-                    
+
                             output += itoa64[(value >> 12) & 0x3f];
                             if (i++ >= count) {
                                 break;
                             }
-                    
+
                             output += itoa64[(value >> 18) & 0x3f];
                         } while (i < count);
 
@@ -110,7 +110,7 @@ app.post('/BeginSession', (req, res) => {
                                                 iss: data.login,
                                                 exp: tokenExpiration
                                             }, jwtTokenSecret, tokenAlg);
-        
+
                                             res.end(JSON.stringify({
                                                 token: token
                                             }));
@@ -170,11 +170,11 @@ app.post('/RichTextEditor', (req, res) => {
                 getParameter('tokenAlg', tokenAlg => {
                     if (tokenAlg) {
                         let decoded = jwt.decode(data.token, jwtTokenSecret, false, tokenAlg);
-        
+
                         if (decoded && moment() <= decoded.exp) {
                             let uuid = uuidV4();
                             let url = '/editor.html?fileid=' + uuid + '&locale=' + data.locale;
-        
+
                             let decodedData = base64.decode(data.text);
                             fs.writeFile('data/' + uuid, decodedData, err => {
                                 if (err) {
@@ -183,14 +183,14 @@ app.post('/RichTextEditor', (req, res) => {
                                 } else {
                                     let host = server.address().address;
                                     let port = server.address().port;
-                        
+
                                     editorUrl = 'http://' + (host !== '::' ? host : '127.0.0.1') + ':' + port + url;
 
                                     res.end(JSON.stringify({
                                         token: data.token,
                                         editorUrl: editorUrl 
                                     }));
-                                }       
+                                }
                             });
                         } else {
                             logger.debug(sessionIsExpired, data.token);
@@ -221,7 +221,7 @@ app.post('/PDFEditor', (req, res) => {
 
     req.on('end', () => {
         let data = null;
-        
+
         try {
             data = JSON.parse(body);
         }
@@ -240,11 +240,11 @@ app.post('/PDFEditor', (req, res) => {
                         let decoded = jwt.decode(data.token, jwtTokenSecret, false, tokenAlg);
                         let host = server.address().address;
                         let port = server.address().port;
-                
+
                         if (decoded && moment() <= decoded.exp) {
                             let uuid = uuidV4();
                             let url = '/pdf.js/web/viewer.html?file=/data/' + uuid + '#locale=' + data.locale;
-                
+
                             if (data.type === 'application/pdf' && ['view', 'edit', 'design'].includes(data.mode) && data.content) {
                                 fs.writeFile('data/' + uuid, base64.decode(data.content), 'binary', err => {
                                     if (err) {
@@ -252,14 +252,14 @@ app.post('/PDFEditor', (req, res) => {
                                         res.end(JSON.stringify({ token: data.token, editorUrl: '' }));
                                     } else {
                                         editorUrl = 'http://' + (host !== '::' ? host : '127.0.0.1') + ':' + port + url + '&mode=' + data.mode;
-                
+
                                         if (data.data) {
                                             let fields = {
                                                 'file': '/data/' + uuid,
                                                 'operation': data.mode === 'view' ? 'f' : '',
                                                 'entries': []
                                             };
-                
+
                                             for (let i in data.data) {
                                                 fields.entries.push({
                                                     'name': data.data[i].name,
@@ -269,7 +269,7 @@ app.post('/PDFEditor', (req, res) => {
                                             }
 
                                             data.fields = fields;
-                
+
                                             generateForm(data, { end: body => {
                                                 try {
                                                     data = JSON.parse(body);
@@ -313,7 +313,7 @@ app.post('/PDFEditor', (req, res) => {
                                                 'operation': data.mode === 'view' ? 'f' : '',
                                                 'entries': []
                                             };
-                
+
                                             for (let i in data.data) {
                                                 fields.entries.push({
                                                     'name': data.data[i].name,
@@ -323,7 +323,7 @@ app.post('/PDFEditor', (req, res) => {
                                             }
 
                                             data.fields = fields;
-                
+
                                             generateForm(data, { end: body => {
                                                 try {
                                                     data = JSON.parse(body);
@@ -363,12 +363,12 @@ app.post('/PDFEditor', (req, res) => {
                                                 getParameter('AsposeApiKey', apiKey => {
                                                     if (apiKey) {
                                                         let config = {'appSid': appSid, 'apiKey': apiKey, 'debug': true};
-                                
+
                                                         // Instantiate Aspose Storage API SDK
                                                         let sApi = new storageApi(config);
                                                         // Instantiate Aspose.Pdf API SDK
                                                         let pApi = new pdfApi(config);
-                                
+
                                                         // Upload file to aspose cloud storage
                                                         let fileName = uuid + '.html';
                                                         sApi.PutCreate(fileName, null, null, 'data/' + uuid + '.html', responseMessage => {
@@ -387,7 +387,7 @@ app.post('/PDFEditor', (req, res) => {
                                                                                     } else {
                                                                                         editorUrl = 'http://' + (host !== '::' ? host : '127.0.0.1') + ':' + port + url + '&mode=' + data.mode;
                                                                                     }
-                                            
+
                                                                                     fileName = uuid + '.html';
                                                                                     sApi.DeleteFile(fileName, null, null, responseMessage => {
                                                                                         if (responseMessage.status === 'OK') {
@@ -484,7 +484,7 @@ app.post('/UpdateForm', (req, res) => {
                 getParameter('tokenAlg', tokenAlg => {
                     if (tokenAlg) {
                         let decoded = jwt.decode(data.token, jwtTokenSecret, false, tokenAlg);
-                
+
                         if (decoded && moment() <= decoded.exp) {
                             generateForm(data, res);
                         } else {
@@ -516,7 +516,7 @@ app.post('/GetTemplateList', (req, res) => {
 
     req.on('end', () => {
         let data = null;
-        
+
         try {
             data = JSON.parse(body);
         }
@@ -530,17 +530,17 @@ app.post('/GetTemplateList', (req, res) => {
                 getParameter('tokenAlg', tokenAlg => {
                     if (tokenAlg) {
                         let decoded = jwt.decode(data.token, jwtTokenSecret, false, tokenAlg);
-            
+
                         if (moment() <= decoded.exp) {
                             let forms = [];
-            
+
                             forms.push({
                                 'id': 'US I9',
                                 'name': 'US I-9',
                                 'group': 'US Federal Forms',
                                 'description': 'US I-9 Form'
                             });
-            
+
                             res.end(JSON.stringify({
                                 token: data.token,
                                 forms: forms
@@ -580,14 +580,14 @@ function getParameter(name, callback) {
 
 function generateForm(data, res){
     let body = '';
-    
+
     let socket = new net.Socket();
 
     socket.connect(iTextSocket, '127.0.0.1', () => {
         socket.write(JSON.stringify(data.fields));
         socket.write('\n');
     });
-    
+
     socket.on('data', data => {
         body += data.toString();
 
@@ -596,14 +596,14 @@ function generateForm(data, res){
             socket.end();
         }
     });
-            
+
     socket.on('close', () => {
         console.log('Connection closed');
     });
 
     socket.on('error', err => {
         logger.error(err);
-    });    
+    });
 }
 
 let server = app.listen(8305, () => {
@@ -626,7 +626,7 @@ let server = app.listen(8305, () => {
     app.use('/jquery/jquery-ui.js', express.static(path.join(__dirname, 'jquery/jquery-ui-1.12.1.min.js')));
 
     let socket = new net.Socket();
-    
+
     socket.connect(iTextSocket, '127.0.0.1', () => {
         socket.end();
     });

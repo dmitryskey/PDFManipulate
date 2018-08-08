@@ -831,7 +831,8 @@ class USI9Section2 extends USI9Translator {
             13: this._('I766receipt'),
             14: this._('foreinpassportnonimmigrantreceipt'),
             15: this._('FSMpassportreceipt'),
-            16: this._('RMIpassportreceipt')
+            16: this._('RMIpassportreceipt'),
+            17: this._('expiredeadI766')
         };
 
         switch (citizenship)
@@ -1051,20 +1052,45 @@ class USI9Section2 extends USI9Translator {
             fieldValidationMessage = this._('section2.cardformat');
 
             this._listADocExpDate.prop(this.freeTextProp, true);
-        } else if (code === '6') {
+        } else if (['6', '17'].indexOf(code) >= 0) {
             // Alien authorized to work
             // 6 - Employment Auth. Document (Form I-766)
+            // 17 - Expired Employment Auth. Document (Form I-766)
             issuingAuthList = { USCIS: this._(USCIS) };
             issuingAuth = USCIS;
             numberMaxLength = 13;
             fieldValidationExpression = this.cardNumberFormat;
             fieldValidationMessage = this._('section2.cardformat');
         
-            // I-766 can be expired in conjuction with I-797C (up to 180 days);
-            this._listADocExpDate.datepicker('option', 'minDate', 
-                new Date(Date.now() - 180 * 24 * 3600 * 1000)).attr('autocomplete', 'false');
+            if (code === '17') {
+                // I-766 can be expired in conjuction with I-797C (up to 180 days);
+                this._listADocExpDate
+                    .datepicker('option', 'minDate', new Date(Date.now() - 180 * 24 * 3600 * 1000))
+                    .datepicker('option', 'maxDate', new Date())
+                    .attr('autocomplete', 'false');
 
-            this._listADocExpDate.prop(this.freeTextProp, true);
+                this.filterCombolist(
+                    this._listADoc2,
+                    { 5: this._('formI797C') },
+                    '5',
+                    this,
+                    this.processListABC);
+                
+                this.filterCombolist(
+                    this._listAIssuingAuthority2,
+                    { USCIS:this._(USCIS) },
+                    USCIS,
+                    this,
+                    this.processListABC);
+        
+                this._listADocNumber2.prop(this.requiredProp, true);
+                this._listADocExpDate2
+                    .datepicker('option', 'minDate', new Date())
+                    .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
+                    .prop(this.requiredProp, true);
+            } else {
+                this._listADocExpDate.prop(this.freeTextProp, true);
+            }
         } else if (['7', '14'].indexOf(code) >= 0) {
             // 7 - Foreign Passport, work-authorized nonimmigrant
             // 14 - Receipt: Replacement Foreign Passport, work-authorized nonimmigrant
@@ -1231,7 +1257,7 @@ class USI9Section2 extends USI9Translator {
             .val(this.na);
         }
         
-        if (['1', '2', '3', '4', '5', '6', '8', '9', '10', '11', '12', '15', '16'].indexOf(code) >= 0) {
+        if (['1', '2', '3', '4', '5', '6', '8', '9', '10', '11', '12', '15', '16', '17'].indexOf(code) >= 0) {
             this.filterCombolist(this._listADoc3, { 0: this.na }, '0', this, this.processListABC);
             this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber3.attr('readOnly', 'true').val(this.na);
