@@ -1072,6 +1072,7 @@ class USI9Section2 extends USI9Translator {
             fieldValidationMessage = this._('section2.cardformat');
         
             this._listADocExpDate
+                .datepicker('option', 'minDate', null)
                 .datepicker('option', 'maxDate', new Date())
                 .attr('autocomplete', 'false');
 
@@ -1132,7 +1133,7 @@ class USI9Section2 extends USI9Translator {
                 this,
                 this.processListABC);
         
-            this.filterCombolist(this._listAIssuingAuthority3, {0:this.na}, '0', this, this.processListABC);
+            this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber3.attr('readOnly', 'true').val(this.na);
             this._listADocExpDate3.attr('readOnly', 'true')
             .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);

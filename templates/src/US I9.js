@@ -1092,28 +1092,31 @@ var USI9Section2 = (function (_super) {
             fieldValidationMessage = this._('section2.cardformat');
             this._listADocExpDate.prop(this.freeTextProp, true);
         }
-        else if (['6', '17'].indexOf(code) >= 0) {
+        else if (code === '6') {
             issuingAuthList = { USCIS: this._(USCIS) };
             issuingAuth = USCIS;
             numberMaxLength = 13;
             fieldValidationExpression = this.cardNumberFormat;
             fieldValidationMessage = this._('section2.cardformat');
-            if (code === '17') {
-                this._listADocExpDate
-                    .datepicker('option', 'minDate', new Date(Date.now() - 180 * 24 * 3600 * 1000))
-                    .datepicker('option', 'maxDate', new Date())
-                    .attr('autocomplete', 'false');
-                this.filterCombolist(this._listADoc2, { 5: this._('formI797C'), 6: this._('formI20') }, '5', this, this.processListABC);
-                this.filterCombolist(this._listAIssuingAuthority2, { USCIS: this._(USCIS) }, USCIS, this, this.processListABC);
-                this._listADocNumber2.prop(this.requiredProp, true);
-                this._listADocExpDate2
-                    .datepicker('option', 'minDate', new Date())
-                    .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
-                    .prop(this.requiredProp, true);
-            }
-            else {
-                this._listADocExpDate.prop(this.freeTextProp, true);
-            }
+            this._listADocExpDate.prop(this.freeTextProp, true);
+        }
+        else if (code === '17') {
+            issuingAuthList = { USCIS: this._(USCIS) };
+            issuingAuth = USCIS;
+            numberMaxLength = 13;
+            fieldValidationExpression = this.cardNumberFormat;
+            fieldValidationMessage = this._('section2.cardformat');
+            this._listADocExpDate
+                .datepicker('option', 'minDate', null)
+                .datepicker('option', 'maxDate', new Date())
+                .attr('autocomplete', 'false');
+            this.filterCombolist(this._listADoc2, { 5: this._('formI797C'), 6: this._('formI20') }, '5', this, this.processListABC);
+            this.filterCombolist(this._listAIssuingAuthority2, { USCIS: this._(USCIS) }, USCIS, this, this.processListABC);
+            this._listADocNumber2.prop(this.requiredProp, true);
+            this._listADocExpDate2
+                .datepicker('option', 'minDate', new Date())
+                .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
+                .prop(this.requiredProp, true);
         }
         else if (['7', '14'].indexOf(code) >= 0) {
             issuingAuthList = JSON.parse(this._('countries'));
