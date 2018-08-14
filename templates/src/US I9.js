@@ -1103,7 +1103,7 @@ var USI9Section2 = (function (_super) {
                     .datepicker('option', 'minDate', new Date(Date.now() - 180 * 24 * 3600 * 1000))
                     .datepicker('option', 'maxDate', new Date())
                     .attr('autocomplete', 'false');
-                this.filterCombolist(this._listADoc2, { 5: this._('formI797C') }, '5', this, this.processListABC);
+                this.filterCombolist(this._listADoc2, { 5: this._('formI797C'), 6: this._('formI20') }, '5', this, this.processListABC);
                 this.filterCombolist(this._listAIssuingAuthority2, { USCIS: this._(USCIS) }, USCIS, this, this.processListABC);
                 this._listADocNumber2.prop(this.requiredProp, true);
                 this._listADocExpDate2
@@ -1245,6 +1245,7 @@ var USI9Section2 = (function (_super) {
         var USDS = 'USDS';
         var USCIS = 'USCIS';
         var DOJINS = 'DOJINS';
+        var ICE = 'ICE';
         var numberMaxLength = 11;
         var fieldFormat = /^[a-zA-Z0-9]+$/;
         if (code === '1') {
@@ -1255,6 +1256,12 @@ var USI9Section2 = (function (_super) {
         }
         else if (code === '3') {
             fieldFormat = /^\d+$/;
+        }
+        else if (code === '5') {
+            this.filterCombolist(this._listAIssuingAuthority2, { USCIS: this._(USCIS) }, USCIS, this, this.processListABC);
+        }
+        else if (code === '6') {
+            this.filterCombolist(this._listAIssuingAuthority2, { spaceSymbol: this.blankItem, ICE: this._(ICE), DOJINS: this._(DOJINS) }, ICE, this, this.processListABC);
         }
         this._listADocNumber2
             .prop('maxLength', numberMaxLength)

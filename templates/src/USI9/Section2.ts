@@ -1052,9 +1052,18 @@ class USI9Section2 extends USI9Translator {
             fieldValidationMessage = this._('section2.cardformat');
 
             this._listADocExpDate.prop(this.freeTextProp, true);
-        } else if (['6', '17'].indexOf(code) >= 0) {
+        } else if (code === '6') {
             // Alien authorized to work
             // 6 - Employment Auth. Document (Form I-766)
+            issuingAuthList = { USCIS: this._(USCIS) };
+            issuingAuth = USCIS;
+            numberMaxLength = 13;
+            fieldValidationExpression = this.cardNumberFormat;
+            fieldValidationMessage = this._('section2.cardformat');
+        
+            this._listADocExpDate.prop(this.freeTextProp, true);
+        } else if (code === '17') {
+            // Alien authorized to work
             // 17 - Expired Employment Auth. Document (Form I-766)
             issuingAuthList = { USCIS: this._(USCIS) };
             issuingAuth = USCIS;
@@ -1062,35 +1071,29 @@ class USI9Section2 extends USI9Translator {
             fieldValidationExpression = this.cardNumberFormat;
             fieldValidationMessage = this._('section2.cardformat');
         
-            if (code === '17') {
-                // I-766 can be expired in conjuction with I-797C (up to 180 days);
-                this._listADocExpDate
-                    .datepicker('option', 'minDate', new Date(Date.now() - 180 * 24 * 3600 * 1000))
-                    .datepicker('option', 'maxDate', new Date())
-                    .attr('autocomplete', 'false');
+            this._listADocExpDate
+                .datepicker('option', 'maxDate', new Date())
+                .attr('autocomplete', 'false');
 
-                this.filterCombolist(
-                    this._listADoc2,
-                    { 5: this._('formI797C') },
-                    '5',
-                    this,
-                    this.processListABC);
+            this.filterCombolist(
+                this._listADoc2,
+                { 5: this._('formI797C'), 6: this._('formI20') },
+                '5',
+                this,
+                this.processListABC);
                 
-                this.filterCombolist(
-                    this._listAIssuingAuthority2,
-                    { USCIS:this._(USCIS) },
-                    USCIS,
-                    this,
-                    this.processListABC);
-        
-                this._listADocNumber2.prop(this.requiredProp, true);
-                this._listADocExpDate2
-                    .datepicker('option', 'minDate', new Date())
-                    .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
-                    .prop(this.requiredProp, true);
-            } else {
-                this._listADocExpDate.prop(this.freeTextProp, true);
-            }
+            this.filterCombolist(
+                this._listAIssuingAuthority2,
+                { USCIS: this._(USCIS) },
+                USCIS,
+                this,
+                this.processListABC);
+
+            this._listADocNumber2.prop(this.requiredProp, true);
+            this._listADocExpDate2
+            .datepicker('option', 'minDate', new Date())
+            .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
+            .prop(this.requiredProp, true);
         } else if (['7', '14'].indexOf(code) >= 0) {
             // 7 - Foreign Passport, work-authorized nonimmigrant
             // 14 - Receipt: Replacement Foreign Passport, work-authorized nonimmigrant
@@ -1286,6 +1289,7 @@ class USI9Section2 extends USI9Translator {
         let USDS = 'USDS';
         let USCIS = 'USCIS';
         let DOJINS = 'DOJINS';
+        let ICE = 'ICE';
 
         let numberMaxLength = 11;
         let fieldFormat = /^[a-zA-Z0-9]+$/;
@@ -1309,6 +1313,22 @@ class USI9Section2 extends USI9Translator {
         } else if (code === '3') {
             // 3 - Form I-94/I-94A
             fieldFormat = /^\d+$/;
+        } else if (code === '5') {
+            // 5 - Form I-797C
+            this.filterCombolist(
+                this._listAIssuingAuthority2,
+                { USCIS: this._(USCIS) },
+                USCIS,
+                this,
+                this.processListABC);
+        } else if (code === '6') {
+            // 6 - Form I-20
+            this.filterCombolist(
+                this._listAIssuingAuthority2,
+                { spaceSymbol: this.blankItem, ICE: this._(ICE), DOJINS: this._(DOJINS) },
+                ICE,
+                this,
+                this.processListABC);
         }
 
         // 4 - Receipt: Replacement Form I-94/I-94A
