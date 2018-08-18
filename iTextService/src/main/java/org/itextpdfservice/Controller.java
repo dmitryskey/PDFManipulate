@@ -14,14 +14,29 @@ public class Controller {
         return timeStamper.format(new java.util.Date());
     }
 
-    public static String update(String fields, PrintWriter writer) {
+    public static String processRequest(String fields, PrintWriter writer) {
         try {
             fields = URLDecoder.decode(fields, "UTF-8").replace("=", "");
 
             Reader jsonReader = new StringReader(fields);
             Gson gson = new GsonBuilder().create();
+
             Fields f = gson.fromJson(jsonReader, Fields.class);
 
+            return flattenDocument(f, writer);
+        }
+        catch (Exception e) {
+            if (writer != null) {
+                writer.println("[ERROR]	[" + getCurrentTimeStamp() + "]	" + e);
+                writer.flush();
+            }
+        }
+
+        return "";
+    }
+
+    private static String flattenDocument(Fields f, PrintWriter writer) {
+        try {
             if (f.file == null || !(new File(".." + f.file)).exists()) {
                 return "";
             }
@@ -66,20 +81,20 @@ public class Controller {
                             }
                         }
 
-                    pageDict.put(PdfName.ANNOTS, newAnnots);
+                        pageDict.put(PdfName.ANNOTS, newAnnots);
+                    }
                 }
             }
-        }
 
-        s.close();
-        w.close();
+            s.close();
+            w.close();
 
-        if (writer != null) {
-            writer.println("[INFO]	[" + getCurrentTimeStamp() + "]	Generate the form [" +  f.file + "]");
-            writer.flush();
-        }
+            if (writer != null) {
+                writer.println("[INFO]	[" + getCurrentTimeStamp() + "]	Generate the form [" +  f.file + "]");
+                writer.flush();
+            }
 
-        return new String(Base64.encodeBase64(w.toByteArray()));
+            return new String(Base64.encodeBase64(w.toByteArray()));
         }
         catch (Exception e) {
             if (writer != null) {

@@ -748,7 +748,8 @@ var USI9Section2 = (function (_super) {
                     errorMessages.push(this._listBDocNumber.prop(this.validationMessageProp));
                     this._listBDocNumber.toggleClass(this.invalidFieldClass, true);
                 }
-                if (!this.validateTextField(this._listBDocExpDate, '', [this.dateFormat, this.NAString], true, [])) {
+                if (!this.validateDateRange(this._listBDocExpDate, '', []) ||
+                    !this.validateTextField(this._listBDocExpDate, '', [this.dateFormat, this.NAString], true, [])) {
                     errorMessages.push(this._('section2.listbexpdate'));
                     this._listBDocExpDate.toggleClass(this.invalidFieldClass, true);
                 }
@@ -762,6 +763,10 @@ var USI9Section2 = (function (_super) {
                     errorMessages.push(this._('section2.ssncardnotvalidformat'));
                     this._listCDoc.toggleClass(this.invalidFieldClass, true);
                 }
+                else if (this._listCDoc.prop('i551') && !confirm(this._('section2.expiredformI551confirmation'))) {
+                    errorMessages.push(this._('section2.expiredformI551notvalid'));
+                    this._listCDoc.toggleClass(this.invalidFieldClass, true);
+                }
                 else if (this._listCDocNumber.prop(this.validationExpressionProp) &&
                     !this._listCDocNumber.prop(this.validationExpressionProp)
                         .test(this._listCDocNumber.val()) &&
@@ -769,7 +774,8 @@ var USI9Section2 = (function (_super) {
                     errorMessages.push(this._listCDocNumber.prop(this.validationMessageProp));
                     this._listCDocNumber.toggleClass(this.invalidFieldClass, true);
                 }
-                if (!this.validateTextField(this._listCDocExpDate, '', [this.dateFormat, this.NAString], true, [])) {
+                if (!this.validateDateRange(this._listCDocExpDate, '', []) ||
+                    !this.validateTextField(this._listCDocExpDate, '', [this.dateFormat, this.NAString], true, [])) {
                     errorMessages.push(this._('section2.listcexpdate'));
                     this._listCDocExpDate.toggleClass(this.invalidFieldClass, true);
                 }
@@ -857,7 +863,7 @@ var USI9Section2 = (function (_super) {
             .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false');
         this._listBDocExpDateHelp = this.renderHelpIcon(listBDocExpDateHelp, this._('listbexpdatehelp.caption'), dialog, this._('listbexpdatehelp.text'), 500);
         this._listCDoc = this.renderControl(listCDoc, this._('listcdoc.tooltip'));
-        this._listCDocHelp = this.renderHelpIcon(listCDocHelp, this._('listcdochelp.caption'), dialog, this._('listcdochelp.text'), 600);
+        this._listCDocHelp = this.renderHelpIcon(listCDocHelp, this._('listcdochelp.caption'), dialog, this._('listcdochelp.text'), 700);
         this.filterCombolist(this._listCDoc, this.getListCContent(null), null, this, this.processListABC);
         this._listCIssuingAuthority = this.renderControl(listCIssuingAuthority, this._('listcissuingauthority.tooltip'));
         this._listCIssuingAuthorityHelp = this.renderHelpIcon(listCIssuingAuthorityHelp, this._('listcissuingauthorityhelp.caption'), dialog, this._('listcissuingauthorityhelp.text'), 500);
@@ -1004,7 +1010,8 @@ var USI9Section2 = (function (_super) {
         if (['3', '4', '0', null].indexOf(citizenship) >= 0) {
             listC = $.extend(listC, {
                 9: this._('eadListC'),
-                13: this._('eadListCReceipt')
+                13: this._('eadListCReceipt'),
+                14: this._('expiredFormI551')
             });
         }
         $.each(listC, function (i, v) { return listC[i] = decodeURIComponent(v); });
@@ -1030,9 +1037,12 @@ var USI9Section2 = (function (_super) {
         this._listADocNumber2.prop(this.requiredProp, false);
         this._listADocExpDate2.prop(this.requiredProp, false);
         this._listADocExpDate
-            .datepicker('option', 'minDate', new Date()).attr('autocomplete', 'false')
-            .datepicker('option', 'maxDate', null).prop(this.requiredProp, true)
-            .prop(this.freeTextProp, false);
+            .removeAttr('readOnly')
+            .datepicker('option', 'minDate', new Date())
+            .datepicker('option', 'maxDate', null)
+            .datepicker('option', 'showOn', 'focus')
+            .attr('autocomplete', 'false').val('')
+            .prop(this.requiredProp, true).prop(this.freeTextProp, false);
         var tenYearsFromNow = new Date();
         tenYearsFromNow.setFullYear(tenYearsFromNow.getFullYear() + 10);
         if (['1', '2'].indexOf(code) >= 0) {
@@ -1041,7 +1051,7 @@ var USI9Section2 = (function (_super) {
             numberMaxLength = 9;
             fieldValidationExpression = this.usPassportNumberFormat;
             fieldValidationMessage = this._('section2.uspassportformat');
-            this._listADocExpDate.datepicker('option', 'maxDate', tenYearsFromNow).attr('autocomplete', 'false');
+            this._listADocExpDate.datepicker('option', 'maxDate', tenYearsFromNow);
         }
         else if (code === '3') {
             issuingAuthList = { USCIS: this._(USCIS), DOJINS: this._(DOJINS) };
@@ -1049,7 +1059,7 @@ var USI9Section2 = (function (_super) {
             numberMaxLength = 13;
             fieldValidationExpression = this.cardNumberFormat;
             fieldValidationMessage = this._('section2.cardformat');
-            this._listADocExpDate.datepicker('option', 'maxDate', tenYearsFromNow).attr('autocomplete', 'false');
+            this._listADocExpDate.datepicker('option', 'maxDate', tenYearsFromNow);
         }
         else if (code === '4') {
             issuingAuthList = { DOJINS: this._(DOJINS) };
@@ -1057,7 +1067,7 @@ var USI9Section2 = (function (_super) {
             numberMaxLength = 13;
             fieldValidationExpression = this.cardNumberFormat;
             fieldValidationMessage = this._('section2.cardformat');
-            this._listADocExpDate.datepicker('option', 'maxDate', tenYearsFromNow).attr('autocomplete', 'false');
+            this._listADocExpDate.datepicker('option', 'maxDate', tenYearsFromNow);
         }
         else if (code === '5') {
             issuingAuthList = JSON.parse(this._('countries'));
@@ -1069,8 +1079,11 @@ var USI9Section2 = (function (_super) {
             this.filterCombolist(this._listAIssuingAuthority2, { USCIS: this._(USCIS), DOJINS: this._(DOJINS) }, USCIS, this, this.processListABC);
             this._listADocNumber2.attr('readOnly', 'true').val(this.na);
             this._listADocExpDate2
+                .removeAttr('readOnly')
                 .datepicker('option', 'minDate', new Date())
-                .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
+                .datepicker('option', 'maxDate', null)
+                .datepicker('option', 'showOn', 'focus')
+                .attr('autocomplete', 'false').val('')
                 .unbind('keypress')
                 .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
                 .prop(this.requiredProp, true).prop(this.freeTextProp, true);
@@ -1082,7 +1095,10 @@ var USI9Section2 = (function (_super) {
             fieldFormat = this.numberFormat;
             fieldValidationExpression = this.admissionNumberFormat;
             fieldValidationMessage = this._('admissionnumber.format');
-            this._listADocExpDate.prop(this.freeTextProp, true);
+            this._listADocExpDate
+                .unbind('keypress')
+                .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
+                .prop(this.freeTextProp, true);
         }
         else if (code === '12') {
             issuingAuthList = { USCIS: this._(USCIS) };
@@ -1090,7 +1106,10 @@ var USI9Section2 = (function (_super) {
             numberMaxLength = 13;
             fieldValidationExpression = this.cardNumberFormat;
             fieldValidationMessage = this._('section2.cardformat');
-            this._listADocExpDate.prop(this.freeTextProp, true);
+            this._listADocExpDate
+                .unbind('keypress')
+                .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
+                .prop(this.freeTextProp, true);
         }
         else if (code === '6') {
             issuingAuthList = { USCIS: this._(USCIS) };
@@ -1107,15 +1126,20 @@ var USI9Section2 = (function (_super) {
             fieldValidationExpression = this.cardNumberFormat;
             fieldValidationMessage = this._('section2.cardformat');
             this._listADocExpDate
+                .removeAttr('readOnly')
                 .datepicker('option', 'minDate', null)
                 .datepicker('option', 'maxDate', new Date())
-                .attr('autocomplete', 'false');
+                .datepicker('option', 'showOn', 'focus')
+                .attr('autocomplete', 'false').val('');
             this.filterCombolist(this._listADoc2, { 5: this._('formI797C'), 6: this._('formI20') }, '5', this, this.processListABC);
             this.filterCombolist(this._listAIssuingAuthority2, { USCIS: this._(USCIS) }, USCIS, this, this.processListABC);
-            this._listADocNumber2.prop(this.requiredProp, true);
+            this._listADocNumber2.removeAttr('readOnly').val('').prop(this.requiredProp, true);
             this._listADocExpDate2
+                .removeAttr('readOnly')
                 .datepicker('option', 'minDate', new Date())
-                .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
+                .datepicker('option', 'maxDate', null)
+                .datepicker('option', 'showOn', 'focus')
+                .attr('autocomplete', 'false').val('')
                 .prop(this.requiredProp, true);
         }
         else if (['7', '14'].indexOf(code) >= 0) {
@@ -1126,10 +1150,13 @@ var USI9Section2 = (function (_super) {
             fieldValidationMessage = this._('section2.passportformat');
             this.filterCombolist(this._listADoc2, { 3: this._('formI94'), 4: this._('formI94receipt') }, '3', this, this.processListABC);
             this.filterCombolist(this._listAIssuingAuthority2, { USCIS: this._(USCIS), CBP: this._(CBP) }, USCIS, this, this.processListABC);
-            this._listADocNumber2.prop(this.requiredProp, true);
+            this._listADocNumber2.removeAttr('readOnly').val('').prop(this.requiredProp, true);
             this._listADocExpDate2
+                .removeAttr('readOnly')
                 .datepicker('option', 'minDate', new Date())
-                .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
+                .datepicker('option', 'maxDate', null)
+                .datepicker('option', 'showOn', 'focus')
+                .attr('autocomplete', 'false').val('')
                 .unbind('keypress')
                 .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
                 .prop(this.requiredProp, true).prop(this.freeTextProp, true);
@@ -1147,10 +1174,12 @@ var USI9Section2 = (function (_super) {
             fieldValidationMessage = this._('section2.passportformat');
             this.filterCombolist(this._listADoc2, { 3: this._('formI94'), 4: this._('formI94receipt') }, '3', this, this.processListABC);
             this.filterCombolist(this._listAIssuingAuthority2, { USCIS: this._(USCIS), CBP: this._(CBP) }, USCIS, this, this.processListABC);
-            this._listADocNumber2.prop(this.requiredProp, true);
+            this._listADocNumber2.removeAttr('readOnly').val('').prop(this.requiredProp, true);
             this._listADocExpDate2
                 .datepicker('option', 'minDate', new Date())
-                .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
+                .datepicker('option', 'maxDate', null)
+                .datepicker('option', 'showOn', 'focus')
+                .attr('autocomplete', 'false').val('')
                 .unbind('keypress')
                 .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
                 .prop(this.requiredProp, true).prop(this.freeTextProp, true);
@@ -1163,10 +1192,12 @@ var USI9Section2 = (function (_super) {
             fieldValidationMessage = this._('section2.passportformat');
             this.filterCombolist(this._listADoc2, { 3: this._('formI94'), 4: this._('formI94receipt') }, '3', this, this.processListABC);
             this.filterCombolist(this._listAIssuingAuthority2, { USCIS: this._(USCIS), CBP: this._(CBP) }, USCIS, this, this.processListABC);
-            this._listADocNumber2.prop(this.requiredProp, true);
+            this._listADocNumber2.removeAttr('readOnly').val('').prop(this.requiredProp, true);
             this._listADocExpDate2
                 .datepicker('option', 'minDate', new Date())
-                .datepicker('option', 'maxDate', null).attr('autocomplete', 'false').val('')
+                .datepicker('option', 'maxDate', null)
+                .datepicker('option', 'showOn', 'focus')
+                .attr('autocomplete', 'false').val('')
                 .unbind('keypress')
                 .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
                 .prop(this.requiredProp, true).prop(this.freeTextProp, true);
@@ -1220,27 +1251,22 @@ var USI9Section2 = (function (_super) {
             this.filterCombolist(this._listAIssuingAuthority2, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber2.attr('readOnly', 'true').val(this.na);
             this._listADocExpDate2.attr('readOnly', 'true')
-                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false')
-                .val(this.na);
+                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
         }
         if (['1', '2', '3', '4', '5', '6', '8', '9', '10', '11', '12', '15', '16', '17'].indexOf(code) >= 0) {
             this.filterCombolist(this._listADoc3, { 0: this.na }, '0', this, this.processListABC);
             this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber3.attr('readOnly', 'true').val(this.na);
-            this._listADocExpDate3.attr('readOnly', 'true')
+            this._listADocExpDate3
+                .attr('readOnly', 'true')
                 .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
         }
         if (code !== '0' && code.trim() !== '') {
-            this.setCombolistValue(this._listBDoc, '0');
-            this.filterCombolist(this._listBIssuingAuthority, { 0: this.na }, '0', this, null);
-            this._listBDocNumber.attr('readOnly', 'true').val(this.na);
-            this._listBDocExpDate.attr('readOnly', 'true')
-                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
-            this.setCombolistValue(this._listCDoc, '0');
-            this.filterCombolist(this._listCIssuingAuthority, { 0: this.na }, '0', this, null);
-            this._listCDocNumber.attr('readOnly', 'true').val(this.na);
-            this._listCDocExpDate.attr('readOnly', 'true')
-                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+            this.clearListB();
+            this.clearListC();
+        }
+        if (code === '0') {
+            this.clearListA();
         }
     };
     USI9Section2.prototype.listADocTitle2 = function (code) {
@@ -1251,6 +1277,8 @@ var USI9Section2 = (function (_super) {
         var ICE = 'ICE';
         var numberMaxLength = 11;
         var fieldFormat = /^[a-zA-Z0-9]+$/;
+        this._listADocNumber2.removeAttr('readOnly').val('');
+        this._listADocExpDate2.removeAttr('readOnly').val('');
         if (code === '1') {
             this.filterCombolist(this._listAIssuingAuthority2, { spaceSymbol: this.blankItem, USCIS: this._(USCIS), DOJINS: this._(DOJINS) }, USCIS, this, this.processListABC);
         }
@@ -1308,15 +1336,13 @@ var USI9Section2 = (function (_super) {
         var issuingAuthList;
         var issuingAuth = null;
         this._listBDocNumber.prop('maxLength', '100').unbind('keypress');
-        if (code !== '0' && code.trim() !== '') {
-            this.clearListA();
-        }
         this._listBIssuingAuthority.prop(this.requiredProp, true);
         this._listBDocNumber.prop(this.requiredProp, true);
         this._listBDocExpDate.prop(this.requiredProp, true);
         if (['19', '20'].indexOf(code) < 0) {
             this._listBDocNumber.removeAttr('readOnly').val('');
-            this._listBDocExpDate.removeAttr('readOnly')
+            this._listBDocExpDate
+                .removeAttr('readOnly')
                 .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false').val('')
                 .unbind('keypress')
                 .keypress(function (e) { return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
@@ -1354,12 +1380,19 @@ var USI9Section2 = (function (_super) {
             issuingAuthList = { '0': this.na };
             issuingAuth = '0';
             this._listBDocNumber.attr('readOnly', 'true').val(this.na);
-            this._listBDocExpDate.attr('readOnly', 'true')
+            this._listBDocExpDate
+                .attr('readOnly', 'true')
                 .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
         }
         this.filterCombolist(this._listBIssuingAuthority, $.extend({ spaceSymbol: this.blankItem }, issuingAuthList), issuingAuth, this, this.processListABC);
         this._listBDocNumber.prop(this.validationExpressionProp, fieldValidationExpression);
         this._listBDocNumber.prop(this.validationMessageProp, fieldValidationMessage);
+        if (code !== '0' && code.trim() !== '') {
+            this.clearListA();
+        }
+        if (code === '0') {
+            this.clearListB();
+        }
     };
     USI9Section2.prototype.listCDocTitle = function (code) {
         var _this = this;
@@ -1368,6 +1401,7 @@ var USI9Section2 = (function (_super) {
         var SSD = 'SSD';
         var DHEW = 'DHEW';
         var USDS = 'USDS';
+        var USCIS = 'USCIS';
         var DOJINS = 'DOJINS';
         var numberMaxLength = 15;
         var fieldFormat = /^[a-zA-Z0-9]+$/;
@@ -1375,20 +1409,21 @@ var USI9Section2 = (function (_super) {
         var fieldValidationMessage = null;
         var issuingAuthList;
         var issuingAuth;
-        if (code !== '0' && code.trim() !== '') {
-            this.clearListA();
-        }
         this._listCIssuingAuthority.prop(this.requiredProp, true);
         this._listCDocNumber.prop(this.requiredProp, true);
         this._listCDocExpDate.prop(this.requiredProp, true);
         this._listCIssuingAuthority.attr('readOnly', 'true');
-        this._listCDocExpDate.removeAttr('readOnly')
-            .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false')
+        this._listCDocExpDate
+            .removeAttr('readOnly')
+            .datepicker('option', 'minDate', new Date())
+            .datepicker('option', 'maxDate', null)
+            .datepicker('option', 'showOn', 'focus')
+            .attr('autocomplete', 'false')
             .unbind('keypress')
             .keypress(function (e) { return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
             .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
             .val('');
-        this._listCDoc.prop('ssncard', false);
+        this._listCDoc.prop('ssncard', false).prop('i551', false);
         if (code === '1') {
             issuingAuthList = { SSA: this._(SSA), USDHHS: this._(USDHHS), SSD: this._(SSD), DHEW: this._(DHEW) };
             issuingAuth = SSA;
@@ -1396,8 +1431,10 @@ var USI9Section2 = (function (_super) {
             fieldFormat = /^[\d-]+$/;
             fieldValidationExpression = this.ssnFormat;
             fieldValidationMessage = this._('section2.ssnformat');
-            this._listCDocExpDate.attr('readOnly', 'true')
-                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+            this._listCDocExpDate
+                .attr('readOnly', 'true')
+                .datepicker('option', 'showOn', 'off')
+                .attr('autocomplete', 'false').val(this.na);
             this._listCDoc.prop('ssncard', true);
         }
         else if (['2', '3', '4'].indexOf(code) >= 0) {
@@ -1438,13 +1475,34 @@ var USI9Section2 = (function (_super) {
             issuingAuthList = { SSA: this._(SSA) };
             issuingAuth = SSA;
         }
+        else if (code === '14') {
+            issuingAuthList = { USCIS: this._(USCIS), DOJINS: this._(DOJINS) };
+            issuingAuth = USCIS;
+            numberMaxLength = 13;
+            fieldValidationExpression = this.cardNumberFormat;
+            fieldValidationMessage = this._('section2.cardformat');
+            this._listCDoc.prop('i551', true);
+            this._listCDocExpDate
+                .removeAttr('readOnly')
+                .datepicker('option', 'minDate', null)
+                .datepicker('option', 'maxDate', new Date())
+                .datepicker('option', 'showOn', 'focus')
+                .attr('autocomplete', 'false').val('');
+        }
         this._listCDocNumber
             .prop('maxLength', numberMaxLength)
             .removeAttr('readOnly').val('')
             .keypress(function (e) { return fieldFormat.test(e.key) || e.key === _this.backSpaceCode; });
         this.filterCombolist(this._listCIssuingAuthority, $.extend({ spaceSymbol: this.blankItem }, issuingAuthList), issuingAuth, this, this.processListABC);
-        this._listCDocNumber.prop(this.validationExpressionProp, fieldValidationExpression);
-        this._listCDocNumber.prop(this.validationMessageProp, fieldValidationMessage);
+        this._listCDocNumber
+            .prop(this.validationExpressionProp, fieldValidationExpression)
+            .prop(this.validationMessageProp, fieldValidationMessage);
+        if (code !== '0' && code.trim() !== '') {
+            this.clearListA();
+        }
+        if (code === '0') {
+            this.clearListC();
+        }
     };
     USI9Section2.prototype.fillListABC = function (status) {
         this.filterCombolist(this._listADoc, this.getListAContent(status), null, this, this.processListABC);
@@ -1492,6 +1550,22 @@ var USI9Section2 = (function (_super) {
         this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
         this._listADocNumber3.attr('readOnly', 'true').val(this.na);
         this._listADocExpDate3.attr('readOnly', 'true')
+            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+    };
+    USI9Section2.prototype.clearListB = function () {
+        this.setCombolistValue(this._listBDoc, '0');
+        this.filterCombolist(this._listBIssuingAuthority, { 0: this.na }, '0', this, null);
+        this._listBDocNumber.attr('readOnly', 'true').val(this.na);
+        this._listBDocExpDate
+            .attr('readOnly', 'true')
+            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+    };
+    USI9Section2.prototype.clearListC = function () {
+        this.setCombolistValue(this._listCDoc, '0');
+        this.filterCombolist(this._listCIssuingAuthority, { 0: this.na }, '0', this, null);
+        this._listCDocNumber.attr('readOnly', 'true').val(this.na);
+        this._listCDocExpDate
+            .attr('readOnly', 'true')
             .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
     };
     return USI9Section2;

@@ -26,10 +26,11 @@ public class Application
 
             if (listOfFiles.length == 0) {
                 if (writer != null) {
-                    writer.println("[ERROR]	[" + getCurrentTimeStamp() + "]	Database is found");
+                    writer.println("[ERROR]	[" + getCurrentTimeStamp() + "]	Database is not found");
                     writer.flush();
                 }
 
+                writer.close();
                 return;
             }
 
@@ -53,7 +54,7 @@ public class Application
                 PrintWriter toClient = new PrintWriter(server.getOutputStream(),true);
                 BufferedReader fromClient = new BufferedReader(new InputStreamReader(server.getInputStream()));
                 String fields = fromClient.readLine();
-                toClient.println(Controller.update(fields, writer));
+                toClient.println(Controller.processRequest(fields, writer));
             }
         }
         catch (UnknownHostException e) {
