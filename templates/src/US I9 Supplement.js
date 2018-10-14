@@ -77,10 +77,11 @@ var PDFForm = (function () {
         return document.webL10n.get(t);
     };
     PDFForm.prototype.selectCheckmark = function (ctrl, arr) {
-        for (var c in arr) {
-            if (arr[c].attr(this.annotationName) !== ctrl.attr(this.annotationName)) {
-                arr[c].prop('checked', false);
-                arr[c].parent().children('span').text('');
+        for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
+            var a = arr_1[_i];
+            if (a.attr(this.annotationName) !== ctrl.attr(this.annotationName)) {
+                a.prop('checked', false);
+                a.parent().children('span').text('');
             }
         }
     };

@@ -255,8 +255,8 @@ class USI9Fields extends PDFForm {
                 .replace('${length}', length.toString()));
         } else if ((f && f.val() !== '' || validateIfEmpty) && regExp.length > 0) {
             let validFlag = false;
-            for (let i in regExp) {
-                if (f && regExp[i].test(f.val() as string)) {
+            for (let r of regExp) {
+                if (f && r.test(f.val() as string)) {
                     validFlag = true;
                     break;
                 }

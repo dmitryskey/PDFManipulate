@@ -75,10 +75,10 @@ class PDFForm {
     }
 
     protected selectCheckmark(ctrl: JQuery<HTMLElement>, arr: Array<JQuery<HTMLElement>>) {
-        for (var c in arr) {
-            if (arr[c].attr(this.annotationName) !== ctrl.attr(this.annotationName)) {
-                arr[c].prop('checked', false);
-                arr[c].parent().children('span').text('');
+        for (var a of arr) {
+            if (a.attr(this.annotationName) !== ctrl.attr(this.annotationName)) {
+                a.prop('checked', false);
+                a.parent().children('span').text('');
             }
         }
     }
