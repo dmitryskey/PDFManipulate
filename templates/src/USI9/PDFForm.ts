@@ -10,12 +10,14 @@ class PDFForm {
     protected postalCodeFormat = /^[A-Za-z0-9]{6}$/;
     protected dateFormat = /^\d{2}[/]{1}\d{2}[/]{1}\d{4}$/;
     protected numberFormat = /^\d{1}$/;
+    protected numberWithDashesFormat = /^\d{1}|\-{1}$/;
     protected emailFormat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     protected phoneFormat = /^[\d/NA-]+$/;
     protected phoneNumber = /^\d{3}\-{1}\d{3}\-{1}\d{4}$/;
     protected uscisNumberFormat = /^\d{7,9}$/;
     protected admissionNumberFormat = /^\d{11}$/;
     protected usPassportNumberFormat = /^[a-zA-Z0-9]{6,9}$/;
+    protected greenCardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$|\d{7,9}|\d{3}\-{0,1}\d{3}\-{0,1}\d{3}$/;
     protected cardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$/;
     protected passportNumberFormat = /^[a-zA-Z0-9]{6,12}$/;
     protected driverLicenseNumberFormat = /^[a-zA-Z0-9]{8,14}$/;

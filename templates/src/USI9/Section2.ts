@@ -97,37 +97,37 @@ class USI9Section2 extends USI9Translator {
             this._('employeeinfosection2help.caption'),
             dialog,
             this._('employeeinfosection2help.text')
-        );            
-    
+        );
+
         this._lastNameSection2 = lastName;
-    
+
         this._lastNameSection2Help = this.renderHelpIcon(
             lastNameHelp,
             this._('lastnamesection2help.caption'),
             dialog,
             this._('lastnamesection2help.text')
         );
-    
+
         this._firstNameSection2 = firstName;
-    
+
         this._firstNameSection2Help = this.renderHelpIcon(
             firstNameHelp,
             this._('firstnamesection2help.caption'),
             dialog,
             this._('firstnamesection2help.text')
         );
-            
+
         this._middleInitialSection2 = middleInitial;
-    
+
         this._middleInitialSection2Help = this.renderHelpIcon(
             middleInitialHelp,
             this._('middleinitialsection2help.caption'), 
             dialog,
             this._('middleinitialsection2help.text')
         );
-        
+
         this._immigrationStatus = immigrationStatus;
-    
+
         this._immigrationStatusHelp = this.renderHelpIcon(
             immigrationStatusHelp,
             this._('immigrationstatushelp.caption'),
@@ -178,7 +178,7 @@ class USI9Section2 extends USI9Translator {
             listCDocExpDate,
             listCDocExpDateHelp
         );
-        
+
         this._additionalInfo = this.renderControl(additionalInfo, this._('additionalinfo.tooltip'))
 
         this._additionalInfoHelp = this.renderHelpIcon(
@@ -255,7 +255,7 @@ class USI9Section2 extends USI9Translator {
             this._listCDocNumber,
             this._listCDocExpDate,
             this._additionalInfo];       
-            
+
         if (section2Fields.filter(f => f && f.val() && (f.val() as string).trim() !== '').length == 0) {
             return errorMessages;
         }
@@ -283,7 +283,7 @@ class USI9Section2 extends USI9Translator {
                 errorMessages.push(this._('section2.listafirstissuingauthority'));
                 this._listAIssuingAuthority.toggleClass(this.invalidFieldClass, true);
             }
-            
+
             if ((this._listADocNumber.val() as string).trim() === '') {
                 errorMessages.push(this._('section2.listafirstdocnumber'));
                 this._listADocNumber.toggleClass(this.invalidFieldClass, true);
@@ -300,7 +300,7 @@ class USI9Section2 extends USI9Translator {
                 errorMessages.push(this._('section2.listasecondissuingauthority'));
                 this._listAIssuingAuthority2.toggleClass(this.invalidFieldClass, true);
             }
-            
+
             if ((this._listADocNumber2.val() as string).trim() === '') {
                 errorMessages.push(this._('section2.listaseconddocnumber'));
                 this._listADocNumber2.toggleClass(this.invalidFieldClass, true);
@@ -310,7 +310,7 @@ class USI9Section2 extends USI9Translator {
                 errorMessages.push(this._('section2.listathirdissuingauthority'));
                 this._listAIssuingAuthority3.toggleClass(this.invalidFieldClass, true);
             }
-            
+
             if ((this._listADocNumber3.val() as string).trim() === '') {
                 errorMessages.push(this._('section2.listathirddocnumber'));
                 this._listADocNumber3.toggleClass(this.invalidFieldClass, true);
@@ -323,7 +323,7 @@ class USI9Section2 extends USI9Translator {
                 errorMessages.push(this._('section2.listafirstexpdate'));
                 this._listADocExpDate.toggleClass(this.invalidFieldClass, true);
             }
-            
+
             if (!this.validateDateRange(this._listADocExpDate2, '', []) ||
                (!this._listADocExpDate2.prop(this.freeTextProp) &&
                 !this.validateTextField(this._listADocExpDate2, '', [this.dateFormat, this.NAString], true, [])) ||
@@ -331,7 +331,7 @@ class USI9Section2 extends USI9Translator {
                 errorMessages.push(this._('section2.listasecondexpdate'));
                 this._listADocExpDate2.toggleClass(this.invalidFieldClass, true);
             }
-            
+
             if (!this.validateDateRange(this._listADocExpDate3, '', []) ||
                (!this._listADocExpDate3.prop(this.freeTextProp) &&
                 !this.validateTextField(this._listADocExpDate3, '', [this.dateFormat, this.NAString], true, [])) ||
@@ -433,7 +433,7 @@ class USI9Section2 extends USI9Translator {
         employerStateHelp: JQuery<HTMLElement>,
         employerZip: JQuery<HTMLElement>,
         employerZipHelp: JQuery<HTMLElement>){
-            
+
         this._sgnEmployer = this.renderControl(sgnEmployer, this._('sgnemployer.tooltip'));
 
         this._sgnEmployerHelp = this.renderHelpIcon(
@@ -582,7 +582,7 @@ class USI9Section2 extends USI9Translator {
         listCDocExpDateHelp: JQuery<HTMLElement>){
 
         this._listADoc = this.renderControl(listADoc, this._('listadoc.tooltip'));
-    
+
         this._listADocHelp = this.renderHelpIcon(
             listADocHelp,
             this._('listadochelp.caption'),
@@ -590,9 +590,9 @@ class USI9Section2 extends USI9Translator {
             this._('listadochelp.text'),
             500
         );
-    
+
         this._listAIssuingAuthority = this.renderControl(listAIssuingAuthority, this._('listaissuingauthority.tooltip'));
-    
+
         this._listAIssuingAuthorityHelp = this.renderHelpIcon(
             listAIssuingAuthorityHelp,
             this._('listaissuingauthorityhelp.caption'),
@@ -600,9 +600,9 @@ class USI9Section2 extends USI9Translator {
             this._('listaissuingauthorityhelp.text'),
             500
         );
-    
+
         this._listADocNumber = this.renderControl(listADocNumber, this._('listadocnumber.tooltip'));
-    
+
         this._listADocNumberHelp = this.renderHelpIcon(
             listADocNumberHelp,
             this._('listadocnumberhelp.caption'),
@@ -610,10 +610,10 @@ class USI9Section2 extends USI9Translator {
             this._('listadocnumberhelp.text'),
             500
         );
-    
+
         this._listADocExpDate = this.renderControl(listADocExpDate, this._('listaexpdate.tooltip'))
         .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false');
-    
+
         this._listADocExpDateHelp = this.renderHelpIcon(
             listADocExpDateHelp,
             this._('listaexpdatehelp.caption'),
@@ -621,9 +621,9 @@ class USI9Section2 extends USI9Translator {
             this._('listaexpdatehelp.text'),
             500
         );
-    
+
         this._listADoc2 = this.renderControl(listADoc2, this._('listadoc2.tooltip'));
-    
+
         this._listADoc2Help = this.renderHelpIcon(
             listADoc2Help,
             this._('listadoc2help.caption'),
@@ -631,9 +631,9 @@ class USI9Section2 extends USI9Translator {
             this._('listadoc2help.text'),
             500
         );
-    
+
         this._listAIssuingAuthority2 = this.renderControl(listAIssuingAuthority2, this._('listaissuingauthority2.tooltip'));
-        
+
         this._listAIssuingAuthority2Help = this.renderHelpIcon(
             listAIssuingAuthority2Help,
             this._('listaissuingauthority2help.caption'),
@@ -641,9 +641,9 @@ class USI9Section2 extends USI9Translator {
             this._('listaissuingauthority2help.text'),
             500
         );
-    
+
         this._listADocNumber2 = this.renderControl(listADocNumber2, this._('listadocnumber2.tooltip'));
-        
+
         this._listADocNumber2Help = this.renderHelpIcon(
             listADocNumber2Help,
             this._('listadocnumber2help.caption'),
@@ -651,10 +651,10 @@ class USI9Section2 extends USI9Translator {
             this._('listadocnumber2help.text'),
             500
         );
-    
+
         this._listADocExpDate2 = this.renderControl(listADocExpDate2, this._('listaexpdate2.tooltip'))
         .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false');
-        
+
         this._listADocExpDate2Help = this.renderHelpIcon(
             listADocExpDate2Help,
             this._('listaexpdate2help.caption'),
@@ -662,9 +662,9 @@ class USI9Section2 extends USI9Translator {
             this._('listaexpdate2help.text'),
             500
         );
-    
+
         this._listADoc3 = this.renderControl(listADoc3, this._('listadoc3.tooltip'));
-    
+
         this._listADoc3Help = this.renderHelpIcon(
             listADoc3Help,
             this._('listadoc3help.caption'),
@@ -672,9 +672,9 @@ class USI9Section2 extends USI9Translator {
             this._('listadoc3help.text'),
             500
         );
-        
+
         this._listAIssuingAuthority3 = this.renderControl(listAIssuingAuthority3, this._('listaissuingauthority3.tooltip'));
-        
+
         this._listAIssuingAuthority3Help = this.renderHelpIcon(
             listAIssuingAuthority3Help,
             this._('listaissuingauthority3help.caption'),
@@ -682,9 +682,9 @@ class USI9Section2 extends USI9Translator {
             this._('listaissuingauthority3help.text'),
             500
         );
-    
+
         this._listADocNumber3 = this.renderControl(listADocNumber3, this._('listadocnumber3.tooltip'));
-        
+
         this._listADocNumber3Help = this.renderHelpIcon(
             listADocNumber3Help,
             this._('listadocnumber3help.caption'),
@@ -692,10 +692,10 @@ class USI9Section2 extends USI9Translator {
             this._('listadocnumber3help.text'),
             500
         );
-    
+
         this._listADocExpDate3 = this.renderControl(listADocExpDate3, this._('listaexpdate3.tooltip'))
         .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false');
-        
+
         this._listADocExpDate3Help = this.renderHelpIcon(
             listADocExpDate3Help,
             this._('listaexpdate3help.caption'),
@@ -703,9 +703,9 @@ class USI9Section2 extends USI9Translator {
             this._('listaexpdate3help.text'),
             500
         );
-    
+
         this._listBDoc = this.renderControl(listBDoc, this._('listbdoc.tooltip'));
-    
+
         this._listBDocHelp = this.renderHelpIcon(
             listBDocHelp,
             this._('listbdochelp.caption'),
@@ -713,11 +713,11 @@ class USI9Section2 extends USI9Translator {
             this._('listbdochelp.text'),
             600
         );
-    
+
         this.filterCombolist(this._listBDoc, this.getListBContent(null), null, this, this.processListABC);
-    
+
         this._listBIssuingAuthority = this.renderControl(listBIssuingAuthority, this._('listbissuingauthority.tooltip'));
-        
+
         this._listBIssuingAuthorityHelp = this.renderHelpIcon(
             listBIssuingAuthorityHelp,
             this._('listbissuingauthorityhelp.caption'),
@@ -725,19 +725,19 @@ class USI9Section2 extends USI9Translator {
             this._('listbissuingauthorityhelp.text'),
             500
         );
-    
+
         this._listBDocNumber = this.renderControl(listBDocNumber, this._('listbdocnumber.tooltip'));
-    
+
         this._listBDocNumberHelp = this.renderHelpIcon(
             listBDocNumberHelp,
             this._('listbdocnumberhelp.caption'),
             dialog,
             this._('listbdocnumberhelp.text'),
         );
-    
+
         this._listBDocExpDate = this.renderControl(listBDocExpDate, this._('listbexpdate.tooltip'))
         .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false');
-        
+
         this._listBDocExpDateHelp = this.renderHelpIcon(
             listBDocExpDateHelp,
             this._('listbexpdatehelp.caption'),
@@ -745,9 +745,9 @@ class USI9Section2 extends USI9Translator {
             this._('listbexpdatehelp.text'),
             500
         );
-    
+
         this._listCDoc = this.renderControl(listCDoc, this._('listcdoc.tooltip'));
-    
+
         this._listCDocHelp = this.renderHelpIcon(
             listCDocHelp,
             this._('listcdochelp.caption'),
@@ -755,11 +755,11 @@ class USI9Section2 extends USI9Translator {
             this._('listcdochelp.text'),
             700
         );
-    
+
         this.filterCombolist(this._listCDoc, this.getListCContent(null), null, this, this.processListABC);
-    
+
         this._listCIssuingAuthority = this.renderControl(listCIssuingAuthority, this._('listcissuingauthority.tooltip'));
-        
+
         this._listCIssuingAuthorityHelp = this.renderHelpIcon(
             listCIssuingAuthorityHelp,
             this._('listcissuingauthorityhelp.caption'),
@@ -767,19 +767,19 @@ class USI9Section2 extends USI9Translator {
             this._('listcissuingauthorityhelp.text'),
             500
         );
-    
+
         this._listCDocNumber = this.renderControl(listCDocNumber, this._('listcdocnumber.tooltip'));
-    
+
         this._listCDocNumberHelp = this.renderHelpIcon(
             listCDocNumberHelp,
             this._('listcdocnumberhelp.caption'),
             dialog,
             this._('listcdocnumberhelp.text'),
         );
-    
+
         this._listCDocExpDate = this.renderControl(listCDocExpDate, this._('listcexpdate.tooltip'))
         .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false');
-        
+
         this._listCDocExpDateHelp = this.renderHelpIcon(
             listCDocExpDateHelp,
             this._('listcexpdatehelp.caption'),
@@ -799,7 +799,7 @@ class USI9Section2 extends USI9Translator {
         case 'ListADocTitle2':
             self.listADocTitle2(code);
             break;
-        
+
         case 'ListADocTitle3':
             self.listADocTitle3(code);
             break;
@@ -983,7 +983,7 @@ class USI9Section2 extends USI9Translator {
 
         let tenYearsFromNow = new Date();
         tenYearsFromNow.setFullYear(tenYearsFromNow.getFullYear() + 10);
-            
+
         if (['1', '2'].indexOf(code) >= 0) {
             // 1 - U.S. Passport
             // 2 - U.S. Passport Card
@@ -999,7 +999,8 @@ class USI9Section2 extends USI9Translator {
             issuingAuthList = { USCIS: this._(USCIS), DOJINS: this._(DOJINS) };
             issuingAuth = USCIS;
             numberMaxLength = 13;
-            fieldValidationExpression = this.cardNumberFormat;
+            fieldFormat = this.numberWithDashesFormat;
+            fieldValidationExpression = this.greenCardNumberFormat;
             fieldValidationMessage = this._('section2.cardformat');
 
             this._listADocExpDate.datepicker('option', 'maxDate', tenYearsFromNow)
@@ -1048,7 +1049,7 @@ class USI9Section2 extends USI9Translator {
         } else if (code === '10') {
             // 10 - Receipt: Form I-94/I-94A w/I-551 stamp, photo
             issuingAuthList = {DHS: this._(DHS)};
-            issuingAuth = DHS;            
+            issuingAuth = DHS;
             numberMaxLength = 11;
             fieldFormat = this.numberFormat;
             fieldValidationExpression = this.admissionNumberFormat
@@ -1078,7 +1079,7 @@ class USI9Section2 extends USI9Translator {
             numberMaxLength = 13;
             fieldValidationExpression = this.cardNumberFormat;
             fieldValidationMessage = this._('section2.cardformat');
-        
+
             this._listADocExpDate.prop(this.freeTextProp, true);
         } else if (code === '17') {
             // Alien authorized to work
@@ -1088,7 +1089,7 @@ class USI9Section2 extends USI9Translator {
             numberMaxLength = 13;
             fieldValidationExpression = this.cardNumberFormat;
             fieldValidationMessage = this._('section2.cardformat');
-        
+
             this._listADocExpDate
             .removeAttr('readOnly')
             .datepicker('option', 'minDate', null)
@@ -1102,7 +1103,7 @@ class USI9Section2 extends USI9Translator {
                 '5',
                 this,
                 this.processListABC);
-                
+
             this.filterCombolist(
                 this._listAIssuingAuthority2,
                 { USCIS: this._(USCIS) },
@@ -1126,14 +1127,14 @@ class USI9Section2 extends USI9Translator {
             numberMaxLength = 12;
             fieldValidationExpression = this.passportNumberFormat;
             fieldValidationMessage = this._('section2.passportformat');
-        
+
             this.filterCombolist(
                 this._listADoc2,
                 { 3: this._('formI94'), 4: this._('formI94receipt') },
                 '3',
                 this,
                 this.processListABC);
-        
+
             this.filterCombolist(
                 this._listAIssuingAuthority2,
                 { USCIS:this._(USCIS), CBP:this._(CBP) },
@@ -1152,14 +1153,14 @@ class USI9Section2 extends USI9Translator {
             .unbind('keypress')
             .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
             .prop(this.requiredProp, true).prop(this.freeTextProp, true);
-        
+
             this.filterCombolist(
                 this._listADoc3,
                 { 0: this.na, 1: this._('formI20'), 2: this._('formDS2019') },
                 '0',
                 this,
                 this.processListABC);
-        
+
             this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber3.attr('readOnly', 'true').val(this.na);
             this._listADocExpDate3.attr('readOnly', 'true')
@@ -1171,14 +1172,14 @@ class USI9Section2 extends USI9Translator {
             numberMaxLength = 12;
             fieldValidationExpression = this.passportNumberFormat;
             fieldValidationMessage = this._('section2.passportformat');
-        
+
             this.filterCombolist(
                 this._listADoc2,
                 { 3: this._('formI94'), 4: this._('formI94receipt') },
                 '3',
                 this,
                 this.processListABC);
-        
+
             this.filterCombolist(
                 this._listAIssuingAuthority2,
                 { USCIS:this._(USCIS), CBP:this._(CBP) },
@@ -1203,14 +1204,14 @@ class USI9Section2 extends USI9Translator {
             numberMaxLength = 12;
             fieldValidationExpression = this.passportNumberFormat;
             fieldValidationMessage = this._('section2.passportformat');
-        
+
             this.filterCombolist(
                 this._listADoc2,
                 { 3: this._('formI94'), 4: this._('formI94receipt') },
                 '3',
                 this,
                 this.processListABC);
-        
+
             this.filterCombolist(
                 this._listAIssuingAuthority2,
                 { USCIS:this._(USCIS), CBP:this._(CBP) },
@@ -1263,7 +1264,7 @@ class USI9Section2 extends USI9Translator {
             fieldValidationExpression = this.passportNumberFormat;
             fieldValidationMessage = this._('section2.passportformat');
         }
-        
+
         this._listADocNumber
         .prop('maxLength', numberMaxLength)
         .keypress(e => fieldFormat.test(e.key) || e.key === this.backSpaceCode);
@@ -1284,7 +1285,7 @@ class USI9Section2 extends USI9Translator {
             issuingAuth,
             this,
             this.processListABC);
-        
+
         if (['1', '2', '3', '4', '6', '10', '11', '12'].indexOf(code) >= 0) {
             this.filterCombolist(this._listADoc2, { 0: this.na }, '0', this, this.processListABC);
             this.filterCombolist(this._listAIssuingAuthority2, { 0: this.na }, '0', this, this.processListABC);
@@ -1292,7 +1293,7 @@ class USI9Section2 extends USI9Translator {
             this._listADocExpDate2.attr('readOnly', 'true')
             .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
         }
-        
+
         if (['1', '2', '3', '4', '5', '6', '8', '9', '10', '11', '12', '15', '16', '17'].indexOf(code) >= 0) {
             this.filterCombolist(this._listADoc3, { 0: this.na }, '0', this, this.processListABC);
             this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
@@ -1301,7 +1302,7 @@ class USI9Section2 extends USI9Translator {
             .attr('readOnly', 'true')
             .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
         }
-        
+
         if (code !== '0' && code.trim() !== '') {
             this.clearListB();
             this.clearListC();
@@ -1323,7 +1324,7 @@ class USI9Section2 extends USI9Translator {
 
         this._listADocNumber2.removeAttr('readOnly').val('');
         this._listADocExpDate2.removeAttr('readOnly').val('')
-      
+
         if (code === '1') {
             // 1 - Temporary I-551 Stamp
             this.filterCombolist(
@@ -1392,7 +1393,7 @@ class USI9Section2 extends USI9Translator {
                 ICE,
                 this,
                 this.processListABC);
-            
+
             this._listADocNumber3.removeAttr('readOnly').val('');
             this._listADocExpDate3.removeAttr('readOnly').val('')
             .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false')
@@ -1405,7 +1406,7 @@ class USI9Section2 extends USI9Translator {
                 USDS,
                 this,
                 this.processListABC);
-            
+
             this._listADocNumber3.removeAttr('readOnly').val('');
             this._listADocExpDate3.removeAttr('readOnly').val('')
             .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false')
@@ -1571,7 +1572,7 @@ class USI9Section2 extends USI9Translator {
         .val('');
 
         this._listCDoc.prop('ssncard', false).prop('i551', false);
-    
+
         if (code === '1') {
             // 1 - (Unrestricted) Social Security Card
             issuingAuthList = { SSA: this._(SSA), USDHHS: this._(USDHHS), SSD: this._(SSD), DHEW: this._(DHEW) };
@@ -1681,7 +1682,7 @@ class USI9Section2 extends USI9Translator {
             this.clearListC();
         }
     }
-    
+
     protected fillListABC(status: string) {
         this.filterCombolist(
             this._listADoc,
@@ -1739,13 +1740,13 @@ class USI9Section2 extends USI9Translator {
         this._listADocNumber.attr('readOnly', 'true').val(this.na);
         this._listADocExpDate.attr('readOnly', 'true')
         .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
-        
+
         this.filterCombolist(this._listADoc2, {0:this.na}, '0', this, this.processListABC);
         this.filterCombolist(this._listAIssuingAuthority2, { 0:this.na }, '0', this, this.processListABC);
         this._listADocNumber2.attr('readOnly', 'true').val(this.na);
         this._listADocExpDate2.attr('readOnly', 'true')
         .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
-    
+
         this.filterCombolist(this._listADoc3, { 0: this.na }, '0', this, this.processListABC);
         this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
         this._listADocNumber3.attr('readOnly', 'true').val(this.na);

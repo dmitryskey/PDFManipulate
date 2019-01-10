@@ -26,39 +26,39 @@ class USI9Section3 extends USI9Section2 {
     {
         let spaceSymbol = this.space;
         let citizenships = [this._citizen, this._national, this._lpr, this._alien];
-        
+
         this._citizen.click(() => {
             this.selectCheckmark(this._citizen, citizenships);
             this.processLPR(this._citizen.prop('checked'));
             this.processAlien(this._citizen.prop('checked'));
-    
+
             this.clearListABC();
-    
+
             if (this._citizen.prop('checked')) {
                 this.fillListABC('1');
             }
         });
-    
+
         this._national.click(() => {
             this.selectCheckmark(this._national, citizenships);
             this.processLPR(this._national.prop('checked'));
             this.processAlien(this._national.prop('checked'));
-    
+
             this.clearListABC();
-    
+
             if (this._national.prop('checked')) {
                 this.fillListABC('2');
             }
         });
-    
+
         this._lpr.click(() => {
             this.selectCheckmark(this._lpr, citizenships);
             this.processAlien(this._lpr.prop('checked'));
             this._lpruscisNum.val('');
             this.filterCombolist(this._lpruscisNumType, {}, null, this, this.processListABC);
-    
+
             this.clearListABC();
-        
+
             if (this._lpr.prop('checked')) {
                 this._lpruscisNum.prop('disabled', false);
                 this._lpruscisNumType.prop('disabled', false);
@@ -68,11 +68,10 @@ class USI9Section3 extends USI9Section2 {
                     null,
                     this,
                     this.processListABC);
-    
-                    this.fillListABC('3');
-                }
+                this.fillListABC('3');
+            }
         });
-    
+
         this._alien.click(() => {
             this.selectCheckmark(this._alien, citizenships);
             this.processLPR(this._alien.prop('checked'));
@@ -82,26 +81,24 @@ class USI9Section3 extends USI9Section2 {
             this._admissionNum.val('');
             this._passportNum.val('');
             this.filterCombolist(this._countryOfIssuance, {}, null, this, this.processListABC);
-    
+
             this.clearListABC();
-    
+
             if (this._alien.prop('checked')) {
                 this._alienWorkAuthDate.prop('disabled', false);
                 this._alienuscisNum.prop('disabled', false);
                 this._alienuscisNumType.prop('disabled', false);
-        
                 this.filterCombolist(
                     this._alienuscisNumType, 
                     { 'A':this._('aliennumber'), 'U':this._('uscisnumber') },
                     null,
                     this,
                     this.processListABC);
-        
+
                 this._admissionNum.prop('disabled', false);
                 this._passportNum.prop('disabled', false);
-        
                 this._countryOfIssuance.prop('disabled', false);
-        
+
                 this.filterCombolist(
                     this._countryOfIssuance,
                     JSON.parse(this._('countries')),

@@ -211,10 +211,10 @@ class USI9Section1 extends USI9Fields {
             dialog,
             this._('emailhelp.text')
         );
-    
+
         this._phone = this.renderControl(phone, this._('phonehelp.tooltip'))
         .keypress(e => this.phoneFormat.test(e.key) || e.key === this.backSpaceCode);
-    
+
         this._phoneHelp = this.renderHelpIcon(
             phoneHelp,
             this._('phonehelp.caption'),
@@ -269,18 +269,18 @@ class USI9Section1 extends USI9Fields {
             dialog,
             this._('nationalhelp.text')
         );
-    
+
         this._lpr = this.renderControl(lpr, this._('lprhelp.tooltip'));
-    
+
         this._lprHelp = this.renderHelpIcon(
             lprHelp,
             this._('lprhelp.caption'),
             dialog,
             this._('lprhelp.text')
         );
-    
+
         this._alien = this.renderControl(alien, this._('alienhelp.tooltip'));
-    
+
         this._alienHelp = this.renderHelpIcon(
             alienHelp,
             this._('alienhelp.caption'),
@@ -288,50 +288,50 @@ class USI9Section1 extends USI9Fields {
             this._('alienhelp.text'),
             500
         );
-    
+
         this._uscisNumberHelp = this.renderHelpIcon(
             uscisNumberHelp,
             this._('uscisnumberhelp.caption'),
             dialog,
             this._('uscisnumberhelp.text')
         );
-    
+
         this._lpruscisNumPrefix = lpruscisNumPrefix;
-    
+
         this._lpruscisNum = this.renderControl(lpruscisNum, this._('uscisnumber.tooltip'))
         .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode);
-    
+
         this._lpruscisNumType = this.renderControl(lpruscisNumType, this._('uscisnumbertype.tooltip'));
 
         this.assignCombolistEventHandler(this._lpruscisNumType, e => 
             this._lpruscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : ''));
-    
+
         this._alienWorkAuthDate = this.renderControl(alienWorkAuthDate, this._('alienworkauthdate.tooltip'))
         .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false')
         .unbind('keypress')
         .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
         .blur((e: JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
-    
+
         this._alienuscisNumPrefix = alienuscisNumPrefix;
-    
+
         this._alienuscisNum = this.renderControl(alienuscisNum, this._('uscisnumber.tooltip'))
         .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode);
-    
+
         this._alienuscisNumType = this.renderControl(alienuscisNumType, this._('uscisnumbertype.tooltip'));
 
         this.assignCombolistEventHandler(this._alienuscisNumType, e => 
             this._alienuscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : ''));
-    
+
         this._admissionNum = this.renderControl(admissionNum, this._('admissionnumber.tooltip'))
         .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode);
-    
+
         this._admissionNumHelp = this.renderHelpIcon(
             admissionNumHelp,
             this._('admissionnumberhelp.caption'),
             dialog,
             this._('admissionnumberhelp.text')
         );
-    
+
         this._passportNum = this.renderControl(passportNum, this._('passportnumber.tooltip'));
 
         this._passportNumHelp = this.renderHelpIcon(
@@ -351,14 +351,14 @@ class USI9Section1 extends USI9Fields {
         );
 
         this._sgnEmployee = this.renderControl(sgnEmployee, this._('sgnemployee.tooltip'));
-  
+
         this._sgnEmployeeHelp = this.renderHelpIcon(
             sgnEmployeeHelp,
             this._('sgnemployeehelp.caption'),
             dialog,
             this._('sgnemployeehelp.text'),
             700);
-    
+
         this._sgnEmployeeDate = this.renderControl(sgnEmployeeDate, this._('employeedate.tooltip'))
         .datepicker({ minDate: new Date() }).attr('autocomplete', 'false');
 
@@ -541,11 +541,11 @@ class USI9Section1 extends USI9Fields {
 
             [this._alienuscisNum, this._admissionNum, this._passportNum, this._countryOfIssuance].forEach(field =>
                 field.toggleClass(this.invalidFieldClass, false));
-            
+
             this.validateTextField(this._alienuscisNum, this._('citizenship.uscis'), [this.NAString, this.uscisNumberFormat], false, errorMessages);
             this.validateTextField(this._admissionNum, this._('citizenship.admission'), [this.NAString, this.admissionNumberFormat], false, errorMessages);
             this.validateTextField(this._passportNum, this._('citizenship.passport'), [this.NAString, this.passportNumberFormat], false, errorMessages);
-            
+
             if (this.EmptyOrNA(this._alienuscisNum) && this.EmptyOrNA(this._admissionNum) &&
                 this.EmptyOrNA(this._passportNum) && this.EmptyOrNA(this._countryOfIssuance)) {
                 [this._alienuscisNum, this._admissionNum, this._passportNum, this._countryOfIssuance].forEach(field =>

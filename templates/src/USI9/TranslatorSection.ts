@@ -24,7 +24,7 @@ class USI9Translator extends USI9Section1 {
         translatorZipHelp: JQuery<HTMLElement>) {
 
         var translator = [translatorYes, translatorNo];
-            
+
         this._translatorYes = this.renderControl(translatorYes, this._('translator.tooltip'))
         .click(() => { 
             this.selectCheckmark(this._translatorYes, translator);
@@ -38,11 +38,11 @@ class USI9Translator extends USI9Section1 {
             this._translatorState.prop('disabled', false);
             this._translatorZip.prop('disabled', false);
         });
-            
+
         this._translatorNo = this.renderControl(translatorNo, this._('translator.tooltip'))
         .click(() => {
             this.selectCheckmark(this._translatorNo, translator);
-            
+
             this._sgnTranslator.val('').prop('disabled', true);
             this._translatorDate.val('').prop('disabled', true);
             this._translatorLastName.val('').prop('disabled', true);
@@ -52,7 +52,7 @@ class USI9Translator extends USI9Section1 {
             this._translatorState.val('').prop('disabled', true);
             this._translatorZip.val('').prop('disabled', true);
         });
-            
+
         this._translatorHelp = this.renderHelpIcon(
             translatorHelp,
             this._('translatorhelp.caption'),
@@ -60,7 +60,7 @@ class USI9Translator extends USI9Section1 {
             this._('translatorhelp.text'),
             500
         );
-            
+
         this._sgnTranslator = this.renderControl(sgnTranslator, this._('sgntranslator.tooltip'));
 
         this._sgnTranslatorHelp = this.renderHelpIcon(
@@ -69,7 +69,7 @@ class USI9Translator extends USI9Section1 {
             dialog,
             this._('sgntranslatorhelp.text')
         );
-            
+
         this._translatorDate = this.renderControl(translatorDate, this._('translatordate.tooltip'))
         .datepicker({ minDate: new Date() });
 
@@ -79,7 +79,7 @@ class USI9Translator extends USI9Section1 {
             dialog,
             this._('translatordatehelp.text')
         );
-            
+
         this._translatorLastName = this.renderControl(translatorLastName, this._('translatorlastname.tooltip'))
         .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
 
@@ -89,7 +89,7 @@ class USI9Translator extends USI9Section1 {
             dialog,
             this._('translatorlastnamehelp.text')
         );
-            
+
         this._translatorFirstName = this.renderControl(translatorFirstName, this._('translatorfirstname.tooltip'))
         .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
 
@@ -99,7 +99,7 @@ class USI9Translator extends USI9Section1 {
             dialog,
             this._('translatorfirstnamehelp.text')
         );
-            
+
         this._translatorAddress = this.renderControl(translatorAddress, this._('translatoraddress.tooltip'));
 
         this._translatorAddressHelp = this.renderHelpIcon(
@@ -108,7 +108,7 @@ class USI9Translator extends USI9Section1 {
             dialog,
             this._('translatoraddresshelp.text')
         );
-            
+
         this._translatorCity = this.renderControl(translatorCity, this._('translatorcity.tooltip'));
 
         this._translatorCityHelp = this.renderHelpIcon(
@@ -117,7 +117,7 @@ class USI9Translator extends USI9Section1 {
             dialog,
             this._('translatorcityhelp.text')
         );
-            
+
         this._translatorState = this.renderControl(translatorState, this._('translatorstate.tooltip'));
         this.setCombolistText(this._translatorState, ' ', this.blankItem);
 
@@ -127,7 +127,7 @@ class USI9Translator extends USI9Section1 {
             dialog,
             this._('translatorstatehelp.text')
         );
-            
+
         this._translatorZip = this.renderControl(translatorZip, this._('translatorzip.tooltip'))
         .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode);
 
@@ -147,9 +147,9 @@ class USI9Translator extends USI9Section1 {
         if (!statusSelected) {
             errorMessages.push(this._('translator.status'));
         }
-        
+
         translator.forEach(status => status.toggleClass(this.invalidFieldClass, !statusSelected));
-        
+
         if (this._translatorYes.prop('checked')) {
             this._translatorDate.attr(this.annotationRequired, 'true');
             this.validateTextField(this._translatorDate, this._('date.sgntranslator'), [this.dateFormat], true, errorMessages);
