@@ -212,7 +212,7 @@ class USI9Section3 extends USI9Section2 {
         );
 
         this._rehireDate = this.renderControl(rehireDate, this._('rehiredate.tooltip') )
-        .datepicker().attr('autocomplete', 'false')
+        .datepicker().attr('autocomplete', 'disabled')
         .unbind('keypress')
         .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
         .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
@@ -281,7 +281,7 @@ class USI9Section3 extends USI9Section2 {
         );
 
         this._expDateSec3 = this.renderControl(expDateSec3, this._('expdatesec3.tooltip'))
-        .datepicker({ minDate: new Date() }).attr('autocomplete', 'false')
+        .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled')
         .unbind('keypress')
         .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
         .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
@@ -305,7 +305,7 @@ class USI9Section3 extends USI9Section2 {
         );
 
         this._signDateSec3 = this.renderControl(signDateSec3, this._('employersigndatesec3.tooltip'))
-        .datepicker({ minDate: new Date() }).attr('autocomplete', 'off')
+        .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled')
         .attr(this.annotationRequired, 'true')
         // work around for the Chrome auto-fill bug
         .attr('readonly', 'true')

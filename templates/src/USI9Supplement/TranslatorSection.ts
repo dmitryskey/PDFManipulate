@@ -94,7 +94,7 @@ class USI9SupplementTranslator extends USI9SupplementFields {
         );
             
         this._translatorDate = this.renderControl(translatorDate, this._('translatordate.tooltip'))
-        .datepicker({ minDate: new Date() });
+        .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
 
         this._translatorDateHelp = this.renderHelpIcon(
             translatorDateHelp,
@@ -163,7 +163,7 @@ class USI9SupplementTranslator extends USI9SupplementFields {
 
         this._sgnTranslator2 = this.renderControl(sgnTranslator2, this._('sgntranslator.tooltip'));
         this._translatorDate2 = this.renderControl(translatorDate2, this._('translatordate.tooltip'))
-        .datepicker({ minDate: new Date() });  
+        .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');  
 
         this._translatorLastName2 = this.renderControl(translatorLastName2, this._('translatorlastname.tooltip'))
         .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
@@ -183,7 +183,7 @@ class USI9SupplementTranslator extends USI9SupplementFields {
 
         this._sgnTranslator3 = this.renderControl(sgnTranslator3, this._('sgntranslator.tooltip'));
         this._translatorDate3 = this.renderControl(translatorDate3, this._('translatordate.tooltip'))
-        .datepicker({ minDate: new Date() });  
+        .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');  
 
         this._translatorLastName3 = this.renderControl(translatorLastName3, this._('translatorlastname.tooltip'))
         .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
@@ -203,7 +203,7 @@ class USI9SupplementTranslator extends USI9SupplementFields {
 
         this._sgnTranslator4 = this.renderControl(sgnTranslator4, this._('sgntranslator.tooltip'));
         this._translatorDate4 = this.renderControl(translatorDate4, this._('translatordate.tooltip'))
-        .datepicker({ minDate: new Date() });  
+        .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');  
 
         this._translatorLastName4 = this.renderControl(translatorLastName4, this._('translatorlastname.tooltip'))
         .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);

@@ -71,7 +71,7 @@ class USI9Translator extends USI9Section1 {
         );
 
         this._translatorDate = this.renderControl(translatorDate, this._('translatordate.tooltip'))
-        .datepicker({ minDate: new Date() });
+        .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
 
         this._translatorDateHelp = this.renderHelpIcon(
             translatorDateHelp,

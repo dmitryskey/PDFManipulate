@@ -184,7 +184,7 @@ class USI9Section1 extends USI9Fields {
             changeMonth: true,
             changeYear: true,
             yearRange: '1908:' + maxDOB.getFullYear(),
-            maxDate: maxDOB}).attr('autocomplete', 'false');
+            maxDate: maxDOB}).attr('autocomplete', 'disabled');
 
         this._dobHelp = this.renderHelpIcon(
             dobHelp,
@@ -307,7 +307,7 @@ class USI9Section1 extends USI9Fields {
             this._lpruscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : ''));
 
         this._alienWorkAuthDate = this.renderControl(alienWorkAuthDate, this._('alienworkauthdate.tooltip'))
-        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false')
+        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
         .unbind('keypress')
         .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
         .blur((e: JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
@@ -360,7 +360,7 @@ class USI9Section1 extends USI9Fields {
             700);
 
         this._sgnEmployeeDate = this.renderControl(sgnEmployeeDate, this._('employeedate.tooltip'))
-        .datepicker({ minDate: new Date() }).attr('autocomplete', 'false');
+        .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
 
         this._sgnEmployeeDateHelp = this.renderHelpIcon(
             sgnEmployeeDateHelp,

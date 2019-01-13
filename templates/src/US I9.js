@@ -351,7 +351,7 @@ var USI9Section1 = (function (_super) {
             changeYear: true,
             yearRange: '1908:' + maxDOB.getFullYear(),
             maxDate: maxDOB
-        }).attr('autocomplete', 'false');
+        }).attr('autocomplete', 'disabled');
         this._dobHelp = this.renderHelpIcon(dobHelp, this._('dobhelp.caption'), dialog, this._('dobhelp.text'));
         this.renderSSNFields([ssn11, ssn12, ssn13, ssn21, ssn22, ssn31, ssn32, ssn33, ssn34]);
         this._ssnHelp = this.renderHelpIcon(ssnHelp, this._('ssnhelp.caption'), dialog, this._('ssnhelp.text'), 400);
@@ -380,7 +380,7 @@ var USI9Section1 = (function (_super) {
             return _this._lpruscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : '');
         });
         this._alienWorkAuthDate = this.renderControl(alienWorkAuthDate, this._('alienworkauthdate.tooltip'))
-            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false')
+            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
             .unbind('keypress')
             .keypress(function (e) { return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
             .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); });
@@ -401,7 +401,7 @@ var USI9Section1 = (function (_super) {
         this._sgnEmployee = this.renderControl(sgnEmployee, this._('sgnemployee.tooltip'));
         this._sgnEmployeeHelp = this.renderHelpIcon(sgnEmployeeHelp, this._('sgnemployeehelp.caption'), dialog, this._('sgnemployeehelp.text'), 700);
         this._sgnEmployeeDate = this.renderControl(sgnEmployeeDate, this._('employeedate.tooltip'))
-            .datepicker({ minDate: new Date() }).attr('autocomplete', 'false');
+            .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
         this._sgnEmployeeDateHelp = this.renderHelpIcon(sgnEmployeeDateHelp, this._('employeedatehelp.caption'), dialog, this._('employeedatehelp.text'));
     };
     USI9Section1.prototype.renderSection1 = function (dialog, lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, otherNames, otherNamesHelp, address, addressHelp, apptNumber, apptNumberHelp, city, cityHelp, state, stateHelp, zip, zipHelp, dob, dobHelp, ssn11, ssn12, ssn13, ssn21, ssn22, ssn31, ssn32, ssn33, ssn34, ssnHelp, email, emailHelp, phone, phoneHelp, citizen, citizenHelp, national, nationalHelp, lpr, lprHelp, alien, alienHelp, uscisNumberHelp, lpruscisNumPrefix, lpruscisNum, lpruscisNumType, alienWorkAuthDate, alienuscisNumPrefix, alienuscisNum, alienuscisNumType, admissionNum, admissionNumHelp, passportNum, passportNumHelp, countryOfIssuance, countryOfIssuanceHelp, sgnEmployee, sgnEmployeeHelp, sgnEmployeeDate, sgnEmployeeDateHelp) {
@@ -542,7 +542,7 @@ var USI9Translator = (function (_super) {
         this._sgnTranslator = this.renderControl(sgnTranslator, this._('sgntranslator.tooltip'));
         this._sgnTranslatorHelp = this.renderHelpIcon(sgnTranslatorHelp, this._('sgntranslatorhelp.caption'), dialog, this._('sgntranslatorhelp.text'));
         this._translatorDate = this.renderControl(translatorDate, this._('translatordate.tooltip'))
-            .datepicker({ minDate: new Date() });
+            .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
         this._translatorDateHelp = this.renderHelpIcon(translatorDateHelp, this._('translatordatehelp.caption'), dialog, this._('translatordatehelp.text'));
         this._translatorLastName = this.renderControl(translatorLastName, this._('translatorlastname.tooltip'))
             .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
@@ -632,7 +632,7 @@ var USI9Section2 = (function (_super) {
             this.clearListABC();
         }
         this._hireDate = this.renderControl(hireDate, this._('hiredate.tooltip'))
-            .datepicker().attr('autocomplete', 'false').attr('autocomplete', 'false');
+            .datepicker().attr('autocomplete', 'disabled');
         this._hireDateHelp = this.renderHelpIcon(hireDateHelp, this._('hiredatehelp.caption'), dialog, this._('hiredatehelp.text'));
         this.renderEmployerData(dialog, sgnEmployer, sgnEmployerHelp, employerSignDate, employerSignDateHelp, employerTitle, employerTitleHelp, employerLastName, employerLastNameHelp, employerFirstName, employerFirstNameHelp, employerName, employerNameHelp, employerAddress, employerAddressHelp, employerCity, employerCityHelp, employerState, employerStateHelp, employerZip, employerZipHelp);
     };
@@ -807,7 +807,7 @@ var USI9Section2 = (function (_super) {
         this._sgnEmployer = this.renderControl(sgnEmployer, this._('sgnemployer.tooltip'));
         this._sgnEmployerHelp = this.renderHelpIcon(sgnEmployerHelp, this._('sgnemployerhelp.caption'), dialog, this._('sgnemployerhelp.text'), 500);
         this._employerSignDate = this.renderControl(employerSignDate, this._('employersigndate.tooltip'))
-            .datepicker({ minDate: new Date() }).attr('autocomplete', 'false');
+            .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
         this._employerSignDateHelp = this.renderHelpIcon(employerSignDateHelp, this._('employersigndatehelp.caption'), dialog, this._('employersigndatehelp.text'), 500);
         this._employerTitle = this.renderControl(employerTitle, this._('employertitle.tooltip'));
         this._employerTitleHelp = this.renderHelpIcon(employerTitleHelp, this._('employertitlehelp.caption'), dialog, this._('employertitlehelp.text'), 500);
@@ -836,7 +836,7 @@ var USI9Section2 = (function (_super) {
         this._listADocNumber = this.renderControl(listADocNumber, this._('listadocnumber.tooltip'));
         this._listADocNumberHelp = this.renderHelpIcon(listADocNumberHelp, this._('listadocnumberhelp.caption'), dialog, this._('listadocnumberhelp.text'), 500);
         this._listADocExpDate = this.renderControl(listADocExpDate, this._('listaexpdate.tooltip'))
-            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false');
+            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled');
         this._listADocExpDateHelp = this.renderHelpIcon(listADocExpDateHelp, this._('listaexpdatehelp.caption'), dialog, this._('listaexpdatehelp.text'), 500);
         this._listADoc2 = this.renderControl(listADoc2, this._('listadoc2.tooltip'));
         this._listADoc2Help = this.renderHelpIcon(listADoc2Help, this._('listadoc2help.caption'), dialog, this._('listadoc2help.text'), 500);
@@ -845,7 +845,7 @@ var USI9Section2 = (function (_super) {
         this._listADocNumber2 = this.renderControl(listADocNumber2, this._('listadocnumber2.tooltip'));
         this._listADocNumber2Help = this.renderHelpIcon(listADocNumber2Help, this._('listadocnumber2help.caption'), dialog, this._('listadocnumber2help.text'), 500);
         this._listADocExpDate2 = this.renderControl(listADocExpDate2, this._('listaexpdate2.tooltip'))
-            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false');
+            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled');
         this._listADocExpDate2Help = this.renderHelpIcon(listADocExpDate2Help, this._('listaexpdate2help.caption'), dialog, this._('listaexpdate2help.text'), 500);
         this._listADoc3 = this.renderControl(listADoc3, this._('listadoc3.tooltip'));
         this._listADoc3Help = this.renderHelpIcon(listADoc3Help, this._('listadoc3help.caption'), dialog, this._('listadoc3help.text'), 500);
@@ -854,7 +854,7 @@ var USI9Section2 = (function (_super) {
         this._listADocNumber3 = this.renderControl(listADocNumber3, this._('listadocnumber3.tooltip'));
         this._listADocNumber3Help = this.renderHelpIcon(listADocNumber3Help, this._('listadocnumber3help.caption'), dialog, this._('listadocnumber3help.text'), 500);
         this._listADocExpDate3 = this.renderControl(listADocExpDate3, this._('listaexpdate3.tooltip'))
-            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false');
+            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled');
         this._listADocExpDate3Help = this.renderHelpIcon(listADocExpDate3Help, this._('listaexpdate3help.caption'), dialog, this._('listaexpdate3help.text'), 500);
         this._listBDoc = this.renderControl(listBDoc, this._('listbdoc.tooltip'));
         this._listBDocHelp = this.renderHelpIcon(listBDocHelp, this._('listbdochelp.caption'), dialog, this._('listbdochelp.text'), 600);
@@ -864,7 +864,7 @@ var USI9Section2 = (function (_super) {
         this._listBDocNumber = this.renderControl(listBDocNumber, this._('listbdocnumber.tooltip'));
         this._listBDocNumberHelp = this.renderHelpIcon(listBDocNumberHelp, this._('listbdocnumberhelp.caption'), dialog, this._('listbdocnumberhelp.text'));
         this._listBDocExpDate = this.renderControl(listBDocExpDate, this._('listbexpdate.tooltip'))
-            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false');
+            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled');
         this._listBDocExpDateHelp = this.renderHelpIcon(listBDocExpDateHelp, this._('listbexpdatehelp.caption'), dialog, this._('listbexpdatehelp.text'), 500);
         this._listCDoc = this.renderControl(listCDoc, this._('listcdoc.tooltip'));
         this._listCDocHelp = this.renderHelpIcon(listCDocHelp, this._('listcdochelp.caption'), dialog, this._('listcdochelp.text'), 700);
@@ -874,7 +874,7 @@ var USI9Section2 = (function (_super) {
         this._listCDocNumber = this.renderControl(listCDocNumber, this._('listcdocnumber.tooltip'));
         this._listCDocNumberHelp = this.renderHelpIcon(listCDocNumberHelp, this._('listcdocnumberhelp.caption'), dialog, this._('listcdocnumberhelp.text'));
         this._listCDocExpDate = this.renderControl(listCDocExpDate, this._('listcexpdate.tooltip'))
-            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false');
+            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled');
         this._listCDocExpDateHelp = this.renderHelpIcon(listCDocExpDateHelp, this._('listcexpdatehelp.caption'), dialog, this._('listcexpdatehelp.text'), 500);
     };
     USI9Section2.prototype.processListABC = function (ddl, code, self) {
@@ -1045,7 +1045,7 @@ var USI9Section2 = (function (_super) {
             .datepicker('option', 'minDate', new Date())
             .datepicker('option', 'maxDate', null)
             .datepicker('option', 'showOn', 'focus')
-            .attr('autocomplete', 'false').val('')
+            .attr('autocomplete', 'disabled').val('')
             .prop(this.requiredProp, true).prop(this.freeTextProp, false);
         var tenYearsFromNow = new Date();
         tenYearsFromNow.setFullYear(tenYearsFromNow.getFullYear() + 10);
@@ -1088,7 +1088,7 @@ var USI9Section2 = (function (_super) {
                 .datepicker('option', 'minDate', new Date())
                 .datepicker('option', 'maxDate', null)
                 .datepicker('option', 'showOn', 'focus')
-                .attr('autocomplete', 'false').val('')
+                .attr('autocomplete', 'disabled').val('')
                 .unbind('keypress')
                 .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
                 .prop(this.requiredProp, true).prop(this.freeTextProp, true);
@@ -1135,7 +1135,7 @@ var USI9Section2 = (function (_super) {
                 .datepicker('option', 'minDate', null)
                 .datepicker('option', 'maxDate', new Date())
                 .datepicker('option', 'showOn', 'focus')
-                .attr('autocomplete', 'false').val('');
+                .attr('autocomplete', 'disabled').val('');
             this.filterCombolist(this._listADoc2, { 5: this._('formI797C'), 6: this._('formI20') }, '5', this, this.processListABC);
             this.filterCombolist(this._listAIssuingAuthority2, { USCIS: this._(USCIS) }, USCIS, this, this.processListABC);
             this._listADocNumber2.removeAttr('readOnly').val('').prop(this.requiredProp, true);
@@ -1144,7 +1144,7 @@ var USI9Section2 = (function (_super) {
                 .datepicker('option', 'minDate', new Date())
                 .datepicker('option', 'maxDate', null)
                 .datepicker('option', 'showOn', 'focus')
-                .attr('autocomplete', 'false').val('')
+                .attr('autocomplete', 'disabled').val('')
                 .prop(this.requiredProp, true);
         }
         else if (['7', '14'].indexOf(code) >= 0) {
@@ -1161,7 +1161,7 @@ var USI9Section2 = (function (_super) {
                 .datepicker('option', 'minDate', new Date())
                 .datepicker('option', 'maxDate', null)
                 .datepicker('option', 'showOn', 'focus')
-                .attr('autocomplete', 'false').val('')
+                .attr('autocomplete', 'disabled').val('')
                 .unbind('keypress')
                 .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
                 .prop(this.requiredProp, true).prop(this.freeTextProp, true);
@@ -1169,7 +1169,7 @@ var USI9Section2 = (function (_super) {
             this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber3.attr('readOnly', 'true').val(this.na);
             this._listADocExpDate3.attr('readOnly', 'true')
-                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
         }
         else if (code === '8') {
             issuingAuthList = { FSM: this._(FSM) };
@@ -1184,7 +1184,7 @@ var USI9Section2 = (function (_super) {
                 .datepicker('option', 'minDate', new Date())
                 .datepicker('option', 'maxDate', null)
                 .datepicker('option', 'showOn', 'focus')
-                .attr('autocomplete', 'false').val('')
+                .attr('autocomplete', 'disabled').val('')
                 .unbind('keypress')
                 .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
                 .prop(this.requiredProp, true).prop(this.freeTextProp, true);
@@ -1202,7 +1202,7 @@ var USI9Section2 = (function (_super) {
                 .datepicker('option', 'minDate', new Date())
                 .datepicker('option', 'maxDate', null)
                 .datepicker('option', 'showOn', 'focus')
-                .attr('autocomplete', 'false').val('')
+                .attr('autocomplete', 'disabled').val('')
                 .unbind('keypress')
                 .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
                 .prop(this.requiredProp, true).prop(this.freeTextProp, true);
@@ -1256,7 +1256,7 @@ var USI9Section2 = (function (_super) {
             this.filterCombolist(this._listAIssuingAuthority2, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber2.attr('readOnly', 'true').val(this.na);
             this._listADocExpDate2.attr('readOnly', 'true')
-                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
         }
         if (['1', '2', '3', '4', '5', '6', '8', '9', '10', '11', '12', '15', '16', '17'].indexOf(code) >= 0) {
             this.filterCombolist(this._listADoc3, { 0: this.na }, '0', this, this.processListABC);
@@ -1264,7 +1264,7 @@ var USI9Section2 = (function (_super) {
             this._listADocNumber3.attr('readOnly', 'true').val(this.na);
             this._listADocExpDate3
                 .attr('readOnly', 'true')
-                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
         }
         if (code !== '0' && code.trim() !== '') {
             this.clearListB();
@@ -1314,20 +1314,20 @@ var USI9Section2 = (function (_super) {
             this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber3.attr('readOnly', 'true').val(this.na);
             this._listADocExpDate3.attr('readOnly', 'true')
-                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
         }
         else if (code === '1') {
             this.filterCombolist(this._listAIssuingAuthority3, { spaceSymbol: this.blankItem, ICE: this._(ICE), DOJINS: this._(DOJINS) }, ICE, this, this.processListABC);
             this._listADocNumber3.removeAttr('readOnly').val('');
             this._listADocExpDate3.removeAttr('readOnly').val('')
-                .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false')
+                .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'disabled')
                 .prop(this.requiredProp, true).prop(this.freeTextProp, false);
         }
         else if (code === '2') {
             this.filterCombolist(this._listAIssuingAuthority3, { spaceSymbol: this.blankItem, USDS: this._(USDS) }, USDS, this, this.processListABC);
             this._listADocNumber3.removeAttr('readOnly').val('');
             this._listADocExpDate3.removeAttr('readOnly').val('')
-                .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false')
+                .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'disabled')
                 .prop(this.requiredProp, true).prop(this.freeTextProp, false);
         }
     };
@@ -1348,7 +1348,7 @@ var USI9Section2 = (function (_super) {
             this._listBDocNumber.removeAttr('readOnly').val('');
             this._listBDocExpDate
                 .removeAttr('readOnly')
-                .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false').val('')
+                .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'disabled').val('')
                 .unbind('keypress')
                 .keypress(function (e) { return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
                 .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); });
@@ -1387,7 +1387,7 @@ var USI9Section2 = (function (_super) {
             this._listBDocNumber.attr('readOnly', 'true').val(this.na);
             this._listBDocExpDate
                 .attr('readOnly', 'true')
-                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
         }
         this.filterCombolist(this._listBIssuingAuthority, $.extend({ spaceSymbol: this.blankItem }, issuingAuthList), issuingAuth, this, this.processListABC);
         this._listBDocNumber.prop(this.validationExpressionProp, fieldValidationExpression);
@@ -1423,7 +1423,7 @@ var USI9Section2 = (function (_super) {
             .datepicker('option', 'minDate', new Date())
             .datepicker('option', 'maxDate', null)
             .datepicker('option', 'showOn', 'focus')
-            .attr('autocomplete', 'false')
+            .attr('autocomplete', 'disabled')
             .unbind('keypress')
             .keypress(function (e) { return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
             .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
@@ -1439,7 +1439,7 @@ var USI9Section2 = (function (_super) {
             this._listCDocExpDate
                 .attr('readOnly', 'true')
                 .datepicker('option', 'showOn', 'off')
-                .attr('autocomplete', 'false').val(this.na);
+                .attr('autocomplete', 'disabled').val(this.na);
             this._listCDoc.prop('ssncard', true);
         }
         else if (['2', '3', '4'].indexOf(code) >= 0) {
@@ -1492,7 +1492,7 @@ var USI9Section2 = (function (_super) {
                 .datepicker('option', 'minDate', null)
                 .datepicker('option', 'maxDate', new Date())
                 .datepicker('option', 'showOn', 'focus')
-                .attr('autocomplete', 'false').val('');
+                .attr('autocomplete', 'disabled').val('');
         }
         this._listCDocNumber
             .prop('maxLength', numberMaxLength)
@@ -1545,17 +1545,17 @@ var USI9Section2 = (function (_super) {
         this.filterCombolist(this._listAIssuingAuthority, { 0: this.na }, '0', this, this.processListABC);
         this._listADocNumber.attr('readOnly', 'true').val(this.na);
         this._listADocExpDate.attr('readOnly', 'true')
-            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
         this.filterCombolist(this._listADoc2, { 0: this.na }, '0', this, this.processListABC);
         this.filterCombolist(this._listAIssuingAuthority2, { 0: this.na }, '0', this, this.processListABC);
         this._listADocNumber2.attr('readOnly', 'true').val(this.na);
         this._listADocExpDate2.attr('readOnly', 'true')
-            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
         this.filterCombolist(this._listADoc3, { 0: this.na }, '0', this, this.processListABC);
         this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
         this._listADocNumber3.attr('readOnly', 'true').val(this.na);
         this._listADocExpDate3.attr('readOnly', 'true')
-            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
     };
     USI9Section2.prototype.clearListB = function () {
         this.setCombolistValue(this._listBDoc, '0');
@@ -1563,7 +1563,7 @@ var USI9Section2 = (function (_super) {
         this._listBDocNumber.attr('readOnly', 'true').val(this.na);
         this._listBDocExpDate
             .attr('readOnly', 'true')
-            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
     };
     USI9Section2.prototype.clearListC = function () {
         this.setCombolistValue(this._listCDoc, '0');
@@ -1571,7 +1571,7 @@ var USI9Section2 = (function (_super) {
         this._listCDocNumber.attr('readOnly', 'true').val(this.na);
         this._listCDocExpDate
             .attr('readOnly', 'true')
-            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
     };
     return USI9Section2;
 }(USI9Translator));
@@ -1700,7 +1700,7 @@ var USI9Section3 = (function (_super) {
             .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); });
         this._newmiddleInitialHelp = this.renderHelpIcon(middleInitialHelp, this._('newmiddleinitialhelp.caption'), dialog, this._('newmiddleinitialhelp.text'));
         this._rehireDate = this.renderControl(rehireDate, this._('rehiredate.tooltip'))
-            .datepicker().attr('autocomplete', 'false')
+            .datepicker().attr('autocomplete', 'disabled')
             .unbind('keypress')
             .keypress(function (e) { return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
             .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); });
@@ -1744,7 +1744,7 @@ var USI9Section3 = (function (_super) {
         this._docNumberSec3 = this.renderControl(docNumberSec3, this._('docnumbersec3.tooltip'));
         this._docNumberSec3Help = this.renderHelpIcon(docNumberSec3Help, this._('docnumbersec3help.caption'), dialog, this._('docnumbersec3help.text'), 500);
         this._expDateSec3 = this.renderControl(expDateSec3, this._('expdatesec3.tooltip'))
-            .datepicker({ minDate: new Date() }).attr('autocomplete', 'false')
+            .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled')
             .unbind('keypress')
             .keypress(function (e) { return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
             .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); });
@@ -1752,7 +1752,7 @@ var USI9Section3 = (function (_super) {
         this._sgnEmployerSec3 = this.renderControl(sgnEmployerSec3, this._('sgnemployersec3.tooltip'));
         this._sgnEmployerSec3Help = this.renderHelpIcon(sgnEmployerSec3Help, this._('sgnemployersec3help.caption'), dialog, this._('sgnemployersec3help.text'), 500);
         this._signDateSec3 = this.renderControl(signDateSec3, this._('employersigndatesec3.tooltip'))
-            .datepicker({ minDate: new Date() }).attr('autocomplete', 'off')
+            .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled')
             .attr(this.annotationRequired, 'true')
             .attr('readonly', 'true')
             .focus(function () { return _this._signDateSec3.removeAttr('readonly'); })

@@ -195,7 +195,7 @@ class USI9Section2 extends USI9Translator {
         }
 
         this._hireDate = this.renderControl(hireDate, this._('hiredate.tooltip'))
-        .datepicker().attr('autocomplete', 'false').attr('autocomplete', 'false');
+        .datepicker().attr('autocomplete', 'disabled');
 
         this._hireDateHelp = this.renderHelpIcon(
             hireDateHelp,
@@ -445,7 +445,7 @@ class USI9Section2 extends USI9Translator {
         );
 
         this._employerSignDate = this.renderControl(employerSignDate, this._('employersigndate.tooltip'))
-        .datepicker({ minDate: new Date() }).attr('autocomplete', 'false');
+        .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
 
         this._employerSignDateHelp = this.renderHelpIcon(
             employerSignDateHelp,
@@ -612,7 +612,7 @@ class USI9Section2 extends USI9Translator {
         );
 
         this._listADocExpDate = this.renderControl(listADocExpDate, this._('listaexpdate.tooltip'))
-        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false');
+        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled');
 
         this._listADocExpDateHelp = this.renderHelpIcon(
             listADocExpDateHelp,
@@ -653,7 +653,7 @@ class USI9Section2 extends USI9Translator {
         );
 
         this._listADocExpDate2 = this.renderControl(listADocExpDate2, this._('listaexpdate2.tooltip'))
-        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false');
+        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled');
 
         this._listADocExpDate2Help = this.renderHelpIcon(
             listADocExpDate2Help,
@@ -694,7 +694,7 @@ class USI9Section2 extends USI9Translator {
         );
 
         this._listADocExpDate3 = this.renderControl(listADocExpDate3, this._('listaexpdate3.tooltip'))
-        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false');
+        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled');
 
         this._listADocExpDate3Help = this.renderHelpIcon(
             listADocExpDate3Help,
@@ -736,7 +736,7 @@ class USI9Section2 extends USI9Translator {
         );
 
         this._listBDocExpDate = this.renderControl(listBDocExpDate, this._('listbexpdate.tooltip'))
-        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false');
+        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled');
 
         this._listBDocExpDateHelp = this.renderHelpIcon(
             listBDocExpDateHelp,
@@ -778,7 +778,7 @@ class USI9Section2 extends USI9Translator {
         );
 
         this._listCDocExpDate = this.renderControl(listCDocExpDate, this._('listcexpdate.tooltip'))
-        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'false');
+        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled');
 
         this._listCDocExpDateHelp = this.renderHelpIcon(
             listCDocExpDateHelp,
@@ -978,7 +978,7 @@ class USI9Section2 extends USI9Translator {
         .datepicker('option', 'minDate', new Date())
         .datepicker('option', 'maxDate', null)
         .datepicker('option', 'showOn', 'focus')
-        .attr('autocomplete', 'false').val('')
+        .attr('autocomplete', 'disabled').val('')
         .prop(this.requiredProp, true).prop(this.freeTextProp, false);
 
         let tenYearsFromNow = new Date();
@@ -1042,7 +1042,7 @@ class USI9Section2 extends USI9Translator {
             .datepicker('option', 'minDate', new Date())
             .datepicker('option', 'maxDate', null)
             .datepicker('option', 'showOn', 'focus')
-            .attr('autocomplete', 'false').val('')
+            .attr('autocomplete', 'disabled').val('')
             .unbind('keypress')
             .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
             .prop(this.requiredProp, true).prop(this.freeTextProp, true);
@@ -1095,7 +1095,7 @@ class USI9Section2 extends USI9Translator {
             .datepicker('option', 'minDate', null)
             .datepicker('option', 'maxDate', new Date())
             .datepicker('option', 'showOn', 'focus')
-            .attr('autocomplete', 'false').val('');
+            .attr('autocomplete', 'disabled').val('');
 
             this.filterCombolist(
                 this._listADoc2,
@@ -1117,7 +1117,7 @@ class USI9Section2 extends USI9Translator {
             .datepicker('option', 'minDate', new Date())
             .datepicker('option', 'maxDate', null)
             .datepicker('option', 'showOn', 'focus')
-            .attr('autocomplete', 'false').val('')
+            .attr('autocomplete', 'disabled').val('')
             .prop(this.requiredProp, true);
         } else if (['7', '14'].indexOf(code) >= 0) {
             // 7 - Foreign Passport, work-authorized nonimmigrant
@@ -1149,7 +1149,7 @@ class USI9Section2 extends USI9Translator {
             .datepicker('option', 'minDate', new Date())
             .datepicker('option', 'maxDate', null)
             .datepicker('option', 'showOn', 'focus')
-            .attr('autocomplete', 'false').val('')
+            .attr('autocomplete', 'disabled').val('')
             .unbind('keypress')
             .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
             .prop(this.requiredProp, true).prop(this.freeTextProp, true);
@@ -1164,7 +1164,7 @@ class USI9Section2 extends USI9Translator {
             this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber3.attr('readOnly', 'true').val(this.na);
             this._listADocExpDate3.attr('readOnly', 'true')
-            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
         } else if (code === '8') {
             // 8 - FSM Passport with Form I-94
             issuingAuthList = { FSM: this._(FSM) };
@@ -1193,7 +1193,7 @@ class USI9Section2 extends USI9Translator {
             .datepicker('option', 'minDate', new Date())
             .datepicker('option', 'maxDate', null)
             .datepicker('option', 'showOn', 'focus')
-            .attr('autocomplete', 'false').val('')
+            .attr('autocomplete', 'disabled').val('')
             .unbind('keypress')
             .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
             .prop(this.requiredProp, true).prop(this.freeTextProp, true);
@@ -1225,7 +1225,7 @@ class USI9Section2 extends USI9Translator {
             .datepicker('option', 'minDate', new Date())
             .datepicker('option', 'maxDate', null)
             .datepicker('option', 'showOn', 'focus')
-            .attr('autocomplete', 'false').val('')
+            .attr('autocomplete', 'disabled').val('')
             .unbind('keypress')
             .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
             .prop(this.requiredProp, true).prop(this.freeTextProp, true);
@@ -1291,7 +1291,7 @@ class USI9Section2 extends USI9Translator {
             this.filterCombolist(this._listAIssuingAuthority2, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber2.attr('readOnly', 'true').val(this.na);
             this._listADocExpDate2.attr('readOnly', 'true')
-            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
         }
 
         if (['1', '2', '3', '4', '5', '6', '8', '9', '10', '11', '12', '15', '16', '17'].indexOf(code) >= 0) {
@@ -1300,7 +1300,7 @@ class USI9Section2 extends USI9Translator {
             this._listADocNumber3.attr('readOnly', 'true').val(this.na);
             this._listADocExpDate3
             .attr('readOnly', 'true')
-            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
         }
 
         if (code !== '0' && code.trim() !== '') {
@@ -1384,7 +1384,7 @@ class USI9Section2 extends USI9Translator {
             this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
             this._listADocNumber3.attr('readOnly', 'true').val(this.na);
             this._listADocExpDate3.attr('readOnly', 'true')
-            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
         } else if (code === '1') {
             // 1 - Form I-20
             this.filterCombolist(
@@ -1396,7 +1396,7 @@ class USI9Section2 extends USI9Translator {
 
             this._listADocNumber3.removeAttr('readOnly').val('');
             this._listADocExpDate3.removeAttr('readOnly').val('')
-            .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false')
+            .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'disabled')
             .prop(this.requiredProp, true).prop(this.freeTextProp, false);
         } else if (code === '2') {
             // 2 - Form DS-2019
@@ -1409,7 +1409,7 @@ class USI9Section2 extends USI9Translator {
 
             this._listADocNumber3.removeAttr('readOnly').val('');
             this._listADocExpDate3.removeAttr('readOnly').val('')
-            .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false')
+            .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'disabled')
             .prop(this.requiredProp, true).prop(this.freeTextProp, false);
         }
     }
@@ -1436,7 +1436,7 @@ class USI9Section2 extends USI9Translator {
             this._listBDocNumber.removeAttr('readOnly').val('');
             this._listBDocExpDate
             .removeAttr('readOnly')
-            .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'false').val('')
+            .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'disabled').val('')
             .unbind('keypress')
             .keypress((e : JQuery.Event<HTMLElement>) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
             .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
@@ -1517,7 +1517,7 @@ class USI9Section2 extends USI9Translator {
             this._listBDocNumber.attr('readOnly', 'true').val(this.na);
             this._listBDocExpDate
             .attr('readOnly', 'true')
-            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
         }
 
         this.filterCombolist(
@@ -1565,7 +1565,7 @@ class USI9Section2 extends USI9Translator {
         .datepicker('option', 'minDate', new Date())
         .datepicker('option', 'maxDate', null)
         .datepicker('option', 'showOn', 'focus')
-        .attr('autocomplete', 'false')
+        .attr('autocomplete', 'disabled')
         .unbind('keypress')
         .keypress((e : JQuery.Event<HTMLElement>) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
         .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
@@ -1587,7 +1587,7 @@ class USI9Section2 extends USI9Translator {
             this._listCDocExpDate
             .attr('readOnly', 'true')
             .datepicker('option', 'showOn', 'off')
-            .attr('autocomplete', 'false').val(this.na);
+            .attr('autocomplete', 'disabled').val(this.na);
 
             this._listCDoc.prop('ssncard', true);
         } else if (['2', '3', '4'].indexOf(code) >= 0) {
@@ -1655,7 +1655,7 @@ class USI9Section2 extends USI9Translator {
             .datepicker('option', 'minDate', null)
             .datepicker('option', 'maxDate', new Date())
             .datepicker('option', 'showOn', 'focus')
-            .attr('autocomplete', 'false').val('');
+            .attr('autocomplete', 'disabled').val('');
         }
 
         this._listCDocNumber
@@ -1739,19 +1739,19 @@ class USI9Section2 extends USI9Translator {
         this.filterCombolist(this._listAIssuingAuthority, { 0: this.na }, '0', this, this.processListABC);
         this._listADocNumber.attr('readOnly', 'true').val(this.na);
         this._listADocExpDate.attr('readOnly', 'true')
-        .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+        .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
 
         this.filterCombolist(this._listADoc2, {0:this.na}, '0', this, this.processListABC);
         this.filterCombolist(this._listAIssuingAuthority2, { 0:this.na }, '0', this, this.processListABC);
         this._listADocNumber2.attr('readOnly', 'true').val(this.na);
         this._listADocExpDate2.attr('readOnly', 'true')
-        .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+        .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
 
         this.filterCombolist(this._listADoc3, { 0: this.na }, '0', this, this.processListABC);
         this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
         this._listADocNumber3.attr('readOnly', 'true').val(this.na);
         this._listADocExpDate3.attr('readOnly', 'true')
-        .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+        .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
     }
 
     protected clearListB() {
@@ -1760,7 +1760,7 @@ class USI9Section2 extends USI9Translator {
         this._listBDocNumber.attr('readOnly', 'true').val(this.na);
         this._listBDocExpDate
         .attr('readOnly', 'true')
-        .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+        .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
     }
 
     protected clearListC() {
@@ -1769,7 +1769,7 @@ class USI9Section2 extends USI9Translator {
         this._listCDocNumber.attr('readOnly', 'true').val(this.na);
         this._listCDocExpDate
         .attr('readOnly', 'true')
-        .datepicker('option', 'showOn', 'off').attr('autocomplete', 'false').val(this.na);
+        .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
     }
     //endregion
 }

@@ -258,7 +258,7 @@ var USI9SupplementTranslator = (function (_super) {
         this._sgnTranslator = this.renderControl(sgnTranslator, this._('sgntranslator.tooltip'));
         this._sgnTranslatorHelp = this.renderHelpIcon(sgnTranslatorHelp, this._('sgntranslatorhelp.caption'), dialog, this._('sgntranslatorhelp.text'));
         this._translatorDate = this.renderControl(translatorDate, this._('translatordate.tooltip'))
-            .datepicker({ minDate: new Date() });
+            .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
         this._translatorDateHelp = this.renderHelpIcon(translatorDateHelp, this._('translatordatehelp.caption'), dialog, this._('translatordatehelp.text'));
         this._translatorLastName = this.renderControl(translatorLastName, this._('translatorlastname.tooltip'))
             .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
@@ -278,7 +278,7 @@ var USI9SupplementTranslator = (function (_super) {
         this._translatorZipHelp = this.renderHelpIcon(translatorZipHelp, this._('translatorziphelp.caption'), dialog, this._('translatorziphelp.text'));
         this._sgnTranslator2 = this.renderControl(sgnTranslator2, this._('sgntranslator.tooltip'));
         this._translatorDate2 = this.renderControl(translatorDate2, this._('translatordate.tooltip'))
-            .datepicker({ minDate: new Date() });
+            .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
         this._translatorLastName2 = this.renderControl(translatorLastName2, this._('translatorlastname.tooltip'))
             .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
         this._translatorFirstName2 = this.renderControl(translatorFirstName2, this._('translatorfirstname.tooltip'))
@@ -291,7 +291,7 @@ var USI9SupplementTranslator = (function (_super) {
             .keypress(function (e) { return _this.zipFormat.test(e.key) || e.key === _this.backSpaceCode; });
         this._sgnTranslator3 = this.renderControl(sgnTranslator3, this._('sgntranslator.tooltip'));
         this._translatorDate3 = this.renderControl(translatorDate3, this._('translatordate.tooltip'))
-            .datepicker({ minDate: new Date() });
+            .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
         this._translatorLastName3 = this.renderControl(translatorLastName3, this._('translatorlastname.tooltip'))
             .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
         this._translatorFirstName3 = this.renderControl(translatorFirstName3, this._('translatorfirstname.tooltip'))
@@ -304,7 +304,7 @@ var USI9SupplementTranslator = (function (_super) {
             .keypress(function (e) { return _this.zipFormat.test(e.key) || e.key === _this.backSpaceCode; });
         this._sgnTranslator4 = this.renderControl(sgnTranslator4, this._('sgntranslator.tooltip'));
         this._translatorDate4 = this.renderControl(translatorDate4, this._('translatordate.tooltip'))
-            .datepicker({ minDate: new Date() });
+            .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
         this._translatorLastName4 = this.renderControl(translatorLastName4, this._('translatorlastname.tooltip'))
             .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
         this._translatorFirstName4 = this.renderControl(translatorFirstName4, this._('translatorfirstname.tooltip'))
