@@ -1824,7 +1824,9 @@ var USI9 = (function (_super) {
             'operation': 'f',
             'entries': []
         };
-        var readOnlyFieldsToFlat = ['LPRUSCISNumberPrefix', 'AlienUSCISNumberPrefix',
+        var readOnlyFieldsToFlat = ['LPRUSCISNumber', 'LPRUSCISNumberPrefix', 'AlienUSCISNumberPrefix',
+            'AlienWorkAuthorizationDate', 'AlienUSCISNumber',
+            'AdmissionNumber', 'ForeignPassportNumber', 'CountryOfIssuance',
             'LastNameSection2', 'FirstNameSection2',
             'MiddleInitialSection2', 'ImmigrationStatus'];
         $('[' + this.annotationName + ']').each(function (index, ctrl) {

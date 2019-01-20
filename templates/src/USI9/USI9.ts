@@ -24,7 +24,9 @@ class USI9 extends USI9Section3 {
         }
 
         let readOnlyFieldsToFlat =
-        ['LPRUSCISNumberPrefix', 'AlienUSCISNumberPrefix',
+        ['LPRUSCISNumber', 'LPRUSCISNumberPrefix', 'AlienUSCISNumberPrefix',
+         'AlienWorkAuthorizationDate', 'AlienUSCISNumber',
+         'AdmissionNumber', 'ForeignPassportNumber', 'CountryOfIssuance',
          'LastNameSection2', 'FirstNameSection2',
          'MiddleInitialSection2', 'ImmigrationStatus'];
 
