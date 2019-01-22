@@ -286,12 +286,10 @@ var USI9Section1 = (function (_super) {
         this._firstNameHelp = this.renderHelpIcon(firstNameHelp, this._('firstnamehelp.caption'), dialog, this._('firstnamehelp.text'));
         this._middleInitial = this.renderControl(middleInitial, this._('middleinitialhelp.tooltip'))
             .keypress(function (e) { return _this.nameFormat.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
-            .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
             .attr('tabindex', tabIndex++);
         this._middleInitialHelp = this.renderHelpIcon(middleInitialHelp, this._('middleinitialhelp.caption'), dialog, this._('middleinitialhelp.text'));
         this._otherNames = this.renderControl(otherNames, this._('othernameshelp.tooltip'))
             .keypress(function (e) { return _this.nameFormat.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
-            .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
             .attr('tabindex', tabIndex++);
         this._otherNamesHelp = this.renderHelpIcon(otherNamesHelp, this._('othernameshelp.caption'), dialog, this._('othernameshelp.text'));
         this._address = this.renderControl(address, this._('addresshelp.tooltip'))
@@ -406,7 +404,6 @@ var USI9Section1 = (function (_super) {
             .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
             .unbind('keypress')
             .keypress(function (e) { return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
-            .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
             .attr('tabindex', tabIndex++);
         this._alienuscisNumPrefix = alienuscisNumPrefix;
         this._alienuscisNum = this.renderControl(alienuscisNum, this._('uscisnumber.tooltip'))
@@ -447,13 +444,14 @@ var USI9Section1 = (function (_super) {
         var _this = this;
         var errorMessages = [];
         [this._middleInitial, this._otherNames, this._apptNumber, this._email, this._phone]
-            .filter(function (f) { return f.val().trim() === ''; }).forEach(function (f) { return f.val(_this.na); });
+            .filter(function (f) { return f.val().trim() === '' || f.val().toUpperCase() === _this.na; })
+            .forEach(function (f) { return f.val(_this.na); });
         this.validateTextField(this._lastName, this._('name.last'), [this.nameFormat], false, errorMessages);
         this.validateTextField(this._firstName, this._('name.first'), [this.nameFormat], false, errorMessages);
         this.validateTextField(this._middleInitial, this._('name.middleinitial'), [this.nameInitialFormat, this.NAString], false, errorMessages);
         this.validateTextField(this._otherNames, this._('name.othernames'), [this.nameFormat, this.NAString], false, errorMessages);
         this.validateTextField(this._address, this._('address.address'), [], false, errorMessages);
-        this.validateTextField(this._apptNumber, this._('address.apartment'), [this.NAString], false, errorMessages);
+        this.validateTextField(this._apptNumber, this._('address.apartment'), [], false, errorMessages);
         this.validateTextField(this._city, this._('address.city'), [], false, errorMessages);
         this.validateTextField(this._state, this._('address.state'), [this.stateFormat], false, errorMessages);
         this.validateTextField(this._zip, this._('address.zip'), [['CAN', 'MEX'].indexOf(this._state.val()) < 0 ? this.zipNumberFormat : this.postalCodeFormat], false, errorMessages);
@@ -712,7 +710,9 @@ var USI9Section2 = (function (_super) {
         if (section2Fields.filter(function (f) { return f && f.val() && f.val().trim() !== ''; }).length == 0) {
             return errorMessages;
         }
-        section2Fields.filter(function (f) { return f.val().trim() === '' && !f.prop(_this.requiredProp); }).forEach(function (f) { return f.val(_this.na); });
+        section2Fields.filter(function (f) { return (f.val().trim() === '' && !f.prop(_this.requiredProp))
+            || f.val().toUpperCase() === _this.na; })
+            .forEach(function (f) { return f.val(_this.na); });
         section2Fields.forEach(function (f) { return f.toggleClass(_this.invalidFieldClass, false); });
         this._lastNameSection2.val(this._lastName.val());
         this._firstNameSection2.val(this._firstName.val());
@@ -973,6 +973,8 @@ var USI9Section2 = (function (_super) {
             case 'ListCDocTitle':
                 self.listCDocTitle(code);
                 break;
+            case 'DocTitleSec3':
+                break;
         }
     };
     USI9Section2.prototype.getListAContent = function (citizenship) {
@@ -1169,7 +1171,6 @@ var USI9Section2 = (function (_super) {
                 .datepicker('option', 'showOn', 'focus')
                 .attr('autocomplete', 'disabled').val('')
                 .unbind('keypress')
-                .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
                 .prop(this.requiredProp, true).prop(this.freeTextProp, true);
         }
         else if (code === '10') {
@@ -1181,7 +1182,6 @@ var USI9Section2 = (function (_super) {
             fieldValidationMessage = this._('admissionnumber.format');
             this._listADocExpDate
                 .unbind('keypress')
-                .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
                 .prop(this.freeTextProp, true);
         }
         else if (code === '12') {
@@ -1192,7 +1192,6 @@ var USI9Section2 = (function (_super) {
             fieldValidationMessage = this._('section2.cardformat');
             this._listADocExpDate
                 .unbind('keypress')
-                .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
                 .prop(this.freeTextProp, true);
         }
         else if (code === '6') {
@@ -1242,7 +1241,6 @@ var USI9Section2 = (function (_super) {
                 .datepicker('option', 'showOn', 'focus')
                 .attr('autocomplete', 'disabled').val('')
                 .unbind('keypress')
-                .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
                 .prop(this.requiredProp, true).prop(this.freeTextProp, true);
             this.filterCombolist(this._listADoc3, { 0: this.na, 1: this._('formI20'), 2: this._('formDS2019') }, '0', this, this.processListABC);
             this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
@@ -1265,7 +1263,6 @@ var USI9Section2 = (function (_super) {
                 .datepicker('option', 'showOn', 'focus')
                 .attr('autocomplete', 'disabled').val('')
                 .unbind('keypress')
-                .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
                 .prop(this.requiredProp, true).prop(this.freeTextProp, true);
         }
         else if (code === '9') {
@@ -1283,7 +1280,6 @@ var USI9Section2 = (function (_super) {
                 .datepicker('option', 'showOn', 'focus')
                 .attr('autocomplete', 'disabled').val('')
                 .unbind('keypress')
-                .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
                 .prop(this.requiredProp, true).prop(this.freeTextProp, true);
         }
         else if (code === '11') {
@@ -1324,8 +1320,7 @@ var USI9Section2 = (function (_super) {
         this._listADocExpDate.unbind('keypress');
         if (!this._listADocExpDate.prop(this.freeTextProp)) {
             this._listADocExpDate
-                .keypress(function (e) { return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
-                .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); });
+                .keypress(function (e) { return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; });
         }
         this._listADocNumber.prop(this.validationExpressionProp, fieldValidationExpression);
         this._listADocNumber.prop(this.validationMessageProp, fieldValidationMessage);
@@ -1429,8 +1424,7 @@ var USI9Section2 = (function (_super) {
                 .removeAttr('readOnly')
                 .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'disabled').val('')
                 .unbind('keypress')
-                .keypress(function (e) { return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
-                .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); });
+                .keypress(function (e) { return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; });
         }
         if (['1', '2', '21', '22'].indexOf(code) >= 0) {
             issuingAuthList = JSON.parse(this._('usstates'));
@@ -1439,8 +1433,7 @@ var USI9Section2 = (function (_super) {
             this._listBDocNumber
                 .prop('maxLength', numberMaxLength)
                 .unbind('keypress')
-                .keypress(function (e) { return fieldFormat.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
-                .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); });
+                .keypress(function (e) { return fieldFormat.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; });
             fieldValidationExpression = this.driverLicenseNumberFormat;
             fieldValidationMessage = this._('section2.listbnumberformat');
         }
@@ -1505,7 +1498,6 @@ var USI9Section2 = (function (_super) {
             .attr('autocomplete', 'disabled')
             .unbind('keypress')
             .keypress(function (e) { return /[\d/]/g.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode; })
-            .blur(function (e) { return e.target.value = e.target.value.toUpperCase(); })
             .val('');
         this._listCDoc.prop('ssncard', false).prop('i551', false);
         if (code === '1') {
@@ -1856,13 +1848,13 @@ var USI9Section3 = (function (_super) {
         section3Fields.forEach(function (f) { return f && f.toggleClass(_this.invalidFieldClass, false); });
         if (section3Fields.filter(function (e) { return e && e.val() && e.val() !== ''; }).length > 0) {
             [this._newlastName, this._newfirstName, this._newmiddleInitial, this._rehireDate,
-                this._docTitleSec3, this._docNumberSec3, this._expDateSec3].filter(function (f) { return f.val() === ''; })
+                this._docTitleSec3, this._docNumberSec3, this._expDateSec3].filter(function (f) { return f.val() === '' || f.val().toUpperCase() === _this.na; })
                 .forEach(function (f) { return f && f.val(_this.na); });
             this.validateTextField(this._newlastName, this._('name.last') + this.space + this._('section3.suffix'), [this.nameFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._newfirstName, this._('name.first') + this.space + this._('section3.suffix'), [this.nameFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._newmiddleInitial, this._('name.middleinitial') + this.space + this._('section3.suffix'), [this.nameInitialFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._rehireDate, this._('section3.rehire'), [this.dateFormat, this.NAString], true, errorMessages);
-            this.validateTextField(this._docNumberSec3, this._('section3.docnumber') + this.space + this._('section3.suffix'), [this.NAString], false, errorMessages);
+            this.validateTextField(this._docNumberSec3, this._('section3.docnumber') + this.space + this._('section3.suffix'), [/^[a-zA-Z0-9]+$/, this.NAString], false, errorMessages);
             this.validateTextField(this._expDateSec3, this._('section3.expdate') + this.space + this._('section3.suffix'), [this.dateFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._signDateSec3, this._('section3.today') + this.space + this._('section3.suffix'), [this.dateFormat], true, errorMessages);
             this.validateTextField(this._employerNameSec3, this._('section3.employer') + this.space + this._('section3.suffix'), [this.nameFormat], true, errorMessages);

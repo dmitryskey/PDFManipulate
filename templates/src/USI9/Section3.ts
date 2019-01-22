@@ -351,14 +351,14 @@ class USI9Section3 extends USI9Section2 {
 
         if (section3Fields.filter(e => e && e.val() && e.val() !== '').length > 0) {
             [this._newlastName, this._newfirstName, this._newmiddleInitial, this._rehireDate,
-             this._docTitleSec3, this._docNumberSec3, this._expDateSec3].filter(f => f.val() === '')
+             this._docTitleSec3, this._docNumberSec3, this._expDateSec3].filter(f => f.val() === '' || (f.val() as string).toUpperCase() === this.na)
             .forEach(f => f && f.val(this.na));
 
             this.validateTextField(this._newlastName, this._('name.last') + this.space + this._('section3.suffix'), [this.nameFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._newfirstName, this._('name.first') + this.space + this._('section3.suffix'), [this.nameFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._newmiddleInitial, this._('name.middleinitial') + this.space + this._('section3.suffix'), [this.nameInitialFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._rehireDate, this._('section3.rehire'), [this.dateFormat, this.NAString], true, errorMessages);            
-            this.validateTextField(this._docNumberSec3, this._('section3.docnumber') + this.space + this._('section3.suffix'), [this.NAString], false, errorMessages);
+            this.validateTextField(this._docNumberSec3, this._('section3.docnumber') + this.space + this._('section3.suffix'), [/^[a-zA-Z0-9]+$/, this.NAString], false, errorMessages);
             this.validateTextField(this._expDateSec3, this._('section3.expdate') + this.space + this._('section3.suffix'), [this.dateFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._signDateSec3, this._('section3.today') + this.space + this._('section3.suffix'), [this.dateFormat], true, errorMessages);
             this.validateTextField(this._employerNameSec3, this._('section3.employer') + this.space + this._('section3.suffix'), [this.nameFormat], true, errorMessages);

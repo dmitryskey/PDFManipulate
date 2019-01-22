@@ -48,7 +48,6 @@ class USI9Section1 extends USI9Fields {
         // N/A option
         this._middleInitial = this.renderControl(middleInitial, this._('middleinitialhelp.tooltip'))
         .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-        .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
         .attr('tabindex', tabIndex++);
 
         this._middleInitialHelp = this.renderHelpIcon(
@@ -60,7 +59,6 @@ class USI9Section1 extends USI9Fields {
 
         this._otherNames = this.renderControl(otherNames,this._('othernameshelp.tooltip'))
         .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-        .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
         .attr('tabindex', tabIndex++);
 
         this._otherNamesHelp = this.renderHelpIcon(
@@ -339,7 +337,6 @@ class USI9Section1 extends USI9Fields {
         .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
         .unbind('keypress')
         .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-        .blur((e: JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
         .attr('tabindex', tabIndex++);
 
         this._alienuscisNumPrefix = alienuscisNumPrefix;
@@ -505,14 +502,15 @@ class USI9Section1 extends USI9Fields {
 
         // Put N/A if required
         [this._middleInitial, this._otherNames, this._apptNumber, this._email, this._phone]
-           .filter(f => (f.val() as string).trim() === '').forEach(f => f.val(this.na));
+           .filter(f => (f.val() as string).trim() === '' || (f.val() as string).toUpperCase() === this.na)
+           .forEach(f => f.val(this.na));
 
         this.validateTextField(this._lastName, this._('name.last'), [this.nameFormat], false, errorMessages);
         this.validateTextField(this._firstName, this._('name.first'), [this.nameFormat], false, errorMessages);
         this.validateTextField(this._middleInitial, this._('name.middleinitial'), [this.nameInitialFormat, this.NAString], false, errorMessages);
         this.validateTextField(this._otherNames, this._('name.othernames'), [this.nameFormat, this.NAString], false, errorMessages);
         this.validateTextField(this._address, this._('address.address'), [], false, errorMessages);
-        this.validateTextField(this._apptNumber, this._('address.apartment'), [this.NAString], false, errorMessages);
+        this.validateTextField(this._apptNumber, this._('address.apartment'), [], false, errorMessages);
         this.validateTextField(this._city, this._('address.city'), [], false, errorMessages);
         this.validateTextField(this._state, this._('address.state'), [this.stateFormat], false, errorMessages);
         this.validateTextField(this._zip, this._('address.zip'),

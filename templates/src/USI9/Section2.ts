@@ -267,7 +267,9 @@ class USI9Section2 extends USI9Translator {
             return errorMessages;
         }
 
-        section2Fields.filter(f => (f.val() as string).trim() === '' && !f.prop(this.requiredProp)).forEach(f => f.val(this.na));
+        section2Fields.filter(f => ((f.val() as string).trim() === '' && !f.prop(this.requiredProp))
+          || (f.val() as string).toUpperCase() === this.na)
+          .forEach(f => f.val(this.na));
 
         section2Fields.forEach(f => f.toggleClass(this.invalidFieldClass, false));
 
@@ -854,6 +856,9 @@ class USI9Section2 extends USI9Translator {
         case 'ListCDocTitle':
             self.listCDocTitle(code);
             break;
+
+        case 'DocTitleSec3':
+            break;
         }
     }
 
@@ -1087,7 +1092,6 @@ class USI9Section2 extends USI9Translator {
             .datepicker('option', 'showOn', 'focus')
             .attr('autocomplete', 'disabled').val('')
             .unbind('keypress')
-            .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
             .prop(this.requiredProp, true).prop(this.freeTextProp, true);
         } else if (code === '10') {
             // 10 - Receipt: Form I-94/I-94A w/I-551 stamp, photo
@@ -1100,7 +1104,6 @@ class USI9Section2 extends USI9Translator {
 
             this._listADocExpDate
             .unbind('keypress')
-            .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
             .prop(this.freeTextProp, true);
         } else if (code === '12') {
             // 12 - Receipt replacement Perm. Res. Card (Form I-551)
@@ -1112,7 +1115,6 @@ class USI9Section2 extends USI9Translator {
 
             this._listADocExpDate
             .unbind('keypress')
-            .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
             .prop(this.freeTextProp, true);
         } else if (code === '6') {
             // Alien authorized to work
@@ -1194,7 +1196,6 @@ class USI9Section2 extends USI9Translator {
             .datepicker('option', 'showOn', 'focus')
             .attr('autocomplete', 'disabled').val('')
             .unbind('keypress')
-            .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
             .prop(this.requiredProp, true).prop(this.freeTextProp, true);
 
             this.filterCombolist(
@@ -1238,7 +1239,6 @@ class USI9Section2 extends USI9Translator {
             .datepicker('option', 'showOn', 'focus')
             .attr('autocomplete', 'disabled').val('')
             .unbind('keypress')
-            .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
             .prop(this.requiredProp, true).prop(this.freeTextProp, true);
         } else if (code === '9') {
             // 9 - RMI Passport with Form I-94
@@ -1270,7 +1270,6 @@ class USI9Section2 extends USI9Translator {
             .datepicker('option', 'showOn', 'focus')
             .attr('autocomplete', 'disabled').val('')
             .unbind('keypress')
-            .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
             .prop(this.requiredProp, true).prop(this.freeTextProp, true);
         } else if (code === '11') {
             // 11 - Receipt: Form I-94/I-94A w/refugee stamp
@@ -1316,7 +1315,6 @@ class USI9Section2 extends USI9Translator {
         if (!this._listADocExpDate.prop(this.freeTextProp)) {
             this._listADocExpDate
             .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-            .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
         }
 
         this._listADocNumber.prop(this.validationExpressionProp,  fieldValidationExpression);    
@@ -1481,8 +1479,7 @@ class USI9Section2 extends USI9Translator {
             .removeAttr('readOnly')
             .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'disabled').val('')
             .unbind('keypress')
-            .keypress((e : JQuery.Event<HTMLElement>) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-            .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
+            .keypress((e : JQuery.Event<HTMLElement>) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
         }
 
         if (['1', '2', '21', '22'].indexOf(code) >= 0) {
@@ -1498,8 +1495,7 @@ class USI9Section2 extends USI9Translator {
             this._listBDocNumber
             .prop('maxLength', numberMaxLength)
             .unbind('keypress')
-            .keypress(e => fieldFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-            .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
+            .keypress(e => fieldFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
 
             fieldValidationExpression = this.driverLicenseNumberFormat;
             fieldValidationMessage = this._('section2.listbnumberformat');
@@ -1611,7 +1607,6 @@ class USI9Section2 extends USI9Translator {
         .attr('autocomplete', 'disabled')
         .unbind('keypress')
         .keypress((e : JQuery.Event<HTMLElement>) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-        .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
         .val('');
 
         this._listCDoc.prop('ssncard', false).prop('i551', false);
