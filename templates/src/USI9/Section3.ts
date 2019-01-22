@@ -2,6 +2,7 @@
 
 class USI9Section3 extends USI9Section2 {
     protected renderSection3(
+        tabIndex: number,
         dialog: JQuery<HTMLElement>,
         lastName: JQuery<HTMLElement>,
         lastNameHelp: JQuery<HTMLElement>,
@@ -180,7 +181,7 @@ class USI9Section3 extends USI9Section2 {
 
         this._newlastName = this.renderControl(lastName, this._('newlastname.tooltip'))
         .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-        .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
+        .attr('tabindex', tabIndex++);
 
         this._newlastNameHelp = this.renderHelpIcon(
             lastNameHelp,
@@ -191,7 +192,7 @@ class USI9Section3 extends USI9Section2 {
 
         this._newfirstName = this.renderControl(firstName, this._('newfirstname.tooltip'))
         .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-        .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
+        .attr('tabindex', tabIndex++);
 
         this._newfirstNameHelp = this.renderHelpIcon(
             firstNameHelp,
@@ -202,7 +203,7 @@ class USI9Section3 extends USI9Section2 {
 
         this._newmiddleInitial = this.renderControl(middleInitial, this._('newmiddleinitial.tooltip'))
         .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-        .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
+        .attr('tabindex', tabIndex++);
 
         this._newmiddleInitialHelp = this.renderHelpIcon(
             middleInitialHelp,
@@ -215,7 +216,7 @@ class USI9Section3 extends USI9Section2 {
         .datepicker().attr('autocomplete', 'disabled')
         .unbind('keypress')
         .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-        .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
+        .attr('tabindex', tabIndex++);
 
         this._rehireDateHelp = this.renderHelpIcon(
             rehireDateHelp,
@@ -225,7 +226,8 @@ class USI9Section3 extends USI9Section2 {
             500
         );
 
-        this._docTitleSec3 = this.renderControl(docTitleSec3, this._('doctitlesec3.tooltip'));
+        this._docTitleSec3 = this.renderControl(docTitleSec3, this._('doctitlesec3.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this.filterCombolist(this._docTitleSec3, {
             spaceSymbol: this.blankItem,
@@ -270,7 +272,8 @@ class USI9Section3 extends USI9Section2 {
             500
         );
 
-        this._docNumberSec3 = this.renderControl(docNumberSec3, this._('docnumbersec3.tooltip'));
+        this._docNumberSec3 = this.renderControl(docNumberSec3, this._('docnumbersec3.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._docNumberSec3Help = this.renderHelpIcon(
             docNumberSec3Help,
@@ -284,7 +287,7 @@ class USI9Section3 extends USI9Section2 {
         .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled')
         .unbind('keypress')
         .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-        .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
+        .attr('tabindex', tabIndex++);
 
         this._expDateSec3Help = this.renderHelpIcon(
             expDateSec3Help,
@@ -294,7 +297,8 @@ class USI9Section3 extends USI9Section2 {
             500
         );
 
-        this._sgnEmployerSec3 = this.renderControl(sgnEmployerSec3, this._('sgnemployersec3.tooltip'));
+        this._sgnEmployerSec3 = this.renderControl(sgnEmployerSec3, this._('sgnemployersec3.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._sgnEmployerSec3Help = this.renderHelpIcon(
             sgnEmployerSec3Help,
@@ -310,7 +314,8 @@ class USI9Section3 extends USI9Section2 {
         // work around for the Chrome auto-fill bug
         .attr('readonly', 'true')
         .focus(() => this._signDateSec3.removeAttr('readonly'))
-        .blur(() => this._signDateSec3.attr('readonly', 'true'));
+        .blur(() => this._signDateSec3.attr('readonly', 'true'))
+        .attr('tabindex', tabIndex++);
 
         this._signDateSec3Help = this.renderHelpIcon(
             signDateSec3Help,
@@ -321,7 +326,8 @@ class USI9Section3 extends USI9Section2 {
         );
 
         this._employerNameSec3 = this.renderControl(employerNameSec3, this._('employernamesec3.tooltip'))
-        .attr(this.annotationRequired, 'true');
+        .attr(this.annotationRequired, 'true')
+        .attr('tabindex', tabIndex++);
 
         this._employerNameSec3Help = this.renderHelpIcon(
             employerNameSec3Help,
@@ -330,6 +336,8 @@ class USI9Section3 extends USI9Section2 {
             this._('employernamesec3help.text'),
             500
         );
+
+        return tabIndex;
     }
 
     protected validateFields(): string[] {
@@ -350,7 +358,7 @@ class USI9Section3 extends USI9Section2 {
             this.validateTextField(this._newfirstName, this._('name.first') + this.space + this._('section3.suffix'), [this.nameFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._newmiddleInitial, this._('name.middleinitial') + this.space + this._('section3.suffix'), [this.nameInitialFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._rehireDate, this._('section3.rehire'), [this.dateFormat, this.NAString], true, errorMessages);            
-            this.validateTextField(this._docNumberSec3, this._('section3.docnumber') + this.space + this._('section3.suffix'), [this.nameFormat, this.NAString], false, errorMessages);
+            this.validateTextField(this._docNumberSec3, this._('section3.docnumber') + this.space + this._('section3.suffix'), [this.NAString], false, errorMessages);
             this.validateTextField(this._expDateSec3, this._('section3.expdate') + this.space + this._('section3.suffix'), [this.dateFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._signDateSec3, this._('section3.today') + this.space + this._('section3.suffix'), [this.dateFormat], true, errorMessages);
             this.validateTextField(this._employerNameSec3, this._('section3.employer') + this.space + this._('section3.suffix'), [this.nameFormat], true, errorMessages);

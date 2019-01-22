@@ -2,6 +2,7 @@
 
 class USI9Section1 extends USI9Fields {
     private renderNameAndAddress(
+        tabIndex: number,
         dialog: JQuery<HTMLElement>,
         lastName: JQuery<HTMLElement>,
         lastNameHelp: JQuery<HTMLElement>,
@@ -23,7 +24,8 @@ class USI9Section1 extends USI9Fields {
         zipHelp: JQuery<HTMLElement>) {
 
         this._lastName = this.renderControl(lastName, this._('lastnamehelp.tooltip'))
-        .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
+        .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+        .attr('tabindex', tabIndex++);
 
         this._lastNameHelp = this.renderHelpIcon(
             lastNameHelp,
@@ -33,7 +35,8 @@ class USI9Section1 extends USI9Fields {
         );
 
         this._firstName = this.renderControl(firstName, this._('firstnamehelp.tooltip'))
-        .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
+        .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+        .attr('tabindex', tabIndex++);
 
         this._firstNameHelp = this.renderHelpIcon(
             firstNameHelp,
@@ -45,7 +48,8 @@ class USI9Section1 extends USI9Fields {
         // N/A option
         this._middleInitial = this.renderControl(middleInitial, this._('middleinitialhelp.tooltip'))
         .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-        .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
+        .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
+        .attr('tabindex', tabIndex++);
 
         this._middleInitialHelp = this.renderHelpIcon(
             middleInitialHelp,
@@ -56,7 +60,8 @@ class USI9Section1 extends USI9Fields {
 
         this._otherNames = this.renderControl(otherNames,this._('othernameshelp.tooltip'))
         .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-        .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
+        .blur((e : JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
+        .attr('tabindex', tabIndex++);
 
         this._otherNamesHelp = this.renderHelpIcon(
             otherNamesHelp,
@@ -65,7 +70,8 @@ class USI9Section1 extends USI9Fields {
             this._('othernameshelp.text')
         );
 
-        this._address = this.renderControl(address, this._('addresshelp.tooltip'));
+        this._address = this.renderControl(address, this._('addresshelp.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._addressHelp = this.renderHelpIcon(
             addressHelp,
@@ -74,7 +80,8 @@ class USI9Section1 extends USI9Fields {
             this._('addresshelp.text')
         );
 
-        this._apptNumber = this.renderControl(apptNumber,this._('apartmentnumberhelp.tooltip'));
+        this._apptNumber = this.renderControl(apptNumber,this._('apartmentnumberhelp.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._apptNumberHelp = this.renderHelpIcon(
             apptNumberHelp,
@@ -83,7 +90,8 @@ class USI9Section1 extends USI9Fields {
             this._('apartmentnumberhelp.text')
         );
 
-        this._city = this.renderControl(city, this._('cityhelp.tooltip'));
+        this._city = this.renderControl(city, this._('cityhelp.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._cityHelp = this.renderHelpIcon(
             cityHelp,
@@ -109,6 +117,7 @@ class USI9Section1 extends USI9Fields {
         })
         .prop('title', '').attr(this.annotationRequired, 'true')
         .tooltip({ content: this._('statehelp.tooltip') })
+        .attr('tabindex', tabIndex++);
 
         this.setCombolistText(this._state, this.space, this.blankItem);
 
@@ -120,7 +129,8 @@ class USI9Section1 extends USI9Fields {
         );
 
         this._zip = this.renderControl(zip, this._('ziphelp.tooltip'))
-        .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode);
+        .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
+        .attr('tabindex', tabIndex++);
 
         this._zipHelp = this.renderHelpIcon(
             zipHelp,
@@ -128,9 +138,11 @@ class USI9Section1 extends USI9Fields {
             dialog,
             this._('ziphelp.text')
         );
+
+        return tabIndex;
     }
 
-    private renderSSNFields(ssn : JQuery<HTMLElement>[]) {
+    private renderSSNFields(ssn : JQuery<HTMLElement>[], tabIndex: number) {
         this._ssn = ssn;
         for (let i = 0; i < ssn.length - 1; i++) {
             this._ssn[i]
@@ -149,14 +161,19 @@ class USI9Section1 extends USI9Fields {
                 if (e.keyCode === 8) {
                     $('[' + this.annotationNext + '=' + $(e.target).attr(this.annotationName) + ']').focus();
                 }
-            });
+            })
+            .attr('tabindex', tabIndex++);
         }
 
         this.renderControl(this._ssn[ssn.length - 1], this._('ssnhelp.tooltip'))
-        .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode);
+        .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
+        .attr('tabindex', tabIndex++);
+
+        return tabIndex;
     }
 
     private renderPersonalData(
+        tabIndex: number,
         dialog: JQuery<HTMLElement>,
         dob: JQuery<HTMLElement>,
         dobHelp: JQuery<HTMLElement>,
@@ -184,7 +201,8 @@ class USI9Section1 extends USI9Fields {
             changeMonth: true,
             changeYear: true,
             yearRange: '1908:' + maxDOB.getFullYear(),
-            maxDate: maxDOB}).attr('autocomplete', 'disabled');
+            maxDate: maxDOB}).attr('autocomplete', 'disabled')
+        .attr('tabindex', tabIndex++);
 
         this._dobHelp = this.renderHelpIcon(
             dobHelp,
@@ -193,7 +211,7 @@ class USI9Section1 extends USI9Fields {
             this._('dobhelp.text')
         );
 
-        this.renderSSNFields([ssn11, ssn12, ssn13, ssn21, ssn22, ssn31, ssn32, ssn33, ssn34])
+        tabIndex = this.renderSSNFields([ssn11, ssn12, ssn13, ssn21, ssn22, ssn31, ssn32, ssn33, ssn34], tabIndex);
 
         this._ssnHelp = this.renderHelpIcon(
             ssnHelp,
@@ -204,6 +222,7 @@ class USI9Section1 extends USI9Fields {
         );
 
         this._email = this.renderControl(email, this._('emailhelp.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._emailHelp = this.renderHelpIcon(
             emailHelp,
@@ -213,17 +232,21 @@ class USI9Section1 extends USI9Fields {
         );
 
         this._phone = this.renderControl(phone, this._('phonehelp.tooltip'))
-        .keypress(e => this.phoneFormat.test(e.key) || e.key === this.backSpaceCode);
+        .keypress(e => this.phoneFormat.test(e.key) || e.key === this.backSpaceCode)
+        .attr('tabindex', tabIndex++);
 
         this._phoneHelp = this.renderHelpIcon(
             phoneHelp,
             this._('phonehelp.caption'),
             dialog,
             this._('phonehelp.text')
-        ); 
+        );
+
+        return tabIndex;
     }
 
     private renderCitizenship(
+        tabIndex: number,
         dialog: JQuery<HTMLElement>,
         citizen: JQuery<HTMLElement>,
         citizenHelp: JQuery<HTMLElement>,
@@ -252,7 +275,8 @@ class USI9Section1 extends USI9Fields {
         sgnEmployeeDate: JQuery<HTMLElement>,
         sgnEmployeeDateHelp: JQuery<HTMLElement>) {
 
-        this._citizen = this.renderControl(citizen, this._('citizenhelp.tooltip'));
+        this._citizen = this.renderControl(citizen, this._('citizenhelp.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._citizenHelp = this.renderHelpIcon(
             citizenHelp,
@@ -261,7 +285,8 @@ class USI9Section1 extends USI9Fields {
             this._('citizenhelp.text')
         );
 
-        this._national = this.renderControl(national, this._('nationalhelp.tooltip'));
+        this._national = this.renderControl(national, this._('nationalhelp.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._nationalHelp = this.renderHelpIcon(
             nationalHelp,
@@ -270,7 +295,8 @@ class USI9Section1 extends USI9Fields {
             this._('nationalhelp.text')
         );
 
-        this._lpr = this.renderControl(lpr, this._('lprhelp.tooltip'));
+        this._lpr = this.renderControl(lpr, this._('lprhelp.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._lprHelp = this.renderHelpIcon(
             lprHelp,
@@ -279,7 +305,8 @@ class USI9Section1 extends USI9Fields {
             this._('lprhelp.text')
         );
 
-        this._alien = this.renderControl(alien, this._('alienhelp.tooltip'));
+        this._alien = this.renderControl(alien, this._('alienhelp.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._alienHelp = this.renderHelpIcon(
             alienHelp,
@@ -299,9 +326,11 @@ class USI9Section1 extends USI9Fields {
         this._lpruscisNumPrefix = lpruscisNumPrefix;
 
         this._lpruscisNum = this.renderControl(lpruscisNum, this._('uscisnumber.tooltip'))
-        .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode);
+        .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
+        .attr('tabindex', tabIndex++);
 
-        this._lpruscisNumType = this.renderControl(lpruscisNumType, this._('uscisnumbertype.tooltip'));
+        this._lpruscisNumType = this.renderControl(lpruscisNumType, this._('uscisnumbertype.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this.assignCombolistEventHandler(this._lpruscisNumType, e => 
             this._lpruscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : ''));
@@ -310,20 +339,24 @@ class USI9Section1 extends USI9Fields {
         .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
         .unbind('keypress')
         .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-        .blur((e: JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase());
+        .blur((e: JQuery.Event<HTMLInputElement>) => e.target.value = e.target.value.toUpperCase())
+        .attr('tabindex', tabIndex++);
 
         this._alienuscisNumPrefix = alienuscisNumPrefix;
 
         this._alienuscisNum = this.renderControl(alienuscisNum, this._('uscisnumber.tooltip'))
-        .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode);
+        .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
+        .attr('tabindex', tabIndex++);
 
-        this._alienuscisNumType = this.renderControl(alienuscisNumType, this._('uscisnumbertype.tooltip'));
+        this._alienuscisNumType = this.renderControl(alienuscisNumType, this._('uscisnumbertype.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this.assignCombolistEventHandler(this._alienuscisNumType, e => 
             this._alienuscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : ''));
 
         this._admissionNum = this.renderControl(admissionNum, this._('admissionnumber.tooltip'))
-        .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode);
+        .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
+        .attr('tabindex', tabIndex++);
 
         this._admissionNumHelp = this.renderHelpIcon(
             admissionNumHelp,
@@ -332,7 +365,8 @@ class USI9Section1 extends USI9Fields {
             this._('admissionnumberhelp.text')
         );
 
-        this._passportNum = this.renderControl(passportNum, this._('passportnumber.tooltip'));
+        this._passportNum = this.renderControl(passportNum, this._('passportnumber.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._passportNumHelp = this.renderHelpIcon(
             passportNumHelp,
@@ -341,7 +375,8 @@ class USI9Section1 extends USI9Fields {
             this._('passportnumberhelp.text')
         );
 
-        this._countryOfIssuance = this.renderControl(countryOfIssuance, this._('coi.tooltip'));
+        this._countryOfIssuance = this.renderControl(countryOfIssuance, this._('coi.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._countryOfIssuanceHelp = this.renderHelpIcon(
             countryOfIssuanceHelp,
@@ -350,7 +385,8 @@ class USI9Section1 extends USI9Fields {
             this._('coihelp.text')
         );
 
-        this._sgnEmployee = this.renderControl(sgnEmployee, this._('sgnemployee.tooltip'));
+        this._sgnEmployee = this.renderControl(sgnEmployee, this._('sgnemployee.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._sgnEmployeeHelp = this.renderHelpIcon(
             sgnEmployeeHelp,
@@ -360,17 +396,21 @@ class USI9Section1 extends USI9Fields {
             700);
 
         this._sgnEmployeeDate = this.renderControl(sgnEmployeeDate, this._('employeedate.tooltip'))
-        .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
+        .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled')
+        .attr('tabindex', tabIndex++);
 
         this._sgnEmployeeDateHelp = this.renderHelpIcon(
             sgnEmployeeDateHelp,
             this._('employeedatehelp.caption'),
             dialog,
-            this._('employeedatehelp.text'));  
+            this._('employeedatehelp.text'));
+            
+        return tabIndex;
     }
 
     protected renderSection1(
-        dialog: JQuery<HTMLElement>,
+        tabIndex: number,
+        dialog: JQuery<HTMLElement>,        
         lastName: JQuery<HTMLElement>,
         lastNameHelp: JQuery<HTMLElement>,
         firstName: JQuery<HTMLElement>,
@@ -434,20 +474,20 @@ class USI9Section1 extends USI9Fields {
 
         $('a').prop('target', '_blank');
 
-        this.renderNameAndAddress(dialog,
+        tabIndex = this.renderNameAndAddress(tabIndex, dialog,
             lastName, lastNameHelp, firstName, firstNameHelp,
             middleInitial, middleInitialHelp,
             otherNames, otherNamesHelp,
             address, addressHelp, apptNumber, apptNumberHelp,
             city, cityHelp, state, stateHelp, zip, zipHelp);
 
-        this.renderPersonalData(dialog,
-            dob, dobHelp,
+        tabIndex = this.renderPersonalData(
+            tabIndex, dialog, dob, dobHelp,
             ssn11, ssn12, ssn13, ssn21, ssn22, ssn31,
             ssn32, ssn33, ssn34, ssnHelp,
             email, emailHelp, phone, phoneHelp);
 
-        this.renderCitizenship(dialog,
+        tabIndex = this.renderCitizenship(tabIndex, dialog,
             citizen, citizenHelp, national, nationalHelp,
             lpr, lprHelp, alien, alienHelp, uscisNumberHelp,
             lpruscisNumPrefix, lpruscisNum, lpruscisNumType,
@@ -456,6 +496,8 @@ class USI9Section1 extends USI9Fields {
             countryOfIssuance, countryOfIssuanceHelp,
             sgnEmployee, sgnEmployeeHelp,
             sgnEmployeeDate, sgnEmployeeDateHelp);
+
+        return tabIndex;
     }
 
     protected validateFields(): string[] {
@@ -470,7 +512,7 @@ class USI9Section1 extends USI9Fields {
         this.validateTextField(this._middleInitial, this._('name.middleinitial'), [this.nameInitialFormat, this.NAString], false, errorMessages);
         this.validateTextField(this._otherNames, this._('name.othernames'), [this.nameFormat, this.NAString], false, errorMessages);
         this.validateTextField(this._address, this._('address.address'), [], false, errorMessages);
-        this.validateTextField(this._apptNumber, this._('address.appartment'), [this.NAString], false, errorMessages);
+        this.validateTextField(this._apptNumber, this._('address.apartment'), [this.NAString], false, errorMessages);
         this.validateTextField(this._city, this._('address.city'), [], false, errorMessages);
         this.validateTextField(this._state, this._('address.state'), [this.stateFormat], false, errorMessages);
         this.validateTextField(this._zip, this._('address.zip'),

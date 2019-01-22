@@ -2,6 +2,7 @@
 
 class USI9Translator extends USI9Section1 {
     protected renderTranslatorSection(
+        tabIndex: number,
         dialog: JQuery<HTMLElement>,
         translatorNo: JQuery<HTMLElement>,
         translatorYes: JQuery<HTMLElement>,
@@ -23,21 +24,7 @@ class USI9Translator extends USI9Section1 {
         translatorZip: JQuery<HTMLElement>,
         translatorZipHelp: JQuery<HTMLElement>) {
 
-        var translator = [translatorYes, translatorNo];
-
-        this._translatorYes = this.renderControl(translatorYes, this._('translator.tooltip'))
-        .click(() => { 
-            this.selectCheckmark(this._translatorYes, translator);
-
-            this._sgnTranslator.prop('disabled', false);
-            this._translatorDate.prop('disabled', false);
-            this._translatorLastName.prop('disabled', false);
-            this._translatorFirstName.prop('disabled', false);
-            this._translatorAddress.prop('disabled', false);
-            this._translatorCity.prop('disabled', false);
-            this._translatorState.prop('disabled', false);
-            this._translatorZip.prop('disabled', false);
-        });
+        var translator = [translatorNo, translatorYes];
 
         this._translatorNo = this.renderControl(translatorNo, this._('translator.tooltip'))
         .click(() => {
@@ -51,7 +38,23 @@ class USI9Translator extends USI9Section1 {
             this._translatorCity.val('').prop('disabled', true);
             this._translatorState.val('').prop('disabled', true);
             this._translatorZip.val('').prop('disabled', true);
-        });
+        })
+        .attr('tabindex', tabIndex++);
+
+        this._translatorYes = this.renderControl(translatorYes, this._('translator.tooltip'))
+        .click(() => { 
+            this.selectCheckmark(this._translatorYes, translator);
+
+            this._sgnTranslator.prop('disabled', false);
+            this._translatorDate.prop('disabled', false);
+            this._translatorLastName.prop('disabled', false);
+            this._translatorFirstName.prop('disabled', false);
+            this._translatorAddress.prop('disabled', false);
+            this._translatorCity.prop('disabled', false);
+            this._translatorState.prop('disabled', false);
+            this._translatorZip.prop('disabled', false);
+        })
+        .attr('tabindex', tabIndex++);
 
         this._translatorHelp = this.renderHelpIcon(
             translatorHelp,
@@ -61,7 +64,8 @@ class USI9Translator extends USI9Section1 {
             500
         );
 
-        this._sgnTranslator = this.renderControl(sgnTranslator, this._('sgntranslator.tooltip'));
+        this._sgnTranslator = this.renderControl(sgnTranslator, this._('sgntranslator.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._sgnTranslatorHelp = this.renderHelpIcon(
             sgnTranslatorHelp,
@@ -71,7 +75,8 @@ class USI9Translator extends USI9Section1 {
         );
 
         this._translatorDate = this.renderControl(translatorDate, this._('translatordate.tooltip'))
-        .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
+        .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled')
+        .attr('tabindex', tabIndex++);
 
         this._translatorDateHelp = this.renderHelpIcon(
             translatorDateHelp,
@@ -81,7 +86,8 @@ class USI9Translator extends USI9Section1 {
         );
 
         this._translatorLastName = this.renderControl(translatorLastName, this._('translatorlastname.tooltip'))
-        .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
+        .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+        .attr('tabindex', tabIndex++);
 
         this._translatorLastNameHelp = this.renderHelpIcon(
             translatorLastNameHelp,
@@ -91,7 +97,8 @@ class USI9Translator extends USI9Section1 {
         );
 
         this._translatorFirstName = this.renderControl(translatorFirstName, this._('translatorfirstname.tooltip'))
-        .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
+        .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+        .attr('tabindex', tabIndex++);
 
         this._translatorFirstNameHelp = this.renderHelpIcon(
             translatorFirstNameHelp,
@@ -100,7 +107,8 @@ class USI9Translator extends USI9Section1 {
             this._('translatorfirstnamehelp.text')
         );
 
-        this._translatorAddress = this.renderControl(translatorAddress, this._('translatoraddress.tooltip'));
+        this._translatorAddress = this.renderControl(translatorAddress, this._('translatoraddress.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._translatorAddressHelp = this.renderHelpIcon(
             translatorAddressHelp,
@@ -109,7 +117,8 @@ class USI9Translator extends USI9Section1 {
             this._('translatoraddresshelp.text')
         );
 
-        this._translatorCity = this.renderControl(translatorCity, this._('translatorcity.tooltip'));
+        this._translatorCity = this.renderControl(translatorCity, this._('translatorcity.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._translatorCityHelp = this.renderHelpIcon(
             translatorCityHelp,
@@ -118,7 +127,8 @@ class USI9Translator extends USI9Section1 {
             this._('translatorcityhelp.text')
         );
 
-        this._translatorState = this.renderControl(translatorState, this._('translatorstate.tooltip'));
+        this._translatorState = this.renderControl(translatorState, this._('translatorstate.tooltip'))
+        .attr('tabindex', tabIndex++);
         this.setCombolistText(this._translatorState, ' ', this.blankItem);
 
         this._translatorStateHelp = this.renderHelpIcon(
@@ -129,7 +139,8 @@ class USI9Translator extends USI9Section1 {
         );
 
         this._translatorZip = this.renderControl(translatorZip, this._('translatorzip.tooltip'))
-        .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode);
+        .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
+        .attr('tabindex', tabIndex++);
 
         this._translatorZipHelp = this.renderHelpIcon(
             translatorZipHelp,
@@ -137,6 +148,8 @@ class USI9Translator extends USI9Section1 {
             dialog,
             this._('translatorziphelp.text')
         );
+
+        return tabIndex;
     }
 
     protected validateFields(): string[] {

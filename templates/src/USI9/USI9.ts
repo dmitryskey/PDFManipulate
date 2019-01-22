@@ -41,8 +41,9 @@ class USI9 extends USI9Section3 {
         });
     }
 
-    private prepareFirstPage() {
-        this.renderSection1(
+    private prepareFirstPage(tabIndex: number) {
+        tabIndex = this.renderSection1(
+            tabIndex,
             $('#dialogPage'),
             $('[' + this.annotationName + '=LastName]'),
             $('[' + this.annotationName + '=LastNameHelp]'),
@@ -106,7 +107,8 @@ class USI9 extends USI9Section3 {
             $('[' + this.annotationName + '=sgnEmployeeDateHelp]')
         );
 
-        this.renderTranslatorSection(
+        tabIndex = this.renderTranslatorSection(
+            tabIndex,
             $('#dialogPage'),
             $('[' + this.annotationName + '=PreparerOrTranslatorNo]'),
             $('[' + this.annotationName + '=PreparerOrTranslatorYes]'),
@@ -128,10 +130,13 @@ class USI9 extends USI9Section3 {
             $('[' + this.annotationName + '=TranslatorZip]'),
             $('[' + this.annotationName + '=TranslatorZipHelp]')
         );
+
+        return tabIndex;
     }
 
-    private prepareSecondPage() {
-        this.renderSection2(
+    private prepareSecondPage(tabIndex: number) {
+        tabIndex = this.renderSection2(
+            tabIndex,
             $('#dialogPage'),
             $('[' + this.annotationName + '=EmployeeInfoSection2Help]'),
             $('[' + this.annotationName + '=LastNameSection2]'),
@@ -208,7 +213,8 @@ class USI9 extends USI9Section3 {
             $('[' + this.annotationName + '=EmployerZipHelp]')
         );
 
-        this.renderSection3(
+        tabIndex = this.renderSection3(
+            tabIndex,
             $('#dialogPage'),
             $('[' + this.annotationName + '=NewLastName]'),
             $('[' + this.annotationName + '=NewLastNameHelp]'),
@@ -231,6 +237,8 @@ class USI9 extends USI9Section3 {
             $('[' + this.annotationName + '=EmployerNameSec3]'),
             $('[' + this.annotationName + '=EmployerNameSec3Help]')
         );
+
+        return tabIndex;
     }
 
     protected validateForm(dialog: JQuery<HTMLElement>) : boolean {
@@ -270,8 +278,7 @@ class USI9 extends USI9Section3 {
             }
         });
 
-        this.prepareFirstPage();
-        this.prepareSecondPage();
+        this.prepareSecondPage(this.prepareFirstPage(100));
     }
 }
 

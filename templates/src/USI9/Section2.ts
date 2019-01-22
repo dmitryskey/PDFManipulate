@@ -7,6 +7,7 @@ class USI9Section2 extends USI9Translator {
     private requiredProp = 'required';
 
     protected renderSection2(
+        tabIndex: number,
         dialog: JQuery<HTMLElement>,
         employeeInfoHelp: JQuery<HTMLElement>,
         lastName: JQuery<HTMLElement>,
@@ -90,7 +91,7 @@ class USI9Section2 extends USI9Translator {
                 this.getListBContent(e.target.value),
                 this.na,
                 this,
-                this.processListABC));
+                this.processListABC))
 
         this._employeeInfoHelp = this.renderHelpIcon(
             employeeInfoHelp,
@@ -135,7 +136,8 @@ class USI9Section2 extends USI9Translator {
             this._('immigrationstatushelp.text')
         );
 
-        this.renderListABC(
+        tabIndex = this.renderListABC(
+            tabIndex,
             dialog,
             listADoc,
             listADocHelp,
@@ -180,6 +182,7 @@ class USI9Section2 extends USI9Translator {
         );
 
         this._additionalInfo = this.renderControl(additionalInfo, this._('additionalinfo.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._additionalInfoHelp = this.renderHelpIcon(
             additionalInfoHelp,
@@ -195,7 +198,8 @@ class USI9Section2 extends USI9Translator {
         }
 
         this._hireDate = this.renderControl(hireDate, this._('hiredate.tooltip'))
-        .datepicker().attr('autocomplete', 'disabled');
+        .datepicker().attr('autocomplete', 'disabled')
+        .attr('tabindex', tabIndex++);
 
         this._hireDateHelp = this.renderHelpIcon(
             hireDateHelp,
@@ -204,7 +208,8 @@ class USI9Section2 extends USI9Translator {
             this._('hiredatehelp.text')
         );
 
-        this.renderEmployerData(
+        tabIndex = this.renderEmployerData(
+            tabIndex,
             dialog,
             sgnEmployer,
             sgnEmployerHelp,
@@ -227,6 +232,8 @@ class USI9Section2 extends USI9Translator {
             employerZip,
             employerZipHelp
         );
+
+        return tabIndex;
     }
 
     protected validateFields(): string[] {
@@ -412,6 +419,7 @@ class USI9Section2 extends USI9Translator {
     }
 
     private renderEmployerData(
+        tabIndex: number,
         dialog: JQuery<HTMLElement>,
         sgnEmployer: JQuery<HTMLElement>,
         sgnEmployerHelp: JQuery<HTMLElement>,
@@ -434,7 +442,8 @@ class USI9Section2 extends USI9Translator {
         employerZip: JQuery<HTMLElement>,
         employerZipHelp: JQuery<HTMLElement>){
 
-        this._sgnEmployer = this.renderControl(sgnEmployer, this._('sgnemployer.tooltip'));
+        this._sgnEmployer = this.renderControl(sgnEmployer, this._('sgnemployer.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._sgnEmployerHelp = this.renderHelpIcon(
             sgnEmployerHelp,
@@ -445,7 +454,8 @@ class USI9Section2 extends USI9Translator {
         );
 
         this._employerSignDate = this.renderControl(employerSignDate, this._('employersigndate.tooltip'))
-        .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
+        .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled')
+        .attr('tabindex', tabIndex++);
 
         this._employerSignDateHelp = this.renderHelpIcon(
             employerSignDateHelp,
@@ -455,7 +465,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._employerTitle = this.renderControl(employerTitle, this._('employertitle.tooltip'));
+        this._employerTitle = this.renderControl(employerTitle, this._('employertitle.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._employerTitleHelp = this.renderHelpIcon(
             employerTitleHelp,
@@ -465,7 +476,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._employerLastName = this.renderControl(employerLastName, this._('employerlastname.tooltip'));
+        this._employerLastName = this.renderControl(employerLastName, this._('employerlastname.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._employerLastNameHelp = this.renderHelpIcon(
             employerLastNameHelp,
@@ -475,7 +487,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._employerFirstName = this.renderControl(employerFirstName, this._('employerfirstname.tooltip'));
+        this._employerFirstName = this.renderControl(employerFirstName, this._('employerfirstname.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._employerFirstNameHelp = this.renderHelpIcon(
             employerFirstNameHelp,
@@ -485,7 +498,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._employerName = this.renderControl(employerName, this._('employername.tooltip'));
+        this._employerName = this.renderControl(employerName, this._('employername.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._employerNameHelp = this.renderHelpIcon(
             employerNameHelp,
@@ -495,7 +509,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._employerAddress = this.renderControl(employerAddress, this._('employeraddress.tooltip'));
+        this._employerAddress = this.renderControl(employerAddress, this._('employeraddress.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._employerAddressHelp = this.renderHelpIcon(
             employerAddressHelp,
@@ -505,7 +520,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._employerCity = this.renderControl(employerCity, this._('employercity.tooltip'));
+        this._employerCity = this.renderControl(employerCity, this._('employercity.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._employerCityHelp = this.renderHelpIcon(
             employerCityHelp,
@@ -515,7 +531,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._employerState = this.renderControl(employerState, this._('employerstate.tooltip'));
+        this._employerState = this.renderControl(employerState, this._('employerstate.tooltip'))
+        .attr('tabindex', tabIndex++);
         this.setCombolistText(this._employerState, this.space, this.blankItem);
 
         this._employerStateHelp = this.renderHelpIcon(
@@ -527,7 +544,8 @@ class USI9Section2 extends USI9Translator {
         );
 
         this._employerZip = this.renderControl(employerZip, this._('employerzip.tooltip'))
-        .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode);
+        .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
+        .attr('tabindex', tabIndex++);
 
         this._employerZipHelp = this.renderHelpIcon(
             employerZipHelp,
@@ -535,10 +553,13 @@ class USI9Section2 extends USI9Translator {
             dialog,
             this._('employerziphelp.text')
         );
+
+        return tabIndex;
     }
 
     //region "List A/B/C" methods
     private renderListABC(
+        tabIndex: number,
         dialog: JQuery<HTMLElement>,
         listADoc: JQuery<HTMLElement>,
         listADocHelp: JQuery<HTMLElement>,
@@ -581,7 +602,8 @@ class USI9Section2 extends USI9Translator {
         listCDocExpDate: JQuery<HTMLElement>,
         listCDocExpDateHelp: JQuery<HTMLElement>){
 
-        this._listADoc = this.renderControl(listADoc, this._('listadoc.tooltip'));
+        this._listADoc = this.renderControl(listADoc, this._('listadoc.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._listADocHelp = this.renderHelpIcon(
             listADocHelp,
@@ -591,7 +613,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._listAIssuingAuthority = this.renderControl(listAIssuingAuthority, this._('listaissuingauthority.tooltip'));
+        this._listAIssuingAuthority = this.renderControl(listAIssuingAuthority, this._('listaissuingauthority.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._listAIssuingAuthorityHelp = this.renderHelpIcon(
             listAIssuingAuthorityHelp,
@@ -601,7 +624,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._listADocNumber = this.renderControl(listADocNumber, this._('listadocnumber.tooltip'));
+        this._listADocNumber = this.renderControl(listADocNumber, this._('listadocnumber.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._listADocNumberHelp = this.renderHelpIcon(
             listADocNumberHelp,
@@ -612,7 +636,8 @@ class USI9Section2 extends USI9Translator {
         );
 
         this._listADocExpDate = this.renderControl(listADocExpDate, this._('listaexpdate.tooltip'))
-        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled');
+        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
+        .attr('tabindex', tabIndex++);
 
         this._listADocExpDateHelp = this.renderHelpIcon(
             listADocExpDateHelp,
@@ -622,7 +647,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._listADoc2 = this.renderControl(listADoc2, this._('listadoc2.tooltip'));
+        this._listADoc2 = this.renderControl(listADoc2, this._('listadoc2.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._listADoc2Help = this.renderHelpIcon(
             listADoc2Help,
@@ -632,7 +658,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._listAIssuingAuthority2 = this.renderControl(listAIssuingAuthority2, this._('listaissuingauthority2.tooltip'));
+        this._listAIssuingAuthority2 = this.renderControl(listAIssuingAuthority2, this._('listaissuingauthority2.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._listAIssuingAuthority2Help = this.renderHelpIcon(
             listAIssuingAuthority2Help,
@@ -642,7 +669,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._listADocNumber2 = this.renderControl(listADocNumber2, this._('listadocnumber2.tooltip'));
+        this._listADocNumber2 = this.renderControl(listADocNumber2, this._('listadocnumber2.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._listADocNumber2Help = this.renderHelpIcon(
             listADocNumber2Help,
@@ -653,7 +681,8 @@ class USI9Section2 extends USI9Translator {
         );
 
         this._listADocExpDate2 = this.renderControl(listADocExpDate2, this._('listaexpdate2.tooltip'))
-        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled');
+        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
+        .attr('tabindex', tabIndex++);
 
         this._listADocExpDate2Help = this.renderHelpIcon(
             listADocExpDate2Help,
@@ -663,7 +692,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._listADoc3 = this.renderControl(listADoc3, this._('listadoc3.tooltip'));
+        this._listADoc3 = this.renderControl(listADoc3, this._('listadoc3.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._listADoc3Help = this.renderHelpIcon(
             listADoc3Help,
@@ -673,7 +703,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._listAIssuingAuthority3 = this.renderControl(listAIssuingAuthority3, this._('listaissuingauthority3.tooltip'));
+        this._listAIssuingAuthority3 = this.renderControl(listAIssuingAuthority3, this._('listaissuingauthority3.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._listAIssuingAuthority3Help = this.renderHelpIcon(
             listAIssuingAuthority3Help,
@@ -683,7 +714,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._listADocNumber3 = this.renderControl(listADocNumber3, this._('listadocnumber3.tooltip'));
+        this._listADocNumber3 = this.renderControl(listADocNumber3, this._('listadocnumber3.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._listADocNumber3Help = this.renderHelpIcon(
             listADocNumber3Help,
@@ -694,7 +726,8 @@ class USI9Section2 extends USI9Translator {
         );
 
         this._listADocExpDate3 = this.renderControl(listADocExpDate3, this._('listaexpdate3.tooltip'))
-        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled');
+        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
+        .attr('tabindex', tabIndex++);
 
         this._listADocExpDate3Help = this.renderHelpIcon(
             listADocExpDate3Help,
@@ -704,7 +737,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._listBDoc = this.renderControl(listBDoc, this._('listbdoc.tooltip'));
+        this._listBDoc = this.renderControl(listBDoc, this._('listbdoc.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._listBDocHelp = this.renderHelpIcon(
             listBDocHelp,
@@ -716,7 +750,8 @@ class USI9Section2 extends USI9Translator {
 
         this.filterCombolist(this._listBDoc, this.getListBContent(null), null, this, this.processListABC);
 
-        this._listBIssuingAuthority = this.renderControl(listBIssuingAuthority, this._('listbissuingauthority.tooltip'));
+        this._listBIssuingAuthority = this.renderControl(listBIssuingAuthority, this._('listbissuingauthority.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._listBIssuingAuthorityHelp = this.renderHelpIcon(
             listBIssuingAuthorityHelp,
@@ -726,7 +761,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._listBDocNumber = this.renderControl(listBDocNumber, this._('listbdocnumber.tooltip'));
+        this._listBDocNumber = this.renderControl(listBDocNumber, this._('listbdocnumber.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._listBDocNumberHelp = this.renderHelpIcon(
             listBDocNumberHelp,
@@ -736,7 +772,8 @@ class USI9Section2 extends USI9Translator {
         );
 
         this._listBDocExpDate = this.renderControl(listBDocExpDate, this._('listbexpdate.tooltip'))
-        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled');
+        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
+        .attr('tabindex', tabIndex++);
 
         this._listBDocExpDateHelp = this.renderHelpIcon(
             listBDocExpDateHelp,
@@ -746,7 +783,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._listCDoc = this.renderControl(listCDoc, this._('listcdoc.tooltip'));
+        this._listCDoc = this.renderControl(listCDoc, this._('listcdoc.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._listCDocHelp = this.renderHelpIcon(
             listCDocHelp,
@@ -758,7 +796,8 @@ class USI9Section2 extends USI9Translator {
 
         this.filterCombolist(this._listCDoc, this.getListCContent(null), null, this, this.processListABC);
 
-        this._listCIssuingAuthority = this.renderControl(listCIssuingAuthority, this._('listcissuingauthority.tooltip'));
+        this._listCIssuingAuthority = this.renderControl(listCIssuingAuthority, this._('listcissuingauthority.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._listCIssuingAuthorityHelp = this.renderHelpIcon(
             listCIssuingAuthorityHelp,
@@ -768,7 +807,8 @@ class USI9Section2 extends USI9Translator {
             500
         );
 
-        this._listCDocNumber = this.renderControl(listCDocNumber, this._('listcdocnumber.tooltip'));
+        this._listCDocNumber = this.renderControl(listCDocNumber, this._('listcdocnumber.tooltip'))
+        .attr('tabindex', tabIndex++);
 
         this._listCDocNumberHelp = this.renderHelpIcon(
             listCDocNumberHelp,
@@ -778,7 +818,8 @@ class USI9Section2 extends USI9Translator {
         );
 
         this._listCDocExpDate = this.renderControl(listCDocExpDate, this._('listcexpdate.tooltip'))
-        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled');
+        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
+        .attr('tabindex', tabIndex++);
 
         this._listCDocExpDateHelp = this.renderHelpIcon(
             listCDocExpDateHelp,
@@ -787,6 +828,8 @@ class USI9Section2 extends USI9Translator {
             this._('listcexpdatehelp.text'),
             500
         );
+
+        return tabIndex;
     }
 
     protected processListABC(ddl: string, code: string, self: USI9Section2) {
