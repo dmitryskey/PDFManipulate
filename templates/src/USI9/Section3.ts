@@ -357,8 +357,66 @@ class USI9Section3 extends USI9Section2 {
             this.validateTextField(this._newlastName, this._('name.last') + this.space + this._('section3.suffix'), [this.nameFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._newfirstName, this._('name.first') + this.space + this._('section3.suffix'), [this.nameFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._newmiddleInitial, this._('name.middleinitial') + this.space + this._('section3.suffix'), [this.nameInitialFormat, this.NAString], false, errorMessages);
-            this.validateTextField(this._rehireDate, this._('section3.rehire'), [this.dateFormat, this.NAString], true, errorMessages);            
-            this.validateTextField(this._docNumberSec3, this._('section3.docnumber') + this.space + this._('section3.suffix'), [/^[a-zA-Z0-9]+$/, this.NAString], false, errorMessages);
+            this.validateTextField(this._rehireDate, this._('section3.rehire'), [this.dateFormat, this.NAString], true, errorMessages);
+
+            let fieldValidationExpression = /^[a-zA-Z0-9]+$/;
+            switch(this._docTitleSec3.val())
+            {
+                // 1 - U.S. Passport
+                // 2 - U.S. Passport Card
+                case '1': case '2':
+                    fieldValidationExpression = this.usPassportNumberFormat;
+                    break;
+                // 3 - Perm. Resident Card (Form I-551)
+                // 4 - Alien Reg. Receipt Card (Form I-551)
+                case '3': case '4':
+                    fieldValidationExpression = this.greenCardNumberFormat;
+                    break;
+                // 5 - Foreign Passport with Temp. I-551 Stamp
+                // 6 - Foreign Passport with Temp. I-551 MRIV
+                // 8 - Foreign Passport with Form I-94, endorsement
+                // 9 - FSM Passport with Form I-94
+                // 10 - RMI Passport with Form I-94
+                case '5': case '6': case '8': case '9': case '10':
+                    fieldValidationExpression = this.passportNumberFormat;
+                    break;
+                // 7 - Receipt replacement EAD (Form I-766)
+                case '7':
+                    fieldValidationExpression = this.cardNumberFormat;
+                    break;
+                // 11 - Receipt Form I-94/I-94A w/I-551 stamp, photo
+                // 12 - Receipt Form I-94/I-94A w/refugee stamp (or RE class of admission)
+                case '11': case '12':
+                    fieldValidationExpression = this.admissionNumberFormat;
+                    break;
+                // 13 - (Unrestricted) Social Security Card
+                case '13':
+                    fieldValidationExpression = this.ssnFormat;
+                    break;
+                // 14 - Form FS-545
+                // 15 - Form DS-1350
+                // 16 - Form FS-240
+                // 17 - U.S. Birth Certificate
+                // 18 - Native American tribal document
+                // 19 - Form I-197
+                // 20 - Form I-179
+                // 21 - Employment Auth. document (DHS)
+                // 22 - Receipt replacement Perm. Res. Card (Form I-551)
+                // 23 - Receipt replacement EAD (Form I-766)
+                // 24 - Receipt Replacement Foreign Passport with Form I-94, endorsement
+                // 25 - Receipt Replacement FSM Passport with Form I-94
+                // 26 - Receipt Replacement RMI Passport with Form I-94
+                // 27 - Receipt Replacement Unrestricted SS Card
+                // 28 - Receipt Replacement Birth Certificate
+                // 29 - Receipt Replacement Native American Tribal Doc.
+                // 30 - Receipt Replacement Employment Auth. Doc. (DHS)
+                case '14': case '15': case '16': case '17': case '18': case '19': case '20': case '21': case '22':
+                case '23': case '24': case '25': case '26': case '27': case '28': case '29': case '30':
+                    break;
+            }
+
+            this.validateTextField(this._docNumberSec3, this._('section3.docnumber') + this.space + this._('section3.suffix'), [fieldValidationExpression, this.NAString], false, errorMessages);
+
             this.validateTextField(this._expDateSec3, this._('section3.expdate') + this.space + this._('section3.suffix'), [this.dateFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._signDateSec3, this._('section3.today') + this.space + this._('section3.suffix'), [this.dateFormat], true, errorMessages);
             this.validateTextField(this._employerNameSec3, this._('section3.employer') + this.space + this._('section3.suffix'), [this.nameFormat], true, errorMessages);

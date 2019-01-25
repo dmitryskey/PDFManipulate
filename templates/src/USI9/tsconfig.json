@@ -1,12 +1,4 @@
 {
-    "files": [
-        "PDFForm",
-        "Fields",
-        "Section1",
-        "TranslatorSection",
-        "Section2",
-        "USI9"
-    ],
     "compilerOptions": {
         "module": "amd",
         "target": "es5",
@@ -19,5 +11,13 @@
             "scripthost",
             "es2015.iterable"
         ]
-    }
+    },
+    "files": [
+        "Fields.ts",
+        "PDFForm.ts",
+        "Section1.ts",
+        "Section2.ts",
+        "TranslatorSection.ts",
+        "USI9.ts"
+    ]
 }

@@ -973,8 +973,6 @@ var USI9Section2 = (function (_super) {
             case 'ListCDocTitle':
                 self.listCDocTitle(code);
                 break;
-            case 'DocTitleSec3':
-                break;
         }
     };
     USI9Section2.prototype.getListAContent = function (citizenship) {
@@ -1854,7 +1852,53 @@ var USI9Section3 = (function (_super) {
             this.validateTextField(this._newfirstName, this._('name.first') + this.space + this._('section3.suffix'), [this.nameFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._newmiddleInitial, this._('name.middleinitial') + this.space + this._('section3.suffix'), [this.nameInitialFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._rehireDate, this._('section3.rehire'), [this.dateFormat, this.NAString], true, errorMessages);
-            this.validateTextField(this._docNumberSec3, this._('section3.docnumber') + this.space + this._('section3.suffix'), [/^[a-zA-Z0-9]+$/, this.NAString], false, errorMessages);
+            var fieldValidationExpression = /^[a-zA-Z0-9]+$/;
+            switch (this._docTitleSec3.val()) {
+                case '1':
+                case '2':
+                    fieldValidationExpression = this.usPassportNumberFormat;
+                    break;
+                case '3':
+                case '4':
+                    fieldValidationExpression = this.greenCardNumberFormat;
+                    break;
+                case '5':
+                case '6':
+                case '8':
+                case '9':
+                case '10':
+                    fieldValidationExpression = this.passportNumberFormat;
+                    break;
+                case '7':
+                    fieldValidationExpression = this.cardNumberFormat;
+                    break;
+                case '11':
+                case '12':
+                    fieldValidationExpression = this.admissionNumberFormat;
+                    break;
+                case '13':
+                    fieldValidationExpression = this.ssnFormat;
+                    break;
+                case '14':
+                case '15':
+                case '16':
+                case '17':
+                case '18':
+                case '19':
+                case '20':
+                case '21':
+                case '22':
+                case '23':
+                case '24':
+                case '25':
+                case '26':
+                case '27':
+                case '28':
+                case '29':
+                case '30':
+                    break;
+            }
+            this.validateTextField(this._docNumberSec3, this._('section3.docnumber') + this.space + this._('section3.suffix'), [fieldValidationExpression, this.NAString], false, errorMessages);
             this.validateTextField(this._expDateSec3, this._('section3.expdate') + this.space + this._('section3.suffix'), [this.dateFormat, this.NAString], false, errorMessages);
             this.validateTextField(this._signDateSec3, this._('section3.today') + this.space + this._('section3.suffix'), [this.dateFormat], true, errorMessages);
             this.validateTextField(this._employerNameSec3, this._('section3.employer') + this.space + this._('section3.suffix'), [this.nameFormat], true, errorMessages);

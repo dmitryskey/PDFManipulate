@@ -856,9 +856,6 @@ class USI9Section2 extends USI9Translator {
         case 'ListCDocTitle':
             self.listCDocTitle(code);
             break;
-
-        case 'DocTitleSec3':
-            break;
         }
     }
 
@@ -1099,7 +1096,7 @@ class USI9Section2 extends USI9Translator {
             issuingAuth = DHS;
             numberMaxLength = 11;
             fieldFormat = this.numberFormat;
-            fieldValidationExpression = this.admissionNumberFormat
+            fieldValidationExpression = this.admissionNumberFormat;
             fieldValidationMessage = this._('admissionnumber.format');
 
             this._listADocExpDate
