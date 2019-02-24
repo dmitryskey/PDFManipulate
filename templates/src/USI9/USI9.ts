@@ -36,7 +36,7 @@ class USI9 extends USI9Section3 {
 
             PDFViewerApplication.fieldsData.entries.push({
                 'name': ctrl.getAttribute(this.annotationName),
-                'value': op ? (ctrl.type === 'checkbox' ? ( ctrl.checked ? 'Yes' : 'No') : ctrl.value) : '',
+                'value': op ? (ctrl.type === 'checkbox' ? (ctrl.checked ? 'Yes' : 'No') : ctrl.value) : '',
                 'operation': op ? 's': 'd'});
         });
     }

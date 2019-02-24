@@ -6,7 +6,7 @@ Plugin Name: Smart-Forms-On-Demand
 function read_param($paramName, $defaultValue) {
     foreach (scandir(plugin_dir_path( __FILE__ ) . 'db') as $dbFile) {
         if (strlen($dbFile) > 2) {
-            $db = new SQLite3(plugin_dir_path( __FILE__ ) . 'db/' . $dbFile);
+            $db = new SQLite3(plugin_dir_path( __FILE__ ) . 'db' . DIRECTORY_SEPARATOR . $dbFile);
             $statement = $db->prepare('SELECT Parameter FROM App_Config WHERE Name = :name;');
             $statement->bindValue(':name', $paramName);
 
@@ -34,56 +34,42 @@ function update_form($params) {
     // default port
     $service_port = read_param('iTextPort', 8086); 
 
-    $address = 'localhost';
+    $params['session_id'] = null;
+    $params['file'] = plugin_dir_path( __FILE__ ) . substr($params['file'], 1);
 
-    $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-    if (!$socket) {
-        $msg = socket_strerror(socket_last_error($socket));
-        error_log('Smart-Forms-On-Demand: ' . $msg);
+    $url = 'http://localhost:' . $service_port . '/api/UpdateForm';
+    $data = json_encode($params, JSON_UNESCAPED_SLASHES);
+
+    $options = array(
+        'http' => array(
+            'header'  => 'Content-Type: application/json\r\nContent-Length: ' . strlen($data) . '\r\n',
+            'method'  => 'POST',
+            'content' => $data,
+        )
+    );
+
+    $context = stream_context_create($options);
+    if (!$context) {
+        error_log('Smart-Forms-On-Demand: Can not open the stream');
         return '';
     }
 
-    $result = socket_connect($socket, $address, $service_port);
+    $result = file_get_contents($url, false, $context);
+
     if (!$result) {
-        $msg = socket_strerror(socket_last_error($socket));
-        error_log('Smart-Forms-On-Demand: ' . $msg);
+        error_log('Smart-Forms-On-Demand: Can not fetch PDF document from the iText service');
 
         $to = 'smartformsondemand@gmail.com';
         $subject = 'iText service is not running';
         $body = '<p style="font-color:red"><b>Please start iText service</b><p>';
         $headers = array('Content-Type: text/html; charset=UTF-8');
  
-        wp_mail( $to, $subject, $body, $headers );
+        wp_mail($to, $subject, $body, $headers);
 
         return '';
     }
 
-    $in = json_encode($params) . PHP_EOL;
-
-    $out = '';
-
-    $result = socket_write($socket, $in, strlen($in));
-    if (!$result) {
-        $msg = socket_strerror(socket_last_error($socket));
-        error_log('Smart-Forms-On-Demand: ' . $msg);
-        return '';
-    }
-
-    while ($buf = socket_read($socket, 2048)) {
-        $out .= $buf;
-
-        if (strlen($buf) > 0 && $buf[strlen($buf) - 1] === PHP_EOL) {
-            break;
-        }
-    }
-
-    socket_close($socket);
-
-    if (strlen($out) > 0) {
-        return substr($out, 0, strlen($out) - 1);
-    } else {
-        return '';
-    }
+    return json_decode($result);
 }
 
 function process_data($data, $pdf) {
@@ -109,7 +95,7 @@ function process_data($data, $pdf) {
             return false;
         }
 
-        $f = fopen(plugin_dir_path( __FILE__ ) . 'data/uuid' . $pdf, 'w');
+        $f = fopen(plugin_dir_path( __FILE__ ) . 'data' . DIRECTORY_SEPARATOR . 'uuid' . $pdf, 'w');
         fwrite($f, base64_decode($out.content));
         fclose($f);
     }
@@ -186,8 +172,9 @@ add_action('rest_api_init', function ($server) {
                ($data['mode'] === 'view' || $data['mode'] === 'edit')) {
 
                 if ($readOnly === 0) {
-                    if (!copy($pluginPath . 'templates/forms/' . $data['locale'] . '/' . $data['templateid'] . '.pdf',
-                       $pluginPath . 'data/' . $pdf)) {
+                    if (!copy($pluginPath . 'templates' . DIRECTORY_SEPARATOR . 'forms' . DIRECTORY_SEPARATOR .
+                       $data['locale'] . DIRECTORY_SEPARATOR . $data['templateid'] . '.pdf',
+                       $pluginPath . 'data' . DIRECTORY_SEPARATOR . $pdf)) {
                         $errors = error_get_last();
                         error_log('Smart-Forms-On-Demand: ' . $errors['type'] . ', ' . $errors['message']);
                         return '{"editorUrl": ""}';
@@ -205,7 +192,7 @@ add_action('rest_api_init', function ($server) {
                 return '{"editorUrl": "' . $editorUrl . '"}';
             } else if ($data['type'] === 'application/pdf' && $data['content'] !== null &&
                ($data['mode'] === 'view' || $data['mode'] === 'edit' || $data['mode'] === 'design')) {
-                $f = fopen($pluginPath . 'data/' . $pdf, 'w');
+                $f = fopen($pluginPath . 'data' . DIRECTORY_SEPARATOR . $pdf, 'w');
                 fwrite($f, base64_decode($data['content']));
                 fclose($f);
 
@@ -275,4 +262,4 @@ add_action('wp_enqueue_scripts', function() {
         plugin_dir_url( __FILE__ ) . 'smartformsondemand.js?v=1',
         array('jquery')
     );
-} );
+});
