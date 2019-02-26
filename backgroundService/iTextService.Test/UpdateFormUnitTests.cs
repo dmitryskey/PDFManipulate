@@ -28,15 +28,18 @@ namespace Test
         [Test]
         public void TestForm(
             [Values(
-            "{'file': '../../../US I9.pdf'}",
-            "{'file': '../../../US I9.pdf', 'operation': 'f'}",
-            "{'file': '../../../US I9.pdf', 'operation': 'f', 'entries': " +
+            "{'file': 'US I9.pdf'}",
+            "{'file': 'US I9.pdf', 'operation': 'f'}",
+            "{'file': 'US I9.pdf', 'operation': 'f', 'entries': " +
                 "[{'name': 'FirstName', 'value': 'Test', 'operation': 's'}]}",
-            "{'file': '../../../US I9.pdf', 'operation': 'f', 'entries': " +
+            "{'file': 'US I9.pdf', 'operation': 'f', 'entries': " +
                 "[{'name': 'Instructions', 'operation': 'd'}]}",
-            "{'file': '../../../US I9.pdf', 'operation': 'f', 'entries': " +
+            "{'file': 'US I9.pdf', 'operation': 'f', 'entries': " +
                 "[{'name': 'FirstName', 'value': 'Test', 'operation': 's'}, " +
                 "{'name': 'LastName', 'value': 'Person', 'operation': 's'}, " +
+                "{'name': 'State', 'value': 'FL', 'operation': 's'}, " +
+                "{'name': 'Citizen', 'value': 'On', 'operation': 's'}," +
+                "{'name': 'NonCitizenNational', 'value': 'Off', 'operation': 's'}," +
                 "{'name': 'Instructions', 'operation': 'd'}]}"
             )] string val)
         {
@@ -49,7 +52,7 @@ namespace Test
             Assert.IsNotNull(resultValue);
             Assert.IsTrue(resultValue.Length > 0);
 
-            System.IO.File.WriteAllBytes("1.pdf", resultValue);
+            System.IO.File.WriteAllBytes("test_output.pdf", resultValue);
         }
     }
 }

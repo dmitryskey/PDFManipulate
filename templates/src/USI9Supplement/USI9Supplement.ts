@@ -20,12 +20,12 @@ class USI9Supplement extends USI9SupplementTranslator {
         }
 
         $('[' + this.annotationName + ']').each((index, ctrl: HTMLInputElement) => {
-            let op = !ctrl.disabled;
-
-            PDFViewerApplication.fieldsData.entries.push({
-                'name': ctrl.getAttribute(this.annotationName),
-                'value': op ? (ctrl.type === 'checkbox' ? ( ctrl.checked ? 'Yes' : 'No') : ctrl.value) : '',
-                'operation': op ? 's': 'd'});
+            if (!ctrl.disabled) {
+                PDFViewerApplication.fieldsData.entries.push({
+                    'name': ctrl.getAttribute(this.annotationName),
+                    'value': ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value,
+                    'operation': 's'});
+                }
         });
     }
 

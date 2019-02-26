@@ -1955,7 +1955,7 @@ var USI9 = (function (_super) {
                 readOnlyFieldsToFlat.indexOf(ctrl.getAttribute(_this.annotationName)) > -1;
             PDFViewerApplication.fieldsData.entries.push({
                 'name': ctrl.getAttribute(_this.annotationName),
-                'value': op ? (ctrl.type === 'checkbox' ? (ctrl.checked ? 'Yes' : 'No') : ctrl.value) : '',
+                'value': op ? (ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value) : '',
                 'operation': op ? 's' : 'd'
             });
         });

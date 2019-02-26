@@ -404,7 +404,7 @@ var USI9Supplement = (function (_super) {
             var op = !ctrl.disabled;
             PDFViewerApplication.fieldsData.entries.push({
                 'name': ctrl.getAttribute(_this.annotationName),
-                'value': op ? (ctrl.type === 'checkbox' ? (ctrl.checked ? 'Yes' : 'No') : ctrl.value) : '',
+                'value': op ? (ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value) : '',
                 'operation': op ? 's' : 'd'
             });
         });

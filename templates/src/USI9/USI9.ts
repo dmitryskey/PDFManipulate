@@ -31,13 +31,12 @@ class USI9 extends USI9Section3 {
          'MiddleInitialSection2', 'ImmigrationStatus'];
 
         $('[' + this.annotationName + ']').each((index, ctrl: HTMLInputElement) => {
-            let op = !ctrl.disabled ||
-                readOnlyFieldsToFlat.indexOf(ctrl.getAttribute(this.annotationName)) > -1;
-
-            PDFViewerApplication.fieldsData.entries.push({
-                'name': ctrl.getAttribute(this.annotationName),
-                'value': op ? (ctrl.type === 'checkbox' ? (ctrl.checked ? 'Yes' : 'No') : ctrl.value) : '',
-                'operation': op ? 's': 'd'});
+            if (!ctrl.disabled || readOnlyFieldsToFlat.indexOf(ctrl.getAttribute(this.annotationName)) > -1) {
+                PDFViewerApplication.fieldsData.entries.push({
+                    'name': ctrl.getAttribute(this.annotationName),
+                    'value': ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value,
+                    'operation': 's'});
+            }
         });
     }
 
