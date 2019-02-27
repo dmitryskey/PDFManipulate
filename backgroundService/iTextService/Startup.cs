@@ -41,7 +41,6 @@ namespace iTextService
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }

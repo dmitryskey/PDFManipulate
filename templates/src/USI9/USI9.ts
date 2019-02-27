@@ -30,8 +30,8 @@ class USI9 extends USI9Section3 {
          'LastNameSection2', 'FirstNameSection2',
          'MiddleInitialSection2', 'ImmigrationStatus'];
 
-        $('[' + this.annotationName + ']').each((index, ctrl: HTMLInputElement) => {
-            if (!ctrl.disabled || readOnlyFieldsToFlat.indexOf(ctrl.getAttribute(this.annotationName)) > -1) {
+        $('[' + this.annotationName + ']').each((i, ctrl: HTMLInputElement) => {
+            if ((!ctrl.disabled || readOnlyFieldsToFlat.indexOf(ctrl.getAttribute(this.annotationName)) > -1) && ctrl.value && ctrl.value !== '') {
                 PDFViewerApplication.fieldsData.entries.push({
                     'name': ctrl.getAttribute(this.annotationName),
                     'value': ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value,

@@ -88,12 +88,16 @@ namespace iTextService.Controllers
 
                             if (f is PdfChoiceFormField)
                             {
-                                (f as PdfChoiceFormField).SetListSelected(new string[] {e.value});
+                                // workaround for the iText 7 issue when it draws the blue background
+                                var c = f as PdfChoiceFormField;
+
+                                if (c.GetOptions().Count() > 0)
+                                {
+                                    c.SetListSelected(new int[] {1});
+                                }
                             }
-                            else
-                            {
-                                f.SetValue(e.value);
-                            }
+
+                            f.SetValue(e.value);
                         });
                 }
 

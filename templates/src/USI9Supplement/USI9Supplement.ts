@@ -19,8 +19,8 @@ class USI9Supplement extends USI9SupplementTranslator {
             'entries': []
         }
 
-        $('[' + this.annotationName + ']').each((index, ctrl: HTMLInputElement) => {
-            if (!ctrl.disabled) {
+        $('[' + this.annotationName + ']').each((i, ctrl: HTMLInputElement) => {
+            if (!ctrl.disabled && ctrl.value && ctrl.value !== '') {
                 PDFViewerApplication.fieldsData.entries.push({
                     'name': ctrl.getAttribute(this.annotationName),
                     'value': ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value,

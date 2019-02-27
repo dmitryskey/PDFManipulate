@@ -400,13 +400,14 @@ var USI9Supplement = (function (_super) {
             'operation': 'f',
             'entries': []
         };
-        $('[' + this.annotationName + ']').each(function (index, ctrl) {
-            var op = !ctrl.disabled;
-            PDFViewerApplication.fieldsData.entries.push({
-                'name': ctrl.getAttribute(_this.annotationName),
-                'value': op ? (ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value) : '',
-                'operation': op ? 's' : 'd'
-            });
+        $('[' + this.annotationName + ']').each(function (i, ctrl) {
+            if (!ctrl.disabled && ctrl.value && ctrl.value !== '') {
+                PDFViewerApplication.fieldsData.entries.push({
+                    'name': ctrl.getAttribute(_this.annotationName),
+                    'value': ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value,
+                    'operation': 's'
+                });
+            }
         });
     };
     USI9Supplement.prototype.prepareFirstPage = function () {

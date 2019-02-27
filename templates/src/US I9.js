@@ -1950,14 +1950,14 @@ var USI9 = (function (_super) {
             'AdmissionNumber', 'ForeignPassportNumber', 'CountryOfIssuance',
             'LastNameSection2', 'FirstNameSection2',
             'MiddleInitialSection2', 'ImmigrationStatus'];
-        $('[' + this.annotationName + ']').each(function (index, ctrl) {
-            var op = !ctrl.disabled ||
-                readOnlyFieldsToFlat.indexOf(ctrl.getAttribute(_this.annotationName)) > -1;
-            PDFViewerApplication.fieldsData.entries.push({
-                'name': ctrl.getAttribute(_this.annotationName),
-                'value': op ? (ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value) : '',
-                'operation': op ? 's' : 'd'
-            });
+        $('[' + this.annotationName + ']').each(function (i, ctrl) {
+            if ((!ctrl.disabled || readOnlyFieldsToFlat.indexOf(ctrl.getAttribute(_this.annotationName)) > -1) && ctrl.value && ctrl.value !== '') {
+                PDFViewerApplication.fieldsData.entries.push({
+                    'name': ctrl.getAttribute(_this.annotationName),
+                    'value': ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value,
+                    'operation': 's'
+                });
+            }
         });
     };
     USI9.prototype.prepareFirstPage = function (tabIndex) {
