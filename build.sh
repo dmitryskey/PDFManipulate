@@ -23,7 +23,7 @@ mv $iTextService/build/iTextService $p
 cp -R ./locale $p
 cp -R ./templates $p
 rm -R -f $p/templates/src
-cp ./wordpress/* $p
+cp ./wordpress/s* $p
 
 # sed -i 's/pdf.viewer.js/pdf.viewer.js?v=1/g' $p/pdf.js/web/viewer.html
 
