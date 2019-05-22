@@ -14,21 +14,21 @@
     "@types/jquery": "^3.3.29",
     "@types/jqueryui": "^1.12.7",
     "asposepdfcloud": "^1.0.2",
-    "assert": "^1.4.1",
+    "assert": "^1.5.0",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "base-64": "^0.1.0",
     "browserify": "^16.2.3",
     "eslint": "^4.5.0",
     "eslint-plugin-jquery": "^1.5.0",
-    "express": "^4.16.4",
+    "express": "^4.17.0",
     "fs-extra": "^4.0.1",
-    "gulp": "^4.0.0",
-    "gulp-typescript": "^5.0.0",
-    "jquery": "^3.2.1",
-    "jwt-simple": "^0.5.5",
+    "gulp": "^4.0.2",
+    "gulp-typescript": "^5.0.1",
+    "jquery": "^3.4.1",
+    "jwt-simple": "^0.5.6",
     "log4js": "^3.0.6",
-    "mariadb": "^2.0.3",
+    "mariadb": "^2.0.5",
     "md5": "^2.2.1",
     "moment": "^2.24.0",
     "net": "^1.0.2",
@@ -40,6 +40,6 @@
   },
   "dependencies": {
     "autorest": "^2.0.4283",
-    "sqlite3": "^4.0.6"
+    "sqlite3": "^4.0.8"
   }
 }

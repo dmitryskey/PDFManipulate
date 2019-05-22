@@ -28,4 +28,3 @@ cp ./wordpress/s* $p
 # sed -i 's/pdf.viewer.js/pdf.viewer.js?v=1/g' $p/pdf.js/web/viewer.html
 
 tar -zcf ./build/smartformsondemand.tgz $p
-scp ./build/smartformsondemand.tgz dmitryskey@smarti9.eastus.cloudapp.azure.com:/home/dmitryskey/smartformsondemand.tgz

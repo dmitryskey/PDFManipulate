@@ -85,13 +85,14 @@ class USI9Section2 extends USI9Translator {
 
         $('a').prop('target', '_blank');
 
-        this._dob.change((e : JQuery.Event<HTMLInputElement>) =>
+        this._dob.change((e : JQuery.ChangeEvent<HTMLInputElement>) =>
             this.filterCombolist(
                 this._listBDoc,
                 this.getListBContent(e.target.value),
                 this.na,
                 this,
-                this.processListABC))
+                this.processListABC)
+        );
 
         this._employeeInfoHelp = this.renderHelpIcon(
             employeeInfoHelp,
@@ -1097,7 +1098,7 @@ class USI9Section2 extends USI9Translator {
             numberMaxLength = 11;
             fieldFormat = this.numberFormat;
             fieldValidationExpression = this.admissionNumberFormat;
-            fieldValidationMessage = this._('admissionnumber.format');
+            fieldValidationMessage = this._('section2.admissionnumber');
 
             this._listADocExpDate
             .unbind('keypress')
@@ -1276,7 +1277,7 @@ class USI9Section2 extends USI9Translator {
             numberMaxLength = 11;
             fieldFormat = this.numberFormat;
             fieldValidationExpression = this.admissionNumberFormat
-            fieldValidationMessage = this._('admissionnumber.format');
+            fieldValidationMessage = this._('section2.admissionnumber');
 
             this._listADocExpDate.prop(this.freeTextProp, true);
         } else if (code === '13') {
@@ -1476,7 +1477,7 @@ class USI9Section2 extends USI9Translator {
             .removeAttr('readOnly')
             .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'disabled').val('')
             .unbind('keypress')
-            .keypress((e : JQuery.Event<HTMLElement>) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
+            .keypress((e : JQuery.KeyPressEvent<HTMLElement>) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
         }
 
         if (['1', '2', '21', '22'].indexOf(code) >= 0) {
@@ -1603,7 +1604,7 @@ class USI9Section2 extends USI9Translator {
         .datepicker('option', 'showOn', 'focus')
         .attr('autocomplete', 'disabled')
         .unbind('keypress')
-        .keypress((e : JQuery.Event<HTMLElement>) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+        .keypress((e : JQuery.KeyPressEvent<HTMLElement>) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
         .val('');
 
         this._listCDoc.prop('ssncard', false).prop('i551', false);

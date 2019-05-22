@@ -352,7 +352,7 @@ class USI9Section1 extends USI9Fields {
             this._alienuscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : ''));
 
         this._admissionNum = this.renderControl(admissionNum, this._('admissionnumber.tooltip'))
-        .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
+        .keypress(e => this.alphaNumericFormat.test(e.key) || e.key === this.backSpaceCode)
         .attr('tabindex', tabIndex++);
 
         this._admissionNumHelp = this.renderHelpIcon(

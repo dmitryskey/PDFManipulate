@@ -15,24 +15,25 @@ var PDFForm = (function () {
         this.stateFormat = /^[A-Z]{2,3}$/;
         this.NAFormat = /^[NnAa/]+$/;
         this.NAString = /^N\/A$/;
-        this.zipFormat = /^\d+$/;
+        this.zipFormat = /^[0-9]+$/;
         this.postalFormat = /^[A-Za-z0-9]+$/;
-        this.zipNumberFormat = /^\d{5}$/;
+        this.zipNumberFormat = /^[0-9]{5}$/;
         this.postalCodeFormat = /^[A-Za-z0-9]{6}$/;
-        this.dateFormat = /^\d{2}[/]{1}\d{2}[/]{1}\d{4}$/;
-        this.numberFormat = /^\d{1}$/;
-        this.numberWithDashesFormat = /^\d{1}|\-{1}$/;
+        this.dateFormat = /^[0-9]{2}[/]{1}[0-9]{2}[/]{1}[0-9]{4}$/;
+        this.numberFormat = /^[0-9]{1}$/;
+        this.alphaNumericFormat = /^[0-9a-zA-Z]{1}$/;
+        this.numberWithDashesFormat = /^[0-9]{1}|\-{1}$/;
         this.emailFormat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        this.phoneFormat = /^[\d/NA-]+$/;
-        this.phoneNumber = /^\d{3}\-{1}\d{3}\-{1}\d{4}$/;
-        this.uscisNumberFormat = /^\d{7,9}$/;
-        this.admissionNumberFormat = /^\d{11}$/;
+        this.phoneFormat = /^[0-9/NA-]+$/;
+        this.phoneNumber = /^[0-9]{3}\-{1}[0-9]{3}\-{1}[0-9]{4}$/;
+        this.uscisNumberFormat = /^[0-9]{7,9}$/;
+        this.admissionNumberFormat = /^[0-9]{9}[a-zA-Z]{1}[0-9]{1}$|^[0-9]{11}$/;
         this.usPassportNumberFormat = /^[a-zA-Z0-9]{6,9}$/;
-        this.greenCardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$|\d{7,9}|\d{3}\-{0,1}\d{3}\-{0,1}\d{3}$/;
+        this.greenCardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$|[0-9]{7,9}|[0-9]{3}\-{0,1}[0-9]{3}\-{0,1}[0-9]{3}$/;
         this.cardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$/;
         this.passportNumberFormat = /^[a-zA-Z0-9]{6,12}$/;
         this.driverLicenseNumberFormat = /^[a-zA-Z0-9]{8,14}$/;
-        this.ssnFormat = /^\d{3}[-]*\d{2}[-]*\d{4}$/;
+        this.ssnFormat = /^[0-9]{3}[-]*[0-9]{2}[-]*[0-9]{4}$/;
         this.annotationName = 'annotation-name';
         this.annotationRequired = 'annotation-required';
         this.annotationNext = 'annotation-next';
@@ -415,7 +416,7 @@ var USI9Section1 = (function (_super) {
             return _this._alienuscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : '');
         });
         this._admissionNum = this.renderControl(admissionNum, this._('admissionnumber.tooltip'))
-            .keypress(function (e) { return _this.numberFormat.test(e.key) || e.key === _this.backSpaceCode; })
+            .keypress(function (e) { return _this.alphaNumericFormat.test(e.key) || e.key === _this.backSpaceCode; })
             .attr('tabindex', tabIndex++);
         this._admissionNumHelp = this.renderHelpIcon(admissionNumHelp, this._('admissionnumberhelp.caption'), dialog, this._('admissionnumberhelp.text'));
         this._passportNum = this.renderControl(passportNum, this._('passportnumber.tooltip'))
@@ -1177,7 +1178,7 @@ var USI9Section2 = (function (_super) {
             numberMaxLength = 11;
             fieldFormat = this.numberFormat;
             fieldValidationExpression = this.admissionNumberFormat;
-            fieldValidationMessage = this._('admissionnumber.format');
+            fieldValidationMessage = this._('section2.admissionnumber');
             this._listADocExpDate
                 .unbind('keypress')
                 .prop(this.freeTextProp, true);
@@ -1287,7 +1288,7 @@ var USI9Section2 = (function (_super) {
             numberMaxLength = 11;
             fieldFormat = this.numberFormat;
             fieldValidationExpression = this.admissionNumberFormat;
-            fieldValidationMessage = this._('admissionnumber.format');
+            fieldValidationMessage = this._('section2.admissionnumber');
             this._listADocExpDate.prop(this.freeTextProp, true);
         }
         else if (code === '13') {
