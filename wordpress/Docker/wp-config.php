@@ -23,13 +23,13 @@
 define('DB_NAME', 'wordpress');
 
 /** MySQL database username */
-define('DB_USER', 'wordpress');
+define('DB_USER', 'mysqldbuser@webapp-mysqldbserver-4b80f9a8-4184');
 
 /** MySQL database password */
-define('DB_PASSWORD', '55187d7fc100164cdb944ba0f5bf3aae397dbf44ea885296');
+define('DB_PASSWORD', 'Spark384');
 
 /** MySQL hostname */
-define('DB_HOST', '127.0.0.1');
+define('DB_HOST', 'webapp-mysqldbserver-4b80f9a8-4184.mysql.database.azure.com');
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
@@ -83,7 +83,7 @@ define('WP_DEBUG', false);
 define('WP_ALLOW_MULTISITE', true);
 define('MULTISITE', true);
 define('SUBDOMAIN_INSTALL', false);
-define('DOMAIN_CURRENT_SITE', 'smarti9.eastus.cloudapp.azure.com');
+define('DOMAIN_CURRENT_SITE', 'smarti9.org');
 define('PATH_CURRENT_SITE', '/');
 define('SITE_ID_CURRENT_SITE', 1);
 define('BLOG_ID_CURRENT_SITE', 1);
@@ -92,7 +92,7 @@ define('BLOG_ID_CURRENT_SITE', 1);
 
 /** Absolute path to the WordPress directory. */
 if ( !defined('ABSPATH') )
-	define('ABSPATH', dirname(__FILE__) . '/');
+    define('ABSPATH', dirname(__FILE__) . '/');
 
 /** Sets up WordPress vars and included files. */
 require_once(ABSPATH . 'wp-settings.php');
