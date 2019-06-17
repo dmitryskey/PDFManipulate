@@ -1927,6 +1927,7 @@ var USI9Section3 = (function (_super) {
     };
     return USI9Section3;
 }(USI9Section2));
+var eventBus = PDFViewerApplication.eventBus;
 var renderedPages = [false, false, false];
 var form = null;
 var pageToLoad;
@@ -1990,35 +1991,33 @@ var USI9 = (function (_super) {
     };
     USI9.prototype.renderSections = function () {
         var _this = this;
-        $('#print').off('click').click(function () {
-            if (_this.validateForm($('#dialogPage'))) {
-                _this.prepareData();
-                PDFViewerApplication.print();
-            }
-        });
-        $('#download').off('click').click(function () {
-            if (_this.validateForm($('#dialogPage'))) {
-                _this.prepareData();
-                PDFViewerApplication.download();
-            }
+        ['print', 'download'].forEach(function (ev) {
+            var eventFuncs = eventBus.get(ev);
+            eventBus.remove(ev);
+            eventBus.on(ev, function () {
+                if (_this.validateForm($('#dialogPage'))) {
+                    _this.prepareData();
+                    eventFuncs.forEach(function (f) { return f(); });
+                }
+            });
         });
         this.prepareSecondPage(this.prepareFirstPage(100));
     };
     return USI9;
 }(USI9Section3));
-$(document).on('textlayerrendered', function (e) {
-    renderedPages[e.detail.pageNumber - 1] = true;
-    if (e.detail.pageNumber == 1 && !renderedPages[1]) {
-        PDFViewerApplication.eventBus.dispatch('nextpage');
+eventBus.on('textlayerrendered', function (e) {
+    renderedPages[e.pageNumber - 1] = true;
+    if (e.pageNumber == 1 && !renderedPages[1]) {
+        eventBus.dispatch('nextpage');
         pageToLoad = 'firstpage';
         return;
     }
-    if (e.detail.pageNumber >= 2 && !renderedPages[0]) {
-        PDFViewerApplication.eventBus.dispatch('firstpage');
+    if (e.pageNumber >= 2 && !renderedPages[0]) {
+        eventBus.dispatch('firstpage');
         return;
     }
     if (pageToLoad) {
-        PDFViewerApplication.eventBus.dispatch(pageToLoad);
+        eventBus.dispatch(pageToLoad);
     }
     if (renderedPages[0] && renderedPages[1] && form == null) {
         form = new USI9();

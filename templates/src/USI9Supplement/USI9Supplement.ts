@@ -2,6 +2,7 @@
 
 // Global PDF.JS object references.
 declare var PDFViewerApplication: any;
+let eventBus = PDFViewerApplication.eventBus;
 
 class USI9Supplement extends USI9SupplementTranslator {
     constructor() {
@@ -102,27 +103,23 @@ class USI9Supplement extends USI9SupplementTranslator {
     }
 
     public renderSections() {
-        $('#print').off('click').click(() => {
-            if (this.validateForm($('#dialogPage'))) {
-                this.prepareData();
+        ['print', 'download'].forEach((ev) => {
+            let eventFuncs = eventBus.get(ev);
+            eventBus.remove(ev)
+            eventBus.on(ev, () => {
+                if (this.validateForm($('#dialogPage'))) {
+                    this.prepareData();
 
-                PDFViewerApplication.print();
-            }
-        });
-
-        $('#download').off('click').click(() => {
-            if (this.validateForm($('#dialogPage'))) {
-                this.prepareData();
-
-                PDFViewerApplication.download();
-            }
+                    eventFuncs.forEach((f: () => void) => f());
+                }
+            });
         });
 
         this.prepareFirstPage();
     }
 }
 
-$(document).on('textlayerrendered', (e: any) => {
+eventBus.on('textlayerrendered', (e: any) => {
     var form = new USI9Supplement();
     form.renderSections();
 });

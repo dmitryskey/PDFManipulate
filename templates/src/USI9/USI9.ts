@@ -1,11 +1,12 @@
 /// <reference path="Section3.ts" />
 
 // Global PDF.JS object references.
-declare var PDFViewerApplication: any;
+declare let PDFViewerApplication: any;
+let eventBus = PDFViewerApplication.eventBus;
 
 let renderedPages = [false, false, false];
-let form : USI9 = null;
-let pageToLoad : string;
+let form: USI9 = null;
+let pageToLoad: string;
 
 class USI9 extends USI9Section3 {
     constructor() {
@@ -261,43 +262,39 @@ class USI9 extends USI9Section3 {
     }
 
     public renderSections() {
-        $('#print').off('click').click(() => {
-            if (this.validateForm($('#dialogPage'))) {
-                this.prepareData();
+        ['print', 'download'].forEach((ev) => {
+            let eventFuncs = eventBus.get(ev);
+            eventBus.remove(ev)
+            eventBus.on(ev, () => {
+                if (this.validateForm($('#dialogPage'))) {
+                    this.prepareData();
 
-                PDFViewerApplication.print();
-            }
-        });
-
-        $('#download').off('click').click(() => {
-            if (this.validateForm($('#dialogPage'))) {
-                this.prepareData();
-
-                PDFViewerApplication.download();
-            }
+                    eventFuncs.forEach((f: () => void) => f());
+                }
+            });
         });
 
         this.prepareSecondPage(this.prepareFirstPage(100));
     }
 }
 
-$(document).on('textlayerrendered', (e: any) => {
-    renderedPages[e.detail.pageNumber - 1] = true;
+eventBus.on('textlayerrendered', (e: any) => {
+    renderedPages[e.pageNumber - 1] = true;
 
-    if (e.detail.pageNumber == 1 && !renderedPages[1]) {
-        PDFViewerApplication.eventBus.dispatch('nextpage');
+    if (e.pageNumber == 1 && !renderedPages[1]) {
+        eventBus.dispatch('nextpage');
         pageToLoad = 'firstpage'
         return;
     }
 
     // if refresh is done while page = 2 or 3 go to the first page
-    if (e.detail.pageNumber >= 2 && !renderedPages[0]) {
-        PDFViewerApplication.eventBus.dispatch('firstpage');
+    if (e.pageNumber >= 2 && !renderedPages[0]) {
+        eventBus.dispatch('firstpage');
         return;
     }
 
     if (pageToLoad) {
-        PDFViewerApplication.eventBus.dispatch(pageToLoad);
+        eventBus.dispatch(pageToLoad);
     }
 
     if (renderedPages[0] && renderedPages[1] && form == null) {

@@ -385,6 +385,7 @@ var USI9SupplementTranslator = (function (_super) {
     };
     return USI9SupplementTranslator;
 }(USI9SupplementFields));
+var eventBus = PDFViewerApplication.eventBus;
 var USI9Supplement = (function (_super) {
     __extends(USI9Supplement, _super);
     function USI9Supplement() {
@@ -433,23 +434,21 @@ var USI9Supplement = (function (_super) {
     };
     USI9Supplement.prototype.renderSections = function () {
         var _this = this;
-        $('#print').off('click').click(function () {
-            if (_this.validateForm($('#dialogPage'))) {
-                _this.prepareData();
-                PDFViewerApplication.print();
-            }
-        });
-        $('#download').off('click').click(function () {
-            if (_this.validateForm($('#dialogPage'))) {
-                _this.prepareData();
-                PDFViewerApplication.download();
-            }
+        ['print', 'download'].forEach(function (ev) {
+            var eventFuncs = eventBus.get(ev);
+            eventBus.remove(ev);
+            eventBus.on(ev, function () {
+                if (_this.validateForm($('#dialogPage'))) {
+                    _this.prepareData();
+                    eventFuncs.forEach(function (f) { return f(); });
+                }
+            });
         });
         this.prepareFirstPage();
     };
     return USI9Supplement;
 }(USI9SupplementTranslator));
-$(document).on('textlayerrendered', function (e) {
+eventBus.on('textlayerrendered', function (e) {
     var form = new USI9Supplement();
     form.renderSections();
 });
