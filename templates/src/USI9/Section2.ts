@@ -8,7 +8,6 @@ class USI9Section2 extends USI9Translator {
 
     protected renderSection2(
         tabIndex: number,
-        dialog: JQuery<HTMLElement>,
         employeeInfoHelp: JQuery<HTMLElement>,
         lastName: JQuery<HTMLElement>,
         lastNameHelp: JQuery<HTMLElement>,
@@ -97,7 +96,6 @@ class USI9Section2 extends USI9Translator {
         this._employeeInfoHelp = this.renderHelpIcon(
             employeeInfoHelp,
             this._('employeeinfosection2help.caption'),
-            dialog,
             this._('employeeinfosection2help.text')
         );
 
@@ -106,7 +104,6 @@ class USI9Section2 extends USI9Translator {
         this._lastNameSection2Help = this.renderHelpIcon(
             lastNameHelp,
             this._('lastnamesection2help.caption'),
-            dialog,
             this._('lastnamesection2help.text')
         );
 
@@ -115,7 +112,6 @@ class USI9Section2 extends USI9Translator {
         this._firstNameSection2Help = this.renderHelpIcon(
             firstNameHelp,
             this._('firstnamesection2help.caption'),
-            dialog,
             this._('firstnamesection2help.text')
         );
 
@@ -124,7 +120,6 @@ class USI9Section2 extends USI9Translator {
         this._middleInitialSection2Help = this.renderHelpIcon(
             middleInitialHelp,
             this._('middleinitialsection2help.caption'), 
-            dialog,
             this._('middleinitialsection2help.text')
         );
 
@@ -133,13 +128,11 @@ class USI9Section2 extends USI9Translator {
         this._immigrationStatusHelp = this.renderHelpIcon(
             immigrationStatusHelp,
             this._('immigrationstatushelp.caption'),
-            dialog,
             this._('immigrationstatushelp.text')
         );
 
         tabIndex = this.renderListABC(
             tabIndex,
-            dialog,
             listADoc,
             listADocHelp,
             listAIssuingAuthority,
@@ -188,9 +181,7 @@ class USI9Section2 extends USI9Translator {
         this._additionalInfoHelp = this.renderHelpIcon(
             additionalInfoHelp,
             this._('additionalinfohelp.caption'),
-            dialog,
-            this._('additionalinfohelp.text'),
-            500
+            this._('additionalinfohelp.text')
         );
 
         if (!this._citizen.prop('checked') && !this._national.prop('checked') &&
@@ -205,13 +196,11 @@ class USI9Section2 extends USI9Translator {
         this._hireDateHelp = this.renderHelpIcon(
             hireDateHelp,
             this._('hiredatehelp.caption'),
-            dialog,
             this._('hiredatehelp.text')
         );
 
         tabIndex = this.renderEmployerData(
             tabIndex,
-            dialog,
             sgnEmployer,
             sgnEmployerHelp,
             employerSignDate,
@@ -423,7 +412,6 @@ class USI9Section2 extends USI9Translator {
 
     private renderEmployerData(
         tabIndex: number,
-        dialog: JQuery<HTMLElement>,
         sgnEmployer: JQuery<HTMLElement>,
         sgnEmployerHelp: JQuery<HTMLElement>,
         employerSignDate: JQuery<HTMLElement>,
@@ -451,9 +439,7 @@ class USI9Section2 extends USI9Translator {
         this._sgnEmployerHelp = this.renderHelpIcon(
             sgnEmployerHelp,
             this._('sgnemployerhelp.caption'),
-            dialog,
-            this._('sgnemployerhelp.text'),
-            500
+            this._('sgnemployerhelp.text')
         );
 
         this._employerSignDate = this.renderControl(employerSignDate, this._('employersigndate.tooltip'))
@@ -463,9 +449,7 @@ class USI9Section2 extends USI9Translator {
         this._employerSignDateHelp = this.renderHelpIcon(
             employerSignDateHelp,
             this._('employersigndatehelp.caption'),
-            dialog,
-            this._('employersigndatehelp.text'),
-            500
+            this._('employersigndatehelp.text')
         );
 
         this._employerTitle = this.renderControl(employerTitle, this._('employertitle.tooltip'))
@@ -474,9 +458,7 @@ class USI9Section2 extends USI9Translator {
         this._employerTitleHelp = this.renderHelpIcon(
             employerTitleHelp,
             this._('employertitlehelp.caption'),
-            dialog,
-            this._('employertitlehelp.text'),
-            500
+            this._('employertitlehelp.text')
         );
 
         this._employerLastName = this.renderControl(employerLastName, this._('employerlastname.tooltip'))
@@ -485,9 +467,7 @@ class USI9Section2 extends USI9Translator {
         this._employerLastNameHelp = this.renderHelpIcon(
             employerLastNameHelp,
             this._('employerlastnamehelp.caption'),
-            dialog,
-            this._('employerlastnamehelp.text'),
-            500
+            this._('employerlastnamehelp.text')
         );
 
         this._employerFirstName = this.renderControl(employerFirstName, this._('employerfirstname.tooltip'))
@@ -496,9 +476,7 @@ class USI9Section2 extends USI9Translator {
         this._employerFirstNameHelp = this.renderHelpIcon(
             employerFirstNameHelp,
             this._('employerfirstnamehelp.caption'),
-            dialog,
-            this._('employerfirstnamehelp.text'),
-            500
+            this._('employerfirstnamehelp.text')
         );
 
         this._employerName = this.renderControl(employerName, this._('employername.tooltip'))
@@ -507,9 +485,7 @@ class USI9Section2 extends USI9Translator {
         this._employerNameHelp = this.renderHelpIcon(
             employerNameHelp,
             this._('employernamehelp.caption'),
-            dialog,
-            this._('employernamehelp.text'),
-            500
+            this._('employernamehelp.text')
         );
 
         this._employerAddress = this.renderControl(employerAddress, this._('employeraddress.tooltip'))
@@ -518,9 +494,7 @@ class USI9Section2 extends USI9Translator {
         this._employerAddressHelp = this.renderHelpIcon(
             employerAddressHelp,
             this._('employeraddresshelp.caption'),
-            dialog,
-            this._('employeraddresshelp.text'),
-            500
+            this._('employeraddresshelp.text')
         );
 
         this._employerCity = this.renderControl(employerCity, this._('employercity.tooltip'))
@@ -529,9 +503,7 @@ class USI9Section2 extends USI9Translator {
         this._employerCityHelp = this.renderHelpIcon(
             employerCityHelp,
             this._('employercityhelp.caption'),
-            dialog,
-            this._('employercityhelp.text'),
-            500
+            this._('employercityhelp.text')
         );
 
         this._employerState = this.renderControl(employerState, this._('employerstate.tooltip'))
@@ -541,9 +513,7 @@ class USI9Section2 extends USI9Translator {
         this._employerStateHelp = this.renderHelpIcon(
             employerStateHelp,
             this._('employerstatehelp.caption'),
-            dialog,
-            this._('employerstatehelp.text'),
-            500
+            this._('employerstatehelp.text')
         );
 
         this._employerZip = this.renderControl(employerZip, this._('employerzip.tooltip'))
@@ -553,7 +523,6 @@ class USI9Section2 extends USI9Translator {
         this._employerZipHelp = this.renderHelpIcon(
             employerZipHelp,
             this._('employerziphelp.caption'),
-            dialog,
             this._('employerziphelp.text')
         );
 
@@ -563,7 +532,6 @@ class USI9Section2 extends USI9Translator {
     //region "List A/B/C" methods
     private renderListABC(
         tabIndex: number,
-        dialog: JQuery<HTMLElement>,
         listADoc: JQuery<HTMLElement>,
         listADocHelp: JQuery<HTMLElement>,
         listAIssuingAuthority: JQuery<HTMLElement>,
@@ -605,15 +573,16 @@ class USI9Section2 extends USI9Translator {
         listCDocExpDate: JQuery<HTMLElement>,
         listCDocExpDateHelp: JQuery<HTMLElement>){
 
+        let maxWidth = '70';
+
         this._listADoc = this.renderControl(listADoc, this._('listadoc.tooltip'))
         .attr('tabindex', tabIndex++);
 
         this._listADocHelp = this.renderHelpIcon(
             listADocHelp,
             this._('listadochelp.caption'),
-            dialog,
             this._('listadochelp.text'),
-            500
+            maxWidth
         );
 
         this._listAIssuingAuthority = this.renderControl(listAIssuingAuthority, this._('listaissuingauthority.tooltip'))
@@ -622,9 +591,7 @@ class USI9Section2 extends USI9Translator {
         this._listAIssuingAuthorityHelp = this.renderHelpIcon(
             listAIssuingAuthorityHelp,
             this._('listaissuingauthorityhelp.caption'),
-            dialog,
-            this._('listaissuingauthorityhelp.text'),
-            500
+            this._('listaissuingauthorityhelp.text')
         );
 
         this._listADocNumber = this.renderControl(listADocNumber, this._('listadocnumber.tooltip'))
@@ -633,9 +600,7 @@ class USI9Section2 extends USI9Translator {
         this._listADocNumberHelp = this.renderHelpIcon(
             listADocNumberHelp,
             this._('listadocnumberhelp.caption'),
-            dialog,
-            this._('listadocnumberhelp.text'),
-            500
+            this._('listadocnumberhelp.text')
         );
 
         this._listADocExpDate = this.renderControl(listADocExpDate, this._('listaexpdate.tooltip'))
@@ -645,9 +610,7 @@ class USI9Section2 extends USI9Translator {
         this._listADocExpDateHelp = this.renderHelpIcon(
             listADocExpDateHelp,
             this._('listaexpdatehelp.caption'),
-            dialog,
-            this._('listaexpdatehelp.text'),
-            500
+            this._('listaexpdatehelp.text')
         );
 
         this._listADoc2 = this.renderControl(listADoc2, this._('listadoc2.tooltip'))
@@ -656,9 +619,7 @@ class USI9Section2 extends USI9Translator {
         this._listADoc2Help = this.renderHelpIcon(
             listADoc2Help,
             this._('listadoc2help.caption'),
-            dialog,
-            this._('listadoc2help.text'),
-            500
+            this._('listadoc2help.text')
         );
 
         this._listAIssuingAuthority2 = this.renderControl(listAIssuingAuthority2, this._('listaissuingauthority2.tooltip'))
@@ -667,9 +628,7 @@ class USI9Section2 extends USI9Translator {
         this._listAIssuingAuthority2Help = this.renderHelpIcon(
             listAIssuingAuthority2Help,
             this._('listaissuingauthority2help.caption'),
-            dialog,
-            this._('listaissuingauthority2help.text'),
-            500
+            this._('listaissuingauthority2help.text')
         );
 
         this._listADocNumber2 = this.renderControl(listADocNumber2, this._('listadocnumber2.tooltip'))
@@ -678,9 +637,7 @@ class USI9Section2 extends USI9Translator {
         this._listADocNumber2Help = this.renderHelpIcon(
             listADocNumber2Help,
             this._('listadocnumber2help.caption'),
-            dialog,
-            this._('listadocnumber2help.text'),
-            500
+            this._('listadocnumber2help.text')
         );
 
         this._listADocExpDate2 = this.renderControl(listADocExpDate2, this._('listaexpdate2.tooltip'))
@@ -690,9 +647,7 @@ class USI9Section2 extends USI9Translator {
         this._listADocExpDate2Help = this.renderHelpIcon(
             listADocExpDate2Help,
             this._('listaexpdate2help.caption'),
-            dialog,
-            this._('listaexpdate2help.text'),
-            500
+            this._('listaexpdate2help.text')
         );
 
         this._listADoc3 = this.renderControl(listADoc3, this._('listadoc3.tooltip'))
@@ -701,9 +656,7 @@ class USI9Section2 extends USI9Translator {
         this._listADoc3Help = this.renderHelpIcon(
             listADoc3Help,
             this._('listadoc3help.caption'),
-            dialog,
-            this._('listadoc3help.text'),
-            500
+            this._('listadoc3help.text')
         );
 
         this._listAIssuingAuthority3 = this.renderControl(listAIssuingAuthority3, this._('listaissuingauthority3.tooltip'))
@@ -712,9 +665,7 @@ class USI9Section2 extends USI9Translator {
         this._listAIssuingAuthority3Help = this.renderHelpIcon(
             listAIssuingAuthority3Help,
             this._('listaissuingauthority3help.caption'),
-            dialog,
-            this._('listaissuingauthority3help.text'),
-            500
+            this._('listaissuingauthority3help.text')
         );
 
         this._listADocNumber3 = this.renderControl(listADocNumber3, this._('listadocnumber3.tooltip'))
@@ -723,9 +674,7 @@ class USI9Section2 extends USI9Translator {
         this._listADocNumber3Help = this.renderHelpIcon(
             listADocNumber3Help,
             this._('listadocnumber3help.caption'),
-            dialog,
-            this._('listadocnumber3help.text'),
-            500
+            this._('listadocnumber3help.text')
         );
 
         this._listADocExpDate3 = this.renderControl(listADocExpDate3, this._('listaexpdate3.tooltip'))
@@ -735,9 +684,7 @@ class USI9Section2 extends USI9Translator {
         this._listADocExpDate3Help = this.renderHelpIcon(
             listADocExpDate3Help,
             this._('listaexpdate3help.caption'),
-            dialog,
-            this._('listaexpdate3help.text'),
-            500
+            this._('listaexpdate3help.text')
         );
 
         this._listBDoc = this.renderControl(listBDoc, this._('listbdoc.tooltip'))
@@ -746,9 +693,8 @@ class USI9Section2 extends USI9Translator {
         this._listBDocHelp = this.renderHelpIcon(
             listBDocHelp,
             this._('listbdochelp.caption'),
-            dialog,
             this._('listbdochelp.text'),
-            600
+            maxWidth
         );
 
         this.filterCombolist(this._listBDoc, this.getListBContent(null), null, this, this.processListABC);
@@ -759,9 +705,7 @@ class USI9Section2 extends USI9Translator {
         this._listBIssuingAuthorityHelp = this.renderHelpIcon(
             listBIssuingAuthorityHelp,
             this._('listbissuingauthorityhelp.caption'),
-            dialog,
-            this._('listbissuingauthorityhelp.text'),
-            500
+            this._('listbissuingauthorityhelp.text')
         );
 
         this._listBDocNumber = this.renderControl(listBDocNumber, this._('listbdocnumber.tooltip'))
@@ -770,7 +714,6 @@ class USI9Section2 extends USI9Translator {
         this._listBDocNumberHelp = this.renderHelpIcon(
             listBDocNumberHelp,
             this._('listbdocnumberhelp.caption'),
-            dialog,
             this._('listbdocnumberhelp.text'),
         );
 
@@ -781,9 +724,7 @@ class USI9Section2 extends USI9Translator {
         this._listBDocExpDateHelp = this.renderHelpIcon(
             listBDocExpDateHelp,
             this._('listbexpdatehelp.caption'),
-            dialog,
-            this._('listbexpdatehelp.text'),
-            500
+            this._('listbexpdatehelp.text')
         );
 
         this._listCDoc = this.renderControl(listCDoc, this._('listcdoc.tooltip'))
@@ -792,9 +733,8 @@ class USI9Section2 extends USI9Translator {
         this._listCDocHelp = this.renderHelpIcon(
             listCDocHelp,
             this._('listcdochelp.caption'),
-            dialog,
             this._('listcdochelp.text'),
-            700
+            maxWidth
         );
 
         this.filterCombolist(this._listCDoc, this.getListCContent(null), null, this, this.processListABC);
@@ -805,9 +745,7 @@ class USI9Section2 extends USI9Translator {
         this._listCIssuingAuthorityHelp = this.renderHelpIcon(
             listCIssuingAuthorityHelp,
             this._('listcissuingauthorityhelp.caption'),
-            dialog,
-            this._('listcissuingauthorityhelp.text'),
-            500
+            this._('listcissuingauthorityhelp.text')
         );
 
         this._listCDocNumber = this.renderControl(listCDocNumber, this._('listcdocnumber.tooltip'))
@@ -816,8 +754,7 @@ class USI9Section2 extends USI9Translator {
         this._listCDocNumberHelp = this.renderHelpIcon(
             listCDocNumberHelp,
             this._('listcdocnumberhelp.caption'),
-            dialog,
-            this._('listcdocnumberhelp.text'),
+            this._('listcdocnumberhelp.text')
         );
 
         this._listCDocExpDate = this.renderControl(listCDocExpDate, this._('listcexpdate.tooltip'))
@@ -827,9 +764,7 @@ class USI9Section2 extends USI9Translator {
         this._listCDocExpDateHelp = this.renderHelpIcon(
             listCDocExpDateHelp,
             this._('listcexpdatehelp.caption'),
-            dialog,
-            this._('listcexpdatehelp.text'),
-            500
+            this._('listcexpdatehelp.text')
         );
 
         return tabIndex;

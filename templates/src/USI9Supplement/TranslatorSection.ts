@@ -2,7 +2,6 @@
 
 class USI9SupplementTranslator extends USI9SupplementFields {
     protected renderTranslatorSection(
-        dialog: JQuery<HTMLElement>,
         lastName: JQuery<HTMLElement>,
         lastNameHelp: JQuery<HTMLElement>,
         firstName: JQuery<HTMLElement>,
@@ -58,7 +57,6 @@ class USI9SupplementTranslator extends USI9SupplementFields {
         this._lastNameHelp = this.renderHelpIcon(
             lastNameHelp,
             this._('lastnamehelp.caption'),
-            dialog,
             this._('lastnamehelp.text')
         );
 
@@ -68,7 +66,6 @@ class USI9SupplementTranslator extends USI9SupplementFields {
         this._firstNameHelp = this.renderHelpIcon(
             firstNameHelp,
             this._('firstnamehelp.caption'),
-            dialog,
             this._('firstnamehelp.text')
         );
 
@@ -80,7 +77,6 @@ class USI9SupplementTranslator extends USI9SupplementFields {
         this._middleInitialHelp = this.renderHelpIcon(
             middleInitialHelp,
             this._('middleinitialhelp.caption'),
-            dialog,
             this._('middleinitialhelp.text')
         );
            
@@ -89,7 +85,6 @@ class USI9SupplementTranslator extends USI9SupplementFields {
         this._sgnTranslatorHelp = this.renderHelpIcon(
             sgnTranslatorHelp,
             this._('sgntranslatorhelp.caption'),
-            dialog,
             this._('sgntranslatorhelp.text')
         );
             
@@ -99,7 +94,6 @@ class USI9SupplementTranslator extends USI9SupplementFields {
         this._translatorDateHelp = this.renderHelpIcon(
             translatorDateHelp,
             this._('translatordatehelp.caption'),
-            dialog,
             this._('translatordatehelp.text')
         );
             
@@ -109,7 +103,6 @@ class USI9SupplementTranslator extends USI9SupplementFields {
         this._translatorLastNameHelp = this.renderHelpIcon(
             translatorLastNameHelp,
             this._('translatorlastnamehelp.caption'),
-            dialog,
             this._('translatorlastnamehelp.text')
         );
             
@@ -119,7 +112,6 @@ class USI9SupplementTranslator extends USI9SupplementFields {
         this._translatorFirstNameHelp = this.renderHelpIcon(
             translatorFirstNameHelp,
             this._('translatorfirstnamehelp.caption'),
-            dialog,
             this._('translatorfirstnamehelp.text')
         );
             
@@ -128,7 +120,6 @@ class USI9SupplementTranslator extends USI9SupplementFields {
         this._translatorAddressHelp = this.renderHelpIcon(
             translatorAddressHelp,
             this._('translatoraddresshelp.caption'),
-            dialog,
             this._('translatoraddresshelp.text')
         );
             
@@ -137,7 +128,6 @@ class USI9SupplementTranslator extends USI9SupplementFields {
         this._translatorCityHelp = this.renderHelpIcon(
             translatorCityHelp,
             this._('translatorcityhelp.caption'),
-            dialog,
             this._('translatorcityhelp.text')
         );
             
@@ -147,7 +137,6 @@ class USI9SupplementTranslator extends USI9SupplementFields {
         this._translatorStateHelp = this.renderHelpIcon(
             translatorStateHelp,
             this._('translatorstatehelp.caption'),
-            dialog,
             this._('translatorstatehelp.text')
         );
             
@@ -157,7 +146,6 @@ class USI9SupplementTranslator extends USI9SupplementFields {
         this._translatorZipHelp = this.renderHelpIcon(
             translatorZipHelp,
             this._('translatorziphelp.caption'),
-            dialog,
             this._('translatorziphelp.text')
         );
 

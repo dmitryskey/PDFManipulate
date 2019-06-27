@@ -3,7 +3,6 @@
 class USI9Section3 extends USI9Section2 {
     protected renderSection3(
         tabIndex: number,
-        dialog: JQuery<HTMLElement>,
         lastName: JQuery<HTMLElement>,
         lastNameHelp: JQuery<HTMLElement>,
         firstName: JQuery<HTMLElement>,
@@ -186,7 +185,6 @@ class USI9Section3 extends USI9Section2 {
         this._newlastNameHelp = this.renderHelpIcon(
             lastNameHelp,
             this._('newlastnamehelp.caption'),
-            dialog,
             this._('newlastnamehelp.text')
         );
 
@@ -197,7 +195,6 @@ class USI9Section3 extends USI9Section2 {
         this._newfirstNameHelp = this.renderHelpIcon(
             firstNameHelp,
             this._('newfirstnamehelp.caption'),
-            dialog,
             this._('newfirstnamehelp.text')
         );
 
@@ -208,7 +205,6 @@ class USI9Section3 extends USI9Section2 {
         this._newmiddleInitialHelp = this.renderHelpIcon(
             middleInitialHelp,
             this._('newmiddleinitialhelp.caption'),
-            dialog,
             this._('newmiddleinitialhelp.text')
         );
 
@@ -221,9 +217,7 @@ class USI9Section3 extends USI9Section2 {
         this._rehireDateHelp = this.renderHelpIcon(
             rehireDateHelp,
             this._('rehiredatehelp.caption'),
-            dialog,
-            this._('rehiredatehelp.text'),
-            500
+            this._('rehiredatehelp.text')
         );
 
         this._docTitleSec3 = this.renderControl(docTitleSec3, this._('doctitlesec3.tooltip'))
@@ -267,9 +261,7 @@ class USI9Section3 extends USI9Section2 {
         this._docTitleSec3Help = this.renderHelpIcon(
             docTitleSec3Help,
             this._('doctitlesec3help.caption'),
-            dialog,
-            this._('doctitlesec3help.text'),
-            500
+            this._('doctitlesec3help.text')
         );
 
         this._docNumberSec3 = this.renderControl(docNumberSec3, this._('docnumbersec3.tooltip'))
@@ -278,9 +270,7 @@ class USI9Section3 extends USI9Section2 {
         this._docNumberSec3Help = this.renderHelpIcon(
             docNumberSec3Help,
             this._('docnumbersec3help.caption'),
-            dialog,
-            this._('docnumbersec3help.text'),
-            500
+            this._('docnumbersec3help.text')
         );
 
         this._expDateSec3 = this.renderControl(expDateSec3, this._('expdatesec3.tooltip'))
@@ -292,9 +282,7 @@ class USI9Section3 extends USI9Section2 {
         this._expDateSec3Help = this.renderHelpIcon(
             expDateSec3Help,
             this._('expdatesec3help.caption'),
-            dialog,
-            this._('expdatesec3help.text'),
-            500
+            this._('expdatesec3help.text')
         );
 
         this._sgnEmployerSec3 = this.renderControl(sgnEmployerSec3, this._('sgnemployersec3.tooltip'))
@@ -303,9 +291,7 @@ class USI9Section3 extends USI9Section2 {
         this._sgnEmployerSec3Help = this.renderHelpIcon(
             sgnEmployerSec3Help,
             this._('sgnemployersec3help.caption'),
-            dialog,
-            this._('sgnemployersec3help.text'),
-            500
+            this._('sgnemployersec3help.text')
         );
 
         this._signDateSec3 = this.renderControl(signDateSec3, this._('employersigndatesec3.tooltip'))
@@ -320,9 +306,7 @@ class USI9Section3 extends USI9Section2 {
         this._signDateSec3Help = this.renderHelpIcon(
             signDateSec3Help,
             this._('employersigndatesec3help.caption'),
-            dialog,
-            this._('employersigndatesec3help.text'),
-            500
+            this._('employersigndatesec3help.text')
         );
 
         this._employerNameSec3 = this.renderControl(employerNameSec3, this._('employernamesec3.tooltip'))
@@ -332,9 +316,7 @@ class USI9Section3 extends USI9Section2 {
         this._employerNameSec3Help = this.renderHelpIcon(
             employerNameSec3Help,
             this._('employernamesec3help.caption'),
-            dialog,
-            this._('employernamesec3help.text'),
-            500
+            this._('employernamesec3help.text')
         );
 
         return tabIndex;

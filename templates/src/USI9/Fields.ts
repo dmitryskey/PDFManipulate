@@ -298,14 +298,14 @@ class USI9Fields extends PDFForm {
         var options = ctrl.parent().children().filter('.combo-content');
 
         for (let index in items) {
-            options.children().filter('[value="' + index + '"]').html(items[index]);
+            options.children().filter(`[value='${index}']`).html(items[index]);
         }
 
         options.children().show();
         options.children().each((code: number, item: HTMLElement) => {
             var val = item.getAttribute('value');
             if (items && !(val in items)) {
-                options.children().filter('[value="' + val + '"]').hide();
+                options.children().filter(`[value='${val}']`).hide();
             }
         });
 

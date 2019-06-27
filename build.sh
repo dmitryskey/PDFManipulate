@@ -22,4 +22,4 @@ dotnet publish $iTextService/iTextService.csproj --self-contained -r linux-x64 -
 if [[ $? != 0 ]]; then exit $?; fi
 
 mv $iTextService/build/iTextService $p && cp -R ./locale $p && cp -R ./templates $p && rm -R -f $p/templates/src
-cp ./wordpress/s* $p && tar -zcf ./build/smartformsondemand.tgz $p
+cp ./wordpress/s* $p && tar -zcf $p.tgz $p

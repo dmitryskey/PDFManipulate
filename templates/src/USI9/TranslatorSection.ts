@@ -3,7 +3,6 @@
 class USI9Translator extends USI9Section1 {
     protected renderTranslatorSection(
         tabIndex: number,
-        dialog: JQuery<HTMLElement>,
         translatorNo: JQuery<HTMLElement>,
         translatorYes: JQuery<HTMLElement>,
         translatorHelp: JQuery<HTMLElement>,
@@ -59,9 +58,7 @@ class USI9Translator extends USI9Section1 {
         this._translatorHelp = this.renderHelpIcon(
             translatorHelp,
             this._('translatorhelp.caption'),
-            dialog,
-            this._('translatorhelp.text'),
-            500
+            this._('translatorhelp.text')
         );
 
         this._sgnTranslator = this.renderControl(sgnTranslator, this._('sgntranslator.tooltip'))
@@ -70,7 +67,6 @@ class USI9Translator extends USI9Section1 {
         this._sgnTranslatorHelp = this.renderHelpIcon(
             sgnTranslatorHelp,
             this._('sgntranslatorhelp.caption'),
-            dialog,
             this._('sgntranslatorhelp.text')
         );
 
@@ -81,7 +77,6 @@ class USI9Translator extends USI9Section1 {
         this._translatorDateHelp = this.renderHelpIcon(
             translatorDateHelp,
             this._('translatordatehelp.caption'),
-            dialog,
             this._('translatordatehelp.text')
         );
 
@@ -92,7 +87,6 @@ class USI9Translator extends USI9Section1 {
         this._translatorLastNameHelp = this.renderHelpIcon(
             translatorLastNameHelp,
             this._('translatorlastnamehelp.caption'),
-            dialog,
             this._('translatorlastnamehelp.text')
         );
 
@@ -103,7 +97,6 @@ class USI9Translator extends USI9Section1 {
         this._translatorFirstNameHelp = this.renderHelpIcon(
             translatorFirstNameHelp,
             this._('translatorfirstnamehelp.caption'),
-            dialog,
             this._('translatorfirstnamehelp.text')
         );
 
@@ -113,7 +106,6 @@ class USI9Translator extends USI9Section1 {
         this._translatorAddressHelp = this.renderHelpIcon(
             translatorAddressHelp,
             this._('translatoraddresshelp.caption'),
-            dialog,
             this._('translatoraddresshelp.text')
         );
 
@@ -123,7 +115,6 @@ class USI9Translator extends USI9Section1 {
         this._translatorCityHelp = this.renderHelpIcon(
             translatorCityHelp,
             this._('translatorcityhelp.caption'),
-            dialog,
             this._('translatorcityhelp.text')
         );
 
@@ -134,7 +125,6 @@ class USI9Translator extends USI9Section1 {
         this._translatorStateHelp = this.renderHelpIcon(
             translatorStateHelp,
             this._('translatorstatehelp.caption'),
-            dialog,
             this._('translatorstatehelp.text')
         );
 
@@ -145,7 +135,6 @@ class USI9Translator extends USI9Section1 {
         this._translatorZipHelp = this.renderHelpIcon(
             translatorZipHelp,
             this._('translatorziphelp.caption'),
-            dialog,
             this._('translatorziphelp.text')
         );
 

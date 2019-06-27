@@ -10,6 +10,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var PDFForm = (function () {
     function PDFForm() {
+        var _this = this;
         this.nameFormat = /^[A-Za-z ']+$/;
         this.nameInitialFormat = /^[A-Za-z]{1}$/;
         this.stateFormat = /^[A-Z]{2,3}$/;
@@ -41,7 +42,7 @@ var PDFForm = (function () {
         this.space = ' ';
         this.blankItem = '&nbsp;';
         this.backSpaceCode = 'Backspace';
-        var self = this;
+        this.parentProp = 'parent';
         var monthNames = [];
         var monthNamesShort = [];
         var dayNames = [];
@@ -75,9 +76,16 @@ var PDFForm = (function () {
             showMonthAfterYear: false,
             yearSuffix: ''
         });
+        $('body').mouseup(function (e) {
+            var popover = $('.popover');
+            if (!popover.is(e.target) && popover.has(e.target).length === 0 && popover.prop(_this.parentProp) &&
+                popover.prop(_this.parentProp) !== e.target) {
+                $(popover.prop(_this.parentProp)).popover('hide').removeProp(_this.parentProp);
+            }
+        });
     }
     PDFForm.prototype._ = function (t) {
-        return document.webL10n.get(t);
+        return document.webL10n.get(t).replace('#', '&#35;');
     };
     PDFForm.prototype.selectCheckmark = function (ctrl, arr) {
         for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
@@ -90,44 +98,41 @@ var PDFForm = (function () {
     };
     PDFForm.prototype.setCombolistValue = function (ctrl, val) {
         var options = ctrl.parent().children().filter('.combo-content');
-        options.children().filter('[value="' + val + '"]').each(function (index, value) {
+        options.children().filter("[value='" + val + "']").each(function (index, value) {
             value.onclick(null);
         });
     };
     PDFForm.prototype.setCombolistText = function (ctrl, val, txt) {
         var options = ctrl.parent().children().filter('.combo-content');
-        options.children().filter('[value="' + val + '"]').html(txt);
+        options.children().filter("[value='" + val + "']").html(txt);
     };
     PDFForm.prototype.assignCombolistEventHandler = function (ctrl, f) {
         ctrl.parent().children().filter('.combo-content').click(f);
     };
-    PDFForm.prototype.renderControl = function (ctrl, text) {
-        if (navigator.platform.indexOf('iPad') != -1 || navigator.platform.indexOf('iPhone') != -1) {
-            return ctrl;
-        }
-        else {
-            return ctrl.focus(function (e) { return $(e.target).tooltip('close'); }).prop('title', '')
-                .tooltip({ content: text, show: { delay: 1000 } });
-        }
+    PDFForm.prototype.renderControl = function (ctrl, text, onFocus) {
+        if (onFocus === void 0) { onFocus = true; }
+        return ctrl.popover({ html: true, content: text, trigger: onFocus ? 'focus' : 'hover' });
     };
-    PDFForm.prototype.renderHelpIcon = function (ctrl, title, dialog, text, minWidth) {
-        if (minWidth === void 0) { minWidth = 50; }
-        var self = this;
-        var tag = 'div';
-        ctrl.hide().parent().children(tag).remove();
-        return ctrl.parent().append('<' + tag + '>�</' + tag + '>')
-            .children(tag).prop('title', title)
-            .css({ 'color': ctrl.css('color'),
-            'font-size': ctrl.css('font-size') })
-            .toggleClass('icon').parent().click(function (e) {
-            $('.ui-dialog-titlebar-close').attr('title', '');
-            dialog.text('').append(decodeURIComponent(text))
-                .dialog('option', 'title', self._('help'))
-                .dialog('option', 'minWidth', minWidth).dialog('open');
+    PDFForm.prototype.renderHelpIcon = function (ctrl, title, text, maxWidth) {
+        var _this = this;
+        if (maxWidth === void 0) { maxWidth = '30'; }
+        var tag = 'img';
+        return ctrl.parent().find(tag).length > 0 ? ctrl : ctrl.hide().parent()
+            .append("<" + tag + " src='" + PDFForm.helpIconUrl + "' class='icon' />").children(tag)
+            .tooltip({ title: title, placement: 'left' })
+            .popover({
+            html: true,
+            title: decodeURIComponent(this._('help')),
+            content: decodeURIComponent(text),
+            trigger: 'click'
+        })
+            .click(function (e) {
+            $(e.target).tooltip('hide');
+            $('.popover').css('max-width', maxWidth + "%").prop(_this.parentProp, e.target);
         });
     };
     PDFForm.prototype.urlParameter = function (name) {
-        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        var results = new RegExp("[?&]" + name + "=([^&#]*)").exec(window.location.href);
         if (results === null) {
             return null;
         }
@@ -135,20 +140,31 @@ var PDFForm = (function () {
             return decodeURI(results[1]) || 0;
         }
     };
-    PDFForm.prototype.addDialog = function () {
-        $('body').append('<div id="dialogPage"></div>');
-        $('#dialogPage').dialog({
-            minHeight: 50,
-            minWidth: 50,
-            autoOpen: false,
-            buttons: [{
-                    text: 'OK',
-                    click: function () {
-                        $(this).dialog('close');
-                    }
-                }]
-        });
+    PDFForm.prototype.validateForm = function (ctrl, errorMessages) {
+        if (errorMessages.length > 0) {
+            var errorMessage_1 = this._('error.header') + "<br />";
+            errorMessages.forEach(function (e) {
+                errorMessage_1 += " - " + e + "<br />";
+            });
+            ctrl.popover({
+                html: true,
+                title: this._('validation'),
+                content: errorMessage_1,
+                trigger: 'click',
+                placement: 'bottom'
+            }).popover('show');
+            $('.popover').prop(this.parentProp, ctrl);
+            return false;
+        }
+        else {
+            ctrl.popover('hide');
+            return true;
+        }
     };
+    PDFForm.toolbarButtons = ['print', 'download'];
+    PDFForm.helpIconUrl = URL.createObjectURL(new Blob([
+        "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n    <!-- Created with Inkscape (http://www.inkscape.org/) -->\n    \n    <svg\n       xmlns:dc=\"http://purl.org/dc/elements/1.1/\"\n       xmlns:cc=\"http://creativecommons.org/ns#\"\n       xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n       xmlns:svg=\"http://www.w3.org/2000/svg\"\n       xmlns=\"http://www.w3.org/2000/svg\"\n       xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\"\n       xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\"\n       width=\"64px\"\n       height=\"64px\"\n       id=\"svg4310\"\n       version=\"1.1\"\n       inkscape:version=\"0.48.5 r10040\"\n       sodipodi:docname=\"New document 12\">\n      <defs\n         id=\"defs4312\" />\n      <sodipodi:namedview\n         id=\"base\"\n         pagecolor=\"#ffffff\"\n         bordercolor=\"#666666\"\n         borderopacity=\"1.0\"\n         inkscape:pageopacity=\"0.0\"\n         inkscape:pageshadow=\"2\"\n         inkscape:zoom=\"8.109375\"\n         inkscape:cx=\"32\"\n         inkscape:cy=\"32\"\n         inkscape:current-layer=\"layer1\"\n         showgrid=\"true\"\n         inkscape:document-units=\"px\"\n         inkscape:grid-bbox=\"true\"\n         inkscape:window-width=\"1366\"\n         inkscape:window-height=\"706\"\n         inkscape:window-x=\"-8\"\n         inkscape:window-y=\"-8\"\n         inkscape:window-maximized=\"1\" />\n      <metadata\n         id=\"metadata4315\">\n        <rdf:RDF>\n          <cc:Work\n             rdf:about=\"\">\n            <dc:format>image/svg+xml</dc:format>\n            <dc:type\n               rdf:resource=\"http://purl.org/dc/dcmitype/StillImage\" />\n            <dc:title></dc:title>\n          </cc:Work>\n        </rdf:RDF>\n      </metadata>\n      <g\n         id=\"layer1\"\n         inkscape:label=\"Layer 1\"\n         inkscape:groupmode=\"layer\">\n        <path\n           style=\"fill:#ffffff;fill-opacity:1\"\n           d=\"m 15.762549,38.922 c -1.06334,-0.882165 -1.32499,-1.498527 -1.34729,-3.173687 -0.037,-2.776797 1.52601,-5.152147 5.67899,-8.630675 5.33259,-4.466575 6.47416,-8.564501 3.27186,-11.745039 -1.18764,-1.179564 -1.76451,-1.372444 -4.14809,-1.386933 -3.41515,-0.02075 -4.87489,0.960552 -6.75278,4.539549 -1.6751,3.192528 -3.0518803,4.181224 -5.2319903,3.757233 -5.75464,-1.119178 -2.91387,-10.115689 4.4180303,-13.9915496 1.669,-0.8822891 3.09519,-1.1704971 6.45082,-1.3036071 7.53077,-0.29873 12.28335,2.0120271 14.86673,7.2283727 1.14469,2.311347 1.3024,3.11896 1.16013,5.941025 -0.21059,4.177607 -1.49939,6.168229 -6.95257,10.738659 -2.83149,2.373136 -4.27783,3.97627 -4.98858,5.529385 -1.69628,3.706674 -3.92388,4.57246 -6.42526,2.497267 l 0,0 z\"\n           id=\"path4333\"\n           inkscape:connector-curvature=\"0\" />\n        <path\n           style=\"fill:#ffffff;fill-opacity:1\"\n           d=\"m 14.509119,51.233541 c -2.05979,-2.285886 -2.15553,-4.889987 -0.25783,-7.012744 2.73307,-3.057201 7.61599,-1.593986 8.37255,2.508922 0.87511,4.745715 -4.97233,7.991152 -8.11472,4.503822 z\"\n           id=\"path4337\"\n           inkscape:connector-curvature=\"0\" />\n        <path\n           sodipodi:type=\"arc\"\n           style=\"fill:#0000ff;fill-opacity:1\"\n           id=\"path4339\"\n           sodipodi:cx=\"34.978806\"\n           sodipodi:cy=\"36.861271\"\n           sodipodi:rx=\"24.123314\"\n           sodipodi:ry=\"25.932562\"\n           d=\"m 59.102119,36.861271 a 24.123314,25.932562 0 1 1 -48.246627,0 24.123314,25.932562 0 1 1 48.246627,0 z\"\n           transform=\"matrix(1.2376996,0,0,1.145033,-10.225819,-11.080207)\" />\n        <path\n           style=\"fill:#ffffff;fill-opacity:1\"\n           d=\"m 29.191588,39.791319 c -1.06334,-0.882165 -1.32499,-1.498527 -1.34729,-3.173687 -0.037,-2.776797 1.52601,-5.152147 5.678992,-8.630675 5.33259,-4.466575 6.47416,-8.564501 3.27186,-11.745039 -1.18764,-1.179564 -1.76451,-1.372444 -4.14809,-1.386933 -3.415152,-0.02075 -4.874892,0.960552 -6.752782,4.539549 -1.6751,3.192528 -3.05188,4.181224 -5.23199,3.757233 -5.754639,-1.119178 -2.913869,-10.115689 4.41803,-13.9915503 1.669,-0.882289 3.09519,-1.170497 6.45082,-1.303607 7.530772,-0.29873 12.283352,2.012027 14.866732,7.2283733 1.14469,2.311347 1.3024,3.11896 1.16013,5.941025 -0.21059,4.177607 -1.49939,6.168229 -6.95257,10.738659 -2.83149,2.373136 -4.27783,3.97627 -4.98858,5.529385 -1.69628,3.706674 -3.923882,4.57246 -6.425262,2.497267 l 0,0 z\"\n           id=\"path4333-2\"\n           inkscape:connector-curvature=\"0\" />\n        <path\n           style=\"fill:#ffffff;fill-opacity:1\"\n           d=\"m 27.938158,52.10286 c -2.05979,-2.285886 -2.15553,-4.889987 -0.25783,-7.012744 2.73307,-3.057201 7.615992,-1.593986 8.372552,2.508922 0.87511,4.745715 -4.972332,7.991152 -8.114722,4.503822 z\"\n           id=\"path4337-7\"\n           inkscape:connector-curvature=\"0\" />\n      </g>\n    </svg>"
+    ], { type: 'image/svg+xml' }));
     return PDFForm;
 }());
 var USI9SupplementFields = (function (_super) {
@@ -242,41 +258,41 @@ var USI9SupplementTranslator = (function (_super) {
     function USI9SupplementTranslator() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    USI9SupplementTranslator.prototype.renderTranslatorSection = function (dialog, lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, sgnTranslator, sgnTranslatorHelp, translatorDate, translatorDateHelp, translatorLastName, translatorLastNameHelp, translatorFirstName, translatorFirstNameHelp, translatorAddress, translatorAddressHelp, translatorCity, translatorCityHelp, translatorState, translatorStateHelp, translatorZip, translatorZipHelp, sgnTranslator2, translatorDate2, translatorLastName2, translatorFirstName2, translatorAddress2, translatorCity2, translatorState2, translatorZip2, sgnTranslator3, translatorDate3, translatorLastName3, translatorFirstName3, translatorAddress3, translatorCity3, translatorState3, translatorZip3, sgnTranslator4, translatorDate4, translatorLastName4, translatorFirstName4, translatorAddress4, translatorCity4, translatorState4, translatorZip4) {
+    USI9SupplementTranslator.prototype.renderTranslatorSection = function (lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, sgnTranslator, sgnTranslatorHelp, translatorDate, translatorDateHelp, translatorLastName, translatorLastNameHelp, translatorFirstName, translatorFirstNameHelp, translatorAddress, translatorAddressHelp, translatorCity, translatorCityHelp, translatorState, translatorStateHelp, translatorZip, translatorZipHelp, sgnTranslator2, translatorDate2, translatorLastName2, translatorFirstName2, translatorAddress2, translatorCity2, translatorState2, translatorZip2, sgnTranslator3, translatorDate3, translatorLastName3, translatorFirstName3, translatorAddress3, translatorCity3, translatorState3, translatorZip3, sgnTranslator4, translatorDate4, translatorLastName4, translatorFirstName4, translatorAddress4, translatorCity4, translatorState4, translatorZip4) {
         var _this = this;
         $('a').prop('target', '_blank');
         this._lastName = this.renderControl(lastName, this._('lastnamehelp.tooltip'))
             .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
-        this._lastNameHelp = this.renderHelpIcon(lastNameHelp, this._('lastnamehelp.caption'), dialog, this._('lastnamehelp.text'));
+        this._lastNameHelp = this.renderHelpIcon(lastNameHelp, this._('lastnamehelp.caption'), this._('lastnamehelp.text'));
         this._firstName = this.renderControl(firstName, this._('firstnamehelp.tooltip'))
             .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
-        this._firstNameHelp = this.renderHelpIcon(firstNameHelp, this._('firstnamehelp.caption'), dialog, this._('firstnamehelp.text'));
+        this._firstNameHelp = this.renderHelpIcon(firstNameHelp, this._('firstnamehelp.caption'), this._('firstnamehelp.text'));
         this._middleInitial = this.renderControl(middleInitial, this._('middleinitialhelp.tooltip'))
             .keypress(function (e) {
             return _this.nameFormat.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode;
         });
-        this._middleInitialHelp = this.renderHelpIcon(middleInitialHelp, this._('middleinitialhelp.caption'), dialog, this._('middleinitialhelp.text'));
+        this._middleInitialHelp = this.renderHelpIcon(middleInitialHelp, this._('middleinitialhelp.caption'), this._('middleinitialhelp.text'));
         this._sgnTranslator = this.renderControl(sgnTranslator, this._('sgntranslator.tooltip'));
-        this._sgnTranslatorHelp = this.renderHelpIcon(sgnTranslatorHelp, this._('sgntranslatorhelp.caption'), dialog, this._('sgntranslatorhelp.text'));
+        this._sgnTranslatorHelp = this.renderHelpIcon(sgnTranslatorHelp, this._('sgntranslatorhelp.caption'), this._('sgntranslatorhelp.text'));
         this._translatorDate = this.renderControl(translatorDate, this._('translatordate.tooltip'))
             .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
-        this._translatorDateHelp = this.renderHelpIcon(translatorDateHelp, this._('translatordatehelp.caption'), dialog, this._('translatordatehelp.text'));
+        this._translatorDateHelp = this.renderHelpIcon(translatorDateHelp, this._('translatordatehelp.caption'), this._('translatordatehelp.text'));
         this._translatorLastName = this.renderControl(translatorLastName, this._('translatorlastname.tooltip'))
             .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
-        this._translatorLastNameHelp = this.renderHelpIcon(translatorLastNameHelp, this._('translatorlastnamehelp.caption'), dialog, this._('translatorlastnamehelp.text'));
+        this._translatorLastNameHelp = this.renderHelpIcon(translatorLastNameHelp, this._('translatorlastnamehelp.caption'), this._('translatorlastnamehelp.text'));
         this._translatorFirstName = this.renderControl(translatorFirstName, this._('translatorfirstname.tooltip'))
             .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
-        this._translatorFirstNameHelp = this.renderHelpIcon(translatorFirstNameHelp, this._('translatorfirstnamehelp.caption'), dialog, this._('translatorfirstnamehelp.text'));
+        this._translatorFirstNameHelp = this.renderHelpIcon(translatorFirstNameHelp, this._('translatorfirstnamehelp.caption'), this._('translatorfirstnamehelp.text'));
         this._translatorAddress = this.renderControl(translatorAddress, this._('translatoraddress.tooltip'));
-        this._translatorAddressHelp = this.renderHelpIcon(translatorAddressHelp, this._('translatoraddresshelp.caption'), dialog, this._('translatoraddresshelp.text'));
+        this._translatorAddressHelp = this.renderHelpIcon(translatorAddressHelp, this._('translatoraddresshelp.caption'), this._('translatoraddresshelp.text'));
         this._translatorCity = this.renderControl(translatorCity, this._('translatorcity.tooltip'));
-        this._translatorCityHelp = this.renderHelpIcon(translatorCityHelp, this._('translatorcityhelp.caption'), dialog, this._('translatorcityhelp.text'));
+        this._translatorCityHelp = this.renderHelpIcon(translatorCityHelp, this._('translatorcityhelp.caption'), this._('translatorcityhelp.text'));
         this._translatorState = this.renderControl(translatorState, this._('translatorstate.tooltip'));
         this.setCombolistText(this._translatorState, ' ', this.blankItem);
-        this._translatorStateHelp = this.renderHelpIcon(translatorStateHelp, this._('translatorstatehelp.caption'), dialog, this._('translatorstatehelp.text'));
+        this._translatorStateHelp = this.renderHelpIcon(translatorStateHelp, this._('translatorstatehelp.caption'), this._('translatorstatehelp.text'));
         this._translatorZip = this.renderControl(translatorZip, this._('translatorzip.tooltip'))
             .keypress(function (e) { return _this.zipFormat.test(e.key) || e.key === _this.backSpaceCode; });
-        this._translatorZipHelp = this.renderHelpIcon(translatorZipHelp, this._('translatorziphelp.caption'), dialog, this._('translatorziphelp.text'));
+        this._translatorZipHelp = this.renderHelpIcon(translatorZipHelp, this._('translatorziphelp.caption'), this._('translatorziphelp.text'));
         this._sgnTranslator2 = this.renderControl(sgnTranslator2, this._('sgntranslator.tooltip'));
         this._translatorDate2 = this.renderControl(translatorDate2, this._('translatordate.tooltip'))
             .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
@@ -389,9 +405,7 @@ var eventBus = PDFViewerApplication.eventBus;
 var USI9Supplement = (function (_super) {
     __extends(USI9Supplement, _super);
     function USI9Supplement() {
-        var _this = _super.call(this) || this;
-        _this.addDialog();
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     USI9Supplement.prototype.prepareData = function () {
         var _this = this;
@@ -402,7 +416,7 @@ var USI9Supplement = (function (_super) {
             'operation': 'f',
             'entries': []
         };
-        $('[' + this.annotationName + ']').each(function (i, ctrl) {
+        $("[" + this.annotationName + "]").each(function (i, ctrl) {
             if (!ctrl.disabled && ctrl.value && ctrl.value !== '') {
                 PDFViewerApplication.fieldsData.entries.push({
                     'name': ctrl.getAttribute(_this.annotationName),
@@ -413,32 +427,15 @@ var USI9Supplement = (function (_super) {
         });
     };
     USI9Supplement.prototype.prepareFirstPage = function () {
-        this.renderTranslatorSection($('#dialogPage'), $('[' + this.annotationName + '=LastName]'), $('[' + this.annotationName + '=LastNameHelp]'), $('[' + this.annotationName + '=FirstName]'), $('[' + this.annotationName + '=FirstNameHelp]'), $('[' + this.annotationName + '=MiddleInitial]'), $('[' + this.annotationName + '=MiddleInitialHelp]'), $('[' + this.annotationName + '=sgnTranslator]'), $('[' + this.annotationName + '=sgnTranslatorHelp]'), $('[' + this.annotationName + '=TranslatorDate]'), $('[' + this.annotationName + '=TranslatorDateHelp]'), $('[' + this.annotationName + '=TranslatorLastName]'), $('[' + this.annotationName + '=TranslatorLastNameHelp]'), $('[' + this.annotationName + '=TranslatorFirstName]'), $('[' + this.annotationName + '=TranslatorFirstNameHelp]'), $('[' + this.annotationName + '=TranslatorAddress]'), $('[' + this.annotationName + '=TranslatorAddressHelp]'), $('[' + this.annotationName + '=TranslatorCity]'), $('[' + this.annotationName + '=TranslatorCityHelp]'), $('[' + this.annotationName + '=TranslatorState]'), $('[' + this.annotationName + '=TranslatorStateHelp]'), $('[' + this.annotationName + '=TranslatorZip]'), $('[' + this.annotationName + '=TranslatorZipHelp]'), $('[' + this.annotationName + '=sgnTranslator2]'), $('[' + this.annotationName + '=TranslatorDate2]'), $('[' + this.annotationName + '=TranslatorLastName2]'), $('[' + this.annotationName + '=TranslatorFirstName2]'), $('[' + this.annotationName + '=TranslatorAddress2]'), $('[' + this.annotationName + '=TranslatorCity2]'), $('[' + this.annotationName + '=TranslatorState2]'), $('[' + this.annotationName + '=TranslatorZip2]'), $('[' + this.annotationName + '=sgnTranslator3]'), $('[' + this.annotationName + '=TranslatorDate3]'), $('[' + this.annotationName + '=TranslatorLastName3]'), $('[' + this.annotationName + '=TranslatorFirstName3]'), $('[' + this.annotationName + '=TranslatorAddress3]'), $('[' + this.annotationName + '=TranslatorCity3]'), $('[' + this.annotationName + '=TranslatorState3]'), $('[' + this.annotationName + '=TranslatorZip3]'), $('[' + this.annotationName + '=sgnTranslator4]'), $('[' + this.annotationName + '=TranslatorDate4]'), $('[' + this.annotationName + '=TranslatorLastName4]'), $('[' + this.annotationName + '=TranslatorFirstName4]'), $('[' + this.annotationName + '=TranslatorAddress4]'), $('[' + this.annotationName + '=TranslatorCity4]'), $('[' + this.annotationName + '=TranslatorState4]'), $('[' + this.annotationName + '=TranslatorZip4]'));
-    };
-    USI9Supplement.prototype.validateForm = function (dialog) {
-        var errorMessages = _super.prototype.validateFields.call(this);
-        if (errorMessages.length > 0) {
-            var errorMessage = this._('error.header') + '<br />';
-            errorMessages.forEach(function (element) {
-                errorMessage += ' - ' + element + '<br />';
-            });
-            $('.ui-dialog-titlebar-close').attr('title', '');
-            dialog.dialog('option', 'minWidth', 500).text('')
-                .dialog('option', 'title', this._('validation'))
-                .append(errorMessage).dialog('open');
-            return false;
-        }
-        else {
-            return true;
-        }
+        this.renderTranslatorSection($("[" + this.annotationName + "=LastName]"), $("[" + this.annotationName + "=LastNameHelp]"), $("[" + this.annotationName + "=FirstName]"), $("[" + this.annotationName + "=FirstNameHelp]"), $("[" + this.annotationName + "=MiddleInitial]"), $("[" + this.annotationName + "=MiddleInitialHelp]"), $("[" + this.annotationName + "=sgnTranslator]"), $("[" + this.annotationName + "=sgnTranslatorHelp]"), $("[" + this.annotationName + "=TranslatorDate]"), $("[" + this.annotationName + "=TranslatorDateHelp]"), $("[" + this.annotationName + "=TranslatorLastName]"), $("[" + this.annotationName + "=TranslatorLastNameHelp]"), $("[" + this.annotationName + "=TranslatorFirstName]"), $("[" + this.annotationName + "=TranslatorFirstNameHelp]"), $("[" + this.annotationName + "=TranslatorAddress]"), $("[" + this.annotationName + "=TranslatorAddressHelp]"), $("[" + this.annotationName + "=TranslatorCity]"), $("[" + this.annotationName + "=TranslatorCityHelp]"), $("[" + this.annotationName + "=TranslatorState]"), $("[" + this.annotationName + "=TranslatorStateHelp]"), $("[" + this.annotationName + "=TranslatorZip]"), $("[" + this.annotationName + "=TranslatorZipHelp]"), $("[" + this.annotationName + "=sgnTranslator2]"), $("[" + this.annotationName + "=TranslatorDate2]"), $("[" + this.annotationName + "=TranslatorLastName2]"), $("[" + this.annotationName + "=TranslatorFirstName2]"), $("[" + this.annotationName + "=TranslatorAddress2]"), $("[" + this.annotationName + "=TranslatorCity2]"), $("[" + this.annotationName + "=TranslatorState2]"), $("[" + this.annotationName + "=TranslatorZip2]"), $("[" + this.annotationName + "=sgnTranslator3]"), $("[" + this.annotationName + "=TranslatorDate3]"), $("[" + this.annotationName + "=TranslatorLastName3]"), $("[" + this.annotationName + "=TranslatorFirstName3]"), $("[" + this.annotationName + "=TranslatorAddress3]"), $("[" + this.annotationName + "=TranslatorCity3]"), $("[" + this.annotationName + "=TranslatorState3]"), $("[" + this.annotationName + "=TranslatorZip3]"), $("[" + this.annotationName + "=sgnTranslator4]"), $("[" + this.annotationName + "=TranslatorDate4]"), $("[" + this.annotationName + "=TranslatorLastName4]"), $("[" + this.annotationName + "=TranslatorFirstName4]"), $("[" + this.annotationName + "=TranslatorAddress4]"), $("[" + this.annotationName + "=TranslatorCity4]"), $("[" + this.annotationName + "=TranslatorState4]"), $("[" + this.annotationName + "=TranslatorZip4]"));
     };
     USI9Supplement.prototype.renderSections = function () {
         var _this = this;
-        ['print', 'download'].forEach(function (ev) {
-            var eventFuncs = eventBus.get(ev);
-            eventBus.remove(ev);
-            eventBus.on(ev, function () {
-                if (_this.validateForm($('#dialogPage'))) {
+        PDFForm.toolbarButtons.forEach(function (e) {
+            var eventFuncs = eventBus.get(e);
+            eventBus.remove(e);
+            eventBus.on(e, function () {
+                if (_this.validateForm($("#" + e), _super.prototype.validateFields.call(_this))) {
                     _this.prepareData();
                     eventFuncs.forEach(function (f) { return f(); });
                 }

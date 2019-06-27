@@ -45,28 +45,28 @@ app.post('/BeginSession', (req, res) => {
         if (data) {
             let token = '';
             let tokenExpiration = moment().add(1, 'days').valueOf();
-    
+
             getParameter('mariadb', connStr => {
                 if (connStr) {
                     let connParams = JSON.parse(connStr);
-                    
+
                     if (connParams) {
                         mariadb.createConnection(connParams).then(c => {
                             // WordPress password encryption schema
                             c.query('SELECT user_pass FROM wp_users WHERE user_login = ?', [data.login]).then(rows => {
                                 if (rows && rows.length > 0 && data.password) {
                                     let row = rows[0];
-        
+
                                     const itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-        
+
                                     let hash = Buffer.from(md5(row.user_pass.substr(4, 8) + data.password), 'hex');
-        
+
                                     for (let i = 0; i < 1 << itoa64.indexOf(row.user_pass[3]); i++) {
                                         hash = Buffer.from(md5(Buffer.concat([hash, Buffer.from(data.password, 'utf8')])), 'hex');
                                     }
-        
+
                                     let output = '';
-        
+
                                     let i = 0;
                                     let count = 16;
                                     do {
@@ -75,24 +75,24 @@ app.post('/BeginSession', (req, res) => {
                                         if (i < count) {
                                             value |= hash[i] << 8;
                                         }
-        
+
                                         output += itoa64[(value >> 6) & 0x3f];
                                         if (i++ >= count) {
                                             break;
                                         }
-            
+
                                         if (i < count) {
                                             value |= hash[i] << 16;
                                         }
-            
+
                                         output += itoa64[(value >> 12) & 0x3f];
                                         if (i++ >= count) {
                                             break;
                                         }
-            
+
                                         output += itoa64[(value >> 18) & 0x3f];
                                     } while (i < count);
-            
+
                                     if (row.user_pass === row.user_pass.substr(0, 12) + output) {
                                         getParameter('tokenSecret', jwtTokenSecret => {
                                             if (jwtTokenSecret) {
@@ -102,7 +102,7 @@ app.post('/BeginSession', (req, res) => {
                                                             iss: data.login,
                                                             exp: tokenExpiration
                                                         }, jwtTokenSecret, tokenAlg);
-            
+
                                                         res.end(JSON.stringify({
                                                             token: token
                                                         }));
@@ -166,7 +166,7 @@ app.post('/RichTextEditor', (req, res) => {
                     getParameter('tokenAlg', tokenAlg => {
                         if (tokenAlg) {
                             let decoded = decodeToken(data.token, jwtTokenSecret, tokenAlg);
-                            
+
                             if (decoded) {
                                 if (moment() <= decoded.exp) {
                                     let uuid = uuidV4();
@@ -180,7 +180,7 @@ app.post('/RichTextEditor', (req, res) => {
                                         } else {
                                             let host = server.address().address;
                                             let port = server.address().port;
-            
+
                                             res.end(JSON.stringify({
                                                 token: data.token,
                                                 editorUrl: 'http://' + (host !== '::' ? host : '127.0.0.1') + ':' + port + url 
@@ -524,7 +524,7 @@ app.post('/GetTemplateList', (req, res) => {
                                         'group': 'US Federal Forms',
                                         'description': 'US I-9 Form'
                                     });
-                                    
+
                                     forms.push({
                                         'id': 'US I9 Supplement',
                                         'name': 'US I-9 Supplement',
@@ -641,28 +641,25 @@ let server = app.listen(8305, () => {
         fs.mkdir('data');
     }
 
+    //http://localhost:8305/pdf.js/web/viewer.html?file=/data/US%20I9_en-US.pdf&#locale=en-US&mode=edit&templateid=US%20I9
     // fs.emptyDir('data');
 
     // Where to serve static content
     app.use('/pdf.js', express.static(path.join(__dirname, 'pdf.js')));
     app.use('/ckeditor', express.static(path.join(__dirname, 'ckeditor')));
-    app.use('/jquery', express.static(path.join(__dirname, 'jquery')));
     app.use('/data', express.static(path.join(__dirname, 'data')));
-    app.use('/templates', express.static(path.join(__dirname, 'templates/lib')));
+    app.use('/templates', express.static(path.join(__dirname, 'templates/src')));
     app.use('/locale', express.static(path.join(__dirname, 'locale')));
-    app.use('/image', express.static(path.join(__dirname, 'image')));
     app.use('/editor.html', express.static(path.join(__dirname, 'editor.html')));
-    app.use('/jquery/jquery.js', express.static(path.join(__dirname, 'jquery/jquery-3.2.1.min.js')));
-    app.use('/jquery/jquery-ui.js', express.static(path.join(__dirname, 'jquery/jquery-ui-1.12.1.min.js')));
 
     let socket = new net.Socket();
 
-    socket.connect(iTextSocket, '127.0.0.1', () => {
-        socket.end();
-    });
+    // socket.connect(iTextSocket, '127.0.0.1', () => {
+    //     socket.end();
+    // });
 
-    socket.on('error', () => {
-        exec('mvn clean package exec:java', { cwd: 'iTextService' });
+    socket.on('error', err => {
+        logger.error(err);
     });
 
     logger.debug('SmartForms-on-Demand service listening at http://%s:%s', server.address().address, server.address().port);

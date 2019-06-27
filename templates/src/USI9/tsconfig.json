@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "moduleResolution": "node",
         "module": "amd",
         "target": "es5",
         "outFile": "../../src/US I9.js",
