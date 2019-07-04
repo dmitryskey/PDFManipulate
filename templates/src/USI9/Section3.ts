@@ -208,7 +208,7 @@ class USI9Section3 extends USI9Section2 {
             this._('newmiddleinitialhelp.text')
         );
 
-        this._rehireDate = this.renderControl(rehireDate, this._('rehiredate.tooltip') )
+        this._rehireDate = this.renderControl(rehireDate, this._('rehiredate.tooltip'), true, 'left')
         .datepicker().attr('autocomplete', 'disabled')
         .unbind('keypress')
         .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
@@ -220,7 +220,7 @@ class USI9Section3 extends USI9Section2 {
             this._('rehiredatehelp.text')
         );
 
-        this._docTitleSec3 = this.renderControl(docTitleSec3, this._('doctitlesec3.tooltip'))
+        this._docTitleSec3 = this.renderControl(docTitleSec3, this._('doctitlesec3.tooltip'), true, 'right')
         .attr('tabindex', tabIndex++);
 
         this.filterCombolist(this._docTitleSec3, {
@@ -273,7 +273,7 @@ class USI9Section3 extends USI9Section2 {
             this._('docnumbersec3help.text')
         );
 
-        this._expDateSec3 = this.renderControl(expDateSec3, this._('expdatesec3.tooltip'))
+        this._expDateSec3 = this.renderControl(expDateSec3, this._('expdatesec3.tooltip'), true, 'left')
         .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled')
         .unbind('keypress')
         .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
@@ -294,7 +294,7 @@ class USI9Section3 extends USI9Section2 {
             this._('sgnemployersec3help.text')
         );
 
-        this._signDateSec3 = this.renderControl(signDateSec3, this._('employersigndatesec3.tooltip'))
+        this._signDateSec3 = this.renderControl(signDateSec3, this._('employersigndatesec3.tooltip'), true, 'left')
         .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled')
         .attr(this.annotationRequired, 'true')
         // work around for the Chrome auto-fill bug

@@ -25,7 +25,7 @@ class USI9Translator extends USI9Section1 {
 
         var translator = [translatorNo, translatorYes];
 
-        this._translatorNo = this.renderControl(translatorNo, this._('translator.tooltip'))
+        this._translatorNo = this.renderControl(translatorNo, this._('translator.tooltip'), false)
         .click(() => {
             this.selectCheckmark(this._translatorNo, translator);
 
@@ -40,7 +40,7 @@ class USI9Translator extends USI9Section1 {
         })
         .attr('tabindex', tabIndex++);
 
-        this._translatorYes = this.renderControl(translatorYes, this._('translator.tooltip'))
+        this._translatorYes = this.renderControl(translatorYes, this._('translator.tooltip'), false)
         .click(() => { 
             this.selectCheckmark(this._translatorYes, translator);
 
@@ -70,7 +70,7 @@ class USI9Translator extends USI9Section1 {
             this._('sgntranslatorhelp.text')
         );
 
-        this._translatorDate = this.renderControl(translatorDate, this._('translatordate.tooltip'))
+        this._translatorDate = this.renderControl(translatorDate, this._('translatordate.tooltip'), true, 'left')
         .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled')
         .attr('tabindex', tabIndex++);
 
@@ -118,7 +118,7 @@ class USI9Translator extends USI9Section1 {
             this._('translatorcityhelp.text')
         );
 
-        this._translatorState = this.renderControl(translatorState, this._('translatorstate.tooltip'))
+        this._translatorState = this.renderControl(translatorState, this._('translatorstate.tooltip'), true, 'left')
         .attr('tabindex', tabIndex++);
         this.setCombolistText(this._translatorState, ' ', this.blankItem);
 

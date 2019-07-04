@@ -109,9 +109,10 @@ var PDFForm = (function () {
     PDFForm.prototype.assignCombolistEventHandler = function (ctrl, f) {
         ctrl.parent().children().filter('.combo-content').click(f);
     };
-    PDFForm.prototype.renderControl = function (ctrl, text, onFocus) {
+    PDFForm.prototype.renderControl = function (ctrl, text, onFocus, placement) {
         if (onFocus === void 0) { onFocus = true; }
-        return ctrl.popover({ html: true, content: text, trigger: onFocus ? 'focus' : 'hover' });
+        if (placement === void 0) { placement = 'bottom'; }
+        return ctrl.popover({ html: true, content: text, trigger: onFocus ? 'focus' : 'hover', placement: placement });
     };
     PDFForm.prototype.renderHelpIcon = function (ctrl, title, text, maxWidth) {
         var _this = this;
@@ -157,7 +158,7 @@ var PDFForm = (function () {
             return false;
         }
         else {
-            ctrl.popover('hide');
+            ctrl.popover('dispose');
             return true;
         }
     };
@@ -274,7 +275,7 @@ var USI9SupplementTranslator = (function (_super) {
         this._middleInitialHelp = this.renderHelpIcon(middleInitialHelp, this._('middleinitialhelp.caption'), this._('middleinitialhelp.text'));
         this._sgnTranslator = this.renderControl(sgnTranslator, this._('sgntranslator.tooltip'));
         this._sgnTranslatorHelp = this.renderHelpIcon(sgnTranslatorHelp, this._('sgntranslatorhelp.caption'), this._('sgntranslatorhelp.text'));
-        this._translatorDate = this.renderControl(translatorDate, this._('translatordate.tooltip'))
+        this._translatorDate = this.renderControl(translatorDate, this._('translatordate.tooltip'), true, 'left')
             .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
         this._translatorDateHelp = this.renderHelpIcon(translatorDateHelp, this._('translatordatehelp.caption'), this._('translatordatehelp.text'));
         this._translatorLastName = this.renderControl(translatorLastName, this._('translatorlastname.tooltip'))
@@ -287,14 +288,14 @@ var USI9SupplementTranslator = (function (_super) {
         this._translatorAddressHelp = this.renderHelpIcon(translatorAddressHelp, this._('translatoraddresshelp.caption'), this._('translatoraddresshelp.text'));
         this._translatorCity = this.renderControl(translatorCity, this._('translatorcity.tooltip'));
         this._translatorCityHelp = this.renderHelpIcon(translatorCityHelp, this._('translatorcityhelp.caption'), this._('translatorcityhelp.text'));
-        this._translatorState = this.renderControl(translatorState, this._('translatorstate.tooltip'));
+        this._translatorState = this.renderControl(translatorState, this._('translatorstate.tooltip'), true, 'left');
         this.setCombolistText(this._translatorState, ' ', this.blankItem);
         this._translatorStateHelp = this.renderHelpIcon(translatorStateHelp, this._('translatorstatehelp.caption'), this._('translatorstatehelp.text'));
         this._translatorZip = this.renderControl(translatorZip, this._('translatorzip.tooltip'))
             .keypress(function (e) { return _this.zipFormat.test(e.key) || e.key === _this.backSpaceCode; });
         this._translatorZipHelp = this.renderHelpIcon(translatorZipHelp, this._('translatorziphelp.caption'), this._('translatorziphelp.text'));
         this._sgnTranslator2 = this.renderControl(sgnTranslator2, this._('sgntranslator.tooltip'));
-        this._translatorDate2 = this.renderControl(translatorDate2, this._('translatordate.tooltip'))
+        this._translatorDate2 = this.renderControl(translatorDate2, this._('translatordate.tooltip'), true, 'left')
             .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
         this._translatorLastName2 = this.renderControl(translatorLastName2, this._('translatorlastname.tooltip'))
             .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
@@ -302,12 +303,12 @@ var USI9SupplementTranslator = (function (_super) {
             .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
         this._translatorAddress2 = this.renderControl(translatorAddress2, this._('translatoraddress.tooltip'));
         this._translatorCity2 = this.renderControl(translatorCity2, this._('translatorcity.tooltip'));
-        this._translatorState2 = this.renderControl(translatorState2, this._('translatorstate.tooltip'));
+        this._translatorState2 = this.renderControl(translatorState2, this._('translatorstate.tooltip'), true, 'left');
         this.setCombolistText(this._translatorState2, ' ', this.blankItem);
         this._translatorZip2 = this.renderControl(translatorZip2, this._('translatorzip.tooltip'))
             .keypress(function (e) { return _this.zipFormat.test(e.key) || e.key === _this.backSpaceCode; });
         this._sgnTranslator3 = this.renderControl(sgnTranslator3, this._('sgntranslator.tooltip'));
-        this._translatorDate3 = this.renderControl(translatorDate3, this._('translatordate.tooltip'))
+        this._translatorDate3 = this.renderControl(translatorDate3, this._('translatordate.tooltip'), true, 'left')
             .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
         this._translatorLastName3 = this.renderControl(translatorLastName3, this._('translatorlastname.tooltip'))
             .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
@@ -315,12 +316,12 @@ var USI9SupplementTranslator = (function (_super) {
             .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
         this._translatorAddress3 = this.renderControl(translatorAddress3, this._('translatoraddress.tooltip'));
         this._translatorCity3 = this.renderControl(translatorCity3, this._('translatorcity.tooltip'));
-        this._translatorState3 = this.renderControl(translatorState3, this._('translatorstate.tooltip'));
+        this._translatorState3 = this.renderControl(translatorState3, this._('translatorstate.tooltip'), true, 'left');
         this.setCombolistText(this._translatorState3, ' ', this.blankItem);
         this._translatorZip3 = this.renderControl(translatorZip3, this._('translatorzip.tooltip'))
             .keypress(function (e) { return _this.zipFormat.test(e.key) || e.key === _this.backSpaceCode; });
         this._sgnTranslator4 = this.renderControl(sgnTranslator4, this._('sgntranslator.tooltip'));
-        this._translatorDate4 = this.renderControl(translatorDate4, this._('translatordate.tooltip'))
+        this._translatorDate4 = this.renderControl(translatorDate4, this._('translatordate.tooltip'), true, 'left')
             .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
         this._translatorLastName4 = this.renderControl(translatorLastName4, this._('translatorlastname.tooltip'))
             .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
@@ -328,7 +329,7 @@ var USI9SupplementTranslator = (function (_super) {
             .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
         this._translatorAddress4 = this.renderControl(translatorAddress4, this._('translatoraddress.tooltip'));
         this._translatorCity4 = this.renderControl(translatorCity4, this._('translatorcity.tooltip'));
-        this._translatorState4 = this.renderControl(translatorState4, this._('translatorstate.tooltip'));
+        this._translatorState4 = this.renderControl(translatorState4, this._('translatorstate.tooltip'), true, 'left');
         this.setCombolistText(this._translatorState4, ' ', this.blankItem);
         this._translatorZip4 = this.renderControl(translatorZip4, this._('translatorzip.tooltip'))
             .keypress(function (e) { return _this.zipFormat.test(e.key) || e.key === _this.backSpaceCode; });

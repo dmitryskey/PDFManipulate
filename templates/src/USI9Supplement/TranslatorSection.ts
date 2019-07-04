@@ -87,8 +87,8 @@ class USI9SupplementTranslator extends USI9SupplementFields {
             this._('sgntranslatorhelp.caption'),
             this._('sgntranslatorhelp.text')
         );
-            
-        this._translatorDate = this.renderControl(translatorDate, this._('translatordate.tooltip'))
+
+        this._translatorDate = this.renderControl(translatorDate, this._('translatordate.tooltip'), true, 'left')
         .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
 
         this._translatorDateHelp = this.renderHelpIcon(
@@ -131,7 +131,7 @@ class USI9SupplementTranslator extends USI9SupplementFields {
             this._('translatorcityhelp.text')
         );
             
-        this._translatorState = this.renderControl(translatorState, this._('translatorstate.tooltip'));
+        this._translatorState = this.renderControl(translatorState, this._('translatorstate.tooltip'), true, 'left');
         this.setCombolistText(this._translatorState, ' ', this.blankItem);
 
         this._translatorStateHelp = this.renderHelpIcon(
@@ -150,7 +150,7 @@ class USI9SupplementTranslator extends USI9SupplementFields {
         );
 
         this._sgnTranslator2 = this.renderControl(sgnTranslator2, this._('sgntranslator.tooltip'));
-        this._translatorDate2 = this.renderControl(translatorDate2, this._('translatordate.tooltip'))
+        this._translatorDate2 = this.renderControl(translatorDate2, this._('translatordate.tooltip'), true, 'left')
         .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');  
 
         this._translatorLastName2 = this.renderControl(translatorLastName2, this._('translatorlastname.tooltip'))
@@ -163,14 +163,14 @@ class USI9SupplementTranslator extends USI9SupplementFields {
             
         this._translatorCity2 = this.renderControl(translatorCity2, this._('translatorcity.tooltip'));
             
-        this._translatorState2 = this.renderControl(translatorState2, this._('translatorstate.tooltip'));
+        this._translatorState2 = this.renderControl(translatorState2, this._('translatorstate.tooltip'), true, 'left');
         this.setCombolistText(this._translatorState2, ' ', this.blankItem);
             
         this._translatorZip2 = this.renderControl(translatorZip2, this._('translatorzip.tooltip'))
         .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode);
 
         this._sgnTranslator3 = this.renderControl(sgnTranslator3, this._('sgntranslator.tooltip'));
-        this._translatorDate3 = this.renderControl(translatorDate3, this._('translatordate.tooltip'))
+        this._translatorDate3 = this.renderControl(translatorDate3, this._('translatordate.tooltip'), true, 'left')
         .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');  
 
         this._translatorLastName3 = this.renderControl(translatorLastName3, this._('translatorlastname.tooltip'))
@@ -183,14 +183,14 @@ class USI9SupplementTranslator extends USI9SupplementFields {
             
         this._translatorCity3 = this.renderControl(translatorCity3, this._('translatorcity.tooltip'));
             
-        this._translatorState3 = this.renderControl(translatorState3, this._('translatorstate.tooltip'));
+        this._translatorState3 = this.renderControl(translatorState3, this._('translatorstate.tooltip'), true, 'left');
         this.setCombolistText(this._translatorState3, ' ', this.blankItem);
             
         this._translatorZip3 = this.renderControl(translatorZip3, this._('translatorzip.tooltip'))
         .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode);
 
         this._sgnTranslator4 = this.renderControl(sgnTranslator4, this._('sgntranslator.tooltip'));
-        this._translatorDate4 = this.renderControl(translatorDate4, this._('translatordate.tooltip'))
+        this._translatorDate4 = this.renderControl(translatorDate4, this._('translatordate.tooltip'), true, 'left')
         .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');  
 
         this._translatorLastName4 = this.renderControl(translatorLastName4, this._('translatorlastname.tooltip'))
@@ -203,7 +203,7 @@ class USI9SupplementTranslator extends USI9SupplementFields {
             
         this._translatorCity4 = this.renderControl(translatorCity4, this._('translatorcity.tooltip'));
             
-        this._translatorState4 = this.renderControl(translatorState4, this._('translatorstate.tooltip'));
+        this._translatorState4 = this.renderControl(translatorState4, this._('translatorstate.tooltip'), true, 'left');
         this.setCombolistText(this._translatorState4, ' ', this.blankItem);
             
         this._translatorZip4 = this.renderControl(translatorZip4, this._('translatorzip.tooltip'))

@@ -112,8 +112,8 @@ class PDFForm {
         ctrl.parent().children().filter('.combo-content').click(f);
     }
 
-    protected renderControl(ctrl: JQuery<HTMLElement>, text: string, onFocus: boolean = true) : JQuery<HTMLElement> {
-        return ctrl.popover({ html: true, content: text, trigger: onFocus ? 'focus' : 'hover' });
+    protected renderControl(ctrl: JQuery<HTMLElement>, text: string, onFocus: boolean = true, placement: Bootstrap.Placement = 'bottom') : JQuery<HTMLElement> {
+        return ctrl.popover({ html: true, content: text, trigger: onFocus ? 'focus' : 'hover', placement: placement });
     }
 
     protected renderHelpIcon(ctrl: JQuery<HTMLElement>, title: string, text: string, maxWidth: string = '30')
@@ -158,12 +158,11 @@ class PDFForm {
                 trigger: 'click',
                 placement: 'bottom'
             }).popover('show');
-            
-            $('.popover').prop(this.parentProp, ctrl);
 
+            $('.popover').prop(this.parentProp, ctrl);
             return false;
         } else {
-            ctrl.popover('hide');
+            ctrl.popover('dispose');
             return true;
         }
     }

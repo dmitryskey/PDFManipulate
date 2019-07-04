@@ -90,9 +90,9 @@ class USI9Section1 extends USI9Fields {
             this._('cityhelp.text')
         );
 
-        this._state = this.renderControl(state, this._('statehelp.tooltip'))
+        this._state = this.renderControl(state, this._('statehelp.tooltip'), true, 'left')
         .focus(e => {
-            $(e.target).tooltip('close');
+            $(e.target).tooltip('hide');
 
             let nonUSCountries = ['CAN', 'MEX'];
 
@@ -132,9 +132,8 @@ class USI9Section1 extends USI9Fields {
     private renderSSNFields(ssn : JQuery<HTMLElement>[], tabIndex: number) {
         this._ssn = ssn;
         for (let i = 0; i < ssn.length - 1; i++) {
-            this._ssn[i]
+            this.renderControl(this._ssn[i], this._('ssnhelp.tooltip'))
             .attr(this.annotationNext, (this._ssn[i + 1]).attr(this.annotationName))
-            .popover({ html: true, content: this._('ssnhelp.tooltip'), trigger: 'focus' })
             .keypress(e => {
                 if (this.numberFormat.test(e.key)) {
                     $(`['${this.annotationName}'='${$(e.target).attr(this.annotationNext)}']`).focus();
@@ -181,7 +180,7 @@ class USI9Section1 extends USI9Fields {
         maxDOB.setFullYear(maxDOB.getFullYear() - 14);
 
         // E-Verify requirements
-        this._dob = this.renderControl(dob, this._('dobhelp.tooltip'))
+        this._dob = this.renderControl(dob, this._('dobhelp.tooltip'), true, 'left')
         .datepicker({
             changeMonth: true,
             changeYear: true,
@@ -254,7 +253,7 @@ class USI9Section1 extends USI9Fields {
         sgnEmployeeDate: JQuery<HTMLElement>,
         sgnEmployeeDateHelp: JQuery<HTMLElement>) {
 
-        this._citizen = this.renderControl(citizen, this._('citizenhelp.tooltip'), false)
+        this._citizen = this.renderControl(citizen, this._('citizenhelp.tooltip'), false, 'right')
         .attr('tabindex', tabIndex++);
 
         this._citizenHelp = this.renderHelpIcon(
@@ -263,7 +262,7 @@ class USI9Section1 extends USI9Fields {
             this._('citizenhelp.text')
         );
 
-        this._national = this.renderControl(national, this._('nationalhelp.tooltip'), false)
+        this._national = this.renderControl(national, this._('nationalhelp.tooltip'), false, 'right')
         .attr('tabindex', tabIndex++);
 
         this._nationalHelp = this.renderHelpIcon(
@@ -272,7 +271,7 @@ class USI9Section1 extends USI9Fields {
             this._('nationalhelp.text')
         );
 
-        this._lpr = this.renderControl(lpr, this._('lprhelp.tooltip'), false)
+        this._lpr = this.renderControl(lpr, this._('lprhelp.tooltip'), false, 'right')
         .attr('tabindex', tabIndex++);
 
         this._lprHelp = this.renderHelpIcon(
@@ -281,7 +280,7 @@ class USI9Section1 extends USI9Fields {
             this._('lprhelp.text')
         );
 
-        this._alien = this.renderControl(alien, this._('alienhelp.tooltip'), false)
+        this._alien = this.renderControl(alien, this._('alienhelp.tooltip'), false, 'right')
         .attr('tabindex', tabIndex++);
 
         this._alienHelp = this.renderHelpIcon(
@@ -302,13 +301,13 @@ class USI9Section1 extends USI9Fields {
         .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
         .attr('tabindex', tabIndex++);
 
-        this._lpruscisNumType = this.renderControl(lpruscisNumType, this._('uscisnumbertype.tooltip'))
+        this._lpruscisNumType = this.renderControl(lpruscisNumType, this._('uscisnumbertype.tooltip'), true, 'left')
         .attr('tabindex', tabIndex++);
 
         this.assignCombolistEventHandler(this._lpruscisNumType, e => 
             this._lpruscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : ''));
 
-        this._alienWorkAuthDate = this.renderControl(alienWorkAuthDate, this._('alienworkauthdate.tooltip'))
+        this._alienWorkAuthDate = this.renderControl(alienWorkAuthDate, this._('alienworkauthdate.tooltip'), true, 'right')
         .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
         .unbind('keypress')
         .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
@@ -316,17 +315,17 @@ class USI9Section1 extends USI9Fields {
 
         this._alienuscisNumPrefix = alienuscisNumPrefix;
 
-        this._alienuscisNum = this.renderControl(alienuscisNum, this._('uscisnumber.tooltip'))
+        this._alienuscisNum = this.renderControl(alienuscisNum, this._('uscisnumber.tooltip'), true, 'right')
         .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
         .attr('tabindex', tabIndex++);
 
-        this._alienuscisNumType = this.renderControl(alienuscisNumType, this._('uscisnumbertype.tooltip'))
+        this._alienuscisNumType = this.renderControl(alienuscisNumType, this._('uscisnumbertype.tooltip'), true, 'right')
         .attr('tabindex', tabIndex++);
 
         this.assignCombolistEventHandler(this._alienuscisNumType, e => 
             this._alienuscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : ''));
 
-        this._admissionNum = this.renderControl(admissionNum, this._('admissionnumber.tooltip'))
+        this._admissionNum = this.renderControl(admissionNum, this._('admissionnumber.tooltip'), true, 'right')
         .keypress(e => this.alphaNumericFormat.test(e.key) || e.key === this.backSpaceCode)
         .attr('tabindex', tabIndex++);
 
@@ -336,7 +335,7 @@ class USI9Section1 extends USI9Fields {
             this._('admissionnumberhelp.text')
         );
 
-        this._passportNum = this.renderControl(passportNum, this._('passportnumber.tooltip'))
+        this._passportNum = this.renderControl(passportNum, this._('passportnumber.tooltip'), true, 'right')
         .attr('tabindex', tabIndex++);
 
         this._passportNumHelp = this.renderHelpIcon(
@@ -345,7 +344,7 @@ class USI9Section1 extends USI9Fields {
             this._('passportnumberhelp.text')
         );
 
-        this._countryOfIssuance = this.renderControl(countryOfIssuance, this._('coi.tooltip'))
+        this._countryOfIssuance = this.renderControl(countryOfIssuance, this._('coi.tooltip'), true, 'right')
         .attr('tabindex', tabIndex++);
 
         this._countryOfIssuanceHelp = this.renderHelpIcon(
@@ -363,7 +362,7 @@ class USI9Section1 extends USI9Fields {
             this._('sgnemployeehelp.text')
         );
 
-        this._sgnEmployeeDate = this.renderControl(sgnEmployeeDate, this._('employeedate.tooltip'))
+        this._sgnEmployeeDate = this.renderControl(sgnEmployeeDate, this._('employeedate.tooltip'), true, 'right')
         .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled')
         .attr('tabindex', tabIndex++);
 
