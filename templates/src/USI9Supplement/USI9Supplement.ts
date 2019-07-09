@@ -92,7 +92,7 @@ class USI9Supplement extends USI9SupplementTranslator {
     }
 }
 
-eventBus.on('textlayerrendered', (e: any) => {
+eventBus.on('textlayerrendered', () => {
     var form = new USI9Supplement();
     form.renderSections();
 });

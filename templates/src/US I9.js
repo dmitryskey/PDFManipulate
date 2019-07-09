@@ -1943,6 +1943,7 @@ var USI9Section3 = (function (_super) {
     return USI9Section3;
 }(USI9Section2));
 var eventBus = PDFViewerApplication.eventBus;
+var pdfViewer = PDFViewerApplication.pdfViewer;
 var renderedPages = [false, false, false];
 var form = null;
 var pageToLoad;
@@ -2004,12 +2005,11 @@ var USI9 = (function (_super) {
 eventBus.on('textlayerrendered', function (e) {
     renderedPages[e.pageNumber - 1] = true;
     if (e.pageNumber == 1 && !renderedPages[1]) {
-        eventBus.dispatch('nextpage');
-        pageToLoad = 'firstpage';
+        pdfViewer.getPageView(1);
         return;
     }
     if (e.pageNumber >= 2 && !renderedPages[0]) {
-        eventBus.dispatch('firstpage');
+        pdfViewer.getPageView(0);
         return;
     }
     if (pageToLoad) {

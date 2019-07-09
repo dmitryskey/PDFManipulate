@@ -446,7 +446,7 @@ var USI9Supplement = (function (_super) {
     };
     return USI9Supplement;
 }(USI9SupplementTranslator));
-eventBus.on('textlayerrendered', function (e) {
+eventBus.on('textlayerrendered', function () {
     var form = new USI9Supplement();
     form.renderSections();
 });

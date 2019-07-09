@@ -3,10 +3,10 @@
 // Global PDF.JS object references.
 declare let PDFViewerApplication: any;
 let eventBus = PDFViewerApplication.eventBus;
+let pdfViewer = PDFViewerApplication.pdfViewer;
 
 let renderedPages = [false, false, false];
 let form: USI9 = null;
-let pageToLoad: string;
 
 class USI9 extends USI9Section3 {
     private prepareData() {
@@ -252,19 +252,14 @@ eventBus.on('textlayerrendered', (e: any) => {
     renderedPages[e.pageNumber - 1] = true;
 
     if (e.pageNumber == 1 && !renderedPages[1]) {
-        eventBus.dispatch('nextpage');
-        pageToLoad = 'firstpage'
+        pdfViewer.getPageView(1);
         return;
     }
 
     // if refresh is done while page = 2 or 3 go to the first page
     if (e.pageNumber >= 2 && !renderedPages[0]) {
-        eventBus.dispatch('firstpage');
+        pdfViewer.getPageView(0);
         return;
-    }
-
-    if (pageToLoad) {
-        eventBus.dispatch(pageToLoad);
     }
 
     if (renderedPages[0] && renderedPages[1] && form == null) {
