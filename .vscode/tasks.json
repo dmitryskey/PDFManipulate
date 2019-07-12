@@ -35,15 +35,6 @@
                 "kind": "build",
                 "isDefault": true
             }
-        },
-        {
-            "label": "maven",
-            "type": "shell",
-            "command": "cd ${workspaceRoot}/iTextService; mvn",
-            "args": [
-                "clean package exec:java"
-            ],
-            "group": "build"
         }
     ]
 }
