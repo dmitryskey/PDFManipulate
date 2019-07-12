@@ -1946,7 +1946,6 @@ var eventBus = PDFViewerApplication.eventBus;
 var pdfViewer = PDFViewerApplication.pdfViewer;
 var renderedPages = [false, false, false];
 var form = null;
-var pageToLoad;
 var USI9 = (function (_super) {
     __extends(USI9, _super);
     function USI9() {
@@ -2011,9 +2010,6 @@ eventBus.on('textlayerrendered', function (e) {
     if (e.pageNumber >= 2 && !renderedPages[0]) {
         pdfViewer.getPageView(0);
         return;
-    }
-    if (pageToLoad) {
-        eventBus.dispatch(pageToLoad);
     }
     if (renderedPages[0] && renderedPages[1] && form == null) {
         form = new USI9();

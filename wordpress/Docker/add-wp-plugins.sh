@@ -8,16 +8,18 @@ smartplugin=$pluginspath/smartformsondemand
 themespath=$wpcontentpath/themes
 tmppluginzip=/tmp/wpplugin.zip
 
-echo "Download WordPress plugins"
-wget -qO- $pluginurl/polylang.2.6.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $pluginspath && rm $tmppluginzip
+echo "Downloading and installing WordPress plugins"
+wget -qO- $pluginurl/polylang.2.6.1.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $pluginspath && rm $tmppluginzip
 wget -qO- $pluginurl/svg-support.2.3.15.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $pluginspath && rm $tmppluginzip
 wget -qO- $pluginurl/contact-form-7.5.1.3.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $pluginspath && rm $tmppluginzip
 wget -qO- https://downloads.wordpress.org/theme/startup-blog.1.31.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $themespath && rm $tmppluginzip
 
 rm -r $themespath/twenty* && rm -r $pluginspath/akismet && rm $pluginspath/hello.php
 
-echo "Install Smart-Forms-On-Demand plugin"
+echo "Installing Smart-Forms-On-Demand plugin"
 tar -xzf /tmp/smartformsondemand.tgz -C /tmp && mv /tmp/build/smartformsondemand $pluginspath && rmdir /tmp/build && rm /tmp/smartformsondemand.tgz
+
+chown -R www-data:www-data $pluginspath/*
 
 mv /tmp/wp-config.php $wwwpath
 

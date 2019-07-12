@@ -256,7 +256,7 @@ eventBus.on('textlayerrendered', (e: any) => {
         return;
     }
 
-    // if refresh is done while page = 2 or 3 go to the first page
+    // if refresh is done while page = 2 or 3 load the first page
     if (e.pageNumber >= 2 && !renderedPages[0]) {
         pdfViewer.getPageView(0);
         return;
