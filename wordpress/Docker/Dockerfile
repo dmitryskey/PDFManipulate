@@ -6,7 +6,7 @@ ENV SSH_CONFIG "/etc/ssh/sshd_config"
 RUN apt-get update \
         && apt-get install -y --no-install-recommends dialog \
         && apt-get update \
-        && apt-get install -y --no-install-recommends openssh-server mc vim wget unzip mariadb-client \
+        && apt-get install -y --no-install-recommends openssh-server mc wget unzip mariadb-client \
         && echo "$SSH_PASSWD" | chpasswd \
         && sed -i 's/#Port 22/Port 2222/g' "$SSH_CONFIG" \
         && sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' "$SSH_CONFIG" \
@@ -16,8 +16,6 @@ RUN apt-get update \
 EXPOSE 80 443 2222
 
 COPY add-wp-plugins.sh /usr/local/bin
-COPY ../../build/smartformsondemand.tgz /tmp
+COPY smartformsondemand.tgz /tmp
 COPY Smart-Forms-On-Demand.svg /tmp
 COPY wp-config.php /tmp
-
-EXPOSE 80 443 2222
