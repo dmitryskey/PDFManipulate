@@ -1,19 +1,19 @@
-/// <reference path="Section3.ts" />
+import { USI9Section3 } from './Section3';
 
-// Global PDF.JS object references.
-declare let PDFViewerApplication: any;
-let eventBus = PDFViewerApplication.eventBus;
-let pdfViewer = PDFViewerApplication.pdfViewer;
+export class USI9 extends USI9Section3 {
+    private pdfApp: any;
 
-let renderedPages = [false, false, false];
-let form: USI9 = null;
+    constructor(pdfApp: any, webL10n: any)
+    {
+        super(webL10n);
+        this.pdfApp = pdfApp;
+    }
 
-class USI9 extends USI9Section3 {
     private prepareData() {
-        PDFViewerApplication.transformationService = '/?rest_route=/UpdateForm';
-        PDFViewerApplication.sessionID = this.urlParameter('session_id');
-        PDFViewerApplication.fieldsData = {
-            'file': PDFViewerApplication.url,
+        this.pdfApp.transformationService = '/?rest_route=/UpdateForm';
+        this.pdfApp.sessionID = this.urlParameter('session_id');
+        this.pdfApp.fieldsData = {
+            'file': this.pdfApp.url,
             'operation': 'f',
             'entries': []
         }
@@ -27,7 +27,7 @@ class USI9 extends USI9Section3 {
 
         $(`[${this.annotationName}]`).each((i, ctrl: HTMLInputElement) => {
             if ((!ctrl.disabled || readOnlyFieldsToFlat.indexOf(ctrl.getAttribute(this.annotationName)) > -1) && ctrl.value && ctrl.value !== '') {
-                PDFViewerApplication.fieldsData.entries.push({
+                this.pdfApp.fieldsData.entries.push({
                     'name': ctrl.getAttribute(this.annotationName),
                     'value': ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value,
                     'operation': 's'});
@@ -232,7 +232,9 @@ class USI9 extends USI9Section3 {
     }
 
     public renderSections() {
-        PDFForm.toolbarButtons.forEach((e) => {
+        let eventBus = this.pdfApp.eventBus;
+
+        this.toolbarButtons.forEach((e) => {
             let eventFuncs = eventBus.get(e);
             eventBus.remove(e)
             eventBus.on(e, () => {
@@ -247,23 +249,3 @@ class USI9 extends USI9Section3 {
         this.prepareSecondPage(this.prepareFirstPage(100));
     }
 }
-
-eventBus.on('textlayerrendered', (e: any) => {
-    renderedPages[e.pageNumber - 1] = true;
-
-    if (e.pageNumber == 1 && !renderedPages[1]) {
-        pdfViewer.getPageView(1);
-        return;
-    }
-
-    // if refresh is done while page = 2 or 3 load the first page
-    if (e.pageNumber >= 2 && !renderedPages[0]) {
-        pdfViewer.getPageView(0);
-        return;
-    }
-
-    if (renderedPages[0] && renderedPages[1] && form == null) {
-        form = new USI9();
-        form.renderSections();
-    }
-});

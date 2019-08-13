@@ -1,22 +1,26 @@
-/// <reference path="TranslatorSection.ts" />
+import { USI9SupplementTranslator } from './TranslatorSection';
 
-// Global PDF.JS object references.
-declare var PDFViewerApplication: any;
-let eventBus = PDFViewerApplication.eventBus;
+export class USI9Supplement extends USI9SupplementTranslator {
+    private pdfApp: any;
 
-class USI9Supplement extends USI9SupplementTranslator {
+    constructor(pdfApp: any, webL10n: any)
+    {
+        super(webL10n);
+        this.pdfApp = pdfApp;
+    }
+
     private prepareData() {
-        PDFViewerApplication.transformationService = '/?rest_route=/UpdateForm';
-        PDFViewerApplication.sessionID = this.urlParameter('session_id');
-        PDFViewerApplication.fieldsData = {
-            'file': PDFViewerApplication.url,
+        this.pdfApp.transformationService = '/?rest_route=/UpdateForm';
+        this.pdfApp.sessionID = this.urlParameter('session_id');
+        this.pdfApp.fieldsData = {
+            'file': this.pdfApp.url,
             'operation': 'f',
             'entries': []
         }
 
         $(`[${this.annotationName}]`).each((i, ctrl: HTMLInputElement) => {
             if (!ctrl.disabled && ctrl.value && ctrl.value !== '') {
-                PDFViewerApplication.fieldsData.entries.push({
+                this.pdfApp.fieldsData.entries.push({
                     'name': ctrl.getAttribute(this.annotationName),
                     'value': ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value,
                     'operation': 's'});
@@ -76,7 +80,9 @@ class USI9Supplement extends USI9SupplementTranslator {
     }
 
     public renderSections() {
-        PDFForm.toolbarButtons.forEach((e) => {
+        let eventBus = this.pdfApp.eventBus;
+
+        this.toolbarButtons.forEach((e) => {
             let eventFuncs = eventBus.get(e);
             eventBus.remove(e)
             eventBus.on(e, () => {
@@ -91,8 +97,3 @@ class USI9Supplement extends USI9SupplementTranslator {
         this.prepareFirstPage();
     }
 }
-
-eventBus.on('textlayerrendered', () => {
-    var form = new USI9Supplement();
-    form.renderSections();
-});

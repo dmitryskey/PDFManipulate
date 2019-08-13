@@ -1,6 +1,6 @@
-/// <reference path="Section2.ts" />
+import { USI9Section2 } from './Section2';
 
-class USI9Section3 extends USI9Section2 {
+export class USI9Section3 extends USI9Section2 {
     protected renderSection3(
         tabIndex: number,
         lastName: JQuery<HTMLElement>,

@@ -1,47 +1,56 @@
 {
-  "name": "SmartFormsOnDemand",
+  "name": "smarti9",
   "version": "0.0.1",
-  "description": "SmartForms-on-Demand",
+  "description": "Smart I-9",
   "author": "Dmitry Kataev",
   "license": "??",
   "bugs": "???",
-  "homepage": "???",
+  "homepage": "https://www.smarti9.org",
   "repository": {
     "type": "git",
     "url": "https://github.com/cinderjav/PDFManipulate.git"
   },
   "devDependencies": {
-    "@types/jquery": "^3.3.29",
+    "@types/jasmine": "^3.3.15",
+    "@types/jquery": "^3.3.30",
     "@types/jqueryui": "^1.12.7",
     "asposepdfcloud": "^1.0.2",
     "assert": "^1.5.0",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "base-64": "^0.1.0",
-    "browserify": "^16.2.3",
-    "eslint": "^4.5.0",
-    "eslint-plugin-jquery": "^1.5.0",
-    "express": "^4.17.0",
+    "browserify": "^16.3.0",
+    "eslint": "^5.4.1",
+    "eslint-plugin-jquery": "^1.5.1",
+    "express": "^4.17.1",
     "fs-extra": "^4.0.1",
     "gulp": "^4.0.2",
     "gulp-typescript": "^5.0.1",
+    "jasmine": "^3.4.0",
+    "jasmine-core": "^3.4.0",
+    "jasmine-ts": "^0.3.0",
     "jquery": "^3.4.1",
     "jwt-simple": "^0.5.6",
     "log4js": "^3.0.6",
-    "mariadb": "^2.0.5",
+    "mariadb": "^2.1.0",
     "md5": "^2.2.1",
     "moment": "^2.24.0",
     "net": "^1.0.2",
     "path": "^0.12.7",
+    "ts-node": "^8.3.0",
     "tsify": "^3.0.1",
     "typescript": "^2.4.2",
     "uuid": "^3.1.0",
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
-    "@types/bootstrap": "^4.3.0",
+    "@types/bootstrap": "^4.3.1",
     "autorest": "^2.0.4283",
+    "blob": "0.0.5",
     "popper.js": "^1.15.0",
-    "sqlite3": "^4.0.8"
+    "sqlite3": "^4.0.9"
+  },
+  "scripts": {
+    "test": "ts-node node_modules/jasmine/bin/jasmine"
   }
 }

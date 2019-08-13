@@ -2,7 +2,7 @@
     "compilerOptions": {
         "moduleResolution": "node",
         "module": "amd",
-        "target": "es5",
+        "target": "es6",
         "outFile": "../../src/US I9 Supplement.js",
         "removeComments": true,
         "noImplicitAny": true,
@@ -15,8 +15,9 @@
     },
     "files": [
         "Fields.ts",
-        "PDFForm.ts",
+        "../USI9/PDFForm.ts",
         "TranslatorSection.ts",
-        "USI9Supplement.ts"
+        "USI9Supplement.ts",
+        "Init.ts"
     ],
 }

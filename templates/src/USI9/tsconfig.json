@@ -2,7 +2,7 @@
     "compilerOptions": {
         "moduleResolution": "node",
         "module": "amd",
-        "target": "es5",
+        "target": "es6",
         "outFile": "../../src/US I9.js",
         "removeComments": true,
         "noImplicitAny": true,
@@ -19,6 +19,7 @@
         "Section1.ts",
         "Section2.ts",
         "TranslatorSection.ts",
-        "USI9.ts"
+        "USI9.ts",
+        "Init.ts"
     ]
 }

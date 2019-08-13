@@ -1,6 +1,6 @@
-/// <reference path="TranslatorSection.ts" />
+import { USI9Translator } from './TranslatorSection';
 
-class USI9Section2 extends USI9Translator {
+export class USI9Section2 extends USI9Translator {
     private validationExpressionProp = 'validationexpression';
     private validationMessageProp = 'validationmessage';
     private freeTextProp = 'freeText';

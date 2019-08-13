@@ -1,6 +1,6 @@
-/// <reference path="PDFForm.ts" />
+import { PDFForm } from '../USI9/PDFForm';
 
-class USI9SupplementFields extends PDFForm {
+export class USI9SupplementFields extends PDFForm {
     //region "Section 1 Personal data Fields"
     protected _lastName: JQuery<HTMLElement>;
     protected _lastNameHelp: JQuery<HTMLElement>;

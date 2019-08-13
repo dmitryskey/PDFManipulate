@@ -13,5 +13,5 @@ require.config({
 });
 
 if ('templateid' in params) {
-    require(['/templates/' + params['templateid'] + '.js']);
+    require(['/templates/' + params['templateid'] + '.js'], () => require(['Init']));
 }

@@ -1,6 +1,6 @@
-/// <reference path="Fields.ts" />
+import { USI9Fields } from './Fields';
 
-class USI9Section1 extends USI9Fields {
+export class USI9Section1 extends USI9Fields {
     private renderNameAndAddress(
         tabIndex: number,
         lastName: JQuery<HTMLElement>,
@@ -371,7 +371,7 @@ class USI9Section1 extends USI9Fields {
             this._('employeedatehelp.caption'),
             this._('employeedatehelp.text')
         );
-            
+
         return tabIndex;
     }
 

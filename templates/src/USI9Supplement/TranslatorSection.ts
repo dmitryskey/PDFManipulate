@@ -1,6 +1,6 @@
-/// <reference path="Fields.ts" />
+import { USI9SupplementFields } from './Fields'
 
-class USI9SupplementTranslator extends USI9SupplementFields {
+export class USI9SupplementTranslator extends USI9SupplementFields {
     protected renderTranslatorSection(
         lastName: JQuery<HTMLElement>,
         lastNameHelp: JQuery<HTMLElement>,
