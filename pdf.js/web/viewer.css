@@ -29,8 +29,7 @@
   position: absolute;
   white-space: pre;
   cursor: text;
-  -webkit-transform-origin: 0% 0%;
-          transform-origin: 0% 0%;
+  transform-origin: 0% 0%;
 }
 
 .textLayer .highlight {
@@ -142,8 +141,7 @@
   border-radius: 50%;
   position: absolute;
   left: 50%;
-  -webkit-transform: translate(-50%);
-          transform: translate(-50%);
+  transform: translate(-50%);
 }
 
 .annotationLayer .choiceWidgetAnnotation select option {
@@ -260,8 +258,7 @@
   content: '▼';
   right: 0;
   top: 60%;
-  -webkit-transform: translate(0, -60%);
-          transform: translate(0, -60%);
+  transform: translate(0, -60%);
   position: absolute;
 }
 
@@ -304,8 +301,7 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  -webkit-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%); 
+  transform: translate(-50%, -50%); 
   text-align: center;
   width: 100%;
   height: 100%;
@@ -314,8 +310,7 @@
 
 .annotationLayer .buttonWidgetAnnotation.checkBox.check input:checked + span,
 .annotationLayer .buttonWidgetAnnotation.radioButton.check input:checked + span {
-  -webkit-transform: translate(-50%, -40%);
-          transform: translate(-50%, -40%);
+  transform: translate(-50%, -40%);
 }
 
 .annotationLayer .popupWrapper {
@@ -1043,8 +1038,7 @@ html[dir='ltr'] .doorHangerRight:before {
 #toolbarViewerMiddle {
   position: absolute;
   left: 50%;
-  -webkit-transform: translateX(-50%);
-          transform: translateX(-50%);
+  transform: translateX(-50%);
 }
 
 html[dir='ltr'] #toolbarViewerLeft,
@@ -2161,14 +2155,12 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 @media screen and (-webkit-min-device-pixel-ratio: 1.1), screen and (min-resolution: 1.1dppx) {
   /* Rules for Retina screens */
   .toolbarButton::before {
-    -webkit-transform: scale(0.5);
-            transform: scale(0.5);
+    transform: scale(0.5);
     top: -5px;
   }
 
   .secondaryToolbarButton::before {
-    -webkit-transform: scale(0.5);
-            transform: scale(0.5);
+    transform: scale(0.5);
     top: -4px;
   }
 
@@ -2342,8 +2334,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
   }
 
   .outlineItemToggler::before {
-    -webkit-transform: scale(0.5);
-            transform: scale(0.5);
+    transform: scale(0.5);
     top: -1px;
     content: url(images/treeitem-expanded@2x.png);
   }
@@ -2437,8 +2428,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
     margin: auto;
     left: auto;
     position: inherit;
-    -webkit-transform: none;
-            transform: none;
+    transform: none;
   }
 }
 
