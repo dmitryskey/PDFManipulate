@@ -645,7 +645,7 @@ let server = app.listen(8305, () => {
     // fs.emptyDir('data');
 
     // Where to serve static content
-    app.use('/pdf.js', express.static(path.join(__dirname, 'pdf.js')));
+    app.use('/pdf.js', express.static(path.join(__dirname, 'pdf.js/build/generic')));
     app.use('/ckeditor', express.static(path.join(__dirname, 'ckeditor')));
     app.use('/data', express.static(path.join(__dirname, 'data')));
     app.use('/templates', express.static(path.join(__dirname, 'templates/src')));

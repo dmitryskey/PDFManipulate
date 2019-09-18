@@ -1,19 +1,8 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var PDFForm = (function () {
-        function PDFForm() {
-            var _this = this;
+    class PDFForm {
+        constructor(webL10n) {
             this.helpIconUrl = '/data/help.svg';
             this.nameFormat = /^[A-Za-z ']+$/;
             this.nameInitialFormat = /^[A-Za-z]{1}$/;
@@ -48,18 +37,19 @@ define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
             this.backSpaceCode = 'Backspace';
             this.parentProp = 'parent';
             this.toolbarButtons = ['print', 'download'];
-            var monthNames = [];
-            var monthNamesShort = [];
-            var dayNames = [];
-            var dayNamesShort = [];
-            var dayNamesMin = [];
-            $.each(JSON.parse(this._('monthNames')), function (index, value) {
+            this.webL10n = webL10n;
+            let monthNames = [];
+            let monthNamesShort = [];
+            let dayNames = [];
+            let dayNamesShort = [];
+            let dayNamesMin = [];
+            $.each(JSON.parse(this._('monthNames')), (index, value) => {
                 monthNamesShort.push(index);
                 monthNames.push(value);
             });
-            $.each(JSON.parse(this._('dayNames')), function (index, value) {
+            $.each(JSON.parse(this._('dayNames')), (index, value) => {
                 dayNamesMin.push(index);
-                $.each(value, function (i, v) {
+                $.each(value, (i, v) => {
                     dayNamesShort.push(i);
                     dayNames.push(v);
                 });
@@ -81,50 +71,45 @@ define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
                 showMonthAfterYear: false,
                 yearSuffix: ''
             });
-            $('body').mouseup(function (e) {
-                var popover = $('.popover');
-                if (!popover.is(e.target) && popover.has(e.target).length === 0 && popover.prop(_this.parentProp) &&
-                    popover.prop(_this.parentProp) !== e.target) {
-                    $(popover.prop(_this.parentProp)).popover('hide').removeProp(_this.parentProp);
+            $('body').mouseup(e => {
+                let popover = $('.popover');
+                if (!popover.is(e.target) && popover.has(e.target).length === 0 && popover.prop(this.parentProp) &&
+                    popover.prop(this.parentProp) !== e.target) {
+                    $(popover.prop(this.parentProp)).popover('hide').removeProp(this.parentProp);
                 }
             });
         }
-        PDFForm.prototype._ = function (t) {
-            return document.webL10n.get(t).replace('#', '&#35;');
-        };
-        PDFForm.prototype.selectCheckmark = function (ctrl, arr) {
-            for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
-                var a = arr_1[_i];
+        _(t) {
+            return this.webL10n ? this.webL10n.get(t).replace('#', '&#35;') : t;
+        }
+        selectCheckmark(ctrl, arr) {
+            for (var a of arr) {
                 if (a.attr(this.annotationName) !== ctrl.attr(this.annotationName)) {
                     a.prop('checked', false);
                     a.parent().children('span').text('');
                 }
             }
-        };
-        PDFForm.prototype.setCombolistValue = function (ctrl, val) {
+        }
+        setCombolistValue(ctrl, val) {
             var options = ctrl.parent().children().filter('.combo-content');
-            options.children().filter("[value='" + val + "']").each(function (index, value) {
+            options.children().filter(`[value='${val}']`).each((index, value) => {
                 value.onclick(null);
             });
-        };
-        PDFForm.prototype.setCombolistText = function (ctrl, val, txt) {
+        }
+        setCombolistText(ctrl, val, txt) {
             var options = ctrl.parent().children().filter('.combo-content');
-            options.children().filter("[value='" + val + "']").html(txt);
-        };
-        PDFForm.prototype.assignCombolistEventHandler = function (ctrl, f) {
+            options.children().filter(`[value='${val}']`).html(txt);
+        }
+        assignCombolistEventHandler(ctrl, f) {
             ctrl.parent().children().filter('.combo-content').click(f);
-        };
-        PDFForm.prototype.renderControl = function (ctrl, text, onFocus, placement) {
-            if (onFocus === void 0) { onFocus = true; }
-            if (placement === void 0) { placement = 'bottom'; }
+        }
+        renderControl(ctrl, text, onFocus = true, placement = 'bottom') {
             return ctrl.popover({ html: true, content: text, trigger: onFocus ? 'focus' : 'hover', placement: placement });
-        };
-        PDFForm.prototype.renderHelpIcon = function (ctrl, title, text, maxWidth) {
-            var _this = this;
-            if (maxWidth === void 0) { maxWidth = '30'; }
-            var tag = 'img';
+        }
+        renderHelpIcon(ctrl, title, text, maxWidth = '30') {
+            const tag = 'img';
             return ctrl.parent().find(tag).length > 0 ? ctrl : ctrl.hide().parent()
-                .append("<" + tag + " src='" + this.helpIconUrl + "' class='icon' />").children(tag)
+                .append(`<${tag} src='${this.helpIconUrl}' class='icon' />`).children(tag)
                 .tooltip({ title: title, placement: 'left' })
                 .popover({
                 html: true,
@@ -132,30 +117,30 @@ define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
                 content: decodeURIComponent(text),
                 trigger: 'click'
             })
-                .click(function (e) {
+                .click((e) => {
                 $(e.target).tooltip('hide');
-                $('.popover').css('max-width', maxWidth + "%").prop(_this.parentProp, e.target);
+                $('.popover').css('max-width', `${maxWidth}%`).prop(this.parentProp, e.target);
             });
-        };
-        PDFForm.prototype.urlParameter = function (name) {
-            var results = new RegExp("[?&]" + name + "=([^&#]*)").exec(window.location.href);
+        }
+        urlParameter(name) {
+            var results = new RegExp(`[\?&]${name}=([^&#]*)`).exec(window.location.href);
             if (results === null) {
                 return null;
             }
             else {
                 return decodeURI(results[1]) || 0;
             }
-        };
-        PDFForm.prototype.validateForm = function (ctrl, errorMessages) {
+        }
+        validateForm(ctrl, errorMessages) {
             if (errorMessages.length > 0) {
-                var errorMessage_1 = this._('error.header') + "<br />";
-                errorMessages.forEach(function (e) {
-                    errorMessage_1 += " - " + e + "<br />";
+                let errorMessage = `${this._('error.header')}<br />`;
+                errorMessages.forEach(e => {
+                    errorMessage += ` - ${e}<br />`;
                 });
                 ctrl.popover({
                     html: true,
                     title: this._('validation'),
-                    content: errorMessage_1,
+                    content: errorMessage,
                     trigger: 'click',
                     placement: 'bottom'
                 }).popover('show');
@@ -166,34 +151,30 @@ define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
                 ctrl.popover('dispose');
                 return true;
             }
-        };
-        return PDFForm;
-    }());
+        }
+    }
     exports.PDFForm = PDFForm;
 });
 define("USI9Supplement/Fields", ["require", "exports", "USI9/PDFForm"], function (require, exports, PDFForm_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var USI9SupplementFields = (function (_super) {
-        __extends(USI9SupplementFields, _super);
-        function USI9SupplementFields() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.paramExistsMsg = _this._('parameter.exists');
-            _this.paramLengthMsg = _this._('parameter.length');
-            _this.paramFormatMsg = _this._('parameter.format');
-            _this.paramMaxValueMsg = _this._('parameter.max');
-            _this.paramMinValueMsg = _this._('parameter.min');
-            _this.dateFormatMsg = _this._('date.format');
-            _this.invalidFieldClass = 'invalid';
-            return _this;
+    class USI9SupplementFields extends PDFForm_1.PDFForm {
+        constructor() {
+            super(...arguments);
+            this.paramExistsMsg = this._('parameter.exists');
+            this.paramLengthMsg = this._('parameter.length');
+            this.paramFormatMsg = this._('parameter.format');
+            this.paramMaxValueMsg = this._('parameter.max');
+            this.paramMinValueMsg = this._('parameter.min');
+            this.dateFormatMsg = this._('date.format');
+            this.invalidFieldClass = 'invalid';
         }
-        USI9SupplementFields.prototype.validateDateRange = function (f, parameter, errorMessages, prefix) {
-            if (prefix === void 0) { prefix = ''; }
+        validateDateRange(f, parameter, errorMessages, prefix = '') {
             if (!f) {
                 return true;
             }
-            var maxDate = f.datepicker('option', 'maxDate');
-            var minDate = f.datepicker('option', 'minDate');
+            let maxDate = f.datepicker('option', 'maxDate');
+            let minDate = f.datepicker('option', 'minDate');
             if (maxDate) {
                 maxDate.setHours(0, 0, 0, 0);
             }
@@ -216,11 +197,10 @@ define("USI9Supplement/Fields", ["require", "exports", "USI9/PDFForm"], function
                 return true;
             }
             return false;
-        };
-        USI9SupplementFields.prototype.validateTextField = function (f, parameter, regExs, validateIfEmpty, errorMessages, prefix) {
-            if (prefix === void 0) { prefix = ''; }
-            var errorFlag = true;
-            var length = f.prop('maxLength') ? f.prop('maxLength') : 0;
+        }
+        validateTextField(f, parameter, regExs, validateIfEmpty, errorMessages, prefix = '') {
+            let errorFlag = true;
+            let length = f.prop('maxLength') ? f.prop('maxLength') : 0;
             if (!f || !f.val() || (f.attr(this.annotationRequired) && f.val().trim() === '')) {
                 errorMessages.push(this.paramExistsMsg
                     .replace('${prefix}', prefix)
@@ -233,8 +213,8 @@ define("USI9Supplement/Fields", ["require", "exports", "USI9/PDFForm"], function
                     .replace('${length}', length.toString()));
             }
             else if ((f && f.val() !== '' || validateIfEmpty) && regExs.length > 0) {
-                var validFlag = false;
-                for (var i in regExs) {
+                let validFlag = false;
+                for (let i in regExs) {
                     if (f && regExs[i].test(f.val())) {
                         validFlag = true;
                         break;
@@ -257,32 +237,24 @@ define("USI9Supplement/Fields", ["require", "exports", "USI9/PDFForm"], function
                 f.toggleClass(this.invalidFieldClass, errorFlag);
             }
             return !errorFlag;
-        };
-        return USI9SupplementFields;
-    }(PDFForm_1.PDFForm));
+        }
+    }
     exports.USI9SupplementFields = USI9SupplementFields;
 });
 define("USI9Supplement/TranslatorSection", ["require", "exports", "USI9Supplement/Fields"], function (require, exports, Fields_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var USI9SupplementTranslator = (function (_super) {
-        __extends(USI9SupplementTranslator, _super);
-        function USI9SupplementTranslator() {
-            return _super !== null && _super.apply(this, arguments) || this;
-        }
-        USI9SupplementTranslator.prototype.renderTranslatorSection = function (lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, sgnTranslator, sgnTranslatorHelp, translatorDate, translatorDateHelp, translatorLastName, translatorLastNameHelp, translatorFirstName, translatorFirstNameHelp, translatorAddress, translatorAddressHelp, translatorCity, translatorCityHelp, translatorState, translatorStateHelp, translatorZip, translatorZipHelp, sgnTranslator2, translatorDate2, translatorLastName2, translatorFirstName2, translatorAddress2, translatorCity2, translatorState2, translatorZip2, sgnTranslator3, translatorDate3, translatorLastName3, translatorFirstName3, translatorAddress3, translatorCity3, translatorState3, translatorZip3, sgnTranslator4, translatorDate4, translatorLastName4, translatorFirstName4, translatorAddress4, translatorCity4, translatorState4, translatorZip4) {
-            var _this = this;
+    class USI9SupplementTranslator extends Fields_1.USI9SupplementFields {
+        renderTranslatorSection(lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, sgnTranslator, sgnTranslatorHelp, translatorDate, translatorDateHelp, translatorLastName, translatorLastNameHelp, translatorFirstName, translatorFirstNameHelp, translatorAddress, translatorAddressHelp, translatorCity, translatorCityHelp, translatorState, translatorStateHelp, translatorZip, translatorZipHelp, sgnTranslator2, translatorDate2, translatorLastName2, translatorFirstName2, translatorAddress2, translatorCity2, translatorState2, translatorZip2, sgnTranslator3, translatorDate3, translatorLastName3, translatorFirstName3, translatorAddress3, translatorCity3, translatorState3, translatorZip3, sgnTranslator4, translatorDate4, translatorLastName4, translatorFirstName4, translatorAddress4, translatorCity4, translatorState4, translatorZip4) {
             $('a').prop('target', '_blank');
             this._lastName = this.renderControl(lastName, this._('lastnamehelp.tooltip'))
-                .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
+                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
             this._lastNameHelp = this.renderHelpIcon(lastNameHelp, this._('lastnamehelp.caption'), this._('lastnamehelp.text'));
             this._firstName = this.renderControl(firstName, this._('firstnamehelp.tooltip'))
-                .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
+                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
             this._firstNameHelp = this.renderHelpIcon(firstNameHelp, this._('firstnamehelp.caption'), this._('firstnamehelp.text'));
             this._middleInitial = this.renderControl(middleInitial, this._('middleinitialhelp.tooltip'))
-                .keypress(function (e) {
-                return _this.nameFormat.test(e.key) || _this.NAFormat.test(e.key) || e.key === _this.backSpaceCode;
-            });
+                .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
             this._middleInitialHelp = this.renderHelpIcon(middleInitialHelp, this._('middleinitialhelp.caption'), this._('middleinitialhelp.text'));
             this._sgnTranslator = this.renderControl(sgnTranslator, this._('sgntranslator.tooltip'));
             this._sgnTranslatorHelp = this.renderHelpIcon(sgnTranslatorHelp, this._('sgntranslatorhelp.caption'), this._('sgntranslatorhelp.text'));
@@ -290,10 +262,10 @@ define("USI9Supplement/TranslatorSection", ["require", "exports", "USI9Supplemen
                 .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
             this._translatorDateHelp = this.renderHelpIcon(translatorDateHelp, this._('translatordatehelp.caption'), this._('translatordatehelp.text'));
             this._translatorLastName = this.renderControl(translatorLastName, this._('translatorlastname.tooltip'))
-                .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
+                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
             this._translatorLastNameHelp = this.renderHelpIcon(translatorLastNameHelp, this._('translatorlastnamehelp.caption'), this._('translatorlastnamehelp.text'));
             this._translatorFirstName = this.renderControl(translatorFirstName, this._('translatorfirstname.tooltip'))
-                .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
+                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
             this._translatorFirstNameHelp = this.renderHelpIcon(translatorFirstNameHelp, this._('translatorfirstnamehelp.caption'), this._('translatorfirstnamehelp.text'));
             this._translatorAddress = this.renderControl(translatorAddress, this._('translatoraddress.tooltip'));
             this._translatorAddressHelp = this.renderHelpIcon(translatorAddressHelp, this._('translatoraddresshelp.caption'), this._('translatoraddresshelp.text'));
@@ -303,57 +275,57 @@ define("USI9Supplement/TranslatorSection", ["require", "exports", "USI9Supplemen
             this.setCombolistText(this._translatorState, ' ', this.blankItem);
             this._translatorStateHelp = this.renderHelpIcon(translatorStateHelp, this._('translatorstatehelp.caption'), this._('translatorstatehelp.text'));
             this._translatorZip = this.renderControl(translatorZip, this._('translatorzip.tooltip'))
-                .keypress(function (e) { return _this.zipFormat.test(e.key) || e.key === _this.backSpaceCode; });
+                .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode);
             this._translatorZipHelp = this.renderHelpIcon(translatorZipHelp, this._('translatorziphelp.caption'), this._('translatorziphelp.text'));
             this._sgnTranslator2 = this.renderControl(sgnTranslator2, this._('sgntranslator.tooltip'));
             this._translatorDate2 = this.renderControl(translatorDate2, this._('translatordate.tooltip'), true, 'left')
                 .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
             this._translatorLastName2 = this.renderControl(translatorLastName2, this._('translatorlastname.tooltip'))
-                .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
+                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
             this._translatorFirstName2 = this.renderControl(translatorFirstName2, this._('translatorfirstname.tooltip'))
-                .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
+                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
             this._translatorAddress2 = this.renderControl(translatorAddress2, this._('translatoraddress.tooltip'));
             this._translatorCity2 = this.renderControl(translatorCity2, this._('translatorcity.tooltip'));
             this._translatorState2 = this.renderControl(translatorState2, this._('translatorstate.tooltip'), true, 'left');
             this.setCombolistText(this._translatorState2, ' ', this.blankItem);
             this._translatorZip2 = this.renderControl(translatorZip2, this._('translatorzip.tooltip'))
-                .keypress(function (e) { return _this.zipFormat.test(e.key) || e.key === _this.backSpaceCode; });
+                .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode);
             this._sgnTranslator3 = this.renderControl(sgnTranslator3, this._('sgntranslator.tooltip'));
             this._translatorDate3 = this.renderControl(translatorDate3, this._('translatordate.tooltip'), true, 'left')
                 .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
             this._translatorLastName3 = this.renderControl(translatorLastName3, this._('translatorlastname.tooltip'))
-                .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
+                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
             this._translatorFirstName3 = this.renderControl(translatorFirstName3, this._('translatorfirstname.tooltip'))
-                .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
+                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
             this._translatorAddress3 = this.renderControl(translatorAddress3, this._('translatoraddress.tooltip'));
             this._translatorCity3 = this.renderControl(translatorCity3, this._('translatorcity.tooltip'));
             this._translatorState3 = this.renderControl(translatorState3, this._('translatorstate.tooltip'), true, 'left');
             this.setCombolistText(this._translatorState3, ' ', this.blankItem);
             this._translatorZip3 = this.renderControl(translatorZip3, this._('translatorzip.tooltip'))
-                .keypress(function (e) { return _this.zipFormat.test(e.key) || e.key === _this.backSpaceCode; });
+                .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode);
             this._sgnTranslator4 = this.renderControl(sgnTranslator4, this._('sgntranslator.tooltip'));
             this._translatorDate4 = this.renderControl(translatorDate4, this._('translatordate.tooltip'), true, 'left')
                 .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
             this._translatorLastName4 = this.renderControl(translatorLastName4, this._('translatorlastname.tooltip'))
-                .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
+                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
             this._translatorFirstName4 = this.renderControl(translatorFirstName4, this._('translatorfirstname.tooltip'))
-                .keypress(function (e) { return _this.nameFormat.test(e.key) || e.key === _this.backSpaceCode; });
+                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
             this._translatorAddress4 = this.renderControl(translatorAddress4, this._('translatoraddress.tooltip'));
             this._translatorCity4 = this.renderControl(translatorCity4, this._('translatorcity.tooltip'));
             this._translatorState4 = this.renderControl(translatorState4, this._('translatorstate.tooltip'), true, 'left');
             this.setCombolistText(this._translatorState4, ' ', this.blankItem);
             this._translatorZip4 = this.renderControl(translatorZip4, this._('translatorzip.tooltip'))
-                .keypress(function (e) { return _this.zipFormat.test(e.key) || e.key === _this.backSpaceCode; });
-        };
-        USI9SupplementTranslator.prototype.validateFields = function () {
-            var errorMessages = [];
+                .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode);
+        }
+        validateFields() {
+            let errorMessages = [];
             if (this._middleInitial.val().trim() === '') {
                 this._middleInitial.val(this.na);
             }
             this.validateTextField(this._lastName, this._('name.last'), [this.nameFormat], false, errorMessages);
             this.validateTextField(this._firstName, this._('name.first'), [this.nameFormat], false, errorMessages);
             this.validateTextField(this._middleInitial, this._('name.middleinitial'), [this.nameInitialFormat, this.NAString], false, errorMessages);
-            var prefix = this._('translator.prefix') + ' 1: ';
+            let prefix = this._('translator.prefix') + ' 1: ';
             this.validateTextField(this._translatorDate, this._('date.sgntranslator'), [this.dateFormat], true, errorMessages, prefix);
             this.validateTextField(this._translatorLastName, this._('translator.lastname'), [this.nameFormat], true, errorMessages, prefix);
             this.validateTextField(this._translatorFirstName, this._('translator.firstname'), [this.nameFormat], true, errorMessages, prefix);
@@ -410,23 +382,19 @@ define("USI9Supplement/TranslatorSection", ["require", "exports", "USI9Supplemen
                 this.validateTextField(this._translatorZip4, this._('translator.zip'), [this.zipNumberFormat], true, errorMessages, prefix);
             }
             return errorMessages;
-        };
-        return USI9SupplementTranslator;
-    }(Fields_1.USI9SupplementFields));
+        }
+    }
     exports.USI9SupplementTranslator = USI9SupplementTranslator;
 });
 define("USI9Supplement/USI9Supplement", ["require", "exports", "USI9Supplement/TranslatorSection"], function (require, exports, TranslatorSection_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var USI9Supplement = (function (_super) {
-        __extends(USI9Supplement, _super);
-        function USI9Supplement(pdfApp) {
-            var _this = _super.call(this) || this;
-            _this.pdfApp = pdfApp;
-            return _this;
+    class USI9Supplement extends TranslatorSection_1.USI9SupplementTranslator {
+        constructor(pdfApp, webL10n) {
+            super(webL10n);
+            this.pdfApp = pdfApp;
         }
-        USI9Supplement.prototype.prepareData = function () {
-            var _this = this;
+        prepareData() {
             this.pdfApp.transformationService = '/?rest_route=/UpdateForm';
             this.pdfApp.sessionID = this.urlParameter('session_id');
             this.pdfApp.fieldsData = {
@@ -434,44 +402,42 @@ define("USI9Supplement/USI9Supplement", ["require", "exports", "USI9Supplement/T
                 'operation': 'f',
                 'entries': []
             };
-            $("[" + this.annotationName + "]").each(function (i, ctrl) {
+            $(`[${this.annotationName}]`).each((i, ctrl) => {
                 if (!ctrl.disabled && ctrl.value && ctrl.value !== '') {
-                    _this.pdfApp.fieldsData.entries.push({
-                        'name': ctrl.getAttribute(_this.annotationName),
+                    this.pdfApp.fieldsData.entries.push({
+                        'name': ctrl.getAttribute(this.annotationName),
                         'value': ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value,
                         'operation': 's'
                     });
                 }
             });
-        };
-        USI9Supplement.prototype.prepareFirstPage = function () {
-            this.renderTranslatorSection($("[" + this.annotationName + "=LastName]"), $("[" + this.annotationName + "=LastNameHelp]"), $("[" + this.annotationName + "=FirstName]"), $("[" + this.annotationName + "=FirstNameHelp]"), $("[" + this.annotationName + "=MiddleInitial]"), $("[" + this.annotationName + "=MiddleInitialHelp]"), $("[" + this.annotationName + "=sgnTranslator]"), $("[" + this.annotationName + "=sgnTranslatorHelp]"), $("[" + this.annotationName + "=TranslatorDate]"), $("[" + this.annotationName + "=TranslatorDateHelp]"), $("[" + this.annotationName + "=TranslatorLastName]"), $("[" + this.annotationName + "=TranslatorLastNameHelp]"), $("[" + this.annotationName + "=TranslatorFirstName]"), $("[" + this.annotationName + "=TranslatorFirstNameHelp]"), $("[" + this.annotationName + "=TranslatorAddress]"), $("[" + this.annotationName + "=TranslatorAddressHelp]"), $("[" + this.annotationName + "=TranslatorCity]"), $("[" + this.annotationName + "=TranslatorCityHelp]"), $("[" + this.annotationName + "=TranslatorState]"), $("[" + this.annotationName + "=TranslatorStateHelp]"), $("[" + this.annotationName + "=TranslatorZip]"), $("[" + this.annotationName + "=TranslatorZipHelp]"), $("[" + this.annotationName + "=sgnTranslator2]"), $("[" + this.annotationName + "=TranslatorDate2]"), $("[" + this.annotationName + "=TranslatorLastName2]"), $("[" + this.annotationName + "=TranslatorFirstName2]"), $("[" + this.annotationName + "=TranslatorAddress2]"), $("[" + this.annotationName + "=TranslatorCity2]"), $("[" + this.annotationName + "=TranslatorState2]"), $("[" + this.annotationName + "=TranslatorZip2]"), $("[" + this.annotationName + "=sgnTranslator3]"), $("[" + this.annotationName + "=TranslatorDate3]"), $("[" + this.annotationName + "=TranslatorLastName3]"), $("[" + this.annotationName + "=TranslatorFirstName3]"), $("[" + this.annotationName + "=TranslatorAddress3]"), $("[" + this.annotationName + "=TranslatorCity3]"), $("[" + this.annotationName + "=TranslatorState3]"), $("[" + this.annotationName + "=TranslatorZip3]"), $("[" + this.annotationName + "=sgnTranslator4]"), $("[" + this.annotationName + "=TranslatorDate4]"), $("[" + this.annotationName + "=TranslatorLastName4]"), $("[" + this.annotationName + "=TranslatorFirstName4]"), $("[" + this.annotationName + "=TranslatorAddress4]"), $("[" + this.annotationName + "=TranslatorCity4]"), $("[" + this.annotationName + "=TranslatorState4]"), $("[" + this.annotationName + "=TranslatorZip4]"));
-        };
-        USI9Supplement.prototype.renderSections = function () {
-            var _this = this;
-            var eventBus = this.pdfApp.eventBus;
-            this.toolbarButtons.forEach(function (e) {
-                var eventFuncs = eventBus.get(e);
+        }
+        prepareFirstPage() {
+            this.renderTranslatorSection($(`[${this.annotationName}=LastName]`), $(`[${this.annotationName}=LastNameHelp]`), $(`[${this.annotationName}=FirstName]`), $(`[${this.annotationName}=FirstNameHelp]`), $(`[${this.annotationName}=MiddleInitial]`), $(`[${this.annotationName}=MiddleInitialHelp]`), $(`[${this.annotationName}=sgnTranslator]`), $(`[${this.annotationName}=sgnTranslatorHelp]`), $(`[${this.annotationName}=TranslatorDate]`), $(`[${this.annotationName}=TranslatorDateHelp]`), $(`[${this.annotationName}=TranslatorLastName]`), $(`[${this.annotationName}=TranslatorLastNameHelp]`), $(`[${this.annotationName}=TranslatorFirstName]`), $(`[${this.annotationName}=TranslatorFirstNameHelp]`), $(`[${this.annotationName}=TranslatorAddress]`), $(`[${this.annotationName}=TranslatorAddressHelp]`), $(`[${this.annotationName}=TranslatorCity]`), $(`[${this.annotationName}=TranslatorCityHelp]`), $(`[${this.annotationName}=TranslatorState]`), $(`[${this.annotationName}=TranslatorStateHelp]`), $(`[${this.annotationName}=TranslatorZip]`), $(`[${this.annotationName}=TranslatorZipHelp]`), $(`[${this.annotationName}=sgnTranslator2]`), $(`[${this.annotationName}=TranslatorDate2]`), $(`[${this.annotationName}=TranslatorLastName2]`), $(`[${this.annotationName}=TranslatorFirstName2]`), $(`[${this.annotationName}=TranslatorAddress2]`), $(`[${this.annotationName}=TranslatorCity2]`), $(`[${this.annotationName}=TranslatorState2]`), $(`[${this.annotationName}=TranslatorZip2]`), $(`[${this.annotationName}=sgnTranslator3]`), $(`[${this.annotationName}=TranslatorDate3]`), $(`[${this.annotationName}=TranslatorLastName3]`), $(`[${this.annotationName}=TranslatorFirstName3]`), $(`[${this.annotationName}=TranslatorAddress3]`), $(`[${this.annotationName}=TranslatorCity3]`), $(`[${this.annotationName}=TranslatorState3]`), $(`[${this.annotationName}=TranslatorZip3]`), $(`[${this.annotationName}=sgnTranslator4]`), $(`[${this.annotationName}=TranslatorDate4]`), $(`[${this.annotationName}=TranslatorLastName4]`), $(`[${this.annotationName}=TranslatorFirstName4]`), $(`[${this.annotationName}=TranslatorAddress4]`), $(`[${this.annotationName}=TranslatorCity4]`), $(`[${this.annotationName}=TranslatorState4]`), $(`[${this.annotationName}=TranslatorZip4]`));
+        }
+        renderSections() {
+            let eventBus = this.pdfApp.eventBus;
+            this.toolbarButtons.forEach((e) => {
+                let eventFuncs = eventBus.get(e);
                 eventBus.remove(e);
-                eventBus.on(e, function () {
-                    if (_this.validateForm($("#" + e), _super.prototype.validateFields.call(_this))) {
-                        _this.prepareData();
-                        eventFuncs.forEach(function (f) { return f(); });
+                eventBus.on(e, () => {
+                    if (this.validateForm($(`#${e}`), super.validateFields())) {
+                        this.prepareData();
+                        eventFuncs.forEach((f) => f());
                     }
                 });
             });
             this.prepareFirstPage();
-        };
-        return USI9Supplement;
-    }(TranslatorSection_1.USI9SupplementTranslator));
+        }
+    }
     exports.USI9Supplement = USI9Supplement;
 });
 define("USI9Supplement/Init", ["require", "exports", "USI9Supplement/USI9Supplement"], function (require, exports, USI9Supplement_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var eventBus = PDFViewerApplication.eventBus;
-    eventBus.on('textlayerrendered', function () {
-        var form = new USI9Supplement_1.USI9Supplement(PDFViewerApplication);
+    let eventBus = PDFViewerApplication.eventBus;
+    eventBus.on('textlayerrendered', () => {
+        var form = new USI9Supplement_1.USI9Supplement(PDFViewerApplication, document.webL10n);
         form.renderSections();
     });
 });
