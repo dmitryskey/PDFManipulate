@@ -3,7 +3,6 @@ define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
     Object.defineProperty(exports, "__esModule", { value: true });
     class PDFForm {
         constructor(webL10n) {
-            this.helpIconUrl = '/data/help.svg';
             this.nameFormat = /^[A-Za-z ']+$/;
             this.nameInitialFormat = /^[A-Za-z]{1}$/;
             this.stateFormat = /^[A-Z]{2,3}$/;
@@ -107,10 +106,12 @@ define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
             return ctrl.popover({ html: true, content: text, trigger: onFocus ? 'focus' : 'hover', placement: placement });
         }
         renderHelpIcon(ctrl, title, text, maxWidth = '30') {
-            const tag = 'img';
+            const tag = 'i';
             return ctrl.parent().find(tag).length > 0 ? ctrl : ctrl.hide().parent()
-                .append(`<${tag} src='${this.helpIconUrl}' class='icon' />`).children(tag)
-                .tooltip({ title: title, placement: 'left' })
+                .hover((e) => $(e.target).css('cursor', 'pointer'))
+                .append(`<${tag} class='fa fa-question-circle helpIcon'
+                style='font-size:${Math.ceil(ctrl.parent().height())}px' />`)
+                .children(tag).tooltip({ title: title, placement: 'left' })
                 .popover({
                 html: true,
                 title: decodeURIComponent(this._('help')),

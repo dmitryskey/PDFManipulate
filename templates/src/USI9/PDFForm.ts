@@ -1,6 +1,4 @@
 export class PDFForm {
-    private helpIconUrl: string = '/data/help.svg'
-
     protected nameFormat = /^[A-Za-z ']+$/;
     protected nameInitialFormat = /^[A-Za-z]{1}$/;
     protected stateFormat = /^[A-Z]{2,3}$/;
@@ -124,10 +122,12 @@ export class PDFForm {
 
     protected renderHelpIcon(ctrl: JQuery<HTMLElement>, title: string, text: string, maxWidth: string = '30')
         : JQuery<HTMLElement> {
-        const tag = 'img';
+        const tag = 'i';
         return ctrl.parent().find(tag).length > 0 ? ctrl : ctrl.hide().parent()
-            .append(`<${tag} src='${this.helpIconUrl}' class='icon' />`).children(tag)
-            .tooltip({ title: title, placement: 'left' })
+            .hover((e) => $(e.target).css('cursor', 'pointer'))
+            .append(`<${tag} class='fa fa-question-circle helpIcon'
+                style='font-size:${Math.ceil(ctrl.parent().height())}px' />`)
+            .children(tag).tooltip({ title: title, placement: 'left' })
             .popover({
                 html: true,
                 title: decodeURIComponent(this._('help')),
