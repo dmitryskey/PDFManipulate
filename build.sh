@@ -4,7 +4,7 @@ iTextService=./backgroundService/iTextService
 
 rm -R -f $p && mkdir -p $p && mkdir -p $p/data && mkdir -p $p/db && chmod -R 777 $p
 
-cd ./pdf.js && git pull && git checkout PDFManipulate && npm install && npm audit fix && gulp minified && cd ..
+git submodule init && git submodule update && cd ./pdf.js && git checkout PDFManipulate && npm install && npm audit fix && gulp minified && cd ..
 cp -R ./pdf.js/build/minified $p/pdf.js
 find $p/pdf.js -name *.js.map -type f -delete && find $p/pdf.js -name *.pdf -type f -delete
 
