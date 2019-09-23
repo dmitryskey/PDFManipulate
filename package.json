@@ -20,8 +20,6 @@
     "babel-preset-env": "^1.6.0",
     "base-64": "^0.1.0",
     "browserify": "^16.3.0",
-    "eslint": "^5.4.1",
-    "eslint-plugin-jquery": "^1.5.1",
     "express": "^4.17.1",
     "fs-extra": "^4.0.1",
     "gulp": "^4.0.2",
@@ -39,14 +37,17 @@
     "path": "^0.12.7",
     "ts-node": "^8.3.0",
     "tsify": "^3.0.1",
-    "typescript": "^2.4.2",
+    "typescript": "^2.9.2",
     "uuid": "^3.1.0",
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
     "@types/bootstrap": "^4.3.1",
+    "@typescript-eslint/eslint-plugin": "^2.3.1",
+    "@typescript-eslint/parser": "^2.3.1",
     "autorest": "^2.0.4283",
     "blob": "0.0.5",
+    "eslint": "^6.4.0",
     "popper.js": "^1.15.0",
     "sqlite3": "^4.0.9"
   },
