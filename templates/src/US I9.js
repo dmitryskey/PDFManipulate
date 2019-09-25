@@ -103,6 +103,7 @@ define("PDFForm", ["require", "exports"], function (require, exports) {
             ctrl.parent().children().filter('.combo-content').click(f);
         }
         renderControl(ctrl, text, onFocus = true, placement = 'bottom') {
+            ctrl.parent().children().filter('span').click(() => ctrl.popover('hide'));
             return ctrl.popover({ html: true, content: text, trigger: onFocus ? 'focus' : 'hover', placement: placement });
         }
         renderHelpIcon(ctrl, title, text, maxWidth = '30') {

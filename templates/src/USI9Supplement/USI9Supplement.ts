@@ -1,4 +1,4 @@
-import { USI9SupplementTranslator } from './TranslatorSection';
+import { USI9SupplementTranslator } from 'TranslatorSection';
 
 export class USI9Supplement extends USI9SupplementTranslator {
     private pdfApp: any;

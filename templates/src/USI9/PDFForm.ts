@@ -116,7 +116,12 @@ export class PDFForm {
         ctrl.parent().children().filter('.combo-content').click(f);
     }
 
-    protected renderControl(ctrl: JQuery<HTMLElement>, text: string, onFocus: boolean = true, placement: Bootstrap.Placement = 'bottom') : JQuery<HTMLElement> {
+    protected renderControl(
+        ctrl: JQuery<HTMLElement>,
+        text: string, onFocus: boolean = true,
+        placement: Bootstrap.Placement = 'bottom')
+         : JQuery<HTMLElement> {
+        ctrl.parent().children().filter('span').click(() => ctrl.popover('hide'));
         return ctrl.popover({ html: true, content: text, trigger: onFocus ? 'focus' : 'hover', placement: placement });
     }
 

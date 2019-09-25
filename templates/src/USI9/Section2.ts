@@ -1,4 +1,4 @@
-import { USI9Translator } from './TranslatorSection';
+import { USI9Translator } from 'TranslatorSection';
 
 export class USI9Section2 extends USI9Translator {
     private validationExpressionProp = 'validationexpression';

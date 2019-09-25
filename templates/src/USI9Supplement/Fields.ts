@@ -1,4 +1,4 @@
-import { PDFForm } from '../USI9/PDFForm';
+import { PDFForm } from 'PDFForm';
 
 export class USI9SupplementFields extends PDFForm {
     //region "Section 1 Personal data Fields"

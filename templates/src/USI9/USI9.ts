@@ -1,4 +1,4 @@
-import { USI9Section3 } from './Section3';
+import { USI9Section3 } from 'Section3';
 
 export class USI9 extends USI9Section3 {
     private pdfApp: any;

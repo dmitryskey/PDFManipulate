@@ -1,4 +1,4 @@
-import { USI9Section2 } from './Section2';
+import { USI9Section2 } from 'Section2';
 
 export class USI9Section3 extends USI9Section2 {
     protected renderSection3(

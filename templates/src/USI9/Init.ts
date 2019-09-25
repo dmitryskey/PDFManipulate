@@ -1,4 +1,4 @@
-import { USI9 } from './USI9';
+import { USI9 } from 'USI9';
 
 // Global PDF.JS object references.
 declare let PDFViewerApplication: any;

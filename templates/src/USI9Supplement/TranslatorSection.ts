@@ -1,4 +1,4 @@
-import { USI9SupplementFields } from './Fields'
+import { USI9SupplementFields } from 'Fields'
 
 export class USI9SupplementTranslator extends USI9SupplementFields {
     protected renderTranslatorSection(

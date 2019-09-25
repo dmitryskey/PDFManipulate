@@ -13,5 +13,6 @@ require.config({
 });
 
 if ('templateid' in params) {
-    require(['/templates/' + params['templateid'] + '.js'], () => require(['Init']));
+    require(['/templates/' + params['templateid'] + '.js'], () => 
+            require([(params['templateid'].replace(/\s/g, '') + '/Init').replace('USI9/', '')]));
 }

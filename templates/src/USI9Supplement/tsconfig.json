@@ -1,5 +1,12 @@
 {
     "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "*": [
+              "*",
+              "../USI9/*"
+            ]
+          },
         "moduleResolution": "node",
         "module": "amd",
         "target": "es6",
