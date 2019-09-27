@@ -30,13 +30,13 @@ define("PDFForm", ["require", "exports"], function (require, exports) {
             this.annotationName = 'annotation-name';
             this.annotationRequired = 'annotation-required';
             this.annotationNext = 'annotation-next';
-            this.na = this._('NA');
             this.space = ' ';
             this.blankItem = '&nbsp;';
             this.backSpaceCode = 'Backspace';
             this.parentProp = 'parent';
             this.toolbarButtons = ['print', 'download'];
             this.webL10n = webL10n;
+            this.na = this._('NA');
             let monthNames = [];
             let monthNamesShort = [];
             let dayNames = [];
@@ -134,11 +134,10 @@ define("PDFForm", ["require", "exports"], function (require, exports) {
             }
         }
         validateForm(ctrl, errorMessages) {
+            ctrl.popover('dispose');
             if (errorMessages.length > 0) {
                 let errorMessage = `${this._('error.header')}<br />`;
-                errorMessages.forEach(e => {
-                    errorMessage += ` - ${e}<br />`;
-                });
+                errorMessages.forEach(e => errorMessage += ` - ${e}<br />`);
                 ctrl.popover({
                     html: true,
                     title: this._('validation'),
@@ -150,7 +149,6 @@ define("PDFForm", ["require", "exports"], function (require, exports) {
                 return false;
             }
             else {
-                ctrl.popover('dispose');
                 return true;
             }
         }

@@ -27,7 +27,7 @@ export class PDFForm {
     protected annotationName = 'annotation-name';
     protected annotationRequired = 'annotation-required';
     protected annotationNext = 'annotation-next';
-    protected na = this._('NA');
+    protected na:string;
     protected space = ' ';
     protected blankItem = '&nbsp;';
     protected backSpaceCode = 'Backspace';
@@ -43,6 +43,8 @@ export class PDFForm {
 
     constructor(webL10n: any) {
         this.webL10n = webL10n;
+
+        this.na = this._('NA');
 
         let monthNames:string[] = [];
         let monthNamesShort:string[] = [];
@@ -156,11 +158,10 @@ export class PDFForm {
     }
 
     protected validateForm(ctrl: JQuery<HTMLElement>, errorMessages: string[]) : boolean {
+        ctrl.popover('dispose');
         if (errorMessages.length > 0) {
             let errorMessage = `${this._('error.header')}<br />`;
-            errorMessages.forEach(e => {
-                errorMessage += ` - ${e}<br />`;
-            });
+            errorMessages.forEach(e => errorMessage += ` - ${e}<br />`);
 
             ctrl.popover({
                 html: true,
@@ -172,8 +173,7 @@ export class PDFForm {
 
             $('.popover').prop(this.parentProp, ctrl);
             return false;
-        } else {
-            ctrl.popover('dispose');
+        } else {            
             return true;
         }
     }
