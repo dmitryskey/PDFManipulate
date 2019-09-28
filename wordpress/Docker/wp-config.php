@@ -23,13 +23,13 @@
 define('DB_NAME', 'wordpress');
 
 /** MySQL database username */
-define('DB_USER', 'mysqldbuser@webapp-mysqldbserver-4b80f9a8-4184');
+define('DB_USER', 'wordpress@smarti9');
 
 /** MySQL database password */
 define('DB_PASSWORD', 'Spark384');
 
 /** MySQL hostname */
-define('DB_HOST', 'webapp-mysqldbserver-4b80f9a8-4184.mysql.database.azure.com');
+define('DB_HOST', 'smarti9.mariadb.database.azure.com');
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');

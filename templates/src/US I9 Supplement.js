@@ -1,4 +1,4 @@
-define("USI9Supplement/PDFForm", ["require", "exports"], function (require, exports) {
+define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class PDFForm {
@@ -30,13 +30,13 @@ define("USI9Supplement/PDFForm", ["require", "exports"], function (require, expo
             this.annotationName = 'annotation-name';
             this.annotationRequired = 'annotation-required';
             this.annotationNext = 'annotation-next';
-            this.na = this._('NA');
             this.space = ' ';
             this.blankItem = '&nbsp;';
             this.backSpaceCode = 'Backspace';
             this.parentProp = 'parent';
             this.toolbarButtons = ['print', 'download'];
             this.webL10n = webL10n;
+            this.na = this._('NA');
             let monthNames = [];
             let monthNamesShort = [];
             let dayNames = [];
@@ -103,6 +103,7 @@ define("USI9Supplement/PDFForm", ["require", "exports"], function (require, expo
             ctrl.parent().children().filter('.combo-content').click(f);
         }
         renderControl(ctrl, text, onFocus = true, placement = 'bottom') {
+            ctrl.parent().children().filter('span').click(() => ctrl.popover('hide'));
             return ctrl.popover({ html: true, content: text, trigger: onFocus ? 'focus' : 'hover', placement: placement });
         }
         renderHelpIcon(ctrl, title, text, maxWidth = '30') {
@@ -133,11 +134,10 @@ define("USI9Supplement/PDFForm", ["require", "exports"], function (require, expo
             }
         }
         validateForm(ctrl, errorMessages) {
+            ctrl.popover('dispose');
             if (errorMessages.length > 0) {
                 let errorMessage = `${this._('error.header')}<br />`;
-                errorMessages.forEach(e => {
-                    errorMessage += ` - ${e}<br />`;
-                });
+                errorMessages.forEach(e => errorMessage += ` - ${e}<br />`);
                 ctrl.popover({
                     html: true,
                     title: this._('validation'),
@@ -149,14 +149,13 @@ define("USI9Supplement/PDFForm", ["require", "exports"], function (require, expo
                 return false;
             }
             else {
-                ctrl.popover('dispose');
                 return true;
             }
         }
     }
     exports.PDFForm = PDFForm;
 });
-define("USI9Supplement/Fields", ["require", "exports", "USI9Supplement/PDFForm"], function (require, exports, PDFForm_1) {
+define("USI9Supplement/Fields", ["require", "exports", "USI9/PDFForm"], function (require, exports, PDFForm_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class USI9SupplementFields extends PDFForm_1.PDFForm {
@@ -241,164 +240,6 @@ define("USI9Supplement/Fields", ["require", "exports", "USI9Supplement/PDFForm"]
         }
     }
     exports.USI9SupplementFields = USI9SupplementFields;
-});
-define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    class PDFForm {
-        constructor(webL10n) {
-            this.nameFormat = /^[A-Za-z ']+$/;
-            this.nameInitialFormat = /^[A-Za-z]{1}$/;
-            this.stateFormat = /^[A-Z]{2,3}$/;
-            this.NAFormat = /^[NnAa/]+$/;
-            this.NAString = /^N\/A$/;
-            this.zipFormat = /^[0-9]+$/;
-            this.postalFormat = /^[A-Za-z0-9]+$/;
-            this.zipNumberFormat = /^[0-9]{5}$/;
-            this.postalCodeFormat = /^[A-Za-z0-9]{6}$/;
-            this.dateFormat = /^[0-9]{2}[/]{1}[0-9]{2}[/]{1}[0-9]{4}$/;
-            this.numberFormat = /^[0-9]{1}$/;
-            this.alphaNumericFormat = /^[0-9a-zA-Z]{1}$/;
-            this.numberWithDashesFormat = /^[0-9]{1}|\-{1}$/;
-            this.emailFormat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            this.phoneFormat = /^[0-9/NA-]+$/;
-            this.phoneNumber = /^[0-9]{3}\-{1}[0-9]{3}\-{1}[0-9]{4}$/;
-            this.uscisNumberFormat = /^[0-9]{7,9}$/;
-            this.admissionNumberFormat = /^[0-9]{9}[a-zA-Z]{1}[0-9]{1}$|^[0-9]{11}$/;
-            this.usPassportNumberFormat = /^[a-zA-Z0-9]{6,9}$/;
-            this.greenCardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$|[0-9]{7,9}|[0-9]{3}\-{0,1}[0-9]{3}\-{0,1}[0-9]{3}$/;
-            this.cardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$/;
-            this.passportNumberFormat = /^[a-zA-Z0-9]{6,12}$/;
-            this.driverLicenseNumberFormat = /^[a-zA-Z0-9]{8,14}$/;
-            this.ssnFormat = /^[0-9]{3}[-]*[0-9]{2}[-]*[0-9]{4}$/;
-            this.annotationName = 'annotation-name';
-            this.annotationRequired = 'annotation-required';
-            this.annotationNext = 'annotation-next';
-            this.na = this._('NA');
-            this.space = ' ';
-            this.blankItem = '&nbsp;';
-            this.backSpaceCode = 'Backspace';
-            this.parentProp = 'parent';
-            this.toolbarButtons = ['print', 'download'];
-            this.webL10n = webL10n;
-            let monthNames = [];
-            let monthNamesShort = [];
-            let dayNames = [];
-            let dayNamesShort = [];
-            let dayNamesMin = [];
-            $.each(JSON.parse(this._('monthNames')), (index, value) => {
-                monthNamesShort.push(index);
-                monthNames.push(value);
-            });
-            $.each(JSON.parse(this._('dayNames')), (index, value) => {
-                dayNamesMin.push(index);
-                $.each(value, (i, v) => {
-                    dayNamesShort.push(i);
-                    dayNames.push(v);
-                });
-            });
-            $.datepicker.setDefaults({
-                closeText: this._('closeText'),
-                prevText: this._('prevText'),
-                nextText: this._('nextText'),
-                currentText: this._('currentText'),
-                monthNames: monthNames,
-                monthNamesShort: monthNamesShort,
-                dayNames: dayNames,
-                dayNamesShort: dayNamesShort,
-                dayNamesMin: dayNamesMin,
-                weekHeader: this._('weekHeader'),
-                dateFormat: 'mm/dd/yy',
-                firstDay: 1,
-                isRTL: false,
-                showMonthAfterYear: false,
-                yearSuffix: ''
-            });
-            $('body').mouseup(e => {
-                let popover = $('.popover');
-                if (!popover.is(e.target) && popover.has(e.target).length === 0 && popover.prop(this.parentProp) &&
-                    popover.prop(this.parentProp) !== e.target) {
-                    $(popover.prop(this.parentProp)).popover('hide').removeProp(this.parentProp);
-                }
-            });
-        }
-        _(t) {
-            return this.webL10n ? this.webL10n.get(t).replace('#', '&#35;') : t;
-        }
-        selectCheckmark(ctrl, arr) {
-            for (var a of arr) {
-                if (a.attr(this.annotationName) !== ctrl.attr(this.annotationName)) {
-                    a.prop('checked', false);
-                    a.parent().children('span').text('');
-                }
-            }
-        }
-        setCombolistValue(ctrl, val) {
-            var options = ctrl.parent().children().filter('.combo-content');
-            options.children().filter(`[value='${val}']`).each((index, value) => {
-                value.onclick(null);
-            });
-        }
-        setCombolistText(ctrl, val, txt) {
-            var options = ctrl.parent().children().filter('.combo-content');
-            options.children().filter(`[value='${val}']`).html(txt);
-        }
-        assignCombolistEventHandler(ctrl, f) {
-            ctrl.parent().children().filter('.combo-content').click(f);
-        }
-        renderControl(ctrl, text, onFocus = true, placement = 'bottom') {
-            return ctrl.popover({ html: true, content: text, trigger: onFocus ? 'focus' : 'hover', placement: placement });
-        }
-        renderHelpIcon(ctrl, title, text, maxWidth = '30') {
-            const tag = 'i';
-            return ctrl.parent().find(tag).length > 0 ? ctrl : ctrl.hide().parent()
-                .hover((e) => $(e.target).css('cursor', 'pointer'))
-                .append(`<${tag} class='fa fa-question-circle helpIcon'
-                style='font-size:${Math.ceil(ctrl.parent().height())}px' />`)
-                .children(tag).tooltip({ title: title, placement: 'left' })
-                .popover({
-                html: true,
-                title: decodeURIComponent(this._('help')),
-                content: decodeURIComponent(text),
-                trigger: 'click'
-            })
-                .click((e) => {
-                $(e.target).tooltip('hide');
-                $('.popover').css('max-width', `${maxWidth}%`).prop(this.parentProp, e.target);
-            });
-        }
-        urlParameter(name) {
-            var results = new RegExp(`[\?&]${name}=([^&#]*)`).exec(window.location.href);
-            if (results === null) {
-                return null;
-            }
-            else {
-                return decodeURI(results[1]) || 0;
-            }
-        }
-        validateForm(ctrl, errorMessages) {
-            if (errorMessages.length > 0) {
-                let errorMessage = `${this._('error.header')}<br />`;
-                errorMessages.forEach(e => {
-                    errorMessage += ` - ${e}<br />`;
-                });
-                ctrl.popover({
-                    html: true,
-                    title: this._('validation'),
-                    content: errorMessage,
-                    trigger: 'click',
-                    placement: 'bottom'
-                }).popover('show');
-                $('.popover').prop(this.parentProp, ctrl);
-                return false;
-            }
-            else {
-                ctrl.popover('dispose');
-                return true;
-            }
-        }
-    }
-    exports.PDFForm = PDFForm;
 });
 define("USI9Supplement/TranslatorSection", ["require", "exports", "USI9Supplement/Fields"], function (require, exports, Fields_1) {
     "use strict";
