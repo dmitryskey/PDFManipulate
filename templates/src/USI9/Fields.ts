@@ -1,8 +1,9 @@
-import { PDFForm } from 'PDFForm';
-import { USI9Section2 } from 'Section2';
+import { PDFForm } from 'PDFForm'
+// eslint-disable-next-line no-unused-vars
+import { USI9Section2 } from 'Section2'
 
 export class USI9Fields extends PDFForm {
-    //region "Section 1 Personal data Fields"
+    // region "Section 1 Personal data Fields"
     protected _lastName: JQuery<HTMLElement>;
     protected _lastNameHelp: JQuery<HTMLElement>;
     protected _firstName: JQuery<HTMLElement>;
@@ -29,9 +30,9 @@ export class USI9Fields extends PDFForm {
     protected _emailHelp: JQuery<HTMLElement>;
     protected _phone: JQuery<HTMLElement>;
     protected _phoneHelp: JQuery<HTMLElement>;
-    //endregion
+    // endregion
 
-    //region "Citizenship Data fields"
+    // region "Citizenship Data fields"
     protected _citizen: JQuery<HTMLElement>;
     protected _citizenHelp: JQuery<HTMLElement>;
     protected _national: JQuery<HTMLElement>;
@@ -58,9 +59,9 @@ export class USI9Fields extends PDFForm {
     protected _sgnEmployeeHelp: JQuery<HTMLElement>;
     protected _sgnEmployeeDate: JQuery<HTMLElement>;
     protected _sgnEmployeeDateHelp: JQuery<HTMLElement>;
-    //endregion
+    // endregion
 
-    //region "Translator Section Fields"
+    // region "Translator Section Fields"
     protected _translatorNo: JQuery<HTMLElement>;
     protected _translatorYes: JQuery<HTMLElement>;
     protected _translatorHelp: JQuery<HTMLElement>;
@@ -80,9 +81,9 @@ export class USI9Fields extends PDFForm {
     protected _translatorStateHelp: JQuery<HTMLElement>;
     protected _translatorZip: JQuery<HTMLElement>;
     protected _translatorZipHelp: JQuery<HTMLElement>;
-    //endregion
+    // endregion
 
-    //region "Employee Section 2 Data fields"
+    // region "Employee Section 2 Data fields"
     protected _employeeInfoHelp: JQuery<HTMLElement>;
     protected _immigrationStatus: JQuery<HTMLElement>;
     protected _immigrationStatusHelp: JQuery<HTMLElement>;
@@ -92,9 +93,9 @@ export class USI9Fields extends PDFForm {
     protected _firstNameSection2Help: JQuery<HTMLElement>;
     protected _middleInitialSection2: JQuery<HTMLElement>;
     protected _middleInitialSection2Help: JQuery<HTMLElement>;
-    //endregion
+    // endregion
 
-    //region "List A, B, C Fields"
+    // region "List A, B, C Fields"
     protected _listADoc: JQuery<HTMLElement>;
     protected _listADocHelp: JQuery<HTMLElement>;
     protected _listAIssuingAuthority: JQuery<HTMLElement>;
@@ -137,9 +138,9 @@ export class USI9Fields extends PDFForm {
     protected _listCDocExpDateHelp: JQuery<HTMLElement>;
     protected _additionalInfo: JQuery<HTMLElement>;
     protected _additionalInfoHelp: JQuery<HTMLElement>;
-    //endregion
+    // endregion
 
-    //region "Employer Data Fields"
+    // region "Employer Data Fields"
     protected _hireDate: JQuery<HTMLElement>;
     protected _hireDateHelp: JQuery<HTMLElement>;
     protected _sgnEmployer: JQuery<HTMLElement>;
@@ -162,9 +163,9 @@ export class USI9Fields extends PDFForm {
     protected _employerStateHelp: JQuery<HTMLElement>;
     protected _employerZip: JQuery<HTMLElement>;
     protected _employerZipHelp: JQuery<HTMLElement>;
-    //endregion
+    // endregion
 
-    //region "Section 3 Fields"
+    // region "Section 3 Fields"
     protected _newlastName: JQuery<HTMLElement>;
     protected _newlastNameHelp: JQuery<HTMLElement>;
     protected _newfirstName: JQuery<HTMLElement>;
@@ -185,7 +186,7 @@ export class USI9Fields extends PDFForm {
     protected _signDateSec3Help: JQuery<HTMLElement>;
     protected _employerNameSec3: JQuery<HTMLElement>;
     protected _employerNameSec3Help: JQuery<HTMLElement>;
-    //endregion
+    // endregion
 
     protected paramExistsMsg = this._('parameter.exists');
     protected paramLengthMsg = this._('parameter.length');
@@ -196,140 +197,138 @@ export class USI9Fields extends PDFForm {
 
     protected invalidFieldClass = 'invalid';
 
-    protected validateDateRange(f: JQuery<HTMLElement>, parameter: string, errorMessages: string[], prefix: string = '') : boolean {
+    protected validateDateRange (f: JQuery<HTMLElement>, parameter: string, errorMessages: string[], prefix: string = '') : boolean {
         if (!f) {
-            return true;
+            return true
         }
 
-        let maxDate = f.datepicker('option', 'maxDate') as Date;
-        let minDate = f.datepicker('option', 'minDate') as Date;
+        const maxDate = f.datepicker('option', 'maxDate') as Date
+        const minDate = f.datepicker('option', 'minDate') as Date
         if (maxDate) {
-            maxDate.setHours(0, 0, 0, 0);
+            maxDate.setHours(0, 0, 0, 0)
         }
 
         if (minDate) {
-            minDate.setHours(0, 0, 0, 0);
+            minDate.setHours(0, 0, 0, 0)
         }
 
         if (maxDate && f && f.val() && (new Date(f.val() as string) > maxDate)) {
             errorMessages.push(
                 this.paramMaxValueMsg
-                .replace('${prefix}', prefix)
-                .replace('${parameter}', parameter)
-                .replace('${value}', maxDate.toDateString())
-            );
+                    .replace('$[prefix]', prefix)
+                    .replace('$[parameter]', parameter)
+                    .replace('$[value]', maxDate.toDateString())
+            )
         } else if (minDate && f && f.val() && (new Date(f.val() as string) < minDate)) {
             errorMessages.push(
                 this.paramMinValueMsg
-                .replace('${prefix}', prefix)
-                .replace('${parameter}', parameter)
-                .replace('${value}', minDate.toDateString())
-            );
+                    .replace('$[prefix]', prefix)
+                    .replace('$[parameter]', parameter)
+                    .replace('$[value]', minDate.toDateString())
+            )
         } else {
-            return true;
+            return true
         }
 
         return false
     }
 
-    protected validateTextField(
+    protected validateTextField (
         f: JQuery<HTMLElement>,
         parameter: string,
         regExp: RegExp[],
         validateIfEmpty: boolean,
         errorMessages: string[],
         prefix: string = ''): boolean {
+        let errorFlag = true
+        const length = f.prop('maxLength') ? f.prop('maxLength') : 0
 
-        let errorFlag = true;
-        let length = f.prop('maxLength') ? f.prop('maxLength') : 0;
-
-        if (!f || !f.val() || (f.attr(this.annotationRequired) && (f.val() as string).trim() === '')) {   
+        if (!f || !f.val() || (f.attr(this.annotationRequired) && (f.val() as string).trim() === '')) {
             errorMessages.push(
                 this.paramExistsMsg
-                .replace('${prefix}', prefix)
-                .replace('${parameter}', parameter));
+                    .replace('$[prefix]', prefix)
+                    .replace('$[parameter]', parameter))
         } else if (f && f.val() && (f.val() as string).length > length && length > 0) {
             errorMessages.push(
                 this.paramLengthMsg
-                .replace('${prefix}', prefix)
-                .replace('${parameter}', parameter)
-                .replace('${length}', length.toString()));
-        } else if ((f && f.val() !== '' || validateIfEmpty) && regExp.length > 0) {
-            let validFlag = false;
-            for (let r of regExp) {
+                    .replace('$[prefix]', prefix)
+                    .replace('$[parameter]', parameter)
+                    .replace('$[length]', length.toString()))
+        } else if (((f && f.val() !== '') || validateIfEmpty) && regExp.length > 0) {
+            let validFlag = false
+            for (const r of regExp) {
                 if (f && r.test(f.val() as string)) {
-                    validFlag = true;
-                    break;
+                    validFlag = true
+                    break
                 }
             }
 
             if (!validFlag) {
                 errorMessages.push(
                     this.paramFormatMsg
-                    .replace('${prefix}', prefix)
-                    .replace('${parameter}', parameter));
+                        .replace('$[prefix]', prefix)
+                        .replace('$[parameter]', parameter))
             }
 
-            errorFlag = !validFlag;
+            errorFlag = !validFlag
 
             if (!errorFlag) {
-                errorFlag = !this.validateDateRange(f, parameter, errorMessages, prefix);
+                errorFlag = !this.validateDateRange(f, parameter, errorMessages, prefix)
             }
         } else {
-            errorFlag = false;
+            errorFlag = false
         }
 
         if (f) {
-            f.toggleClass(this.invalidFieldClass, errorFlag);
+            f.toggleClass(this.invalidFieldClass, errorFlag)
         }
 
-        return !errorFlag;
+        return !errorFlag
     }
 
-    protected filterCombolist(
+    protected filterCombolist (
         ctrl: JQuery<HTMLElement>,
         items: { [index: string]: string; },
         defaultValue: string,
         fields: USI9Section2,
         callback: (ddl: string, code: string, parent: USI9Section2) => any) {
         if (!ctrl) {
-            return;
+            return
         }
 
-        var options = ctrl.parent().children().filter('.combo-content');
+        var options = ctrl.parent().children().filter('.combo-content')
 
-        for (let index in items) {
-            options.children().filter(`[value='${index}']`).html(items[index]);
+        for (const index in items) {
+            options.children().filter(`[value='${index}']`).html(items[index])
         }
 
-        options.children().show();
+        options.children().show()
         options.children().each((code: number, item: HTMLElement) => {
-            var val = item.getAttribute('value');
+            var val = item.getAttribute('value')
             if (items && !(val in items)) {
-                options.children().filter(`[value='${val}']`).hide();
+                options.children().filter(`[value='${val}']`).hide()
             }
-        });
+        })
 
         if (callback) {
             options.children().click(e => {
-                let inputText = (e.target.parentNode.parentNode as HTMLElement).getElementsByTagName('input')[0];
+                const inputText = (e.target.parentNode.parentNode as HTMLElement).getElementsByTagName('input')[0]
                 if (e.target.innerHTML === this.blankItem) {
-                    inputText.value = '';
+                    inputText.value = ''
                 }
 
                 callback(
                     inputText.getAttribute(this.annotationName),
                     e.target.getAttribute('value'),
                     fields
-                );
-            });
+                )
+            })
         }
 
         if (defaultValue) {
-            this.setCombolistValue(ctrl, defaultValue);
-        }
-        else {
-            ctrl.val('');
+            this.setCombolistValue(ctrl, defaultValue)
+        } else {
+            ctrl.val('')
         }
     }
 }

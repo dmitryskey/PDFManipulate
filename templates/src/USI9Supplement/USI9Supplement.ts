@@ -1,34 +1,34 @@
-import { USI9SupplementTranslator } from 'TranslatorSection';
+import { USI9SupplementTranslator } from 'TranslatorSection'
 
 export class USI9Supplement extends USI9SupplementTranslator {
     private pdfApp: any;
 
-    constructor(pdfApp: any, webL10n: any)
-    {
-        super(webL10n);
-        this.pdfApp = pdfApp;
+    constructor (pdfApp: any, webL10n: any) {
+        super(webL10n)
+        this.pdfApp = pdfApp
     }
 
-    private prepareData() {
-        this.pdfApp.transformationService = '/?rest_route=/UpdateForm';
-        this.pdfApp.sessionID = this.urlParameter('session_id');
+    private prepareData () {
+        this.pdfApp.transformationService = '/?rest_route=/UpdateForm'
+        this.pdfApp.sessionID = this.urlParameter('session_id')
         this.pdfApp.fieldsData = {
-            'file': this.pdfApp.url,
-            'operation': 'f',
-            'entries': []
+            file: this.pdfApp.url,
+            operation: 'f',
+            entries: []
         }
 
         $(`[${this.annotationName}]`).each((i, ctrl: HTMLInputElement) => {
             if (!ctrl.disabled && ctrl.value && ctrl.value !== '') {
                 this.pdfApp.fieldsData.entries.push({
-                    'name': ctrl.getAttribute(this.annotationName),
-                    'value': ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value,
-                    'operation': 's'});
-                }
-        });
+                    name: ctrl.getAttribute(this.annotationName),
+                    value: ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value,
+                    operation: 's'
+                })
+            }
+        })
     }
 
-    private prepareFirstPage() {
+    private prepareFirstPage () {
         this.renderTranslatorSection(
             $(`[${this.annotationName}=LastName]`),
             $(`[${this.annotationName}=LastNameHelp]`),
@@ -76,24 +76,24 @@ export class USI9Supplement extends USI9SupplementTranslator {
             $(`[${this.annotationName}=TranslatorCity4]`),
             $(`[${this.annotationName}=TranslatorState4]`),
             $(`[${this.annotationName}=TranslatorZip4]`)
-        );
+        )
     }
 
-    public renderSections() {
-        let eventBus = this.pdfApp.eventBus;
+    public renderSections () {
+        const eventBus = this.pdfApp.eventBus
 
         this.toolbarButtons.forEach((e) => {
-            let eventFuncs = eventBus.get(e);
+            const eventFuncs = eventBus.get(e)
             eventBus.remove(e)
             eventBus.on(e, () => {
                 if (this.validateForm($(`#${e}`), super.validateFields())) {
-                    this.prepareData();
+                    this.prepareData()
 
-                    eventFuncs.forEach((f: () => void) => f());
+                    eventFuncs.forEach((f: () => void) => f())
                 }
-            });
-        });
+            })
+        })
 
-        this.prepareFirstPage();
+        this.prepareFirstPage()
     }
 }

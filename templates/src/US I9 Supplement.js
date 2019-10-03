@@ -15,14 +15,14 @@ define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
             this.dateFormat = /^[0-9]{2}[/]{1}[0-9]{2}[/]{1}[0-9]{4}$/;
             this.numberFormat = /^[0-9]{1}$/;
             this.alphaNumericFormat = /^[0-9a-zA-Z]{1}$/;
-            this.numberWithDashesFormat = /^[0-9]{1}|\-{1}$/;
-            this.emailFormat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            this.numberWithDashesFormat = /^[0-9]{1}|-{1}$/;
+            this.emailFormat = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             this.phoneFormat = /^[0-9/NA-]+$/;
-            this.phoneNumber = /^[0-9]{3}\-{1}[0-9]{3}\-{1}[0-9]{4}$/;
+            this.phoneNumber = /^[0-9]{3}-{1}[0-9]{3}-{1}[0-9]{4}$/;
             this.uscisNumberFormat = /^[0-9]{7,9}$/;
             this.admissionNumberFormat = /^[0-9]{9}[a-zA-Z]{1}[0-9]{1}$|^[0-9]{11}$/;
             this.usPassportNumberFormat = /^[a-zA-Z0-9]{6,9}$/;
-            this.greenCardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$|[0-9]{7,9}|[0-9]{3}\-{0,1}[0-9]{3}\-{0,1}[0-9]{3}$/;
+            this.greenCardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$|[0-9]{7,9}|[0-9]{3}-{0,1}[0-9]{3}-{0,1}[0-9]{3}$/;
             this.cardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$/;
             this.passportNumberFormat = /^[a-zA-Z0-9]{6,12}$/;
             this.driverLicenseNumberFormat = /^[a-zA-Z0-9]{8,14}$/;
@@ -37,11 +37,11 @@ define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
             this.toolbarButtons = ['print', 'download'];
             this.webL10n = webL10n;
             this.na = this._('NA');
-            let monthNames = [];
-            let monthNamesShort = [];
-            let dayNames = [];
-            let dayNamesShort = [];
-            let dayNamesMin = [];
+            const monthNames = [];
+            const monthNamesShort = [];
+            const dayNames = [];
+            const dayNamesShort = [];
+            const dayNamesMin = [];
             $.each(JSON.parse(this._('monthNames')), (index, value) => {
                 monthNamesShort.push(index);
                 monthNames.push(value);
@@ -71,7 +71,7 @@ define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
                 yearSuffix: ''
             });
             $('body').mouseup(e => {
-                let popover = $('.popover');
+                const popover = $('.popover');
                 if (!popover.is(e.target) && popover.has(e.target).length === 0 && popover.prop(this.parentProp) &&
                     popover.prop(this.parentProp) !== e.target) {
                     $(popover.prop(this.parentProp)).popover('hide').removeProp(this.parentProp);
@@ -84,20 +84,17 @@ define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
         selectCheckmark(ctrl, arr) {
             for (var a of arr) {
                 if (a.attr(this.annotationName) !== ctrl.attr(this.annotationName)) {
-                    a.prop('checked', false);
-                    a.parent().children('span').text('');
+                    a.prop('checked', false).parent().children('span').text('');
                 }
             }
         }
         setCombolistValue(ctrl, val) {
-            var options = ctrl.parent().children().filter('.combo-content');
-            options.children().filter(`[value='${val}']`).each((index, value) => {
-                value.onclick(null);
-            });
+            ctrl.parent().children().filter('.combo-content').children()
+                .filter(`[value='${val}']`).each((index, value) => value.onclick(null));
         }
         setCombolistText(ctrl, val, txt) {
-            var options = ctrl.parent().children().filter('.combo-content');
-            options.children().filter(`[value='${val}']`).html(txt);
+            ctrl.parent().children().filter('.combo-content').children()
+                .filter(`[value='${val}']`).html(txt);
         }
         assignCombolistEventHandler(ctrl, f) {
             ctrl.parent().children().filter('.combo-content').click(f);
@@ -125,19 +122,14 @@ define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
             });
         }
         urlParameter(name) {
-            var results = new RegExp(`[\?&]${name}=([^&#]*)`).exec(window.location.href);
-            if (results === null) {
-                return null;
-            }
-            else {
-                return decodeURI(results[1]) || 0;
-            }
+            var results = new RegExp(`[?&]${name}=([^&#]*)`).exec(window.location.href);
+            return results === null ? null : decodeURI(results[1]) || 0;
         }
         validateForm(ctrl, errorMessages) {
             ctrl.popover('dispose');
             if (errorMessages.length > 0) {
                 let errorMessage = `${this._('error.header')}<br />`;
-                errorMessages.forEach(e => errorMessage += ` - ${e}<br />`);
+                errorMessages.forEach(e => { errorMessage += ` - ${e}<br />`; });
                 ctrl.popover({
                     html: true,
                     title: this._('validation'),
@@ -173,8 +165,8 @@ define("USI9Supplement/Fields", ["require", "exports", "USI9/PDFForm"], function
             if (!f) {
                 return true;
             }
-            let maxDate = f.datepicker('option', 'maxDate');
-            let minDate = f.datepicker('option', 'minDate');
+            const maxDate = f.datepicker('option', 'maxDate');
+            const minDate = f.datepicker('option', 'minDate');
             if (maxDate) {
                 maxDate.setHours(0, 0, 0, 0);
             }
@@ -183,15 +175,15 @@ define("USI9Supplement/Fields", ["require", "exports", "USI9/PDFForm"], function
             }
             if (maxDate && f && f.val() && (new Date(f.val()) > maxDate)) {
                 errorMessages.push(this.paramMaxValueMsg
-                    .replace('${prefix}', prefix)
-                    .replace('${parameter}', parameter)
-                    .replace('${value}', maxDate.toDateString()));
+                    .replace('$[prefix]', prefix)
+                    .replace('$[parameter]', parameter)
+                    .replace('$[value]', maxDate.toDateString()));
             }
             else if (minDate && f && f.val() && (new Date(f.val()) < minDate)) {
                 errorMessages.push(this.paramMinValueMsg
-                    .replace('${prefix}', prefix)
-                    .replace('${parameter}', parameter)
-                    .replace('${value}', minDate.toDateString()));
+                    .replace('$[prefix]', prefix)
+                    .replace('$[parameter]', parameter)
+                    .replace('$[value]', minDate.toDateString()));
             }
             else {
                 return true;
@@ -200,21 +192,21 @@ define("USI9Supplement/Fields", ["require", "exports", "USI9/PDFForm"], function
         }
         validateTextField(f, parameter, regExs, validateIfEmpty, errorMessages, prefix = '') {
             let errorFlag = true;
-            let length = f.prop('maxLength') ? f.prop('maxLength') : 0;
+            const length = f.prop('maxLength') ? f.prop('maxLength') : 0;
             if (!f || !f.val() || (f.attr(this.annotationRequired) && f.val().trim() === '')) {
                 errorMessages.push(this.paramExistsMsg
-                    .replace('${prefix}', prefix)
-                    .replace('${parameter}', parameter));
+                    .replace('$[prefix]', prefix)
+                    .replace('$[parameter]', parameter));
             }
             else if (f && f.val() && f.val().length > length && length > 0) {
                 errorMessages.push(this.paramLengthMsg
-                    .replace('${prefix}', prefix)
-                    .replace('${parameter}', parameter)
-                    .replace('${length}', length.toString()));
+                    .replace('$[prefix]', prefix)
+                    .replace('$[parameter]', parameter)
+                    .replace('$[length]', length.toString()));
             }
-            else if ((f && f.val() !== '' || validateIfEmpty) && regExs.length > 0) {
+            else if (((f && f.val() !== '') || validateIfEmpty) && regExs.length > 0) {
                 let validFlag = false;
-                for (let i in regExs) {
+                for (const i in regExs) {
                     if (f && regExs[i].test(f.val())) {
                         validFlag = true;
                         break;
@@ -222,8 +214,8 @@ define("USI9Supplement/Fields", ["require", "exports", "USI9/PDFForm"], function
                 }
                 if (!validFlag) {
                     errorMessages.push(this.paramFormatMsg
-                        .replace('${prefix}', prefix)
-                        .replace('${parameter}', parameter));
+                        .replace('$[prefix]', prefix)
+                        .replace('$[parameter]', parameter));
                 }
                 errorFlag = !validFlag;
                 if (!errorFlag) {
@@ -318,7 +310,7 @@ define("USI9Supplement/TranslatorSection", ["require", "exports", "USI9Supplemen
                 .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode);
         }
         validateFields() {
-            let errorMessages = [];
+            const errorMessages = [];
             if (this._middleInitial.val().trim() === '') {
                 this._middleInitial.val(this.na);
             }
@@ -398,16 +390,16 @@ define("USI9Supplement/USI9Supplement", ["require", "exports", "USI9Supplement/T
             this.pdfApp.transformationService = '/?rest_route=/UpdateForm';
             this.pdfApp.sessionID = this.urlParameter('session_id');
             this.pdfApp.fieldsData = {
-                'file': this.pdfApp.url,
-                'operation': 'f',
-                'entries': []
+                file: this.pdfApp.url,
+                operation: 'f',
+                entries: []
             };
             $(`[${this.annotationName}]`).each((i, ctrl) => {
                 if (!ctrl.disabled && ctrl.value && ctrl.value !== '') {
                     this.pdfApp.fieldsData.entries.push({
-                        'name': ctrl.getAttribute(this.annotationName),
-                        'value': ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value,
-                        'operation': 's'
+                        name: ctrl.getAttribute(this.annotationName),
+                        value: ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value,
+                        operation: 's'
                     });
                 }
             });
@@ -416,9 +408,9 @@ define("USI9Supplement/USI9Supplement", ["require", "exports", "USI9Supplement/T
             this.renderTranslatorSection($(`[${this.annotationName}=LastName]`), $(`[${this.annotationName}=LastNameHelp]`), $(`[${this.annotationName}=FirstName]`), $(`[${this.annotationName}=FirstNameHelp]`), $(`[${this.annotationName}=MiddleInitial]`), $(`[${this.annotationName}=MiddleInitialHelp]`), $(`[${this.annotationName}=sgnTranslator]`), $(`[${this.annotationName}=sgnTranslatorHelp]`), $(`[${this.annotationName}=TranslatorDate]`), $(`[${this.annotationName}=TranslatorDateHelp]`), $(`[${this.annotationName}=TranslatorLastName]`), $(`[${this.annotationName}=TranslatorLastNameHelp]`), $(`[${this.annotationName}=TranslatorFirstName]`), $(`[${this.annotationName}=TranslatorFirstNameHelp]`), $(`[${this.annotationName}=TranslatorAddress]`), $(`[${this.annotationName}=TranslatorAddressHelp]`), $(`[${this.annotationName}=TranslatorCity]`), $(`[${this.annotationName}=TranslatorCityHelp]`), $(`[${this.annotationName}=TranslatorState]`), $(`[${this.annotationName}=TranslatorStateHelp]`), $(`[${this.annotationName}=TranslatorZip]`), $(`[${this.annotationName}=TranslatorZipHelp]`), $(`[${this.annotationName}=sgnTranslator2]`), $(`[${this.annotationName}=TranslatorDate2]`), $(`[${this.annotationName}=TranslatorLastName2]`), $(`[${this.annotationName}=TranslatorFirstName2]`), $(`[${this.annotationName}=TranslatorAddress2]`), $(`[${this.annotationName}=TranslatorCity2]`), $(`[${this.annotationName}=TranslatorState2]`), $(`[${this.annotationName}=TranslatorZip2]`), $(`[${this.annotationName}=sgnTranslator3]`), $(`[${this.annotationName}=TranslatorDate3]`), $(`[${this.annotationName}=TranslatorLastName3]`), $(`[${this.annotationName}=TranslatorFirstName3]`), $(`[${this.annotationName}=TranslatorAddress3]`), $(`[${this.annotationName}=TranslatorCity3]`), $(`[${this.annotationName}=TranslatorState3]`), $(`[${this.annotationName}=TranslatorZip3]`), $(`[${this.annotationName}=sgnTranslator4]`), $(`[${this.annotationName}=TranslatorDate4]`), $(`[${this.annotationName}=TranslatorLastName4]`), $(`[${this.annotationName}=TranslatorFirstName4]`), $(`[${this.annotationName}=TranslatorAddress4]`), $(`[${this.annotationName}=TranslatorCity4]`), $(`[${this.annotationName}=TranslatorState4]`), $(`[${this.annotationName}=TranslatorZip4]`));
         }
         renderSections() {
-            let eventBus = this.pdfApp.eventBus;
+            const eventBus = this.pdfApp.eventBus;
             this.toolbarButtons.forEach((e) => {
-                let eventFuncs = eventBus.get(e);
+                const eventFuncs = eventBus.get(e);
                 eventBus.remove(e);
                 eventBus.on(e, () => {
                     if (this.validateForm($(`#${e}`), super.validateFields())) {
@@ -435,7 +427,7 @@ define("USI9Supplement/USI9Supplement", ["require", "exports", "USI9Supplement/T
 define("USI9Supplement/Init", ["require", "exports", "USI9Supplement/USI9Supplement"], function (require, exports, USI9Supplement_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    let eventBus = PDFViewerApplication.eventBus;
+    const eventBus = PDFViewerApplication.eventBus;
     eventBus.on('textlayerrendered', () => {
         var form = new USI9Supplement_1.USI9Supplement(PDFViewerApplication, document.webL10n);
         form.renderSections();

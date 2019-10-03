@@ -11,14 +11,14 @@ export class PDFForm {
     protected dateFormat = /^[0-9]{2}[/]{1}[0-9]{2}[/]{1}[0-9]{4}$/;
     protected numberFormat = /^[0-9]{1}$/;
     protected alphaNumericFormat = /^[0-9a-zA-Z]{1}$/;
-    protected numberWithDashesFormat = /^[0-9]{1}|\-{1}$/;
-    protected emailFormat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    protected numberWithDashesFormat = /^[0-9]{1}|-{1}$/;
+    protected emailFormat = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     protected phoneFormat = /^[0-9/NA-]+$/;
-    protected phoneNumber = /^[0-9]{3}\-{1}[0-9]{3}\-{1}[0-9]{4}$/;
+    protected phoneNumber = /^[0-9]{3}-{1}[0-9]{3}-{1}[0-9]{4}$/;
     protected uscisNumberFormat = /^[0-9]{7,9}$/;
     protected admissionNumberFormat = /^[0-9]{9}[a-zA-Z]{1}[0-9]{1}$|^[0-9]{11}$/;
     protected usPassportNumberFormat = /^[a-zA-Z0-9]{6,9}$/;
-    protected greenCardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$|[0-9]{7,9}|[0-9]{3}\-{0,1}[0-9]{3}\-{0,1}[0-9]{3}$/;
+    protected greenCardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$|[0-9]{7,9}|[0-9]{3}-{0,1}[0-9]{3}-{0,1}[0-9]{3}$/;
     protected cardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$/;
     protected passportNumberFormat = /^[a-zA-Z0-9]{6,12}$/;
     protected driverLicenseNumberFormat = /^[a-zA-Z0-9]{8,14}$/;
@@ -37,33 +37,33 @@ export class PDFForm {
 
     private webL10n: any;
 
-    protected _(t: string): string {
-        return this.webL10n ? (this.webL10n.get(t) as string).replace('#', '&#35;') : t;
+    protected _ (t: string): string {
+        return this.webL10n ? (this.webL10n.get(t) as string).replace('#', '&#35;') : t
     }
 
-    constructor(webL10n: any) {
-        this.webL10n = webL10n;
+    constructor (webL10n: any) {
+        this.webL10n = webL10n
 
-        this.na = this._('NA');
+        this.na = this._('NA')
 
-        let monthNames:string[] = [];
-        let monthNamesShort:string[] = [];
-        let dayNames:string[] = [];
-        let dayNamesShort:string[] = [];
-        let dayNamesMin:string[] = [];
+        const monthNames:string[] = []
+        const monthNamesShort:string[] = []
+        const dayNames:string[] = []
+        const dayNamesShort:string[] = []
+        const dayNamesMin:string[] = []
 
         $.each(JSON.parse(this._('monthNames')), (index, value) => {
-            monthNamesShort.push(index as string);
-            monthNames.push(value);
+            monthNamesShort.push(index as string)
+            monthNames.push(value)
         })
 
         $.each(JSON.parse(this._('dayNames')), (index, value) => {
-            dayNamesMin.push(index as string);
+            dayNamesMin.push(index as string)
             $.each(value, (i, v) => {
-                dayNamesShort.push(i as string);
-                dayNames.push(v);
-            });
-        });
+                dayNamesShort.push(i as string)
+                dayNames.push(v)
+            })
+        })
 
         $.datepicker.setDefaults({
             closeText: this._('closeText'),
@@ -81,55 +81,52 @@ export class PDFForm {
             isRTL: false,
             showMonthAfterYear: false,
             yearSuffix: ''
-        });
+        })
 
-        $('body').mouseup(e =>  {
-            let popover = $('.popover');
+        $('body').mouseup(e => {
+            const popover = $('.popover')
 
             if (!popover.is(e.target) && popover.has(e.target).length === 0 && popover.prop(this.parentProp) &&
                 popover.prop(this.parentProp) !== e.target) {
-                $(popover.prop(this.parentProp)).popover('hide').removeProp(this.parentProp);
+                $(popover.prop(this.parentProp)).popover('hide').removeProp(this.parentProp)
             }
-        });
+        })
     }
 
-    protected selectCheckmark(ctrl: JQuery<HTMLElement>, arr: Array<JQuery<HTMLElement>>) {
+    protected selectCheckmark (ctrl: JQuery<HTMLElement>, arr: Array<JQuery<HTMLElement>>) {
         for (var a of arr) {
             if (a.attr(this.annotationName) !== ctrl.attr(this.annotationName)) {
-                a.prop('checked', false);
-                a.parent().children('span').text('');
+                a.prop('checked', false).parent().children('span').text('')
             }
         }
     }
 
-    protected setCombolistValue(ctrl: JQuery<HTMLElement>, val: string) {
-        var options = ctrl.parent().children().filter('.combo-content');
-        options.children().filter(`[value='${val}']`).each((index, value) => {
-            value.onclick(null);
-        });
+    protected setCombolistValue (ctrl: JQuery<HTMLElement>, val: string) {
+        ctrl.parent().children().filter('.combo-content').children()
+            .filter(`[value='${val}']`).each((index, value) => value.onclick(null))
     }
 
-    protected setCombolistText(ctrl: JQuery<HTMLElement>, val: string, txt: string) {
-        var options = ctrl.parent().children().filter('.combo-content');
-        options.children().filter(`[value='${val}']`).html(txt);
+    protected setCombolistText (ctrl: JQuery<HTMLElement>, val: string, txt: string) {
+        ctrl.parent().children().filter('.combo-content').children()
+            .filter(`[value='${val}']`).html(txt)
     }
 
-    protected assignCombolistEventHandler(ctrl: JQuery<HTMLElement>, f: JQuery.EventHandler<HTMLElement>) {
-        ctrl.parent().children().filter('.combo-content').click(f);
+    protected assignCombolistEventHandler (ctrl: JQuery<HTMLElement>, f: JQuery.EventHandler<HTMLElement>) {
+        ctrl.parent().children().filter('.combo-content').click(f)
     }
 
-    protected renderControl(
+    protected renderControl (
         ctrl: JQuery<HTMLElement>,
         text: string, onFocus: boolean = true,
         placement: Bootstrap.Placement = 'bottom')
          : JQuery<HTMLElement> {
-        ctrl.parent().children().filter('span').click(() => ctrl.popover('hide'));
-        return ctrl.popover({ html: true, content: text, trigger: onFocus ? 'focus' : 'hover', placement: placement });
+        ctrl.parent().children().filter('span').click(() => ctrl.popover('hide'))
+        return ctrl.popover({ html: true, content: text, trigger: onFocus ? 'focus' : 'hover', placement: placement })
     }
 
-    protected renderHelpIcon(ctrl: JQuery<HTMLElement>, title: string, text: string, maxWidth: string = '30')
+    protected renderHelpIcon (ctrl: JQuery<HTMLElement>, title: string, text: string, maxWidth: string = '30')
         : JQuery<HTMLElement> {
-        const tag = 'i';
+        const tag = 'i'
         return ctrl.parent().find(tag).length > 0 ? ctrl : ctrl.hide().parent()
             .hover((e) => $(e.target).css('cursor', 'pointer'))
             .append(`<${tag} class='fa fa-question-circle helpIcon'
@@ -142,26 +139,21 @@ export class PDFForm {
                 trigger: 'click'
             })
             .click((e) => {
-                $(e.target).tooltip('hide');
-                $('.popover').css('max-width', `${maxWidth}%`).prop(this.parentProp, e.target);
-            });
+                $(e.target).tooltip('hide')
+                $('.popover').css('max-width', `${maxWidth}%`).prop(this.parentProp, e.target)
+            })
     }
 
-    protected urlParameter(name: string) {
-        var results = new RegExp(`[\?&]${name}=([^&#]*)`).exec(window.location.href);
-        if (results === null) {
-           return null;
-        }
-        else {
-           return decodeURI(results[1]) || 0;
-        }
+    protected urlParameter (name: string) {
+        var results = new RegExp(`[?&]${name}=([^&#]*)`).exec(window.location.href)
+        return results === null ? null : decodeURI(results[1]) || 0
     }
 
-    protected validateForm(ctrl: JQuery<HTMLElement>, errorMessages: string[]) : boolean {
-        ctrl.popover('dispose');
+    protected validateForm (ctrl: JQuery<HTMLElement>, errorMessages: string[]) : boolean {
+        ctrl.popover('dispose')
         if (errorMessages.length > 0) {
-            let errorMessage = `${this._('error.header')}<br />`;
-            errorMessages.forEach(e => errorMessage += ` - ${e}<br />`);
+            let errorMessage = `${this._('error.header')}<br />`
+            errorMessages.forEach(e => { errorMessage += ` - ${e}<br />` })
 
             ctrl.popover({
                 html: true,
@@ -169,12 +161,12 @@ export class PDFForm {
                 content: errorMessage,
                 trigger: 'click',
                 placement: 'bottom'
-            }).popover('show');
+            }).popover('show')
 
-            $('.popover').prop(this.parentProp, ctrl);
-            return false;
-        } else {            
-            return true;
+            $('.popover').prop(this.parentProp, ctrl)
+            return false
+        } else {
+            return true
         }
     }
 }

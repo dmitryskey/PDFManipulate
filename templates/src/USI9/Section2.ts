@@ -1,4 +1,4 @@
-import { USI9Translator } from 'TranslatorSection';
+import { USI9Translator } from 'TranslatorSection'
 
 export class USI9Section2 extends USI9Translator {
     private validationExpressionProp = 'validationexpression';
@@ -6,7 +6,7 @@ export class USI9Section2 extends USI9Translator {
     private freeTextProp = 'freeText';
     private requiredProp = 'required';
 
-    protected renderSection2(
+    protected renderSection2 (
         tabIndex: number,
         employeeInfoHelp: JQuery<HTMLElement>,
         lastName: JQuery<HTMLElement>,
@@ -81,8 +81,7 @@ export class USI9Section2 extends USI9Translator {
         employerStateHelp: JQuery<HTMLElement>,
         employerZip: JQuery<HTMLElement>,
         employerZipHelp: JQuery<HTMLElement>) {
-
-        $('a').prop('target', '_blank');
+        $('a').prop('target', '_blank')
 
         this._dob.change((e : JQuery.ChangeEvent<HTMLInputElement>) =>
             this.filterCombolist(
@@ -91,45 +90,45 @@ export class USI9Section2 extends USI9Translator {
                 this.na,
                 this,
                 this.processListABC)
-        );
+        )
 
         this._employeeInfoHelp = this.renderHelpIcon(
             employeeInfoHelp,
             this._('employeeinfosection2help.caption'),
             this._('employeeinfosection2help.text')
-        );
+        )
 
-        this._lastNameSection2 = lastName;
+        this._lastNameSection2 = lastName
 
         this._lastNameSection2Help = this.renderHelpIcon(
             lastNameHelp,
             this._('lastnamesection2help.caption'),
             this._('lastnamesection2help.text')
-        );
+        )
 
-        this._firstNameSection2 = firstName;
+        this._firstNameSection2 = firstName
 
         this._firstNameSection2Help = this.renderHelpIcon(
             firstNameHelp,
             this._('firstnamesection2help.caption'),
             this._('firstnamesection2help.text')
-        );
+        )
 
-        this._middleInitialSection2 = middleInitial;
+        this._middleInitialSection2 = middleInitial
 
         this._middleInitialSection2Help = this.renderHelpIcon(
             middleInitialHelp,
-            this._('middleinitialsection2help.caption'), 
+            this._('middleinitialsection2help.caption'),
             this._('middleinitialsection2help.text')
-        );
+        )
 
-        this._immigrationStatus = immigrationStatus;
+        this._immigrationStatus = immigrationStatus
 
         this._immigrationStatusHelp = this.renderHelpIcon(
             immigrationStatusHelp,
             this._('immigrationstatushelp.caption'),
             this._('immigrationstatushelp.text')
-        );
+        )
 
         tabIndex = this.renderListABC(
             tabIndex,
@@ -173,31 +172,31 @@ export class USI9Section2 extends USI9Translator {
             listCDocNumberHelp,
             listCDocExpDate,
             listCDocExpDateHelp
-        );
+        )
 
         this._additionalInfo = this.renderControl(additionalInfo, this._('additionalinfo.tooltip'))
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._additionalInfoHelp = this.renderHelpIcon(
             additionalInfoHelp,
             this._('additionalinfohelp.caption'),
             this._('additionalinfohelp.text')
-        );
+        )
 
         if (!this._citizen.prop('checked') && !this._national.prop('checked') &&
             !this._lpr.prop('checked') && this._alien.prop('checked')) {
-            this.clearListABC();
+            this.clearListABC()
         }
 
         this._hireDate = this.renderControl(hireDate, this._('hiredate.tooltip'), true, 'right')
-        .datepicker().attr('autocomplete', 'disabled')
-        .attr('tabindex', tabIndex++);
+            .datepicker().attr('autocomplete', 'disabled')
+            .attr('tabindex', tabIndex++)
 
         this._hireDateHelp = this.renderHelpIcon(
             hireDateHelp,
             this._('hiredatehelp.caption'),
             this._('hiredatehelp.text')
-        );
+        )
 
         tabIndex = this.renderEmployerData(
             tabIndex,
@@ -221,16 +220,16 @@ export class USI9Section2 extends USI9Translator {
             employerStateHelp,
             employerZip,
             employerZipHelp
-        );
+        )
 
-        return tabIndex;
+        return tabIndex
     }
 
-    protected validateFields(): string[] {
-        let errorMessages = super.validateFields();
+    protected validateFields (): string[] {
+        const errorMessages = super.validateFields()
 
         // List A, B, C Fields
-        let section2Fields = [
+        const section2Fields = [
             this._listADoc,
             this._listAIssuingAuthority,
             this._listADocNumber,
@@ -251,166 +250,165 @@ export class USI9Section2 extends USI9Translator {
             this._listCIssuingAuthority,
             this._listCDocNumber,
             this._listCDocExpDate,
-            this._additionalInfo];       
+            this._additionalInfo
+        ]
 
-        if (section2Fields.filter(f => f && f.val() && (f.val() as string).trim() !== '').length == 0) {
-            return errorMessages;
+        if (section2Fields.filter(f => f && f.val() && (f.val() as string).trim() !== '').length === 0) {
+            return errorMessages
         }
 
-        section2Fields.filter(f => ((f.val() as string).trim() === '' && !f.prop(this.requiredProp))
-          || (f.val() as string).toUpperCase() === this.na)
-          .forEach(f => f.val(this.na));
+        section2Fields.filter(f => ((f.val() as string).trim() === '' && !f.prop(this.requiredProp)) ||
+          (f.val() as string).toUpperCase() === this.na)
+            .forEach(f => f.val(this.na))
 
-        section2Fields.forEach(f => f.toggleClass(this.invalidFieldClass, false));
+        section2Fields.forEach(f => f.toggleClass(this.invalidFieldClass, false))
 
-        this._lastNameSection2.val(this._lastName.val());
-        this._firstNameSection2.val(this._firstName.val());
-        this._middleInitialSection2.val(this._middleInitial.val());
-        this._immigrationStatus.val(this._citizen.prop('checked') ? 1 :
-            (this._national.prop('checked') ? 2 : (this._lpr.prop('checked') ? 3 :
-            (this._alien.prop('checked') ? 4 : ''))));
+        this._lastNameSection2.val(this._lastName.val())
+        this._firstNameSection2.val(this._firstName.val())
+        this._middleInitialSection2.val(this._middleInitial.val())
+        this._immigrationStatus.val(this._citizen.prop('checked') ? 1
+            : (this._national.prop('checked') ? 2 : (this._lpr.prop('checked') ? 3
+                : (this._alien.prop('checked') ? 4 : ''))))
 
         if (((this._listADoc.val() as string).trim() !== this.na &&
             ((this._listBDoc.val() as string).trim() !== this.na ||
-             (this._listCDoc.val() as string).trim() !== this.na) ||
+             (this._listCDoc.val() as string).trim() !== this.na)) ||
             ((this._listADoc.val() as string).trim() === this.na &&
             ((this._listBDoc.val() as string).trim() === this.na ||
-             (this._listCDoc.val() as string).trim() === this.na)))) {
-            errorMessages.push(this._('section2.listabc'));
+             (this._listCDoc.val() as string).trim() === this.na))) {
+            errorMessages.push(this._('section2.listabc'))
         } else if ((this._listADoc.val() as string).trim() !== this.na) {
             if ((this._listAIssuingAuthority.val() as string).trim() === '') {
-                errorMessages.push(this._('section2.listafirstissuingauthority'));
-                this._listAIssuingAuthority.toggleClass(this.invalidFieldClass, true);
+                errorMessages.push(this._('section2.listafirstissuingauthority'))
+                this._listAIssuingAuthority.toggleClass(this.invalidFieldClass, true)
             }
 
             if ((this._listADocNumber.val() as string).trim() === '') {
-                errorMessages.push(this._('section2.listafirstdocnumber'));
-                this._listADocNumber.toggleClass(this.invalidFieldClass, true);
-            }
-            else if (this._listADocNumber.prop(this.validationExpressionProp) &&
+                errorMessages.push(this._('section2.listafirstdocnumber'))
+                this._listADocNumber.toggleClass(this.invalidFieldClass, true)
+            } else if (this._listADocNumber.prop(this.validationExpressionProp) &&
                 !(this._listADocNumber.prop(this.validationExpressionProp) as RegExp)
-                 .test(this._listADocNumber.val() as string) &&
+                    .test(this._listADocNumber.val() as string) &&
                  this._listADocNumber.prop(this.validationMessageProp)) {
-                errorMessages.push(this._listADocNumber.prop(this.validationMessageProp));
-                this._listADocNumber.toggleClass(this.invalidFieldClass, true);
+                errorMessages.push(this._listADocNumber.prop(this.validationMessageProp))
+                this._listADocNumber.toggleClass(this.invalidFieldClass, true)
             }
 
             if ((this._listAIssuingAuthority2.val() as string).trim() === '') {
-                errorMessages.push(this._('section2.listasecondissuingauthority'));
-                this._listAIssuingAuthority2.toggleClass(this.invalidFieldClass, true);
+                errorMessages.push(this._('section2.listasecondissuingauthority'))
+                this._listAIssuingAuthority2.toggleClass(this.invalidFieldClass, true)
             }
 
             if ((this._listADocNumber2.val() as string).trim() === '') {
-                errorMessages.push(this._('section2.listaseconddocnumber'));
-                this._listADocNumber2.toggleClass(this.invalidFieldClass, true);
+                errorMessages.push(this._('section2.listaseconddocnumber'))
+                this._listADocNumber2.toggleClass(this.invalidFieldClass, true)
             }
 
             if ((this._listAIssuingAuthority3.val() as string).trim() === '') {
-                errorMessages.push(this._('section2.listathirdissuingauthority'));
-                this._listAIssuingAuthority3.toggleClass(this.invalidFieldClass, true);
+                errorMessages.push(this._('section2.listathirdissuingauthority'))
+                this._listAIssuingAuthority3.toggleClass(this.invalidFieldClass, true)
             }
 
             if ((this._listADocNumber3.val() as string).trim() === '') {
-                errorMessages.push(this._('section2.listathirddocnumber'));
-                this._listADocNumber3.toggleClass(this.invalidFieldClass, true);
+                errorMessages.push(this._('section2.listathirddocnumber'))
+                this._listADocNumber3.toggleClass(this.invalidFieldClass, true)
             }
 
             if (!this.validateDateRange(this._listADocExpDate, '', []) ||
                (!this._listADocExpDate.prop(this.freeTextProp) &&
                 !this.validateTextField(this._listADocExpDate, '', [this.dateFormat, this.NAString], true, [])) ||
                 (this._listADocExpDate.prop(this.freeTextProp) && this._listADocExpDate.val() === '')) {
-                errorMessages.push(this._('section2.listafirstexpdate'));
-                this._listADocExpDate.toggleClass(this.invalidFieldClass, true);
+                errorMessages.push(this._('section2.listafirstexpdate'))
+                this._listADocExpDate.toggleClass(this.invalidFieldClass, true)
             }
 
             if (!this.validateDateRange(this._listADocExpDate2, '', []) ||
                (!this._listADocExpDate2.prop(this.freeTextProp) &&
                 !this.validateTextField(this._listADocExpDate2, '', [this.dateFormat, this.NAString], true, [])) ||
                 (this._listADocExpDate2.prop(this.freeTextProp) && this._listADocExpDate2.val() === '')) {
-                errorMessages.push(this._('section2.listasecondexpdate'));
-                this._listADocExpDate2.toggleClass(this.invalidFieldClass, true);
+                errorMessages.push(this._('section2.listasecondexpdate'))
+                this._listADocExpDate2.toggleClass(this.invalidFieldClass, true)
             }
 
             if (!this.validateDateRange(this._listADocExpDate3, '', []) ||
                (!this._listADocExpDate3.prop(this.freeTextProp) &&
                 !this.validateTextField(this._listADocExpDate3, '', [this.dateFormat, this.NAString], true, [])) ||
                 (this._listADocExpDate3.prop(this.freeTextProp) && this._listADocExpDate3.val() === '')) {
-                errorMessages.push(this._('section2.listathirdexpdate'));
-                this._listADocExpDate3.toggleClass(this.invalidFieldClass, true);
+                errorMessages.push(this._('section2.listathirdexpdate'))
+                this._listADocExpDate3.toggleClass(this.invalidFieldClass, true)
             }
-        } else { 
+        } else {
             if ((this._listBDoc.val() as string).trim() !== this.na) {
                 if ((this._listBIssuingAuthority.val() as string).trim() === '') {
-                    errorMessages.push(this._('section2.listbissuingauthority'));
-                    this._listBIssuingAuthority.toggleClass(this.invalidFieldClass, true);
+                    errorMessages.push(this._('section2.listbissuingauthority'))
+                    this._listBIssuingAuthority.toggleClass(this.invalidFieldClass, true)
                 }
 
                 if ((this._listBDocNumber.val() as string).trim() === '') {
-                    errorMessages.push(this._('section2.listbdocnumber'));
-                    this._listBDocNumber.toggleClass(this.invalidFieldClass, true);
+                    errorMessages.push(this._('section2.listbdocnumber'))
+                    this._listBDocNumber.toggleClass(this.invalidFieldClass, true)
                 } else if (this._listBDocNumber.prop(this.validationExpressionProp) &&
                     !(this._listBDocNumber.prop(this.validationExpressionProp) as RegExp)
-                    .test(this._listBDocNumber.val() as string) &&
+                        .test(this._listBDocNumber.val() as string) &&
                     this._listBDocNumber.prop(this.validationMessageProp)) {
-                    errorMessages.push(this._listBDocNumber.prop(this.validationMessageProp));
-                    this._listBDocNumber.toggleClass(this.invalidFieldClass, true);
+                    errorMessages.push(this._listBDocNumber.prop(this.validationMessageProp))
+                    this._listBDocNumber.toggleClass(this.invalidFieldClass, true)
                 }
 
                 if (!this.validateDateRange(this._listBDocExpDate, '', []) ||
                     !this.validateTextField(this._listBDocExpDate, '', [this.dateFormat, this.NAString], true, [])) {
-                     errorMessages.push(this._('section2.listbexpdate'));
-                     this._listBDocExpDate.toggleClass(this.invalidFieldClass, true);
-                 }
+                    errorMessages.push(this._('section2.listbexpdate'))
+                    this._listBDocExpDate.toggleClass(this.invalidFieldClass, true)
+                }
             }
 
             if ((this._listCDoc.val() as string).trim() !== this.na) {
                 if ((this._listCIssuingAuthority.val() as string).trim() === '') {
-                    errorMessages.push(this._('section2.listcissuingauthority'));
-                    this._listCIssuingAuthority.toggleClass(this.invalidFieldClass, true);
+                    errorMessages.push(this._('section2.listcissuingauthority'))
+                    this._listCIssuingAuthority.toggleClass(this.invalidFieldClass, true)
                 }
 
                 if (this._listCDoc.prop('ssncard') && !confirm(this._('section2.ssncardnotvalid'))) {
-                    errorMessages.push(this._('section2.ssncardnotvalidformat'));
-                    this._listCDoc.toggleClass(this.invalidFieldClass, true);
+                    errorMessages.push(this._('section2.ssncardnotvalidformat'))
+                    this._listCDoc.toggleClass(this.invalidFieldClass, true)
                 } else if (this._listCDoc.prop('i551') && !confirm(this._('section2.expiredformI551confirmation'))) {
-                    errorMessages.push(this._('section2.expiredformI551notvalid'));
-                    this._listCDoc.toggleClass(this.invalidFieldClass, true);
+                    errorMessages.push(this._('section2.expiredformI551notvalid'))
+                    this._listCDoc.toggleClass(this.invalidFieldClass, true)
                 } else if (this._listCDocNumber.prop(this.validationExpressionProp) &&
                     !(this._listCDocNumber.prop(this.validationExpressionProp) as RegExp)
-                    .test(this._listCDocNumber.val() as string) &&
+                        .test(this._listCDocNumber.val() as string) &&
                     this._listCDocNumber.prop(this.validationMessageProp)) {
-                    errorMessages.push(this._listCDocNumber.prop(this.validationMessageProp));
-                    this._listCDocNumber.toggleClass(this.invalidFieldClass, true);
+                    errorMessages.push(this._listCDocNumber.prop(this.validationMessageProp))
+                    this._listCDocNumber.toggleClass(this.invalidFieldClass, true)
                 }
 
                 if (!this.validateDateRange(this._listCDocExpDate, '', []) ||
                     !this.validateTextField(this._listCDocExpDate, '', [this.dateFormat, this.NAString], true, [])) {
-                    errorMessages.push(this._('section2.listcexpdate'));
-                    this._listCDocExpDate.toggleClass(this.invalidFieldClass, true);
+                    errorMessages.push(this._('section2.listcexpdate'))
+                    this._listCDocExpDate.toggleClass(this.invalidFieldClass, true)
                 }
             }
         }
 
         [this._hireDate, this._employerSignDate, this._employerLastName, this._employerFirstName,
-         this._employerTitle, this._employerName, this._employerAddress, this._employerCity,
-         this._employerState, this._employerZip].forEach(f =>
-            f.attr(this.annotationRequired, 'true'));
+            this._employerTitle, this._employerName, this._employerAddress, this._employerCity,
+            this._employerState, this._employerZip].forEach(f => f.attr(this.annotationRequired, 'true'))
 
-        this.validateTextField(this._hireDate, this._('section2.hiredate'), [this.dateFormat], true, errorMessages);
-        this.validateTextField(this._employerSignDate, this._('section2.sgnemployer'), [this.dateFormat], true, errorMessages);
-        this.validateTextField(this._employerTitle, this._('section2.title'), [this.nameFormat], true, errorMessages);
-        this.validateTextField(this._employerLastName, this._('section2.lastname'), [this.nameFormat], true, errorMessages);
-        this.validateTextField(this._employerFirstName, this._('section2.firstname'), [this.nameFormat], true, errorMessages);
-        this.validateTextField(this._employerName, this._('section2.name'), [], true, errorMessages);
-        this.validateTextField(this._employerAddress, this._('section2.address'), [], true, errorMessages);
-        this.validateTextField(this._employerCity, this._('section2.city'), [], true, errorMessages);
-        this.validateTextField(this._employerState, this._('section2.state'), [], true, errorMessages);
-        this.validateTextField(this._employerZip, this._('section2.zip'), [this.zipNumberFormat], true, errorMessages);
+        this.validateTextField(this._hireDate, this._('section2.hiredate'), [this.dateFormat], true, errorMessages)
+        this.validateTextField(this._employerSignDate, this._('section2.sgnemployer'), [this.dateFormat], true, errorMessages)
+        this.validateTextField(this._employerTitle, this._('section2.title'), [this.nameFormat], true, errorMessages)
+        this.validateTextField(this._employerLastName, this._('section2.lastname'), [this.nameFormat], true, errorMessages)
+        this.validateTextField(this._employerFirstName, this._('section2.firstname'), [this.nameFormat], true, errorMessages)
+        this.validateTextField(this._employerName, this._('section2.name'), [], true, errorMessages)
+        this.validateTextField(this._employerAddress, this._('section2.address'), [], true, errorMessages)
+        this.validateTextField(this._employerCity, this._('section2.city'), [], true, errorMessages)
+        this.validateTextField(this._employerState, this._('section2.state'), [], true, errorMessages)
+        this.validateTextField(this._employerZip, this._('section2.zip'), [this.zipNumberFormat], true, errorMessages)
 
-        return errorMessages;
+        return errorMessages
     }
 
-    private renderEmployerData(
+    private renderEmployerData (
         tabIndex: number,
         sgnEmployer: JQuery<HTMLElement>,
         sgnEmployerHelp: JQuery<HTMLElement>,
@@ -431,106 +429,104 @@ export class USI9Section2 extends USI9Translator {
         employerState: JQuery<HTMLElement>,
         employerStateHelp: JQuery<HTMLElement>,
         employerZip: JQuery<HTMLElement>,
-        employerZipHelp: JQuery<HTMLElement>){
-
+        employerZipHelp: JQuery<HTMLElement>) {
         this._sgnEmployer = this.renderControl(sgnEmployer, this._('sgnemployer.tooltip'))
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._sgnEmployerHelp = this.renderHelpIcon(
             sgnEmployerHelp,
             this._('sgnemployerhelp.caption'),
             this._('sgnemployerhelp.text')
-        );
+        )
 
         this._employerSignDate = this.renderControl(employerSignDate, this._('employersigndate.tooltip'), true, 'right')
-        .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled')
-        .attr('tabindex', tabIndex++);
+            .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled').attr('tabindex', tabIndex++)
 
         this._employerSignDateHelp = this.renderHelpIcon(
             employerSignDateHelp,
             this._('employersigndatehelp.caption'),
             this._('employersigndatehelp.text')
-        );
+        )
 
         this._employerTitle = this.renderControl(employerTitle, this._('employertitle.tooltip'))
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._employerTitleHelp = this.renderHelpIcon(
             employerTitleHelp,
             this._('employertitlehelp.caption'),
             this._('employertitlehelp.text')
-        );
+        )
 
         this._employerLastName = this.renderControl(employerLastName, this._('employerlastname.tooltip'))
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._employerLastNameHelp = this.renderHelpIcon(
             employerLastNameHelp,
             this._('employerlastnamehelp.caption'),
             this._('employerlastnamehelp.text')
-        );
+        )
 
         this._employerFirstName = this.renderControl(employerFirstName, this._('employerfirstname.tooltip'))
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._employerFirstNameHelp = this.renderHelpIcon(
             employerFirstNameHelp,
             this._('employerfirstnamehelp.caption'),
             this._('employerfirstnamehelp.text')
-        );
+        )
 
         this._employerName = this.renderControl(employerName, this._('employername.tooltip'))
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._employerNameHelp = this.renderHelpIcon(
             employerNameHelp,
             this._('employernamehelp.caption'),
             this._('employernamehelp.text')
-        );
+        )
 
         this._employerAddress = this.renderControl(employerAddress, this._('employeraddress.tooltip'))
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._employerAddressHelp = this.renderHelpIcon(
             employerAddressHelp,
             this._('employeraddresshelp.caption'),
             this._('employeraddresshelp.text')
-        );
+        )
 
         this._employerCity = this.renderControl(employerCity, this._('employercity.tooltip'))
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._employerCityHelp = this.renderHelpIcon(
             employerCityHelp,
             this._('employercityhelp.caption'),
             this._('employercityhelp.text')
-        );
+        )
 
         this._employerState = this.renderControl(employerState, this._('employerstate.tooltip'), true, 'left')
-        .attr('tabindex', tabIndex++);
-        this.setCombolistText(this._employerState, this.space, this.blankItem);
+            .attr('tabindex', tabIndex++)
+        this.setCombolistText(this._employerState, this.space, this.blankItem)
 
         this._employerStateHelp = this.renderHelpIcon(
             employerStateHelp,
             this._('employerstatehelp.caption'),
             this._('employerstatehelp.text')
-        );
+        )
 
         this._employerZip = this.renderControl(employerZip, this._('employerzip.tooltip'))
-        .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
-        .attr('tabindex', tabIndex++);
+            .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
+            .attr('tabindex', tabIndex++)
 
         this._employerZipHelp = this.renderHelpIcon(
             employerZipHelp,
             this._('employerziphelp.caption'),
             this._('employerziphelp.text')
-        );
+        )
 
-        return tabIndex;
+        return tabIndex
     }
 
     // region "List A/B/C" methods
-    private renderListABC(
+    private renderListABC (
         tabIndex: number,
         listADoc: JQuery<HTMLElement>,
         listADocHelp: JQuery<HTMLElement>,
@@ -571,233 +567,231 @@ export class USI9Section2 extends USI9Translator {
         listCDocNumber: JQuery<HTMLElement>,
         listCDocNumberHelp: JQuery<HTMLElement>,
         listCDocExpDate: JQuery<HTMLElement>,
-        listCDocExpDateHelp: JQuery<HTMLElement>){
-
-        let maxWidth = '70';
+        listCDocExpDateHelp: JQuery<HTMLElement>) {
+        const maxWidth = '70'
 
         this._listADoc = this.renderControl(listADoc, this._('listadoc.tooltip'), true, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._listADocHelp = this.renderHelpIcon(
             listADocHelp,
             this._('listadochelp.caption'),
             this._('listadochelp.text'),
             maxWidth
-        );
+        )
 
         this._listAIssuingAuthority = this.renderControl(listAIssuingAuthority, this._('listaissuingauthority.tooltip'), true, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._listAIssuingAuthorityHelp = this.renderHelpIcon(
             listAIssuingAuthorityHelp,
             this._('listaissuingauthorityhelp.caption'),
             this._('listaissuingauthorityhelp.text')
-        );
+        )
 
         this._listADocNumber = this.renderControl(listADocNumber, this._('listadocnumber.tooltip'), true, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._listADocNumberHelp = this.renderHelpIcon(
             listADocNumberHelp,
             this._('listadocnumberhelp.caption'),
             this._('listadocnumberhelp.text')
-        );
+        )
 
         this._listADocExpDate = this.renderControl(listADocExpDate, this._('listaexpdate.tooltip'), true, 'right')
-        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
-        .attr('tabindex', tabIndex++);
+            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
+            .attr('tabindex', tabIndex++)
 
         this._listADocExpDateHelp = this.renderHelpIcon(
             listADocExpDateHelp,
             this._('listaexpdatehelp.caption'),
             this._('listaexpdatehelp.text')
-        );
+        )
 
         this._listADoc2 = this.renderControl(listADoc2, this._('listadoc2.tooltip'), true, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._listADoc2Help = this.renderHelpIcon(
             listADoc2Help,
             this._('listadoc2help.caption'),
             this._('listadoc2help.text')
-        );
+        )
 
         this._listAIssuingAuthority2 = this.renderControl(listAIssuingAuthority2, this._('listaissuingauthority2.tooltip'), true, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._listAIssuingAuthority2Help = this.renderHelpIcon(
             listAIssuingAuthority2Help,
             this._('listaissuingauthority2help.caption'),
             this._('listaissuingauthority2help.text')
-        );
+        )
 
         this._listADocNumber2 = this.renderControl(listADocNumber2, this._('listadocnumber2.tooltip'), true, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._listADocNumber2Help = this.renderHelpIcon(
             listADocNumber2Help,
             this._('listadocnumber2help.caption'),
             this._('listadocnumber2help.text')
-        );
+        )
 
         this._listADocExpDate2 = this.renderControl(listADocExpDate2, this._('listaexpdate2.tooltip'), true, 'right')
-        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
-        .attr('tabindex', tabIndex++);
+            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
+            .attr('tabindex', tabIndex++)
 
         this._listADocExpDate2Help = this.renderHelpIcon(
             listADocExpDate2Help,
             this._('listaexpdate2help.caption'),
             this._('listaexpdate2help.text')
-        );
+        )
 
         this._listADoc3 = this.renderControl(listADoc3, this._('listadoc3.tooltip'), true, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._listADoc3Help = this.renderHelpIcon(
             listADoc3Help,
             this._('listadoc3help.caption'),
             this._('listadoc3help.text')
-        );
+        )
 
         this._listAIssuingAuthority3 = this.renderControl(listAIssuingAuthority3, this._('listaissuingauthority3.tooltip'), true, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._listAIssuingAuthority3Help = this.renderHelpIcon(
             listAIssuingAuthority3Help,
             this._('listaissuingauthority3help.caption'),
             this._('listaissuingauthority3help.text')
-        );
+        )
 
         this._listADocNumber3 = this.renderControl(listADocNumber3, this._('listadocnumber3.tooltip'), true, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._listADocNumber3Help = this.renderHelpIcon(
             listADocNumber3Help,
             this._('listadocnumber3help.caption'),
             this._('listadocnumber3help.text')
-        );
+        )
 
         this._listADocExpDate3 = this.renderControl(listADocExpDate3, this._('listaexpdate3.tooltip'), true, 'right')
-        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
-        .attr('tabindex', tabIndex++);
+            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() })
+            .attr('autocomplete', 'disabled').attr('tabindex', tabIndex++)
 
         this._listADocExpDate3Help = this.renderHelpIcon(
             listADocExpDate3Help,
             this._('listaexpdate3help.caption'),
             this._('listaexpdate3help.text')
-        );
+        )
 
         this._listBDoc = this.renderControl(listBDoc, this._('listbdoc.tooltip'), true, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._listBDocHelp = this.renderHelpIcon(
             listBDocHelp,
             this._('listbdochelp.caption'),
             this._('listbdochelp.text'),
             maxWidth
-        );
+        )
 
-        this.filterCombolist(this._listBDoc, this.getListBContent(null), null, this, this.processListABC);
+        this.filterCombolist(this._listBDoc, this.getListBContent(null), null, this, this.processListABC)
 
         this._listBIssuingAuthority = this.renderControl(listBIssuingAuthority, this._('listbissuingauthority.tooltip'), true, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._listBIssuingAuthorityHelp = this.renderHelpIcon(
             listBIssuingAuthorityHelp,
             this._('listbissuingauthorityhelp.caption'),
             this._('listbissuingauthorityhelp.text')
-        );
+        )
 
         this._listBDocNumber = this.renderControl(listBDocNumber, this._('listbdocnumber.tooltip'), true, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._listBDocNumberHelp = this.renderHelpIcon(
             listBDocNumberHelp,
             this._('listbdocnumberhelp.caption'),
-            this._('listbdocnumberhelp.text'),
-        );
+            this._('listbdocnumberhelp.text')
+        )
 
         this._listBDocExpDate = this.renderControl(listBDocExpDate, this._('listbexpdate.tooltip'), true, 'right')
-        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
-        .attr('tabindex', tabIndex++);
+            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
+            .attr('tabindex', tabIndex++)
 
         this._listBDocExpDateHelp = this.renderHelpIcon(
             listBDocExpDateHelp,
             this._('listbexpdatehelp.caption'),
             this._('listbexpdatehelp.text')
-        );
+        )
 
         this._listCDoc = this.renderControl(listCDoc, this._('listcdoc.tooltip'), true, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._listCDocHelp = this.renderHelpIcon(
             listCDocHelp,
             this._('listcdochelp.caption'),
             this._('listcdochelp.text'),
             maxWidth
-        );
+        )
 
-        this.filterCombolist(this._listCDoc, this.getListCContent(null), null, this, this.processListABC);
+        this.filterCombolist(this._listCDoc, this.getListCContent(null), null, this, this.processListABC)
 
         this._listCIssuingAuthority = this.renderControl(listCIssuingAuthority, this._('listcissuingauthority.tooltip'), true, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._listCIssuingAuthorityHelp = this.renderHelpIcon(
             listCIssuingAuthorityHelp,
             this._('listcissuingauthorityhelp.caption'),
             this._('listcissuingauthorityhelp.text')
-        );
+        )
 
         this._listCDocNumber = this.renderControl(listCDocNumber, this._('listcdocnumber.tooltip'), true, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._listCDocNumberHelp = this.renderHelpIcon(
             listCDocNumberHelp,
             this._('listcdocnumberhelp.caption'),
             this._('listcdocnumberhelp.text')
-        );
+        )
 
         this._listCDocExpDate = this.renderControl(listCDocExpDate, this._('listcexpdate.tooltip'), true, 'right')
-        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
-        .attr('tabindex', tabIndex++);
+            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
+            .attr('tabindex', tabIndex++)
 
         this._listCDocExpDateHelp = this.renderHelpIcon(
             listCDocExpDateHelp,
             this._('listcexpdatehelp.caption'),
             this._('listcexpdatehelp.text')
-        );
+        )
 
-        return tabIndex;
+        return tabIndex
     }
 
-    protected processListABC(ddl: string, code: string, self: USI9Section2) {
-        switch(ddl)
-        {
+    protected processListABC (ddl: string, code: string, self: USI9Section2) {
+        switch (ddl) {
         case 'ListADocTitle':
-            self.listADocTitle(code);
-            break;
+            self.listADocTitle(code)
+            break
 
         case 'ListADocTitle2':
-            self.listADocTitle2(code);
-            break;
+            self.listADocTitle2(code)
+            break
 
         case 'ListADocTitle3':
-            self.listADocTitle3(code);
-            break;
+            self.listADocTitle3(code)
+            break
 
         case 'ListBDocTitle':
-            self.listBDocTitle(code);
-            break;
+            self.listBDocTitle(code)
+            break
 
         case 'ListCDocTitle':
-            self.listCDocTitle(code);
-            break;
+            self.listCDocTitle(code)
+            break
         }
     }
 
-    protected getListAContent(citizenship: string) : { [index: string]: string; } {
-        let usCitizenOrNational = {spaceSymbol: this.blankItem, 0: this.na, 1: this._('uspassport'), 2: this._('uspassportcard')};
-        let lpr = {
+    protected getListAContent (citizenship: string) : { [index: string]: string; } {
+        const usCitizenOrNational = { spaceSymbol: this.blankItem, 0: this.na, 1: this._('uspassport'), 2: this._('uspassportcard') }
+        const lpr = {
             spaceSymbol: this.blankItem,
             0: this.na,
             3: this._('permanentresidentcard'),
@@ -805,8 +799,8 @@ export class USI9Section2 extends USI9Translator {
             5: this._('foreignpassport'),
             10: this._('I551I94receipt'),
             12: this._('I551receipt')
-        };
-        let alien = {
+        }
+        const alien = {
             spaceSymbol: this.blankItem,
             0: this.na,
             6: this._('eadI766'),
@@ -819,28 +813,27 @@ export class USI9Section2 extends USI9Translator {
             15: this._('FSMpassportreceipt'),
             16: this._('RMIpassportreceipt'),
             17: this._('expiredeadI766')
-        };
+        }
 
-        switch (citizenship)
-        {
-            case '0': case null:
-                return {};
-            case '1': case '2':
-                return usCitizenOrNational;
-            case '3':
-                return lpr;
-            case '4':
-                return alien;
+        switch (citizenship) {
+        case '0': case null:
+            return {}
+        case '1': case '2':
+            return usCitizenOrNational
+        case '3':
+            return lpr
+        case '4':
+            return alien
         }
     }
 
-    protected getListBContent(dob: string) {
-        let isMinorUnderAge18 = false;
-        let ms = Date.parse(dob);
+    protected getListBContent (dob: string) {
+        let isMinorUnderAge18 = false
+        const ms = Date.parse(dob)
         if (!isNaN(ms)) {
-            var ageDifMs = Date.now() - ms;
-            var ageDate = new Date(ageDifMs);
-            isMinorUnderAge18 = Math.abs(ageDate.getUTCFullYear() - 1970) < 18;
+            var ageDifMs = Date.now() - ms
+            var ageDate = new Date(ageDifMs)
+            isMinorUnderAge18 = Math.abs(ageDate.getUTCFullYear() - 1970) < 18
         }
 
         let listB = {
@@ -869,7 +862,7 @@ export class USI9Section2 extends USI9Translator {
             29: this._('marinercardreceipt'),
             30: this._('canadiandriverlicensereceipt'),
             31: this._('indiantribalidreceipt')
-        };
+        }
 
         if (isMinorUnderAge18 || dob === null) {
             listB = $.extend(listB, {
@@ -888,21 +881,21 @@ export class USI9Section2 extends USI9Translator {
                 36: this._('hospitalrecordreceipt'),
                 37: this._('datecarerecordreceipt'),
                 38: this._('nurseryschoolrecordreceipt')
-            });
+            })
         }
 
-        $.each(listB, (i, v) => listB[i] = decodeURIComponent(v));
+        $.each(listB, (i, v) => { listB[i] = decodeURIComponent(v) })
 
-        return listB;
+        return listB
     }
 
-    protected getListCContent(citizenship: string) {
+    protected getListCContent (citizenship: string) {
         let listC = {
             spaceSymbol: this.blankItem,
             0: this._('NA'),
             1: this._('ssncard'),
             10: this._('ssnCardReceipt')
-        };
+        }
 
         if (['1', '2', '0', null].indexOf(citizenship) >= 0) {
             listC = $.extend(listC, {
@@ -915,7 +908,7 @@ export class USI9Section2 extends USI9Translator {
                 8: this._('formI179'),
                 11: this._('birthCertificateReceipt'),
                 12: this._('tribalDocumentReceipt')
-            });
+            })
         }
 
         if (['3', '4', '0', null].indexOf(citizenship) >= 0) {
@@ -923,380 +916,380 @@ export class USI9Section2 extends USI9Translator {
                 9: this._('eadListC'),
                 13: this._('eadListCReceipt'),
                 14: this._('expiredFormI551')
-            });
+            })
         }
 
-        $.each(listC, (i, v) => listC[i] = decodeURIComponent(v));
+        $.each(listC, (i, v) => { listC[i] = decodeURIComponent(v) })
 
-        return listC;
+        return listC
     }
 
-    private listADocTitle(code: string) {
-        let USDS = 'USDS';
-        let USCIS = 'USCIS'
-        let DOJINS = 'DOJINS';
-        let DHS = 'DHS';
-        let CBP = 'CBP';
-        let FSM = 'FSM';
-        let RMI = 'RMI';
+    private listADocTitle (code: string) {
+        const USDS = 'USDS'
+        const USCIS = 'USCIS'
+        const DOJINS = 'DOJINS'
+        const DHS = 'DHS'
+        const CBP = 'CBP'
+        const FSM = 'FSM'
+        const RMI = 'RMI'
 
-        let numberMaxLength = 15;
-        let fieldFormat = /^[a-zA-Z0-9]+$/;
-        let fieldValidationExpression: RegExp = null;
-        let fieldValidationMessage: string = null;
-        let issuingAuthList: { [index: string]: string; };
-        let issuingAuth: string = null;
+        let numberMaxLength = 15
+        let fieldFormat = /^[a-zA-Z0-9]+$/
+        let fieldValidationExpression: RegExp = null
+        let fieldValidationMessage: string = null
+        let issuingAuthList: { [index: string]: string; }
+        let issuingAuth: string = null
 
         this._listADocNumber.prop(this.requiredProp, true)
-        .removeAttr('readOnly').val('');
+            .removeAttr('readOnly').val('')
 
-        this._listADocNumber2.prop(this.requiredProp, false);
-        this._listADocExpDate2.prop(this.requiredProp, false);
+        this._listADocNumber2.prop(this.requiredProp, false)
+        this._listADocExpDate2.prop(this.requiredProp, false)
 
         // restore min date after 17/Expired I-766
         this._listADocExpDate
-        .removeAttr('readOnly')
-        .datepicker('option', 'minDate', new Date())
-        .datepicker('option', 'maxDate', null)
-        .datepicker('option', 'showOn', 'focus')
-        .attr('autocomplete', 'disabled').val('')
-        .prop(this.requiredProp, true).prop(this.freeTextProp, false);
+            .removeAttr('readOnly')
+            .datepicker('option', 'minDate', new Date())
+            .datepicker('option', 'maxDate', null)
+            .datepicker('option', 'showOn', 'focus')
+            .attr('autocomplete', 'disabled').val('')
+            .prop(this.requiredProp, true).prop(this.freeTextProp, false)
 
-        let tenYearsFromNow = new Date();
-        tenYearsFromNow.setFullYear(tenYearsFromNow.getFullYear() + 10);
+        const tenYearsFromNow = new Date()
+        tenYearsFromNow.setFullYear(tenYearsFromNow.getFullYear() + 10)
 
         if (['1', '2'].indexOf(code) >= 0) {
             // 1 - U.S. Passport
             // 2 - U.S. Passport Card
-            issuingAuthList = { USDS: this._(USDS) };
-            issuingAuth = USDS;
-            numberMaxLength = 9;
-            fieldValidationExpression = this.usPassportNumberFormat;
-            fieldValidationMessage = this._('section2.uspassportformat');
+            issuingAuthList = { USDS: this._(USDS) }
+            issuingAuth = USDS
+            numberMaxLength = 9
+            fieldValidationExpression = this.usPassportNumberFormat
+            fieldValidationMessage = this._('section2.uspassportformat')
 
             this._listADocExpDate.datepicker('option', 'maxDate', tenYearsFromNow)
         } else if (code === '3') {
             // 3 - Perm. Resident Card (Form I-551)
-            issuingAuthList = { USCIS: this._(USCIS), DOJINS: this._(DOJINS) };
-            issuingAuth = USCIS;
-            numberMaxLength = 13;
-            fieldFormat = this.numberWithDashesFormat;
-            fieldValidationExpression = this.greenCardNumberFormat;
-            fieldValidationMessage = this._('section2.cardformat');
+            issuingAuthList = { USCIS: this._(USCIS), DOJINS: this._(DOJINS) }
+            issuingAuth = USCIS
+            numberMaxLength = 13
+            fieldFormat = this.numberWithDashesFormat
+            fieldValidationExpression = this.greenCardNumberFormat
+            fieldValidationMessage = this._('section2.cardformat')
 
             this._listADocExpDate.datepicker('option', 'maxDate', tenYearsFromNow)
         } else if (code === '4') {
             // 4 - Alien Reg. Receipt Card (Form I-551)
-            issuingAuthList = { DOJINS: this._(DOJINS) };
-            issuingAuth = DOJINS;
-            numberMaxLength = 13;
-            fieldValidationExpression = this.cardNumberFormat;
-            fieldValidationMessage = this._('section2.cardformat');
+            issuingAuthList = { DOJINS: this._(DOJINS) }
+            issuingAuth = DOJINS
+            numberMaxLength = 13
+            fieldValidationExpression = this.cardNumberFormat
+            fieldValidationMessage = this._('section2.cardformat')
 
             this._listADocExpDate.datepicker('option', 'maxDate', tenYearsFromNow)
         } else if (code === '5') {
             // 5 - Foreign Passport
-            issuingAuthList = JSON.parse(this._('countries'));
-            issuingAuth = null;        
-            numberMaxLength = 12;
-            fieldValidationExpression = this.passportNumberFormat;
-            fieldValidationMessage = this._('section2.passportformat');
+            issuingAuthList = JSON.parse(this._('countries'))
+            issuingAuth = null
+            numberMaxLength = 12
+            fieldValidationExpression = this.passportNumberFormat
+            fieldValidationMessage = this._('section2.passportformat')
 
             this.filterCombolist(
                 this._listADoc2,
                 { 1: this._('temporaryI551stamp'), 2: this._('mrivstamp') },
                 '1',
                 this,
-                this.processListABC);
+                this.processListABC)
 
             this.filterCombolist(
                 this._listAIssuingAuthority2,
                 { USCIS: this._(USCIS), DOJINS: this._(DOJINS) },
                 USCIS,
                 this,
-                this.processListABC);
+                this.processListABC)
 
-            this._listADocNumber2.attr('readOnly', 'true').val(this.na);
+            this._listADocNumber2.attr('readOnly', 'true').val(this.na)
 
             this._listADocExpDate2
-            .removeAttr('readOnly')
-            .datepicker('option', 'minDate', new Date())
-            .datepicker('option', 'maxDate', null)
-            .datepicker('option', 'showOn', 'focus')
-            .attr('autocomplete', 'disabled').val('')
-            .unbind('keypress')
-            .prop(this.requiredProp, true).prop(this.freeTextProp, true);
+                .removeAttr('readOnly')
+                .datepicker('option', 'minDate', new Date())
+                .datepicker('option', 'maxDate', null)
+                .datepicker('option', 'showOn', 'focus')
+                .attr('autocomplete', 'disabled').val('')
+                .unbind('keypress')
+                .prop(this.requiredProp, true).prop(this.freeTextProp, true)
         } else if (code === '10') {
             // 10 - Receipt: Form I-94/I-94A w/I-551 stamp, photo
-            issuingAuthList = {DHS: this._(DHS)};
-            issuingAuth = DHS;
-            numberMaxLength = 11;
-            fieldFormat = this.numberFormat;
-            fieldValidationExpression = this.admissionNumberFormat;
-            fieldValidationMessage = this._('section2.admissionnumber');
+            issuingAuthList = { DHS: this._(DHS) }
+            issuingAuth = DHS
+            numberMaxLength = 11
+            fieldFormat = this.numberFormat
+            fieldValidationExpression = this.admissionNumberFormat
+            fieldValidationMessage = this._('section2.admissionnumber')
 
             this._listADocExpDate
-            .unbind('keypress')
-            .prop(this.freeTextProp, true);
+                .unbind('keypress')
+                .prop(this.freeTextProp, true)
         } else if (code === '12') {
             // 12 - Receipt replacement Perm. Res. Card (Form I-551)
-            issuingAuthList = { USCIS: this._(USCIS) };
-            issuingAuth = USCIS;        
-            numberMaxLength = 13;
-            fieldValidationExpression = this.cardNumberFormat;
-            fieldValidationMessage = this._('section2.cardformat');
+            issuingAuthList = { USCIS: this._(USCIS) }
+            issuingAuth = USCIS
+            numberMaxLength = 13
+            fieldValidationExpression = this.cardNumberFormat
+            fieldValidationMessage = this._('section2.cardformat')
 
             this._listADocExpDate
-            .unbind('keypress')
-            .prop(this.freeTextProp, true);
+                .unbind('keypress')
+                .prop(this.freeTextProp, true)
         } else if (code === '6') {
             // Alien authorized to work
             // 6 - Employment Auth. Document (Form I-766)
-            issuingAuthList = { USCIS: this._(USCIS) };
-            issuingAuth = USCIS;
-            numberMaxLength = 13;
-            fieldValidationExpression = this.cardNumberFormat;
-            fieldValidationMessage = this._('section2.cardformat');
+            issuingAuthList = { USCIS: this._(USCIS) }
+            issuingAuth = USCIS
+            numberMaxLength = 13
+            fieldValidationExpression = this.cardNumberFormat
+            fieldValidationMessage = this._('section2.cardformat')
 
-            this._listADocExpDate.prop(this.freeTextProp, true);
+            this._listADocExpDate.prop(this.freeTextProp, true)
         } else if (code === '17') {
             // Alien authorized to work
             // 17 - Expired Employment Auth. Document (Form I-766)
-            issuingAuthList = { USCIS: this._(USCIS) };
-            issuingAuth = USCIS;
-            numberMaxLength = 13;
-            fieldValidationExpression = this.cardNumberFormat;
-            fieldValidationMessage = this._('section2.cardformat');
+            issuingAuthList = { USCIS: this._(USCIS) }
+            issuingAuth = USCIS
+            numberMaxLength = 13
+            fieldValidationExpression = this.cardNumberFormat
+            fieldValidationMessage = this._('section2.cardformat')
 
             this._listADocExpDate
-            .removeAttr('readOnly')
-            .datepicker('option', 'minDate', null)
-            .datepicker('option', 'maxDate', new Date())
-            .datepicker('option', 'showOn', 'focus')
-            .attr('autocomplete', 'disabled').val('');
+                .removeAttr('readOnly')
+                .datepicker('option', 'minDate', null)
+                .datepicker('option', 'maxDate', new Date())
+                .datepicker('option', 'showOn', 'focus')
+                .attr('autocomplete', 'disabled').val('')
 
             this.filterCombolist(
                 this._listADoc2,
                 { 5: this._('formI797C'), 6: this._('formI20') },
                 '5',
                 this,
-                this.processListABC);
+                this.processListABC)
 
             this.filterCombolist(
                 this._listAIssuingAuthority2,
                 { USCIS: this._(USCIS) },
                 USCIS,
                 this,
-                this.processListABC);
+                this.processListABC)
 
-            this._listADocNumber2.removeAttr('readOnly').val('').prop(this.requiredProp, true);
+            this._listADocNumber2.removeAttr('readOnly').val('').prop(this.requiredProp, true)
             this._listADocExpDate2
-            .removeAttr('readOnly')
-            .datepicker('option', 'minDate', new Date())
-            .datepicker('option', 'maxDate', null)
-            .datepicker('option', 'showOn', 'focus')
-            .attr('autocomplete', 'disabled').val('')
-            .prop(this.requiredProp, true);
+                .removeAttr('readOnly')
+                .datepicker('option', 'minDate', new Date())
+                .datepicker('option', 'maxDate', null)
+                .datepicker('option', 'showOn', 'focus')
+                .attr('autocomplete', 'disabled').val('')
+                .prop(this.requiredProp, true)
         } else if (['7', '14'].indexOf(code) >= 0) {
             // 7 - Foreign Passport, work-authorized nonimmigrant
             // 14 - Receipt: Replacement Foreign Passport, work-authorized nonimmigrant
-            issuingAuthList = JSON.parse(this._('countries'));
-            issuingAuth = null;        
-            numberMaxLength = 12;
-            fieldValidationExpression = this.passportNumberFormat;
-            fieldValidationMessage = this._('section2.passportformat');
+            issuingAuthList = JSON.parse(this._('countries'))
+            issuingAuth = null
+            numberMaxLength = 12
+            fieldValidationExpression = this.passportNumberFormat
+            fieldValidationMessage = this._('section2.passportformat')
 
             this.filterCombolist(
                 this._listADoc2,
                 { 3: this._('formI94'), 4: this._('formI94receipt') },
                 '3',
                 this,
-                this.processListABC);
+                this.processListABC)
 
             this.filterCombolist(
                 this._listAIssuingAuthority2,
-                { USCIS:this._(USCIS), CBP:this._(CBP) },
+                { USCIS: this._(USCIS), CBP: this._(CBP) },
                 USCIS,
                 this,
-                this.processListABC);
+                this.processListABC)
 
-            this._listADocNumber2.removeAttr('readOnly').val('').prop(this.requiredProp, true);
+            this._listADocNumber2.removeAttr('readOnly').val('').prop(this.requiredProp, true)
 
             this._listADocExpDate2
-            .removeAttr('readOnly')
-            .datepicker('option', 'minDate', new Date())
-            .datepicker('option', 'maxDate', null)
-            .datepicker('option', 'showOn', 'focus')
-            .attr('autocomplete', 'disabled').val('')
-            .unbind('keypress')
-            .prop(this.requiredProp, true).prop(this.freeTextProp, true);
+                .removeAttr('readOnly')
+                .datepicker('option', 'minDate', new Date())
+                .datepicker('option', 'maxDate', null)
+                .datepicker('option', 'showOn', 'focus')
+                .attr('autocomplete', 'disabled').val('')
+                .unbind('keypress')
+                .prop(this.requiredProp, true).prop(this.freeTextProp, true)
 
             this.filterCombolist(
                 this._listADoc3,
                 { 0: this.na, 1: this._('formI20'), 2: this._('formDS2019') },
                 '0',
                 this,
-                this.processListABC);
+                this.processListABC)
 
-            this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
-            this._listADocNumber3.attr('readOnly', 'true').val(this.na);
+            this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC)
+            this._listADocNumber3.attr('readOnly', 'true').val(this.na)
             this._listADocExpDate3.attr('readOnly', 'true')
-            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
+                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na)
         } else if (code === '8') {
             // 8 - FSM Passport with Form I-94
-            issuingAuthList = { FSM: this._(FSM) };
-            issuingAuth = FSM;        
-            numberMaxLength = 12;
-            fieldValidationExpression = this.passportNumberFormat;
-            fieldValidationMessage = this._('section2.passportformat');
+            issuingAuthList = { FSM: this._(FSM) }
+            issuingAuth = FSM
+            numberMaxLength = 12
+            fieldValidationExpression = this.passportNumberFormat
+            fieldValidationMessage = this._('section2.passportformat')
 
             this.filterCombolist(
                 this._listADoc2,
                 { 3: this._('formI94'), 4: this._('formI94receipt') },
                 '3',
                 this,
-                this.processListABC);
+                this.processListABC)
 
             this.filterCombolist(
                 this._listAIssuingAuthority2,
-                { USCIS:this._(USCIS), CBP:this._(CBP) },
+                { USCIS: this._(USCIS), CBP: this._(CBP) },
                 USCIS,
                 this,
-                this.processListABC);
+                this.processListABC)
 
-            this._listADocNumber2.removeAttr('readOnly').val('').prop(this.requiredProp, true);
+            this._listADocNumber2.removeAttr('readOnly').val('').prop(this.requiredProp, true)
 
             this._listADocExpDate2
-            .datepicker('option', 'minDate', new Date())
-            .datepicker('option', 'maxDate', null)
-            .datepicker('option', 'showOn', 'focus')
-            .attr('autocomplete', 'disabled').val('')
-            .unbind('keypress')
-            .prop(this.requiredProp, true).prop(this.freeTextProp, true);
+                .datepicker('option', 'minDate', new Date())
+                .datepicker('option', 'maxDate', null)
+                .datepicker('option', 'showOn', 'focus')
+                .attr('autocomplete', 'disabled').val('')
+                .unbind('keypress')
+                .prop(this.requiredProp, true).prop(this.freeTextProp, true)
         } else if (code === '9') {
             // 9 - RMI Passport with Form I-94
-            issuingAuthList = { RMI: this._(RMI) };
-            issuingAuth = RMI;
-            numberMaxLength = 12;
-            fieldValidationExpression = this.passportNumberFormat;
-            fieldValidationMessage = this._('section2.passportformat');
+            issuingAuthList = { RMI: this._(RMI) }
+            issuingAuth = RMI
+            numberMaxLength = 12
+            fieldValidationExpression = this.passportNumberFormat
+            fieldValidationMessage = this._('section2.passportformat')
 
             this.filterCombolist(
                 this._listADoc2,
                 { 3: this._('formI94'), 4: this._('formI94receipt') },
                 '3',
                 this,
-                this.processListABC);
+                this.processListABC)
 
             this.filterCombolist(
                 this._listAIssuingAuthority2,
-                { USCIS:this._(USCIS), CBP:this._(CBP) },
+                { USCIS: this._(USCIS), CBP: this._(CBP) },
                 USCIS,
                 this,
-                this.processListABC);
+                this.processListABC)
 
-            this._listADocNumber2.removeAttr('readOnly').val('').prop(this.requiredProp, true);
+            this._listADocNumber2.removeAttr('readOnly').val('').prop(this.requiredProp, true)
 
             this._listADocExpDate2
-            .datepicker('option', 'minDate', new Date())
-            .datepicker('option', 'maxDate', null)
-            .datepicker('option', 'showOn', 'focus')
-            .attr('autocomplete', 'disabled').val('')
-            .unbind('keypress')
-            .prop(this.requiredProp, true).prop(this.freeTextProp, true);
+                .datepicker('option', 'minDate', new Date())
+                .datepicker('option', 'maxDate', null)
+                .datepicker('option', 'showOn', 'focus')
+                .attr('autocomplete', 'disabled').val('')
+                .unbind('keypress')
+                .prop(this.requiredProp, true).prop(this.freeTextProp, true)
         } else if (code === '11') {
             // 11 - Receipt: Form I-94/I-94A w/refugee stamp
-            issuingAuthList = { DHS: this._(DHS) };
-            issuingAuth = DHS;      
-            numberMaxLength = 11;
-            numberMaxLength = 11;
-            fieldFormat = this.numberFormat;
+            issuingAuthList = { DHS: this._(DHS) }
+            issuingAuth = DHS
+            numberMaxLength = 11
+            numberMaxLength = 11
+            fieldFormat = this.numberFormat
             fieldValidationExpression = this.admissionNumberFormat
-            fieldValidationMessage = this._('section2.admissionnumber');
+            fieldValidationMessage = this._('section2.admissionnumber')
 
-            this._listADocExpDate.prop(this.freeTextProp, true);
+            this._listADocExpDate.prop(this.freeTextProp, true)
         } else if (code === '13') {
             // 13 - Receipt replacement EAD (Form I-766)
-            issuingAuthList = { USCIS: this._(USCIS) };
-            issuingAuth = USCIS;        
-            numberMaxLength = 13;
-            fieldValidationExpression = this.cardNumberFormat;
-            fieldValidationMessage = this._('section2.cardformat');
+            issuingAuthList = { USCIS: this._(USCIS) }
+            issuingAuth = USCIS
+            numberMaxLength = 13
+            fieldValidationExpression = this.cardNumberFormat
+            fieldValidationMessage = this._('section2.cardformat')
 
-            this._listADocExpDate.prop(this.freeTextProp, true);
+            this._listADocExpDate.prop(this.freeTextProp, true)
         } else if (code === '15') {
             // 15 - Receipt: Replacement FSM Passport with Form I-94
-            issuingAuthList = { 'FSM': this._('FSM') };
-            issuingAuth = 'FSM';
-            numberMaxLength = 12;
-            fieldValidationExpression = this.passportNumberFormat;
-            fieldValidationMessage = this._('section2.passportformat');
+            issuingAuthList = { FSM: this._('FSM') }
+            issuingAuth = 'FSM'
+            numberMaxLength = 12
+            fieldValidationExpression = this.passportNumberFormat
+            fieldValidationMessage = this._('section2.passportformat')
         } else if (code === '16') {
             // 16 - Receipt: Replacement RMI Passport with Form I-94
-            issuingAuthList = { RMI: this._(RMI) };
-            issuingAuth = RMI;
-            numberMaxLength = 12;
-            fieldValidationExpression = this.passportNumberFormat;
-            fieldValidationMessage = this._('section2.passportformat');
+            issuingAuthList = { RMI: this._(RMI) }
+            issuingAuth = RMI
+            numberMaxLength = 12
+            fieldValidationExpression = this.passportNumberFormat
+            fieldValidationMessage = this._('section2.passportformat')
         }
 
         this._listADocNumber
-        .prop('maxLength', numberMaxLength)
-        .keypress(e => fieldFormat.test(e.key) || e.key === this.backSpaceCode);
+            .prop('maxLength', numberMaxLength)
+            .keypress(e => fieldFormat.test(e.key) || e.key === this.backSpaceCode)
 
-        this._listADocExpDate.unbind('keypress');
+        this._listADocExpDate.unbind('keypress')
         if (!this._listADocExpDate.prop(this.freeTextProp)) {
             this._listADocExpDate
-            .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+                .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
         }
 
-        this._listADocNumber.prop(this.validationExpressionProp,  fieldValidationExpression);    
-        this._listADocNumber.prop(this.validationMessageProp, fieldValidationMessage);
+        this._listADocNumber.prop(this.validationExpressionProp, fieldValidationExpression)
+        this._listADocNumber.prop(this.validationMessageProp, fieldValidationMessage)
 
         this.filterCombolist(
             this._listAIssuingAuthority.prop(this.requiredProp, true),
-            $.extend({spaceSymbol: this.blankItem}, issuingAuthList),
+            $.extend({ spaceSymbol: this.blankItem }, issuingAuthList),
             issuingAuth,
             this,
-            this.processListABC);
+            this.processListABC)
 
         if (['1', '2', '3', '4', '6', '10', '11', '12'].indexOf(code) >= 0) {
-            this.filterCombolist(this._listADoc2, { 0: this.na }, '0', this, this.processListABC);
-            this.filterCombolist(this._listAIssuingAuthority2, { 0: this.na }, '0', this, this.processListABC);
-            this._listADocNumber2.attr('readOnly', 'true').val(this.na);
+            this.filterCombolist(this._listADoc2, { 0: this.na }, '0', this, this.processListABC)
+            this.filterCombolist(this._listAIssuingAuthority2, { 0: this.na }, '0', this, this.processListABC)
+            this._listADocNumber2.attr('readOnly', 'true').val(this.na)
             this._listADocExpDate2.attr('readOnly', 'true')
-            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
+                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na)
         }
 
         if (['1', '2', '3', '4', '5', '6', '8', '9', '10', '11', '12', '15', '16', '17'].indexOf(code) >= 0) {
-            this.filterCombolist(this._listADoc3, { 0: this.na }, '0', this, this.processListABC);
-            this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
-            this._listADocNumber3.attr('readOnly', 'true').val(this.na);
+            this.filterCombolist(this._listADoc3, { 0: this.na }, '0', this, this.processListABC)
+            this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC)
+            this._listADocNumber3.attr('readOnly', 'true').val(this.na)
             this._listADocExpDate3
-            .attr('readOnly', 'true')
-            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
+                .attr('readOnly', 'true')
+                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na)
         }
 
         if (code !== '0' && code.trim() !== '') {
-            this.clearListB();
-            this.clearListC();
+            this.clearListB()
+            this.clearListC()
         }
 
         if (code === '0') {
-            this.clearListA();
+            this.clearListA()
         }
     }
 
-    private listADocTitle2(code: string) {
-        let USDS = 'USDS';
-        let USCIS = 'USCIS';
-        let DOJINS = 'DOJINS';
-        let ICE = 'ICE';
+    private listADocTitle2 (code: string) {
+        const USDS = 'USDS'
+        const USCIS = 'USCIS'
+        const DOJINS = 'DOJINS'
+        const ICE = 'ICE'
 
-        let numberMaxLength = 11;
-        let fieldFormat = /^[a-zA-Z0-9]+$/;
+        const numberMaxLength = 11
+        let fieldFormat = /^[a-zA-Z0-9]+$/
 
-        this._listADocNumber2.removeAttr('readOnly').val('');
+        this._listADocNumber2.removeAttr('readOnly').val('')
         this._listADocExpDate2.removeAttr('readOnly').val('')
 
         if (code === '1') {
@@ -1306,7 +1299,7 @@ export class USI9Section2 extends USI9Translator {
                 { spaceSymbol: this.blankItem, USCIS: this._(USCIS), DOJINS: this._(DOJINS) },
                 USCIS,
                 this,
-                this.processListABC);
+                this.processListABC)
         } else if (code === '2') {
             // 2 - Machine-readable immigrant visa (MRIV)
             this.filterCombolist(
@@ -1314,10 +1307,10 @@ export class USI9Section2 extends USI9Translator {
                 { spaceSymbol: this.blankItem, USDS: this._(USDS) },
                 USDS,
                 this,
-                this.processListABC);
+                this.processListABC)
         } else if (code === '3') {
             // 3 - Form I-94/I-94A
-            fieldFormat = /^\d+$/;
+            fieldFormat = /^\d+$/
         } else if (code === '5') {
             // 5 - Form I-797C
             this.filterCombolist(
@@ -1325,7 +1318,7 @@ export class USI9Section2 extends USI9Translator {
                 { USCIS: this._(USCIS) },
                 USCIS,
                 this,
-                this.processListABC);
+                this.processListABC)
         } else if (code === '6') {
             // 6 - Form I-20
             this.filterCombolist(
@@ -1333,32 +1326,32 @@ export class USI9Section2 extends USI9Translator {
                 { spaceSymbol: this.blankItem, ICE: this._(ICE), DOJINS: this._(DOJINS) },
                 ICE,
                 this,
-                this.processListABC);
+                this.processListABC)
         }
 
         // 4 - Receipt: Replacement Form I-94/I-94A
         // default parameters
 
         this._listADocNumber2
-        .prop('maxLength', numberMaxLength)
-        .prop(this.requiredProp, true)
-        .keypress(e => fieldFormat.test(e.key) || e.key === this.backSpaceCode);
+            .prop('maxLength', numberMaxLength)
+            .prop(this.requiredProp, true)
+            .keypress(e => fieldFormat.test(e.key) || e.key === this.backSpaceCode)
     }
 
-    private listADocTitle3(code: string) {
-        let ICE = 'ICE';
-        let DOJINS = 'DOJINS';
-        let USDS = 'USDS';
+    private listADocTitle3 (code: string) {
+        const ICE = 'ICE'
+        const DOJINS = 'DOJINS'
+        const USDS = 'USDS'
 
-        this._listADocNumber3.prop(this.requiredProp, true);
-        this._listADocExpDate3.prop(this.requiredProp, true);
+        this._listADocNumber3.prop(this.requiredProp, true)
+        this._listADocExpDate3.prop(this.requiredProp, true)
 
         // 0 - N/A
         if (code === '0') {
-            this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
-            this._listADocNumber3.attr('readOnly', 'true').val(this.na);
+            this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC)
+            this._listADocNumber3.attr('readOnly', 'true').val(this.na)
             this._listADocExpDate3.attr('readOnly', 'true')
-            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
+                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na)
         } else if (code === '1') {
             // 1 - Form I-20
             this.filterCombolist(
@@ -1366,12 +1359,12 @@ export class USI9Section2 extends USI9Translator {
                 { spaceSymbol: this.blankItem, ICE: this._(ICE), DOJINS: this._(DOJINS) },
                 ICE,
                 this,
-                this.processListABC);
+                this.processListABC)
 
-            this._listADocNumber3.removeAttr('readOnly').val('');
+            this._listADocNumber3.removeAttr('readOnly').val('')
             this._listADocExpDate3.removeAttr('readOnly').val('')
-            .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'disabled')
-            .prop(this.requiredProp, true).prop(this.freeTextProp, false);
+                .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'disabled')
+                .prop(this.requiredProp, true).prop(this.freeTextProp, false)
         } else if (code === '2') {
             // 2 - Form DS-2019
             this.filterCombolist(
@@ -1379,40 +1372,40 @@ export class USI9Section2 extends USI9Translator {
                 { spaceSymbol: this.blankItem, USDS: this._(USDS) },
                 USDS,
                 this,
-                this.processListABC);
+                this.processListABC)
 
-            this._listADocNumber3.removeAttr('readOnly').val('');
+            this._listADocNumber3.removeAttr('readOnly').val('')
             this._listADocExpDate3.removeAttr('readOnly').val('')
-            .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'disabled')
-            .prop(this.requiredProp, true).prop(this.freeTextProp, false);
+                .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'disabled')
+                .prop(this.requiredProp, true).prop(this.freeTextProp, false)
         }
     }
 
-    private listBDocTitle(code: string) {
-        let USCG = 'USCG';
+    private listBDocTitle (code: string) {
+        const USCG = 'USCG'
 
-        let numberMaxLength = 15;
-        let fieldFormat = /^[a-zA-Z0-9]+$/;
-        let fieldValidationExpression: RegExp = null;
-        let fieldValidationMessage: string = null;
-        let issuingAuthList: { [index: string]: string; };
-        let issuingAuth: string = null;
+        let numberMaxLength = 15
+        const fieldFormat = /^[a-zA-Z0-9]+$/
+        let fieldValidationExpression: RegExp = null
+        let fieldValidationMessage: string = null
+        let issuingAuthList: { [index: string]: string; }
+        let issuingAuth: string = null
 
-        this._listBDocNumber.prop('maxLength', '100').unbind('keypress');
+        this._listBDocNumber.prop('maxLength', '100').unbind('keypress')
 
-        this._listBIssuingAuthority.prop(this.requiredProp, true);
-        this._listBDocNumber.prop(this.requiredProp, true);
-        this._listBDocExpDate.prop(this.requiredProp, true);
+        this._listBIssuingAuthority.prop(this.requiredProp, true)
+        this._listBDocNumber.prop(this.requiredProp, true)
+        this._listBDocExpDate.prop(this.requiredProp, true)
 
         // NOT 19 - Individual under Age 18
         // NOT 20 - Special Placement
         if (['19', '20'].indexOf(code) < 0) {
-            this._listBDocNumber.removeAttr('readOnly').val('');
+            this._listBDocNumber.removeAttr('readOnly').val('')
             this._listBDocExpDate
-            .removeAttr('readOnly')
-            .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'disabled').val('')
-            .unbind('keypress')
-            .keypress((e : JQuery.KeyPressEvent<HTMLElement>) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
+                .removeAttr('readOnly')
+                .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'disabled').val('')
+                .unbind('keypress')
+                .keypress((e : JQuery.KeyPressEvent<HTMLElement>) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
         }
 
         if (['1', '2', '21', '22'].indexOf(code) >= 0) {
@@ -1420,20 +1413,20 @@ export class USI9Section2 extends USI9Translator {
             // 2 - ID card issued by state/territory
             // 21 - Receipt: Replacement driver’s license
             // 22 - Receipt: Replacement ID card
-            issuingAuthList = JSON.parse(this._('usstates'));
-            issuingAuth = 'AL';
+            issuingAuthList = JSON.parse(this._('usstates'))
+            issuingAuth = 'AL'
 
-            numberMaxLength = 14;
+            numberMaxLength = 14
 
             this._listBDocNumber
-            .prop('maxLength', numberMaxLength)
-            .unbind('keypress')
-            .keypress(e => fieldFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
+                .prop('maxLength', numberMaxLength)
+                .unbind('keypress')
+                .keypress(e => fieldFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
 
-            fieldValidationExpression = this.driverLicenseNumberFormat;
-            fieldValidationMessage = this._('section2.listbnumberformat');
+            fieldValidationExpression = this.driverLicenseNumberFormat
+            fieldValidationMessage = this._('section2.listbnumberformat')
         } else if (['3', '4', '5', '6', '7', '8', '10', '12', '13', '14', '15', '16', '17', '18',
-             '23', '24', '25', '26', '27', '28', '31', '32', '33', '34', '35', '36', '37', '38'].indexOf(code) >= 0) {
+            '23', '24', '25', '26', '27', '28', '31', '32', '33', '34', '35', '36', '37', '38'].indexOf(code) >= 0) {
             // 3 - Government ID
             // 4 - School ID
             // 5 - Voter registration card
@@ -1462,34 +1455,34 @@ export class USI9Section2 extends USI9Translator {
             // 36 - Receipt: Replacement Hospital record (under age 18)
             // 37 - Receipt: Replacement Day-care record (under age 18)
             // 38 - Receipt: Replacement Nursery school record (under age 18)
-            issuingAuthList = {};
-            issuingAuth = null;
+            issuingAuthList = {}
+            issuingAuth = null
 
-            this._listBIssuingAuthority.removeAttr('readOnly');
+            this._listBIssuingAuthority.removeAttr('readOnly')
         } else if (['9', '29'].indexOf(code) >= 0) {
             // 9 - USCG Merchant Mariner card
             // 29 - Receipt: Replacement Merchant Mariner
-            issuingAuthList = { USCG: this._(USCG) };
-            issuingAuth = USCG;
+            issuingAuthList = { USCG: this._(USCG) }
+            issuingAuth = USCG
 
-            this._listBIssuingAuthority.attr('readOnly', 'true');
-        } else  if (['11', '30'].indexOf(code) >= 0) {
+            this._listBIssuingAuthority.attr('readOnly', 'true')
+        } else if (['11', '30'].indexOf(code) >= 0) {
             // 11 - Canadian driver’s license
             // 30 - Receipt: Replacement Canadian DL
-            issuingAuthList = JSON.parse(this._('canada'));
-            issuingAuth = null;
+            issuingAuthList = JSON.parse(this._('canada'))
+            issuingAuth = null
 
-            this._listBIssuingAuthority.attr('readOnly', 'true');
+            this._listBIssuingAuthority.attr('readOnly', 'true')
         } else if (['19'].indexOf(code) >= 0) {
             // 19 - Individual under Age 18
             // 20 - Special Placement
-            issuingAuthList = {'0':this.na};
-            issuingAuth = '0';
+            issuingAuthList = { 0: this.na }
+            issuingAuth = '0'
 
-            this._listBDocNumber.attr('readOnly', 'true').val(this.na);
+            this._listBDocNumber.attr('readOnly', 'true').val(this.na)
             this._listBDocExpDate
-            .attr('readOnly', 'true')
-            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
+                .attr('readOnly', 'true')
+                .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na)
         }
 
         this.filterCombolist(
@@ -1497,250 +1490,250 @@ export class USI9Section2 extends USI9Translator {
             $.extend({ spaceSymbol: this.blankItem }, issuingAuthList),
             issuingAuth,
             this,
-            this.processListABC);
+            this.processListABC)
 
-        this._listBDocNumber.prop(this.validationExpressionProp,  fieldValidationExpression);    
-        this._listBDocNumber.prop(this.validationMessageProp, fieldValidationMessage);
+        this._listBDocNumber.prop(this.validationExpressionProp, fieldValidationExpression)
+        this._listBDocNumber.prop(this.validationMessageProp, fieldValidationMessage)
 
         if (code !== '0' && code.trim() !== '') {
-            this.clearListA();
+            this.clearListA()
         }
 
         if (code === '0') {
-            this.clearListB();
+            this.clearListB()
         }
     }
 
-    private listCDocTitle(code: string) {
-        let SSA = 'SSA';
-        let USDHHS = 'USDHHS';
-        let SSD = 'SSD';
-        let DHEW = 'DHEW';
-        let USDS = 'USDS';
-        let USCIS = 'USCIS';
-        let DOJINS = 'DOJINS';
+    private listCDocTitle (code: string) {
+        const SSA = 'SSA'
+        const USDHHS = 'USDHHS'
+        const SSD = 'SSD'
+        const DHEW = 'DHEW'
+        const USDS = 'USDS'
+        const USCIS = 'USCIS'
+        const DOJINS = 'DOJINS'
 
-        let numberMaxLength = 15;
-        let fieldFormat = /^[a-zA-Z0-9]+$/;
-        let fieldValidationExpression: RegExp = null;
-        let fieldValidationMessage: string = null;        
-        let issuingAuthList: { [index: string]: string; };
-        let issuingAuth: string;
+        let numberMaxLength = 15
+        let fieldFormat = /^[a-zA-Z0-9]+$/
+        let fieldValidationExpression: RegExp = null
+        let fieldValidationMessage: string = null
+        let issuingAuthList: { [index: string]: string; }
+        let issuingAuth: string
 
-        this._listCIssuingAuthority.prop(this.requiredProp, true);
-        this._listCDocNumber.prop(this.requiredProp, true);
-        this._listCDocExpDate.prop(this.requiredProp, true);
+        this._listCIssuingAuthority.prop(this.requiredProp, true)
+        this._listCDocNumber.prop(this.requiredProp, true)
+        this._listCDocExpDate.prop(this.requiredProp, true)
 
-        this._listCIssuingAuthority.attr('readOnly', 'true');
+        this._listCIssuingAuthority.attr('readOnly', 'true')
         this._listCDocExpDate
-        .removeAttr('readOnly')
-        .datepicker('option', 'minDate', new Date())
-        .datepicker('option', 'maxDate', null)
-        .datepicker('option', 'showOn', 'focus')
-        .attr('autocomplete', 'disabled')
-        .unbind('keypress')
-        .keypress((e : JQuery.KeyPressEvent<HTMLElement>) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-        .val('');
+            .removeAttr('readOnly')
+            .datepicker('option', 'minDate', new Date())
+            .datepicker('option', 'maxDate', null)
+            .datepicker('option', 'showOn', 'focus')
+            .attr('autocomplete', 'disabled')
+            .unbind('keypress')
+            .keypress((e : JQuery.KeyPressEvent<HTMLElement>) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+            .val('')
 
-        this._listCDoc.prop('ssncard', false).prop('i551', false);
+        this._listCDoc.prop('ssncard', false).prop('i551', false)
 
         if (code === '1') {
             // 1 - (Unrestricted) Social Security Card
-            issuingAuthList = { SSA: this._(SSA), USDHHS: this._(USDHHS), SSD: this._(SSD), DHEW: this._(DHEW) };
-            issuingAuth = SSA;
+            issuingAuthList = { SSA: this._(SSA), USDHHS: this._(USDHHS), SSD: this._(SSD), DHEW: this._(DHEW) }
+            issuingAuth = SSA
 
-            numberMaxLength = 11;
-            fieldFormat = /^[\d-]+$/;
+            numberMaxLength = 11
+            fieldFormat = /^[\d-]+$/
 
-            fieldValidationExpression = this.ssnFormat;
-            fieldValidationMessage = this._('section2.ssnformat');
+            fieldValidationExpression = this.ssnFormat
+            fieldValidationMessage = this._('section2.ssnformat')
 
             this._listCDocExpDate
-            .attr('readOnly', 'true')
-            .datepicker('option', 'showOn', 'off')
-            .attr('autocomplete', 'disabled').val(this.na);
+                .attr('readOnly', 'true')
+                .datepicker('option', 'showOn', 'off')
+                .attr('autocomplete', 'disabled').val(this.na)
 
-            this._listCDoc.prop('ssncard', true);
+            this._listCDoc.prop('ssncard', true)
         } else if (['2', '3', '4'].indexOf(code) >= 0) {
             // 2 - Form FS-545
             // 3 - Form DS-1350
             // 4 - Form FS-240
-            issuingAuthList = { USDS: this._(USDS) };
-            issuingAuth = USDS;
+            issuingAuthList = { USDS: this._(USDS) }
+            issuingAuth = USDS
         } else if (['5', '6', '11', '12'].indexOf(code) >= 0) {
             // 5 - Birth Certificate
             // 6 - Native American tribal document
             // 11 - Receipt: Replacement Birth Certificate
             // 12 - Receipt: Replacement Native American Tribal Doc.
-            issuingAuthList = {};
-            issuingAuth = null;
+            issuingAuthList = {}
+            issuingAuth = null
 
-            this._listCIssuingAuthority.removeAttr('readOnly');
+            this._listCIssuingAuthority.removeAttr('readOnly')
         } else if (['7', '8'].indexOf(code) >= 0) {
             // 7 - Form I-197
             // 8 - Form I-179
-            issuingAuthList = { DOJINS: this._(DOJINS) };
-            issuingAuth = DOJINS;
+            issuingAuthList = { DOJINS: this._(DOJINS) }
+            issuingAuth = DOJINS
         } else if (['9', '13'].indexOf(code) >= 0) {
             // 9 - Employment Auth. document (DHS) List C #7
             // 13 - Receipt: Replacement Employment Auth. Doc. (DHS)
-            let name = decodeURIComponent(code === '9' ? this._('listC7') : this._('listC7Receipt'));
-            issuingAuthList = { 0: name };
-            issuingAuth = '0';
+            const name = decodeURIComponent(code === '9' ? this._('listC7') : this._('listC7Receipt'))
+            issuingAuthList = { 0: name }
+            issuingAuth = '0'
 
             this._listCIssuingAuthority
-            .removeAttr('readOnly')
-            .keypress(e => {
-                let val = this._listCIssuingAuthority.val() as string;
+                .removeAttr('readOnly')
+                .keypress(e => {
+                    const val = this._listCIssuingAuthority.val() as string
 
-                if (val.length >= name.length) {
-                    return val.substr(0, name.length) === name;
-                }
+                    if (val.length >= name.length) {
+                        return val.substr(0, name.length) === name
+                    }
 
-                return true;
-            })
-            .keyup(e => {
-                let val = this._listCIssuingAuthority.val() as string;
+                    return true
+                })
+                .keyup(e => {
+                    const val = this._listCIssuingAuthority.val() as string
 
-                if (val.length <= name.length ||
+                    if (val.length <= name.length ||
                 (val.length === name.length + 1 && val.substr(0, name.length) !== name)) {
-                    this._listCIssuingAuthority.val(name);
-                }
-            });
+                        this._listCIssuingAuthority.val(name)
+                    }
+                })
         } else if (code === '10') {
             // 10 - Receipt: Replacement Unrestricted SS Card
-            issuingAuthList = { SSA: this._(SSA) };
-            issuingAuth = SSA;
+            issuingAuthList = { SSA: this._(SSA) }
+            issuingAuth = SSA
         } else if (code === '14') {
             // 14 - Expired Perm. Resident Card (Form I-551)
-            issuingAuthList = { USCIS: this._(USCIS), DOJINS: this._(DOJINS) };
-            issuingAuth = USCIS;
-            numberMaxLength = 13;
-            fieldValidationExpression = this.cardNumberFormat;
-            fieldValidationMessage = this._('section2.cardformat');
+            issuingAuthList = { USCIS: this._(USCIS), DOJINS: this._(DOJINS) }
+            issuingAuth = USCIS
+            numberMaxLength = 13
+            fieldValidationExpression = this.cardNumberFormat
+            fieldValidationMessage = this._('section2.cardformat')
 
-            this._listCDoc.prop('i551', true);
+            this._listCDoc.prop('i551', true)
 
             this._listCDocExpDate
-            .removeAttr('readOnly')
-            .datepicker('option', 'minDate', null)
-            .datepicker('option', 'maxDate', new Date())
-            .datepicker('option', 'showOn', 'focus')
-            .attr('autocomplete', 'disabled').val('');
+                .removeAttr('readOnly')
+                .datepicker('option', 'minDate', null)
+                .datepicker('option', 'maxDate', new Date())
+                .datepicker('option', 'showOn', 'focus')
+                .attr('autocomplete', 'disabled').val('')
         }
 
         this._listCDocNumber
-        .prop('maxLength', numberMaxLength)
-        .removeAttr('readOnly').val('')
-        .keypress(e => fieldFormat.test(e.key) || e.key === this.backSpaceCode);
+            .prop('maxLength', numberMaxLength)
+            .removeAttr('readOnly').val('')
+            .keypress(e => fieldFormat.test(e.key) || e.key === this.backSpaceCode)
 
         this.filterCombolist(
             this._listCIssuingAuthority,
             $.extend({ spaceSymbol: this.blankItem }, issuingAuthList),
             issuingAuth,
             this,
-            this.processListABC);
+            this.processListABC)
 
         this._listCDocNumber
-        .prop(this.validationExpressionProp,  fieldValidationExpression)
-        .prop(this.validationMessageProp, fieldValidationMessage);
+            .prop(this.validationExpressionProp, fieldValidationExpression)
+            .prop(this.validationMessageProp, fieldValidationMessage)
 
         if (code !== '0' && code.trim() !== '') {
-            this.clearListA();
+            this.clearListA()
         }
 
         if (code === '0') {
-            this.clearListC();
+            this.clearListC()
         }
     }
 
-    protected fillListABC(status: string) {
+    protected fillListABC (status: string) {
         this.filterCombolist(
             this._listADoc,
             this.getListAContent(status),
             null,
             this,
-            this.processListABC);
+            this.processListABC)
 
         this.filterCombolist(
             this._listBDoc,
             this.getListBContent(this._dob.val() as string),
             null,
             this,
-            this.processListABC);
+            this.processListABC)
 
         this.filterCombolist(
             this._listCDoc,
             this.getListCContent(status),
             null,
             this,
-            this.processListABC);
+            this.processListABC)
     }
 
-    protected clearListABC() {
-        this._lastNameSection2.val('');
-        this._firstNameSection2.val('');
-        this._middleInitialSection2.val('');
-        this._immigrationStatus.val('');
+    protected clearListABC () {
+        this._lastNameSection2.val('')
+        this._firstNameSection2.val('')
+        this._middleInitialSection2.val('')
+        this._immigrationStatus.val('')
 
-        this.filterCombolist(this._listADoc, {}, null, this, null);
-        this.filterCombolist(this._listAIssuingAuthority, {}, null, this, null);
-        this._listADocNumber.val('');
-        this._listADocExpDate.val('');
-        this.filterCombolist(this._listADoc2, {}, null, this, null);
-        this.filterCombolist(this._listAIssuingAuthority2, {}, null, this, null);
-        this._listADocNumber2.val('');
-        this._listADocExpDate2.val('');
-        this.filterCombolist(this._listADoc3, {}, null, this, null);
-        this.filterCombolist(this._listAIssuingAuthority3, {}, null, this, null);
-        this._listADocNumber3.val('');
-        this._listADocExpDate3.val('');
-        this.filterCombolist(this._listBDoc, {}, null, this, null);
-        this.filterCombolist(this._listBIssuingAuthority, {}, null, this, null);
-        this._listBDocNumber.val('');
-        this._listBDocExpDate.val('');
-        this.filterCombolist(this._listCDoc, {}, null, this, null);
-        this.filterCombolist(this._listCIssuingAuthority, {}, null, this, null);
-        this._listCDocNumber.val('');
-        this._listCDocExpDate.val('');
+        this.filterCombolist(this._listADoc, {}, null, this, null)
+        this.filterCombolist(this._listAIssuingAuthority, {}, null, this, null)
+        this._listADocNumber.val('')
+        this._listADocExpDate.val('')
+        this.filterCombolist(this._listADoc2, {}, null, this, null)
+        this.filterCombolist(this._listAIssuingAuthority2, {}, null, this, null)
+        this._listADocNumber2.val('')
+        this._listADocExpDate2.val('')
+        this.filterCombolist(this._listADoc3, {}, null, this, null)
+        this.filterCombolist(this._listAIssuingAuthority3, {}, null, this, null)
+        this._listADocNumber3.val('')
+        this._listADocExpDate3.val('')
+        this.filterCombolist(this._listBDoc, {}, null, this, null)
+        this.filterCombolist(this._listBIssuingAuthority, {}, null, this, null)
+        this._listBDocNumber.val('')
+        this._listBDocExpDate.val('')
+        this.filterCombolist(this._listCDoc, {}, null, this, null)
+        this.filterCombolist(this._listCIssuingAuthority, {}, null, this, null)
+        this._listCDocNumber.val('')
+        this._listCDocExpDate.val('')
     }
 
-    protected clearListA() {
-        this.setCombolistValue(this._listADoc, '0');
-        this.filterCombolist(this._listAIssuingAuthority, { 0: this.na }, '0', this, this.processListABC);
-        this._listADocNumber.attr('readOnly', 'true').val(this.na);
+    protected clearListA () {
+        this.setCombolistValue(this._listADoc, '0')
+        this.filterCombolist(this._listAIssuingAuthority, { 0: this.na }, '0', this, this.processListABC)
+        this._listADocNumber.attr('readOnly', 'true').val(this.na)
         this._listADocExpDate.attr('readOnly', 'true')
-        .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
+            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na)
 
-        this.filterCombolist(this._listADoc2, {0:this.na}, '0', this, this.processListABC);
-        this.filterCombolist(this._listAIssuingAuthority2, { 0:this.na }, '0', this, this.processListABC);
-        this._listADocNumber2.attr('readOnly', 'true').val(this.na);
+        this.filterCombolist(this._listADoc2, { 0: this.na }, '0', this, this.processListABC)
+        this.filterCombolist(this._listAIssuingAuthority2, { 0: this.na }, '0', this, this.processListABC)
+        this._listADocNumber2.attr('readOnly', 'true').val(this.na)
         this._listADocExpDate2.attr('readOnly', 'true')
-        .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
+            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na)
 
-        this.filterCombolist(this._listADoc3, { 0: this.na }, '0', this, this.processListABC);
-        this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
-        this._listADocNumber3.attr('readOnly', 'true').val(this.na);
+        this.filterCombolist(this._listADoc3, { 0: this.na }, '0', this, this.processListABC)
+        this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC)
+        this._listADocNumber3.attr('readOnly', 'true').val(this.na)
         this._listADocExpDate3.attr('readOnly', 'true')
-        .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
+            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na)
     }
 
-    protected clearListB() {
-        this.setCombolistValue(this._listBDoc, '0');
-        this.filterCombolist(this._listBIssuingAuthority, {0: this.na}, '0', this, null);
-        this._listBDocNumber.attr('readOnly', 'true').val(this.na);
+    protected clearListB () {
+        this.setCombolistValue(this._listBDoc, '0')
+        this.filterCombolist(this._listBIssuingAuthority, { 0: this.na }, '0', this, null)
+        this._listBDocNumber.attr('readOnly', 'true').val(this.na)
         this._listBDocExpDate
-        .attr('readOnly', 'true')
-        .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
+            .attr('readOnly', 'true')
+            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na)
     }
 
-    protected clearListC() {
-        this.setCombolistValue(this._listCDoc, '0');
-        this.filterCombolist(this._listCIssuingAuthority, {0: this.na}, '0', this, null);
-        this._listCDocNumber.attr('readOnly', 'true').val(this.na);
+    protected clearListC () {
+        this.setCombolistValue(this._listCDoc, '0')
+        this.filterCombolist(this._listCIssuingAuthority, { 0: this.na }, '0', this, null)
+        this._listCDocNumber.attr('readOnly', 'true').val(this.na)
         this._listCDocExpDate
-        .attr('readOnly', 'true')
-        .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na);
+            .attr('readOnly', 'true')
+            .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na)
     }
-    //endregion
+    // endregion
 }

@@ -1,41 +1,41 @@
-import { USI9Section3 } from 'Section3';
+import { USI9Section3 } from 'Section3'
 
 export class USI9 extends USI9Section3 {
     private pdfApp: any;
 
-    constructor(pdfApp: any, webL10n: any)
-    {
-        super(webL10n);
-        this.pdfApp = pdfApp;
+    constructor (pdfApp: any, webL10n: any) {
+        super(webL10n)
+        this.pdfApp = pdfApp
     }
 
-    private prepareData() {
-        this.pdfApp.transformationService = '/?rest_route=/UpdateForm';
-        this.pdfApp.sessionID = this.urlParameter('session_id');
+    private prepareData () {
+        this.pdfApp.transformationService = '/?rest_route=/UpdateForm'
+        this.pdfApp.sessionID = this.urlParameter('session_id')
         this.pdfApp.fieldsData = {
-            'file': this.pdfApp.url,
-            'operation': 'f',
-            'entries': []
+            file: this.pdfApp.url,
+            operation: 'f',
+            entries: []
         }
 
-        let readOnlyFieldsToFlat =
+        const readOnlyFieldsToFlat =
         ['LPRUSCISNumber', 'LPRUSCISNumberPrefix', 'AlienUSCISNumberPrefix',
-         'AlienWorkAuthorizationDate', 'AlienUSCISNumber',
-         'AdmissionNumber', 'ForeignPassportNumber', 'CountryOfIssuance',
-         'LastNameSection2', 'FirstNameSection2',
-         'MiddleInitialSection2', 'ImmigrationStatus'];
+            'AlienWorkAuthorizationDate', 'AlienUSCISNumber',
+            'AdmissionNumber', 'ForeignPassportNumber', 'CountryOfIssuance',
+            'LastNameSection2', 'FirstNameSection2',
+            'MiddleInitialSection2', 'ImmigrationStatus']
 
         $(`[${this.annotationName}]`).each((i, ctrl: HTMLInputElement) => {
             if ((!ctrl.disabled || readOnlyFieldsToFlat.indexOf(ctrl.getAttribute(this.annotationName)) > -1) && ctrl.value && ctrl.value !== '') {
                 this.pdfApp.fieldsData.entries.push({
-                    'name': ctrl.getAttribute(this.annotationName),
-                    'value': ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value,
-                    'operation': 's'});
+                    name: ctrl.getAttribute(this.annotationName),
+                    value: ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value,
+                    operation: 's'
+                })
             }
-        });
+        })
     }
 
-    private prepareFirstPage(tabIndex: number) {
+    private prepareFirstPage (tabIndex: number) {
         tabIndex = this.renderSection1(
             tabIndex,
             $(`[${this.annotationName}=LastName]`),
@@ -98,7 +98,7 @@ export class USI9 extends USI9Section3 {
             $(`[${this.annotationName}=sgnEmployeeHelp]`),
             $(`[${this.annotationName}=sgnEmployeeDate]`),
             $(`[${this.annotationName}=sgnEmployeeDateHelp]`)
-        );
+        )
 
         tabIndex = this.renderTranslatorSection(
             tabIndex,
@@ -121,12 +121,12 @@ export class USI9 extends USI9Section3 {
             $(`[${this.annotationName}=TranslatorStateHelp]`),
             $(`[${this.annotationName}=TranslatorZip]`),
             $(`[${this.annotationName}=TranslatorZipHelp]`)
-        );
+        )
 
-        return tabIndex;
+        return tabIndex
     }
 
-    private prepareSecondPage(tabIndex: number) {
+    private prepareSecondPage (tabIndex: number) {
         tabIndex = this.renderSection2(
             tabIndex,
             $(`[${this.annotationName}=EmployeeInfoSection2Help]`),
@@ -202,7 +202,7 @@ export class USI9 extends USI9Section3 {
             $(`[${this.annotationName}=EmployerStateHelp]`),
             $(`[${this.annotationName}=EmployerZip]`),
             $(`[${this.annotationName}=EmployerZipHelp]`)
-        );
+        )
 
         tabIndex = this.renderSection3(
             tabIndex,
@@ -226,26 +226,26 @@ export class USI9 extends USI9Section3 {
             $(`[${this.annotationName}=SignDateSec3Help]`),
             $(`[${this.annotationName}=EmployerNameSec3]`),
             $(`[${this.annotationName}=EmployerNameSec3Help]`)
-        );
+        )
 
-        return tabIndex;
+        return tabIndex
     }
 
-    public renderSections() {
-        let eventBus = this.pdfApp.eventBus;
+    public renderSections () {
+        const eventBus = this.pdfApp.eventBus
 
         this.toolbarButtons.forEach((e) => {
-            let eventFuncs = eventBus.get(e);
+            const eventFuncs = eventBus.get(e)
             eventBus.remove(e)
             eventBus.on(e, () => {
                 if (this.validateForm($(`#${e}`), super.validateFields())) {
-                    this.prepareData();
+                    this.prepareData()
 
-                    eventFuncs.forEach((f: () => void) => f());
+                    eventFuncs.forEach((f: () => void) => f())
                 }
-            });
-        });
+            })
+        })
 
-        this.prepareSecondPage(this.prepareFirstPage(100));
+        this.prepareSecondPage(this.prepareFirstPage(100))
     }
 }

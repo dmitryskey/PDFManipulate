@@ -1,7 +1,7 @@
-import { USI9Fields } from 'Fields';
+import { USI9Fields } from 'Fields'
 
 export class USI9Section1 extends USI9Fields {
-    private renderNameAndAddress(
+    private renderNameAndAddress (
         tabIndex: number,
         lastName: JQuery<HTMLElement>,
         lastNameHelp: JQuery<HTMLElement>,
@@ -21,143 +21,141 @@ export class USI9Section1 extends USI9Fields {
         stateHelp: JQuery<HTMLElement>,
         zip: JQuery<HTMLElement>,
         zipHelp: JQuery<HTMLElement>) {
-
         this._lastName = this.renderControl(lastName, this._('lastnamehelp.tooltip'))
-        .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
-        .attr('tabindex', tabIndex++);
+            .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+            .attr('tabindex', tabIndex++)
 
         this._lastNameHelp = this.renderHelpIcon(
             lastNameHelp,
             this._('lastnamehelp.caption'),
             this._('lastnamehelp.text')
-        );
+        )
 
         this._firstName = this.renderControl(firstName, this._('firstnamehelp.tooltip'))
-        .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
-        .attr('tabindex', tabIndex++);
+            .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+            .attr('tabindex', tabIndex++)
 
         this._firstNameHelp = this.renderHelpIcon(
             firstNameHelp,
             this._('firstnamehelp.caption'),
             this._('firstnamehelp.text')
-        );
+        )
 
         // N/A option
         this._middleInitial = this.renderControl(middleInitial, this._('middleinitialhelp.tooltip'))
-        .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-        .attr('tabindex', tabIndex++);
+            .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+            .attr('tabindex', tabIndex++)
 
         this._middleInitialHelp = this.renderHelpIcon(
             middleInitialHelp,
             this._('middleinitialhelp.caption'),
             this._('middleinitialhelp.text')
-        );
+        )
 
-        this._otherNames = this.renderControl(otherNames,this._('othernameshelp.tooltip'))
-        .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-        .attr('tabindex', tabIndex++);
+        this._otherNames = this.renderControl(otherNames, this._('othernameshelp.tooltip'))
+            .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+            .attr('tabindex', tabIndex++)
 
         this._otherNamesHelp = this.renderHelpIcon(
             otherNamesHelp,
             this._('othernameshelp.caption'),
             this._('othernameshelp.text')
-        );
+        )
 
         this._address = this.renderControl(address, this._('addresshelp.tooltip'))
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._addressHelp = this.renderHelpIcon(
             addressHelp,
             this._('addresshelp.caption'),
             this._('addresshelp.text')
-        );
+        )
 
-        this._apptNumber = this.renderControl(apptNumber,this._('apartmentnumberhelp.tooltip'))
-        .attr('tabindex', tabIndex++);
+        this._apptNumber = this.renderControl(apptNumber, this._('apartmentnumberhelp.tooltip'))
+            .attr('tabindex', tabIndex++)
 
         this._apptNumberHelp = this.renderHelpIcon(
             apptNumberHelp,
             this._('apartmentnumberhelp.caption'),
             this._('apartmentnumberhelp.text')
-        );
+        )
 
         this._city = this.renderControl(city, this._('cityhelp.tooltip'))
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._cityHelp = this.renderHelpIcon(
             cityHelp,
             this._('cityhelp.caption'),
             this._('cityhelp.text')
-        );
+        )
 
         this._state = this.renderControl(state, this._('statehelp.tooltip'), true, 'left')
-        .focus(e => {
-            $(e.target).tooltip('hide');
+            .focus(e => {
+                $(e.target).tooltip('hide')
 
-            let nonUSCountries = ['CAN', 'MEX'];
+                const nonUSCountries = ['CAN', 'MEX']
 
-            let zipCode = nonUSCountries.indexOf((e.currentTarget as HTMLInputElement).value) < 0;
-            this._zip.unbind('keypress');
-            this._zip.keypress(e => {
-                return ((nonUSCountries.indexOf(this._state.val() as string) < 0
-                  ? this.zipFormat : this.postalFormat).test(e.key) || e.key === this.backSpaceCode)
-            });
+                const zipCode = nonUSCountries.indexOf((e.currentTarget as HTMLInputElement).value) < 0
+                this._zip.unbind('keypress')
+                this._zip.keypress(e => {
+                    return ((nonUSCountries.indexOf(this._state.val() as string) < 0
+                        ? this.zipFormat : this.postalFormat).test(e.key) || e.key === this.backSpaceCode)
+                })
 
-            this._zip.prop('maxLength', zipCode ? 5 : 6);
-        })
-        .attr(this.annotationRequired, 'true')
-        .attr('tabindex', tabIndex++);
+                this._zip.prop('maxLength', zipCode ? 5 : 6)
+            })
+            .attr(this.annotationRequired, 'true')
+            .attr('tabindex', tabIndex++)
 
-        this.setCombolistText(this._state, this.space, this.blankItem);
+        this.setCombolistText(this._state, this.space, this.blankItem)
 
         this._stateHelp = this.renderHelpIcon(
             stateHelp,
             this._('statehelp.caption'),
             this._('statehelp.text')
-        );
+        )
 
         this._zip = this.renderControl(zip, this._('ziphelp.tooltip'))
-        .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
-        .attr('tabindex', tabIndex++);
+            .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
+            .attr('tabindex', tabIndex++)
 
         this._zipHelp = this.renderHelpIcon(
             zipHelp,
             this._('ziphelp.caption'),
             this._('ziphelp.text')
-        );
+        )
 
-        return tabIndex;
+        return tabIndex
     }
 
-    private renderSSNFields(ssn : JQuery<HTMLElement>[], tabIndex: number) {
-        this._ssn = ssn;
+    private renderSSNFields (ssn : JQuery<HTMLElement>[], tabIndex: number) {
+        this._ssn = ssn
         for (let i = 0; i < ssn.length - 1; i++) {
             this.renderControl(this._ssn[i], this._('ssnhelp.tooltip'))
-            .attr(this.annotationNext, (this._ssn[i + 1]).attr(this.annotationName))
-            .keypress(e => {
-                if (this.numberFormat.test(e.key)) {
-                    $(`['${this.annotationName}'='${$(e.target).attr(this.annotationNext)}']`).focus();
-                    return true;
-                }
-                else {
-                    return e.key === this.backSpaceCode;
-                }
-            }).keydown((e) => {
-                if (e.keyCode === 8) {
-                    $(`['${this.annotationNext}'='${$(e.target).attr(this.annotationName)}']`).focus();
-                }
-            })
-            .attr('tabindex', tabIndex++);
+                .attr(this.annotationNext, (this._ssn[i + 1]).attr(this.annotationName))
+                .keypress(e => {
+                    if (this.numberFormat.test(e.key)) {
+                        $(`['${this.annotationName}'='${$(e.target).attr(this.annotationNext)}']`).focus()
+                        return true
+                    } else {
+                        return e.key === this.backSpaceCode
+                    }
+                }).keydown((e) => {
+                    if (e.keyCode === 8) {
+                        $(`['${this.annotationNext}'='${$(e.target).attr(this.annotationName)}']`).focus()
+                    }
+                })
+                .attr('tabindex', tabIndex++)
         }
 
         this.renderControl(this._ssn[ssn.length - 1], this._('ssnhelp.tooltip'))
-        .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
-        .attr('tabindex', tabIndex++);
+            .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
+            .attr('tabindex', tabIndex++)
 
-        return tabIndex;
+        return tabIndex
     }
 
-    private renderPersonalData(
+    private renderPersonalData (
         tabIndex: number,
         dob: JQuery<HTMLElement>,
         dobHelp: JQuery<HTMLElement>,
@@ -175,56 +173,56 @@ export class USI9Section1 extends USI9Fields {
         emailHelp: JQuery<HTMLElement>,
         phone: JQuery<HTMLElement>,
         phoneHelp: JQuery<HTMLElement>) {
-
-        let maxDOB = new Date();
-        maxDOB.setFullYear(maxDOB.getFullYear() - 14);
+        const maxDOB = new Date()
+        maxDOB.setFullYear(maxDOB.getFullYear() - 14)
 
         // E-Verify requirements
         this._dob = this.renderControl(dob, this._('dobhelp.tooltip'), true, 'left')
-        .datepicker({
-            changeMonth: true,
-            changeYear: true,
-            yearRange: `1908:${maxDOB.getFullYear()}`,
-            maxDate: maxDOB}).attr('autocomplete', 'disabled')
-        .attr('tabindex', tabIndex++);
+            .datepicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: `1908:${maxDOB.getFullYear()}`,
+                maxDate: maxDOB
+            }).attr('autocomplete', 'disabled')
+            .attr('tabindex', tabIndex++)
 
         this._dobHelp = this.renderHelpIcon(
             dobHelp,
             this._('dobhelp.caption'),
             this._('dobhelp.text')
-        );
+        )
 
-        tabIndex = this.renderSSNFields([ssn11, ssn12, ssn13, ssn21, ssn22, ssn31, ssn32, ssn33, ssn34], tabIndex);
+        tabIndex = this.renderSSNFields([ssn11, ssn12, ssn13, ssn21, ssn22, ssn31, ssn32, ssn33, ssn34], tabIndex)
 
         this._ssnHelp = this.renderHelpIcon(
             ssnHelp,
             this._('ssnhelp.caption'),
             this._('ssnhelp.text')
-        );
+        )
 
         this._email = this.renderControl(email, this._('emailhelp.tooltip'))
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._emailHelp = this.renderHelpIcon(
             emailHelp,
             this._('emailhelp.caption'),
             this._('emailhelp.text')
-        );
+        )
 
         this._phone = this.renderControl(phone, this._('phonehelp.tooltip'))
-        .keypress(e => this.phoneFormat.test(e.key) || e.key === this.backSpaceCode)
-        .attr('tabindex', tabIndex++);
+            .keypress(e => this.phoneFormat.test(e.key) || e.key === this.backSpaceCode)
+            .attr('tabindex', tabIndex++)
 
         this._phoneHelp = this.renderHelpIcon(
             phoneHelp,
             this._('phonehelp.caption'),
             this._('phonehelp.text')
-        );
+        )
 
-        return tabIndex;
+        return tabIndex
     }
 
-    private renderCitizenship(
+    private renderCitizenship (
         tabIndex: number,
         citizen: JQuery<HTMLElement>,
         citizenHelp: JQuery<HTMLElement>,
@@ -252,130 +250,129 @@ export class USI9Section1 extends USI9Fields {
         sgnEmployeeHelp: JQuery<HTMLElement>,
         sgnEmployeeDate: JQuery<HTMLElement>,
         sgnEmployeeDateHelp: JQuery<HTMLElement>) {
-
         this._citizen = this.renderControl(citizen, this._('citizenhelp.tooltip'), false, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._citizenHelp = this.renderHelpIcon(
             citizenHelp,
             this._('citizenhelp.caption'),
             this._('citizenhelp.text')
-        );
+        )
 
         this._national = this.renderControl(national, this._('nationalhelp.tooltip'), false, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._nationalHelp = this.renderHelpIcon(
             nationalHelp,
             this._('nationalhelp.caption'),
             this._('nationalhelp.text')
-        );
+        )
 
         this._lpr = this.renderControl(lpr, this._('lprhelp.tooltip'), false, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._lprHelp = this.renderHelpIcon(
             lprHelp,
             this._('lprhelp.caption'),
             this._('lprhelp.text')
-        );
+        )
 
         this._alien = this.renderControl(alien, this._('alienhelp.tooltip'), false, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._alienHelp = this.renderHelpIcon(
             alienHelp,
             this._('alienhelp.caption'),
             this._('alienhelp.text')
-        );
+        )
 
         this._uscisNumberHelp = this.renderHelpIcon(
             uscisNumberHelp,
             this._('uscisnumberhelp.caption'),
             this._('uscisnumberhelp.text')
-        );
+        )
 
-        this._lpruscisNumPrefix = lpruscisNumPrefix;
+        this._lpruscisNumPrefix = lpruscisNumPrefix
 
         this._lpruscisNum = this.renderControl(lpruscisNum, this._('uscisnumber.tooltip'))
-        .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
-        .attr('tabindex', tabIndex++);
+            .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
+            .attr('tabindex', tabIndex++)
 
         this._lpruscisNumType = this.renderControl(lpruscisNumType, this._('uscisnumbertype.tooltip'), true, 'left')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
-        this.assignCombolistEventHandler(this._lpruscisNumType, e => 
-            this._lpruscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : ''));
+        this.assignCombolistEventHandler(this._lpruscisNumType, e =>
+            this._lpruscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : ''))
 
         this._alienWorkAuthDate = this.renderControl(alienWorkAuthDate, this._('alienworkauthdate.tooltip'), true, 'right')
-        .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
-        .unbind('keypress')
-        .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
-        .attr('tabindex', tabIndex++);
+            .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
+            .unbind('keypress')
+            .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+            .attr('tabindex', tabIndex++)
 
-        this._alienuscisNumPrefix = alienuscisNumPrefix;
+        this._alienuscisNumPrefix = alienuscisNumPrefix
 
         this._alienuscisNum = this.renderControl(alienuscisNum, this._('uscisnumber.tooltip'), true, 'right')
-        .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
-        .attr('tabindex', tabIndex++);
+            .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
+            .attr('tabindex', tabIndex++)
 
         this._alienuscisNumType = this.renderControl(alienuscisNumType, this._('uscisnumbertype.tooltip'), true, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
-        this.assignCombolistEventHandler(this._alienuscisNumType, e => 
-            this._alienuscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : ''));
+        this.assignCombolistEventHandler(this._alienuscisNumType, e =>
+            this._alienuscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : ''))
 
         this._admissionNum = this.renderControl(admissionNum, this._('admissionnumber.tooltip'), true, 'right')
-        .keypress(e => this.alphaNumericFormat.test(e.key) || e.key === this.backSpaceCode)
-        .attr('tabindex', tabIndex++);
+            .keypress(e => this.alphaNumericFormat.test(e.key) || e.key === this.backSpaceCode)
+            .attr('tabindex', tabIndex++)
 
         this._admissionNumHelp = this.renderHelpIcon(
             admissionNumHelp,
             this._('admissionnumberhelp.caption'),
             this._('admissionnumberhelp.text')
-        );
+        )
 
         this._passportNum = this.renderControl(passportNum, this._('passportnumber.tooltip'), true, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._passportNumHelp = this.renderHelpIcon(
             passportNumHelp,
             this._('passportnumberhelp.caption'),
             this._('passportnumberhelp.text')
-        );
+        )
 
         this._countryOfIssuance = this.renderControl(countryOfIssuance, this._('coi.tooltip'), true, 'right')
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._countryOfIssuanceHelp = this.renderHelpIcon(
             countryOfIssuanceHelp,
             this._('coihelp.caption'),
             this._('coihelp.text')
-        );
+        )
 
         this._sgnEmployee = this.renderControl(sgnEmployee, this._('sgnemployee.tooltip'))
-        .attr('tabindex', tabIndex++);
+            .attr('tabindex', tabIndex++)
 
         this._sgnEmployeeHelp = this.renderHelpIcon(
             sgnEmployeeHelp,
             this._('sgnemployeehelp.caption'),
             this._('sgnemployeehelp.text')
-        );
+        )
 
         this._sgnEmployeeDate = this.renderControl(sgnEmployeeDate, this._('employeedate.tooltip'), true, 'right')
-        .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled')
-        .attr('tabindex', tabIndex++);
+            .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled')
+            .attr('tabindex', tabIndex++)
 
         this._sgnEmployeeDateHelp = this.renderHelpIcon(
             sgnEmployeeDateHelp,
             this._('employeedatehelp.caption'),
             this._('employeedatehelp.text')
-        );
+        )
 
-        return tabIndex;
+        return tabIndex
     }
 
-    protected renderSection1(
+    protected renderSection1 (
         tabIndex: number,
         lastName: JQuery<HTMLElement>,
         lastNameHelp: JQuery<HTMLElement>,
@@ -437,21 +434,20 @@ export class USI9Section1 extends USI9Fields {
         sgnEmployeeHelp: JQuery<HTMLElement>,
         sgnEmployeeDate: JQuery<HTMLElement>,
         sgnEmployeeDateHelp: JQuery<HTMLElement>) {
-
-        $('a').prop('target', '_blank');
+        $('a').prop('target', '_blank')
 
         tabIndex = this.renderNameAndAddress(tabIndex,
             lastName, lastNameHelp, firstName, firstNameHelp,
             middleInitial, middleInitialHelp,
             otherNames, otherNamesHelp,
             address, addressHelp, apptNumber, apptNumberHelp,
-            city, cityHelp, state, stateHelp, zip, zipHelp);
+            city, cityHelp, state, stateHelp, zip, zipHelp)
 
         tabIndex = this.renderPersonalData(
             tabIndex, dob, dobHelp,
             ssn11, ssn12, ssn13, ssn21, ssn22, ssn31,
             ssn32, ssn33, ssn34, ssnHelp,
-            email, emailHelp, phone, phoneHelp);
+            email, emailHelp, phone, phoneHelp)
 
         tabIndex = this.renderCitizenship(tabIndex,
             citizen, citizenHelp, national, nationalHelp,
@@ -461,86 +457,82 @@ export class USI9Section1 extends USI9Fields {
             admissionNum, admissionNumHelp, passportNum, passportNumHelp,
             countryOfIssuance, countryOfIssuanceHelp,
             sgnEmployee, sgnEmployeeHelp,
-            sgnEmployeeDate, sgnEmployeeDateHelp);
+            sgnEmployeeDate, sgnEmployeeDateHelp)
 
-        return tabIndex;
+        return tabIndex
     }
 
-    protected validateFields(): string[] {
-        let errorMessages: string[] = [];
+    protected validateFields (): string[] {
+        const errorMessages: string[] = [];
 
         // Put N/A if required
         [this._middleInitial, this._otherNames, this._apptNumber, this._email, this._phone]
-           .filter(f => (f.val() as string).trim() === '' || (f.val() as string).toUpperCase() === this.na)
-           .forEach(f => f.val(this.na));
+            .filter(f => (f.val() as string).trim() === '' || (f.val() as string).toUpperCase() === this.na)
+            .forEach(f => f.val(this.na))
 
-        this.validateTextField(this._lastName, this._('name.last'), [this.nameFormat], false, errorMessages);
-        this.validateTextField(this._firstName, this._('name.first'), [this.nameFormat], false, errorMessages);
-        this.validateTextField(this._middleInitial, this._('name.middleinitial'), [this.nameInitialFormat, this.NAString], false, errorMessages);
-        this.validateTextField(this._otherNames, this._('name.othernames'), [this.nameFormat, this.NAString], false, errorMessages);
-        this.validateTextField(this._address, this._('address.address'), [], false, errorMessages);
-        this.validateTextField(this._apptNumber, this._('address.apartment'), [], false, errorMessages);
-        this.validateTextField(this._city, this._('address.city'), [], false, errorMessages);
-        this.validateTextField(this._state, this._('address.state'), [this.stateFormat], false, errorMessages);
+        this.validateTextField(this._lastName, this._('name.last'), [this.nameFormat], false, errorMessages)
+        this.validateTextField(this._firstName, this._('name.first'), [this.nameFormat], false, errorMessages)
+        this.validateTextField(this._middleInitial, this._('name.middleinitial'), [this.nameInitialFormat, this.NAString], false, errorMessages)
+        this.validateTextField(this._otherNames, this._('name.othernames'), [this.nameFormat, this.NAString], false, errorMessages)
+        this.validateTextField(this._address, this._('address.address'), [], false, errorMessages)
+        this.validateTextField(this._apptNumber, this._('address.apartment'), [], false, errorMessages)
+        this.validateTextField(this._city, this._('address.city'), [], false, errorMessages)
+        this.validateTextField(this._state, this._('address.state'), [this.stateFormat], false, errorMessages)
         this.validateTextField(this._zip, this._('address.zip'),
-            [['CAN', 'MEX'].indexOf(this._state.val() as string) < 0 ? this.zipNumberFormat: this.postalCodeFormat], false, errorMessages);
-        this.validateTextField(this._dob, this._('date.dob'), [this.dateFormat], true, errorMessages);
+            [['CAN', 'MEX'].indexOf(this._state.val() as string) < 0 ? this.zipNumberFormat : this.postalCodeFormat], false, errorMessages)
+        this.validateTextField(this._dob, this._('date.dob'), [this.dateFormat], true, errorMessages)
 
-        let areaCode = Math.round(100 * (this._ssn[0].val() as number) +
+        const areaCode = Math.round(100 * (this._ssn[0].val() as number) +
                                   10 * (this._ssn[1].val() as number) +
-                                  1 * (this._ssn[2].val() as number));
+                                  1 * (this._ssn[2].val() as number))
 
-        this._ssn.forEach(field => field.toggleClass(this.invalidFieldClass, false));
+        this._ssn.forEach(field => field.toggleClass(this.invalidFieldClass, false))
         if (this._ssn.filter(element => element.val() !== '').length > 0) {
             if (this._ssn.filter(element => element.val() === '').length > 0) {
-                errorMessages.push(this._('ssn.allfields'));
-                this._ssn.forEach(field => field.toggleClass(this.invalidFieldClass, true));
-            }
-            else if (this._ssn.filter(element => !this.numberFormat.test(element.val() as string)).length > 0) {
-                errorMessages.push(this._('ssn.allnumeric'));
+                errorMessages.push(this._('ssn.allfields'))
+                this._ssn.forEach(field => field.toggleClass(this.invalidFieldClass, true))
+            } else if (this._ssn.filter(element => !this.numberFormat.test(element.val() as string)).length > 0) {
+                errorMessages.push(this._('ssn.allnumeric'))
                 this._ssn.filter(element => !this.numberFormat.test(element.val() as string)).forEach(
-                    field => field.toggleClass(this.invalidFieldClass, true));
-            }
-            else if (areaCode === 0 || areaCode === 666 || areaCode > 899) {
+                    field => field.toggleClass(this.invalidFieldClass, true))
+            } else if (areaCode === 0 || areaCode === 666 || areaCode > 899) {
                 errorMessages.push(this._('ssn.areanumber'));
                 [this._ssn[0], this._ssn[1], this._ssn[2]].forEach(
-                    field => field.toggleClass(this.invalidFieldClass, true));
-            }
-            else if (Math.round(10 * (this._ssn[3].val() as number) + 1 * (this._ssn[4].val() as number)) === 0) {
+                    field => field.toggleClass(this.invalidFieldClass, true))
+            } else if (Math.round(10 * (this._ssn[3].val() as number) + 1 * (this._ssn[4].val() as number)) === 0) {
                 errorMessages.push(this._('ssn.groupnumber'));
                 [this._ssn[3], this._ssn[4]].forEach(
-                    field => field.toggleClass(this.invalidFieldClass, true));
-            }
-            else if (Math.round(1000 * (this._ssn[5].val() as number) +
+                    field => field.toggleClass(this.invalidFieldClass, true))
+            } else if (Math.round(1000 * (this._ssn[5].val() as number) +
                                 100 * (this._ssn[6].val() as number) +
                                 10 * (this._ssn[7].val() as number) +
                                 1 * (this._ssn[8].val() as number)) === 0) {
                 errorMessages.push(this._('ssn.serialnumber'));
                 [this._ssn[5], this._ssn[6], this._ssn[7], this._ssn[8]].forEach(
-                    field => field.toggleClass(this.invalidFieldClass, true));
+                    field => field.toggleClass(this.invalidFieldClass, true))
             }
         }
 
-        this.validateTextField(this._email, this._('email.address'), [this.NAString, this.emailFormat], false, errorMessages);
-        this.validateTextField(this._phone, this._('employee.phone'), [this.NAString, this.phoneNumber], false, errorMessages);
+        this.validateTextField(this._email, this._('email.address'), [this.NAString, this.emailFormat], false, errorMessages)
+        this.validateTextField(this._phone, this._('employee.phone'), [this.NAString, this.phoneNumber], false, errorMessages)
 
-        let citizenship = [this._citizen, this._national, this._lpr, this._alien];
-        let statusSelected = citizenship.filter(status => status.prop('checked')).length > 0;
+        const citizenship = [this._citizen, this._national, this._lpr, this._alien]
+        const statusSelected = citizenship.filter(status => status.prop('checked')).length > 0
         if (!statusSelected) {
-            errorMessages.push(this._('citizenship.status'));
+            errorMessages.push(this._('citizenship.status'))
         }
 
-        citizenship.forEach(status => status.toggleClass(this.invalidFieldClass, !statusSelected));
+        citizenship.forEach(status => status.toggleClass(this.invalidFieldClass, !statusSelected))
 
         if (this._lpr.prop('checked')) {
-            this._lpruscisNum.attr(this.annotationRequired, 'true');
-            this.validateTextField(this._lpruscisNum, this._('citizenship.uscis'), [this.uscisNumberFormat], true, errorMessages);
+            this._lpruscisNum.attr(this.annotationRequired, 'true')
+            this.validateTextField(this._lpruscisNum, this._('citizenship.uscis'), [this.uscisNumberFormat], true, errorMessages)
         } else {
-            this._lpruscisNum.removeAttr(this.annotationRequired);
+            this._lpruscisNum.removeAttr(this.annotationRequired)
         }
 
         if (this._alien.prop('checked')) {
-            this._alienWorkAuthDate.attr(this.annotationRequired, 'true');
+            this._alienWorkAuthDate.attr(this.annotationRequired, 'true')
             this.validateTextField(
                 this._alienWorkAuthDate,
                 this._('citizenship.alienworkauthdate'),
@@ -549,37 +541,37 @@ export class USI9Section1 extends USI9Fields {
                 errorMessages);
 
             [this._alienuscisNum, this._admissionNum, this._passportNum, this._countryOfIssuance].forEach(field =>
-                field.toggleClass(this.invalidFieldClass, false));
+                field.toggleClass(this.invalidFieldClass, false))
 
-            this.validateTextField(this._alienuscisNum, this._('citizenship.uscis'), [this.NAString, this.uscisNumberFormat], false, errorMessages);
-            this.validateTextField(this._admissionNum, this._('citizenship.admission'), [this.NAString, this.admissionNumberFormat], false, errorMessages);
-            this.validateTextField(this._passportNum, this._('citizenship.passport'), [this.NAString, this.passportNumberFormat], false, errorMessages);
+            this.validateTextField(this._alienuscisNum, this._('citizenship.uscis'), [this.NAString, this.uscisNumberFormat], false, errorMessages)
+            this.validateTextField(this._admissionNum, this._('citizenship.admission'), [this.NAString, this.admissionNumberFormat], false, errorMessages)
+            this.validateTextField(this._passportNum, this._('citizenship.passport'), [this.NAString, this.passportNumberFormat], false, errorMessages)
 
             if (this.EmptyOrNA(this._alienuscisNum) && this.EmptyOrNA(this._admissionNum) &&
                 this.EmptyOrNA(this._passportNum) && this.EmptyOrNA(this._countryOfIssuance)) {
                 [this._alienuscisNum, this._admissionNum, this._passportNum, this._countryOfIssuance].forEach(field =>
-                    field.toggleClass(this.invalidFieldClass, true));
+                    field.toggleClass(this.invalidFieldClass, true))
 
-                errorMessages.push(this.paramExistsMsg.replace('${prefix}', '')
-                    .replace('${parameter}', this._('citizenship.alienadmissionpassport')));
+                errorMessages.push(this.paramExistsMsg.replace('$[prefix]', '')
+                    .replace('$[parameter]', this._('citizenship.alienadmissionpassport')))
             } else if (this.EmptyOrNA(this._alienuscisNum) && this.EmptyOrNA(this._admissionNum) &&
                (this.EmptyOrNA(this._passportNum) || this.EmptyOrNA(this._countryOfIssuance))) {
                 [this._passportNum, this._countryOfIssuance].forEach(field =>
-                field.toggleClass(this.invalidFieldClass, true));
+                    field.toggleClass(this.invalidFieldClass, true))
 
-                errorMessages.push(this.paramExistsMsg.replace('${prefix}', '')
-                    .replace('${parameter}', this._('citizenship.passportcountry')));
+                errorMessages.push(this.paramExistsMsg.replace('$[prefix]', '')
+                    .replace('$[parameter]', this._('citizenship.passportcountry')))
             }
         } else {
-            this._alienWorkAuthDate.removeAttr(this.annotationRequired);
+            this._alienWorkAuthDate.removeAttr(this.annotationRequired)
         }
 
-        this.validateTextField(this._sgnEmployeeDate, this._('date.sgnemployee'), [this.dateFormat], true, errorMessages);
+        this.validateTextField(this._sgnEmployeeDate, this._('date.sgnemployee'), [this.dateFormat], true, errorMessages)
 
-        return errorMessages;
+        return errorMessages
     }
 
-    protected EmptyOrNA(field: JQuery<HTMLElement>) : boolean {
-        return [null, '', this.na].indexOf(field.val() as string) >= 0;
+    protected EmptyOrNA (field: JQuery<HTMLElement>) : boolean {
+        return [null, '', this.na].indexOf(field.val() as string) >= 0
     }
 }

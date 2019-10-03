@@ -8,6 +8,9 @@ git submodule init && git submodule update && cd ./pdf.js && git checkout PDFMan
 cp -R ./pdf.js/build/minified $p/pdf.js
 find $p/pdf.js -name *.js.map -type f -delete && find $p/pdf.js -name *.pdf -type f -delete
 
+node ./node_modules/eslint/bin/eslint.js ./templates/src/USI9/*.ts ./templates/src/USI9Supplement/*.ts
+if [[ $? != 0 ]]; then exit $rc; fi
+
 ./node_modules/.bin/tsc -p "./templates/src/USI9/tsconfig.json"
 
 if [[ $? != 0 ]]; then exit $rc; fi

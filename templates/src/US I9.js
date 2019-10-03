@@ -15,14 +15,14 @@ define("PDFForm", ["require", "exports"], function (require, exports) {
             this.dateFormat = /^[0-9]{2}[/]{1}[0-9]{2}[/]{1}[0-9]{4}$/;
             this.numberFormat = /^[0-9]{1}$/;
             this.alphaNumericFormat = /^[0-9a-zA-Z]{1}$/;
-            this.numberWithDashesFormat = /^[0-9]{1}|\-{1}$/;
-            this.emailFormat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            this.numberWithDashesFormat = /^[0-9]{1}|-{1}$/;
+            this.emailFormat = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             this.phoneFormat = /^[0-9/NA-]+$/;
-            this.phoneNumber = /^[0-9]{3}\-{1}[0-9]{3}\-{1}[0-9]{4}$/;
+            this.phoneNumber = /^[0-9]{3}-{1}[0-9]{3}-{1}[0-9]{4}$/;
             this.uscisNumberFormat = /^[0-9]{7,9}$/;
             this.admissionNumberFormat = /^[0-9]{9}[a-zA-Z]{1}[0-9]{1}$|^[0-9]{11}$/;
             this.usPassportNumberFormat = /^[a-zA-Z0-9]{6,9}$/;
-            this.greenCardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$|[0-9]{7,9}|[0-9]{3}\-{0,1}[0-9]{3}\-{0,1}[0-9]{3}$/;
+            this.greenCardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$|[0-9]{7,9}|[0-9]{3}-{0,1}[0-9]{3}-{0,1}[0-9]{3}$/;
             this.cardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$/;
             this.passportNumberFormat = /^[a-zA-Z0-9]{6,12}$/;
             this.driverLicenseNumberFormat = /^[a-zA-Z0-9]{8,14}$/;
@@ -37,11 +37,11 @@ define("PDFForm", ["require", "exports"], function (require, exports) {
             this.toolbarButtons = ['print', 'download'];
             this.webL10n = webL10n;
             this.na = this._('NA');
-            let monthNames = [];
-            let monthNamesShort = [];
-            let dayNames = [];
-            let dayNamesShort = [];
-            let dayNamesMin = [];
+            const monthNames = [];
+            const monthNamesShort = [];
+            const dayNames = [];
+            const dayNamesShort = [];
+            const dayNamesMin = [];
             $.each(JSON.parse(this._('monthNames')), (index, value) => {
                 monthNamesShort.push(index);
                 monthNames.push(value);
@@ -71,7 +71,7 @@ define("PDFForm", ["require", "exports"], function (require, exports) {
                 yearSuffix: ''
             });
             $('body').mouseup(e => {
-                let popover = $('.popover');
+                const popover = $('.popover');
                 if (!popover.is(e.target) && popover.has(e.target).length === 0 && popover.prop(this.parentProp) &&
                     popover.prop(this.parentProp) !== e.target) {
                     $(popover.prop(this.parentProp)).popover('hide').removeProp(this.parentProp);
@@ -84,20 +84,17 @@ define("PDFForm", ["require", "exports"], function (require, exports) {
         selectCheckmark(ctrl, arr) {
             for (var a of arr) {
                 if (a.attr(this.annotationName) !== ctrl.attr(this.annotationName)) {
-                    a.prop('checked', false);
-                    a.parent().children('span').text('');
+                    a.prop('checked', false).parent().children('span').text('');
                 }
             }
         }
         setCombolistValue(ctrl, val) {
-            var options = ctrl.parent().children().filter('.combo-content');
-            options.children().filter(`[value='${val}']`).each((index, value) => {
-                value.onclick(null);
-            });
+            ctrl.parent().children().filter('.combo-content').children()
+                .filter(`[value='${val}']`).each((index, value) => value.onclick(null));
         }
         setCombolistText(ctrl, val, txt) {
-            var options = ctrl.parent().children().filter('.combo-content');
-            options.children().filter(`[value='${val}']`).html(txt);
+            ctrl.parent().children().filter('.combo-content').children()
+                .filter(`[value='${val}']`).html(txt);
         }
         assignCombolistEventHandler(ctrl, f) {
             ctrl.parent().children().filter('.combo-content').click(f);
@@ -125,19 +122,14 @@ define("PDFForm", ["require", "exports"], function (require, exports) {
             });
         }
         urlParameter(name) {
-            var results = new RegExp(`[\?&]${name}=([^&#]*)`).exec(window.location.href);
-            if (results === null) {
-                return null;
-            }
-            else {
-                return decodeURI(results[1]) || 0;
-            }
+            var results = new RegExp(`[?&]${name}=([^&#]*)`).exec(window.location.href);
+            return results === null ? null : decodeURI(results[1]) || 0;
         }
         validateForm(ctrl, errorMessages) {
             ctrl.popover('dispose');
             if (errorMessages.length > 0) {
                 let errorMessage = `${this._('error.header')}<br />`;
-                errorMessages.forEach(e => errorMessage += ` - ${e}<br />`);
+                errorMessages.forEach(e => { errorMessage += ` - ${e}<br />`; });
                 ctrl.popover({
                     html: true,
                     title: this._('validation'),
@@ -188,8 +180,8 @@ define("Section1", ["require", "exports", "Fields"], function (require, exports,
             this._state = this.renderControl(state, this._('statehelp.tooltip'), true, 'left')
                 .focus(e => {
                 $(e.target).tooltip('hide');
-                let nonUSCountries = ['CAN', 'MEX'];
-                let zipCode = nonUSCountries.indexOf(e.currentTarget.value) < 0;
+                const nonUSCountries = ['CAN', 'MEX'];
+                const zipCode = nonUSCountries.indexOf(e.currentTarget.value) < 0;
                 this._zip.unbind('keypress');
                 this._zip.keypress(e => {
                     return ((nonUSCountries.indexOf(this._state.val()) < 0
@@ -233,7 +225,7 @@ define("Section1", ["require", "exports", "Fields"], function (require, exports,
             return tabIndex;
         }
         renderPersonalData(tabIndex, dob, dobHelp, ssn11, ssn12, ssn13, ssn21, ssn22, ssn31, ssn32, ssn33, ssn34, ssnHelp, email, emailHelp, phone, phoneHelp) {
-            let maxDOB = new Date();
+            const maxDOB = new Date();
             maxDOB.setFullYear(maxDOB.getFullYear() - 14);
             this._dob = this.renderControl(dob, this._('dobhelp.tooltip'), true, 'left')
                 .datepicker({
@@ -315,7 +307,7 @@ define("Section1", ["require", "exports", "Fields"], function (require, exports,
             return tabIndex;
         }
         validateFields() {
-            let errorMessages = [];
+            const errorMessages = [];
             [this._middleInitial, this._otherNames, this._apptNumber, this._email, this._phone]
                 .filter(f => f.val().trim() === '' || f.val().toUpperCase() === this.na)
                 .forEach(f => f.val(this.na));
@@ -329,7 +321,7 @@ define("Section1", ["require", "exports", "Fields"], function (require, exports,
             this.validateTextField(this._state, this._('address.state'), [this.stateFormat], false, errorMessages);
             this.validateTextField(this._zip, this._('address.zip'), [['CAN', 'MEX'].indexOf(this._state.val()) < 0 ? this.zipNumberFormat : this.postalCodeFormat], false, errorMessages);
             this.validateTextField(this._dob, this._('date.dob'), [this.dateFormat], true, errorMessages);
-            let areaCode = Math.round(100 * this._ssn[0].val() +
+            const areaCode = Math.round(100 * this._ssn[0].val() +
                 10 * this._ssn[1].val() +
                 1 * this._ssn[2].val());
             this._ssn.forEach(field => field.toggleClass(this.invalidFieldClass, false));
@@ -360,8 +352,8 @@ define("Section1", ["require", "exports", "Fields"], function (require, exports,
             }
             this.validateTextField(this._email, this._('email.address'), [this.NAString, this.emailFormat], false, errorMessages);
             this.validateTextField(this._phone, this._('employee.phone'), [this.NAString, this.phoneNumber], false, errorMessages);
-            let citizenship = [this._citizen, this._national, this._lpr, this._alien];
-            let statusSelected = citizenship.filter(status => status.prop('checked')).length > 0;
+            const citizenship = [this._citizen, this._national, this._lpr, this._alien];
+            const statusSelected = citizenship.filter(status => status.prop('checked')).length > 0;
             if (!statusSelected) {
                 errorMessages.push(this._('citizenship.status'));
             }
@@ -383,14 +375,14 @@ define("Section1", ["require", "exports", "Fields"], function (require, exports,
                 if (this.EmptyOrNA(this._alienuscisNum) && this.EmptyOrNA(this._admissionNum) &&
                     this.EmptyOrNA(this._passportNum) && this.EmptyOrNA(this._countryOfIssuance)) {
                     [this._alienuscisNum, this._admissionNum, this._passportNum, this._countryOfIssuance].forEach(field => field.toggleClass(this.invalidFieldClass, true));
-                    errorMessages.push(this.paramExistsMsg.replace('${prefix}', '')
-                        .replace('${parameter}', this._('citizenship.alienadmissionpassport')));
+                    errorMessages.push(this.paramExistsMsg.replace('$[prefix]', '')
+                        .replace('$[parameter]', this._('citizenship.alienadmissionpassport')));
                 }
                 else if (this.EmptyOrNA(this._alienuscisNum) && this.EmptyOrNA(this._admissionNum) &&
                     (this.EmptyOrNA(this._passportNum) || this.EmptyOrNA(this._countryOfIssuance))) {
                     [this._passportNum, this._countryOfIssuance].forEach(field => field.toggleClass(this.invalidFieldClass, true));
-                    errorMessages.push(this.paramExistsMsg.replace('${prefix}', '')
-                        .replace('${parameter}', this._('citizenship.passportcountry')));
+                    errorMessages.push(this.paramExistsMsg.replace('$[prefix]', '')
+                        .replace('$[parameter]', this._('citizenship.passportcountry')));
                 }
             }
             else {
@@ -470,9 +462,9 @@ define("TranslatorSection", ["require", "exports", "Section1"], function (requir
             return tabIndex;
         }
         validateFields() {
-            let errorMessages = super.validateFields();
-            let translator = [this._translatorNo, this._translatorYes];
-            let statusSelected = translator.filter(status => status.prop('checked')).length > 0;
+            const errorMessages = super.validateFields();
+            const translator = [this._translatorNo, this._translatorYes];
+            const statusSelected = translator.filter(status => status.prop('checked')).length > 0;
             if (!statusSelected) {
                 errorMessages.push(this._('translator.status'));
             }
@@ -546,8 +538,8 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
             return tabIndex;
         }
         validateFields() {
-            let errorMessages = super.validateFields();
-            let section2Fields = [
+            const errorMessages = super.validateFields();
+            const section2Fields = [
                 this._listADoc,
                 this._listAIssuingAuthority,
                 this._listADocNumber,
@@ -570,25 +562,25 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
                 this._listCDocExpDate,
                 this._additionalInfo
             ];
-            if (section2Fields.filter(f => f && f.val() && f.val().trim() !== '').length == 0) {
+            if (section2Fields.filter(f => f && f.val() && f.val().trim() !== '').length === 0) {
                 return errorMessages;
             }
-            section2Fields.filter(f => (f.val().trim() === '' && !f.prop(this.requiredProp))
-                || f.val().toUpperCase() === this.na)
+            section2Fields.filter(f => (f.val().trim() === '' && !f.prop(this.requiredProp)) ||
+                f.val().toUpperCase() === this.na)
                 .forEach(f => f.val(this.na));
             section2Fields.forEach(f => f.toggleClass(this.invalidFieldClass, false));
             this._lastNameSection2.val(this._lastName.val());
             this._firstNameSection2.val(this._firstName.val());
             this._middleInitialSection2.val(this._middleInitial.val());
-            this._immigrationStatus.val(this._citizen.prop('checked') ? 1 :
-                (this._national.prop('checked') ? 2 : (this._lpr.prop('checked') ? 3 :
-                    (this._alien.prop('checked') ? 4 : ''))));
+            this._immigrationStatus.val(this._citizen.prop('checked') ? 1
+                : (this._national.prop('checked') ? 2 : (this._lpr.prop('checked') ? 3
+                    : (this._alien.prop('checked') ? 4 : ''))));
             if ((this._listADoc.val().trim() !== this.na &&
                 (this._listBDoc.val().trim() !== this.na ||
-                    this._listCDoc.val().trim() !== this.na) ||
+                    this._listCDoc.val().trim() !== this.na)) ||
                 (this._listADoc.val().trim() === this.na &&
                     (this._listBDoc.val().trim() === this.na ||
-                        this._listCDoc.val().trim() === this.na)))) {
+                        this._listCDoc.val().trim() === this.na))) {
                 errorMessages.push(this._('section2.listabc'));
             }
             else if (this._listADoc.val().trim() !== this.na) {
@@ -715,8 +707,7 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
                 .attr('tabindex', tabIndex++);
             this._sgnEmployerHelp = this.renderHelpIcon(sgnEmployerHelp, this._('sgnemployerhelp.caption'), this._('sgnemployerhelp.text'));
             this._employerSignDate = this.renderControl(employerSignDate, this._('employersigndate.tooltip'), true, 'right')
-                .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled')
-                .attr('tabindex', tabIndex++);
+                .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled').attr('tabindex', tabIndex++);
             this._employerSignDateHelp = this.renderHelpIcon(employerSignDateHelp, this._('employersigndatehelp.caption'), this._('employersigndatehelp.text'));
             this._employerTitle = this.renderControl(employerTitle, this._('employertitle.tooltip'))
                 .attr('tabindex', tabIndex++);
@@ -747,7 +738,7 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
             return tabIndex;
         }
         renderListABC(tabIndex, listADoc, listADocHelp, listAIssuingAuthority, listAIssuingAuthorityHelp, listADocNumber, listADocNumberHelp, listADocExpDate, listADocExpDateHelp, listADoc2, listADoc2Help, listAIssuingAuthority2, listAIssuingAuthority2Help, listADocNumber2, listADocNumber2Help, listADocExpDate2, listADocExpDate2Help, listADoc3, listADoc3Help, listAIssuingAuthority3, listAIssuingAuthority3Help, listADocNumber3, listADocNumber3Help, listADocExpDate3, listADocExpDate3Help, listBDoc, listBDocHelp, listBIssuingAuthority, listBIssuingAuthorityHelp, listBDocNumber, listBDocNumberHelp, listBDocExpDate, listBDocExpDateHelp, listCDoc, listCDocHelp, listCIssuingAuthority, listCIssuingAuthorityHelp, listCDocNumber, listCDocNumberHelp, listCDocExpDate, listCDocExpDateHelp) {
-            let maxWidth = '70';
+            const maxWidth = '70';
             this._listADoc = this.renderControl(listADoc, this._('listadoc.tooltip'), true, 'right')
                 .attr('tabindex', tabIndex++);
             this._listADocHelp = this.renderHelpIcon(listADocHelp, this._('listadochelp.caption'), this._('listadochelp.text'), maxWidth);
@@ -784,8 +775,8 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
                 .attr('tabindex', tabIndex++);
             this._listADocNumber3Help = this.renderHelpIcon(listADocNumber3Help, this._('listadocnumber3help.caption'), this._('listadocnumber3help.text'));
             this._listADocExpDate3 = this.renderControl(listADocExpDate3, this._('listaexpdate3.tooltip'), true, 'right')
-                .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
-                .attr('tabindex', tabIndex++);
+                .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() })
+                .attr('autocomplete', 'disabled').attr('tabindex', tabIndex++);
             this._listADocExpDate3Help = this.renderHelpIcon(listADocExpDate3Help, this._('listaexpdate3help.caption'), this._('listaexpdate3help.text'));
             this._listBDoc = this.renderControl(listBDoc, this._('listbdoc.tooltip'), true, 'right')
                 .attr('tabindex', tabIndex++);
@@ -837,8 +828,8 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
             }
         }
         getListAContent(citizenship) {
-            let usCitizenOrNational = { spaceSymbol: this.blankItem, 0: this.na, 1: this._('uspassport'), 2: this._('uspassportcard') };
-            let lpr = {
+            const usCitizenOrNational = { spaceSymbol: this.blankItem, 0: this.na, 1: this._('uspassport'), 2: this._('uspassportcard') };
+            const lpr = {
                 spaceSymbol: this.blankItem,
                 0: this.na,
                 3: this._('permanentresidentcard'),
@@ -847,7 +838,7 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
                 10: this._('I551I94receipt'),
                 12: this._('I551receipt')
             };
-            let alien = {
+            const alien = {
                 spaceSymbol: this.blankItem,
                 0: this.na,
                 6: this._('eadI766'),
@@ -876,7 +867,7 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
         }
         getListBContent(dob) {
             let isMinorUnderAge18 = false;
-            let ms = Date.parse(dob);
+            const ms = Date.parse(dob);
             if (!isNaN(ms)) {
                 var ageDifMs = Date.now() - ms;
                 var ageDate = new Date(ageDifMs);
@@ -928,7 +919,7 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
                     38: this._('nurseryschoolrecordreceipt')
                 });
             }
-            $.each(listB, (i, v) => listB[i] = decodeURIComponent(v));
+            $.each(listB, (i, v) => { listB[i] = decodeURIComponent(v); });
             return listB;
         }
         getListCContent(citizenship) {
@@ -958,17 +949,17 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
                     14: this._('expiredFormI551')
                 });
             }
-            $.each(listC, (i, v) => listC[i] = decodeURIComponent(v));
+            $.each(listC, (i, v) => { listC[i] = decodeURIComponent(v); });
             return listC;
         }
         listADocTitle(code) {
-            let USDS = 'USDS';
-            let USCIS = 'USCIS';
-            let DOJINS = 'DOJINS';
-            let DHS = 'DHS';
-            let CBP = 'CBP';
-            let FSM = 'FSM';
-            let RMI = 'RMI';
+            const USDS = 'USDS';
+            const USCIS = 'USCIS';
+            const DOJINS = 'DOJINS';
+            const DHS = 'DHS';
+            const CBP = 'CBP';
+            const FSM = 'FSM';
+            const RMI = 'RMI';
             let numberMaxLength = 15;
             let fieldFormat = /^[a-zA-Z0-9]+$/;
             let fieldValidationExpression = null;
@@ -986,7 +977,7 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
                 .datepicker('option', 'showOn', 'focus')
                 .attr('autocomplete', 'disabled').val('')
                 .prop(this.requiredProp, true).prop(this.freeTextProp, false);
-            let tenYearsFromNow = new Date();
+            const tenYearsFromNow = new Date();
             tenYearsFromNow.setFullYear(tenYearsFromNow.getFullYear() + 10);
             if (['1', '2'].indexOf(code) >= 0) {
                 issuingAuthList = { USDS: this._(USDS) };
@@ -1159,7 +1150,7 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
                 this._listADocExpDate.prop(this.freeTextProp, true);
             }
             else if (code === '15') {
-                issuingAuthList = { 'FSM': this._('FSM') };
+                issuingAuthList = { FSM: this._('FSM') };
                 issuingAuth = 'FSM';
                 numberMaxLength = 12;
                 fieldValidationExpression = this.passportNumberFormat;
@@ -1207,11 +1198,11 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
             }
         }
         listADocTitle2(code) {
-            let USDS = 'USDS';
-            let USCIS = 'USCIS';
-            let DOJINS = 'DOJINS';
-            let ICE = 'ICE';
-            let numberMaxLength = 11;
+            const USDS = 'USDS';
+            const USCIS = 'USCIS';
+            const DOJINS = 'DOJINS';
+            const ICE = 'ICE';
+            const numberMaxLength = 11;
             let fieldFormat = /^[a-zA-Z0-9]+$/;
             this._listADocNumber2.removeAttr('readOnly').val('');
             this._listADocExpDate2.removeAttr('readOnly').val('');
@@ -1236,9 +1227,9 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
                 .keypress(e => fieldFormat.test(e.key) || e.key === this.backSpaceCode);
         }
         listADocTitle3(code) {
-            let ICE = 'ICE';
-            let DOJINS = 'DOJINS';
-            let USDS = 'USDS';
+            const ICE = 'ICE';
+            const DOJINS = 'DOJINS';
+            const USDS = 'USDS';
             this._listADocNumber3.prop(this.requiredProp, true);
             this._listADocExpDate3.prop(this.requiredProp, true);
             if (code === '0') {
@@ -1263,9 +1254,9 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
             }
         }
         listBDocTitle(code) {
-            let USCG = 'USCG';
+            const USCG = 'USCG';
             let numberMaxLength = 15;
-            let fieldFormat = /^[a-zA-Z0-9]+$/;
+            const fieldFormat = /^[a-zA-Z0-9]+$/;
             let fieldValidationExpression = null;
             let fieldValidationMessage = null;
             let issuingAuthList;
@@ -1310,7 +1301,7 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
                 this._listBIssuingAuthority.attr('readOnly', 'true');
             }
             else if (['19'].indexOf(code) >= 0) {
-                issuingAuthList = { '0': this.na };
+                issuingAuthList = { 0: this.na };
                 issuingAuth = '0';
                 this._listBDocNumber.attr('readOnly', 'true').val(this.na);
                 this._listBDocExpDate
@@ -1328,13 +1319,13 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
             }
         }
         listCDocTitle(code) {
-            let SSA = 'SSA';
-            let USDHHS = 'USDHHS';
-            let SSD = 'SSD';
-            let DHEW = 'DHEW';
-            let USDS = 'USDS';
-            let USCIS = 'USCIS';
-            let DOJINS = 'DOJINS';
+            const SSA = 'SSA';
+            const USDHHS = 'USDHHS';
+            const SSD = 'SSD';
+            const DHEW = 'DHEW';
+            const USDS = 'USDS';
+            const USCIS = 'USCIS';
+            const DOJINS = 'DOJINS';
             let numberMaxLength = 15;
             let fieldFormat = /^[a-zA-Z0-9]+$/;
             let fieldValidationExpression = null;
@@ -1382,20 +1373,20 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
                 issuingAuth = DOJINS;
             }
             else if (['9', '13'].indexOf(code) >= 0) {
-                let name = decodeURIComponent(code === '9' ? this._('listC7') : this._('listC7Receipt'));
+                const name = decodeURIComponent(code === '9' ? this._('listC7') : this._('listC7Receipt'));
                 issuingAuthList = { 0: name };
                 issuingAuth = '0';
                 this._listCIssuingAuthority
                     .removeAttr('readOnly')
                     .keypress(e => {
-                    let val = this._listCIssuingAuthority.val();
+                    const val = this._listCIssuingAuthority.val();
                     if (val.length >= name.length) {
                         return val.substr(0, name.length) === name;
                     }
                     return true;
                 })
                     .keyup(e => {
-                    let val = this._listCIssuingAuthority.val();
+                    const val = this._listCIssuingAuthority.val();
                     if (val.length <= name.length ||
                         (val.length === name.length + 1 && val.substr(0, name.length) !== name)) {
                         this._listCIssuingAuthority.val(name);
@@ -1520,8 +1511,8 @@ define("Fields", ["require", "exports", "PDFForm"], function (require, exports, 
             if (!f) {
                 return true;
             }
-            let maxDate = f.datepicker('option', 'maxDate');
-            let minDate = f.datepicker('option', 'minDate');
+            const maxDate = f.datepicker('option', 'maxDate');
+            const minDate = f.datepicker('option', 'minDate');
             if (maxDate) {
                 maxDate.setHours(0, 0, 0, 0);
             }
@@ -1530,15 +1521,15 @@ define("Fields", ["require", "exports", "PDFForm"], function (require, exports, 
             }
             if (maxDate && f && f.val() && (new Date(f.val()) > maxDate)) {
                 errorMessages.push(this.paramMaxValueMsg
-                    .replace('${prefix}', prefix)
-                    .replace('${parameter}', parameter)
-                    .replace('${value}', maxDate.toDateString()));
+                    .replace('$[prefix]', prefix)
+                    .replace('$[parameter]', parameter)
+                    .replace('$[value]', maxDate.toDateString()));
             }
             else if (minDate && f && f.val() && (new Date(f.val()) < minDate)) {
                 errorMessages.push(this.paramMinValueMsg
-                    .replace('${prefix}', prefix)
-                    .replace('${parameter}', parameter)
-                    .replace('${value}', minDate.toDateString()));
+                    .replace('$[prefix]', prefix)
+                    .replace('$[parameter]', parameter)
+                    .replace('$[value]', minDate.toDateString()));
             }
             else {
                 return true;
@@ -1547,21 +1538,21 @@ define("Fields", ["require", "exports", "PDFForm"], function (require, exports, 
         }
         validateTextField(f, parameter, regExp, validateIfEmpty, errorMessages, prefix = '') {
             let errorFlag = true;
-            let length = f.prop('maxLength') ? f.prop('maxLength') : 0;
+            const length = f.prop('maxLength') ? f.prop('maxLength') : 0;
             if (!f || !f.val() || (f.attr(this.annotationRequired) && f.val().trim() === '')) {
                 errorMessages.push(this.paramExistsMsg
-                    .replace('${prefix}', prefix)
-                    .replace('${parameter}', parameter));
+                    .replace('$[prefix]', prefix)
+                    .replace('$[parameter]', parameter));
             }
             else if (f && f.val() && f.val().length > length && length > 0) {
                 errorMessages.push(this.paramLengthMsg
-                    .replace('${prefix}', prefix)
-                    .replace('${parameter}', parameter)
-                    .replace('${length}', length.toString()));
+                    .replace('$[prefix]', prefix)
+                    .replace('$[parameter]', parameter)
+                    .replace('$[length]', length.toString()));
             }
-            else if ((f && f.val() !== '' || validateIfEmpty) && regExp.length > 0) {
+            else if (((f && f.val() !== '') || validateIfEmpty) && regExp.length > 0) {
                 let validFlag = false;
-                for (let r of regExp) {
+                for (const r of regExp) {
                     if (f && r.test(f.val())) {
                         validFlag = true;
                         break;
@@ -1569,8 +1560,8 @@ define("Fields", ["require", "exports", "PDFForm"], function (require, exports, 
                 }
                 if (!validFlag) {
                     errorMessages.push(this.paramFormatMsg
-                        .replace('${prefix}', prefix)
-                        .replace('${parameter}', parameter));
+                        .replace('$[prefix]', prefix)
+                        .replace('$[parameter]', parameter));
                 }
                 errorFlag = !validFlag;
                 if (!errorFlag) {
@@ -1590,7 +1581,7 @@ define("Fields", ["require", "exports", "PDFForm"], function (require, exports, 
                 return;
             }
             var options = ctrl.parent().children().filter('.combo-content');
-            for (let index in items) {
+            for (const index in items) {
                 options.children().filter(`[value='${index}']`).html(items[index]);
             }
             options.children().show();
@@ -1602,7 +1593,7 @@ define("Fields", ["require", "exports", "PDFForm"], function (require, exports, 
             });
             if (callback) {
                 options.children().click(e => {
-                    let inputText = e.target.parentNode.parentNode.getElementsByTagName('input')[0];
+                    const inputText = e.target.parentNode.parentNode.getElementsByTagName('input')[0];
                     if (e.target.innerHTML === this.blankItem) {
                         inputText.value = '';
                     }
@@ -1624,8 +1615,8 @@ define("Section3", ["require", "exports", "Section2"], function (require, export
     Object.defineProperty(exports, "__esModule", { value: true });
     class USI9Section3 extends Section2_1.USI9Section2 {
         renderSection3(tabIndex, lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, rehireDate, rehireDateHelp, docTitleSec3, docTitleSec3Help, docNumberSec3, docNumberSec3Help, expDateSec3, expDateSec3Help, sgnEmployerSec3, sgnEmployerSec3Help, signDateSec3, signDateSec3Help, employerNameSec3, employerNameSec3Help) {
-            let spaceSymbol = this.space;
-            let citizenships = [this._citizen, this._national, this._lpr, this._alien];
+            const spaceSymbol = this.space;
+            const citizenships = [this._citizen, this._national, this._lpr, this._alien];
             this._citizen.click(() => {
                 this.selectCheckmark(this._citizen, citizenships);
                 this.processLPR(this._citizen.prop('checked'));
@@ -1653,7 +1644,7 @@ define("Section3", ["require", "exports", "Section2"], function (require, export
                 if (this._lpr.prop('checked')) {
                     this._lpruscisNum.prop('disabled', false);
                     this._lpruscisNumType.prop('disabled', false);
-                    this.filterCombolist(this._lpruscisNumType, { 'A': this._('aliennumber'), 'U': this._('uscisnumber') }, null, this, this.processListABC);
+                    this.filterCombolist(this._lpruscisNumType, { A: this._('aliennumber'), U: this._('uscisnumber') }, null, this, this.processListABC);
                     this.fillListABC('3');
                 }
             });
@@ -1671,7 +1662,7 @@ define("Section3", ["require", "exports", "Section2"], function (require, export
                     this._alienWorkAuthDate.prop('disabled', false);
                     this._alienuscisNum.prop('disabled', false);
                     this._alienuscisNumType.prop('disabled', false);
-                    this.filterCombolist(this._alienuscisNumType, { 'A': this._('aliennumber'), 'U': this._('uscisnumber') }, null, this, this.processListABC);
+                    this.filterCombolist(this._alienuscisNumType, { A: this._('aliennumber'), U: this._('uscisnumber') }, null, this, this.processListABC);
                     this._admissionNum.prop('disabled', false);
                     this._passportNum.prop('disabled', false);
                     this._countryOfIssuance.prop('disabled', false);
@@ -1682,7 +1673,7 @@ define("Section3", ["require", "exports", "Section2"], function (require, export
             this._alienuscisNum.change(() => {
                 if (!this.EmptyOrNA(this._alienuscisNum)) {
                     if (this.EmptyOrNA(this._alienuscisNumType)) {
-                        this.filterCombolist(this._alienuscisNumType, { 'A': this._('aliennumber'), 'U': this._('uscisnumber') }, null, this, this.processListABC);
+                        this.filterCombolist(this._alienuscisNumType, { A: this._('aliennumber'), U: this._('uscisnumber') }, null, this, this.processListABC);
                     }
                     this._admissionNum.val(this.na);
                     this._passportNum.val(this.na);
@@ -1742,8 +1733,7 @@ define("Section3", ["require", "exports", "Section2"], function (require, export
                 .attr('tabindex', tabIndex++);
             this._newmiddleInitialHelp = this.renderHelpIcon(middleInitialHelp, this._('newmiddleinitialhelp.caption'), this._('newmiddleinitialhelp.text'));
             this._rehireDate = this.renderControl(rehireDate, this._('rehiredate.tooltip'), true, 'left')
-                .datepicker().attr('autocomplete', 'disabled')
-                .unbind('keypress')
+                .datepicker().attr('autocomplete', 'disabled').unbind('keypress')
                 .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
                 .attr('tabindex', tabIndex++);
             this._rehireDateHelp = this.renderHelpIcon(rehireDateHelp, this._('rehiredatehelp.caption'), this._('rehiredatehelp.text'));
@@ -1788,8 +1778,7 @@ define("Section3", ["require", "exports", "Section2"], function (require, export
                 .attr('tabindex', tabIndex++);
             this._docNumberSec3Help = this.renderHelpIcon(docNumberSec3Help, this._('docnumbersec3help.caption'), this._('docnumbersec3help.text'));
             this._expDateSec3 = this.renderControl(expDateSec3, this._('expdatesec3.tooltip'), true, 'left')
-                .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled')
-                .unbind('keypress')
+                .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled').unbind('keypress')
                 .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
                 .attr('tabindex', tabIndex++);
             this._expDateSec3Help = this.renderHelpIcon(expDateSec3Help, this._('expdatesec3help.caption'), this._('expdatesec3help.text'));
@@ -1811,8 +1800,8 @@ define("Section3", ["require", "exports", "Section2"], function (require, export
             return tabIndex;
         }
         validateFields() {
-            let errorMessages = super.validateFields();
-            let section3Fields = [this._newlastName, this._newfirstName, this._newmiddleInitial, this._rehireDate,
+            const errorMessages = super.validateFields();
+            const section3Fields = [this._newlastName, this._newfirstName, this._newmiddleInitial, this._rehireDate,
                 this._docTitleSec3, this._docNumberSec3, this._expDateSec3, this._sgnEmployerSec3,
                 this._signDateSec3, this._employerNameSec3];
             section3Fields.forEach(f => f && f.toggleClass(this.invalidFieldClass, false));
@@ -1911,11 +1900,11 @@ define("USI9", ["require", "exports", "Section3"], function (require, exports, S
             this.pdfApp.transformationService = '/?rest_route=/UpdateForm';
             this.pdfApp.sessionID = this.urlParameter('session_id');
             this.pdfApp.fieldsData = {
-                'file': this.pdfApp.url,
-                'operation': 'f',
-                'entries': []
+                file: this.pdfApp.url,
+                operation: 'f',
+                entries: []
             };
-            let readOnlyFieldsToFlat = ['LPRUSCISNumber', 'LPRUSCISNumberPrefix', 'AlienUSCISNumberPrefix',
+            const readOnlyFieldsToFlat = ['LPRUSCISNumber', 'LPRUSCISNumberPrefix', 'AlienUSCISNumberPrefix',
                 'AlienWorkAuthorizationDate', 'AlienUSCISNumber',
                 'AdmissionNumber', 'ForeignPassportNumber', 'CountryOfIssuance',
                 'LastNameSection2', 'FirstNameSection2',
@@ -1923,9 +1912,9 @@ define("USI9", ["require", "exports", "Section3"], function (require, exports, S
             $(`[${this.annotationName}]`).each((i, ctrl) => {
                 if ((!ctrl.disabled || readOnlyFieldsToFlat.indexOf(ctrl.getAttribute(this.annotationName)) > -1) && ctrl.value && ctrl.value !== '') {
                     this.pdfApp.fieldsData.entries.push({
-                        'name': ctrl.getAttribute(this.annotationName),
-                        'value': ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value,
-                        'operation': 's'
+                        name: ctrl.getAttribute(this.annotationName),
+                        value: ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value,
+                        operation: 's'
                     });
                 }
             });
@@ -1941,9 +1930,9 @@ define("USI9", ["require", "exports", "Section3"], function (require, exports, S
             return tabIndex;
         }
         renderSections() {
-            let eventBus = this.pdfApp.eventBus;
+            const eventBus = this.pdfApp.eventBus;
             this.toolbarButtons.forEach((e) => {
-                let eventFuncs = eventBus.get(e);
+                const eventFuncs = eventBus.get(e);
                 eventBus.remove(e);
                 eventBus.on(e, () => {
                     if (this.validateForm($(`#${e}`), super.validateFields())) {
@@ -1960,13 +1949,13 @@ define("USI9", ["require", "exports", "Section3"], function (require, exports, S
 define("Init", ["require", "exports", "USI9"], function (require, exports, USI9_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    let eventBus = PDFViewerApplication.eventBus;
-    let pdfViewer = PDFViewerApplication.pdfViewer;
-    let renderedPages = [false, false, false];
+    const eventBus = PDFViewerApplication.eventBus;
+    const pdfViewer = PDFViewerApplication.pdfViewer;
+    const renderedPages = [false, false, false];
     let form = null;
     eventBus.on('textlayerrendered', (e) => {
         renderedPages[e.pageNumber - 1] = true;
-        if (e.pageNumber == 1 && !renderedPages[1]) {
+        if (e.pageNumber === 1 && !renderedPages[1]) {
             pdfViewer.getPageView(1);
             return;
         }
