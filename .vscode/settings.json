@@ -1,3 +1,10 @@
 {
-    "java.configuration.updateBuildConfiguration": "automatic"
+  "eslint.validate": [
+    { "language": "typescript", "autoFix": true },
+    { "language": "typescriptreact", "autoFix": true }
+  ],
+  "eslint.workingDirectories": [
+    "./templates/src/USI9",
+    "./templates/src/USI9Supplement"
+  ]
 }

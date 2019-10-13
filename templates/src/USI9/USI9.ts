@@ -232,20 +232,25 @@ export class USI9 extends USI9Section3 {
     }
 
     public renderSections () {
+        this.prepareSecondPage(this.prepareFirstPage(100))
+
         const eventBus = this.pdfApp.eventBus
 
         this.toolbarButtons.forEach((e) => {
             const eventFuncs = eventBus.get(e)
             eventBus.remove(e)
-            eventBus.on(e, () => {
-                if (this.validateForm($(`#${e}`), super.validateFields())) {
-                    this.prepareData()
+            eventBus.on(e, () =>
+                this.validateDocuments((confirmFlag) =>
+                    this.validateUSI9($(`#${e}`), confirmFlag).then(() => {
+                        this.prepareData()
 
-                    eventFuncs.forEach((f: () => void) => f())
-                }
-            })
+                        eventFuncs.forEach((f: () => void) => f())
+                    }).catch((ctrl: JQuery<HTMLElement>) => ctrl.popover('show'))
+                )
+            )
         })
-
-        this.prepareSecondPage(this.prepareFirstPage(100))
     }
+
+    private validateUSI9 = (ctrl: JQuery<HTMLElement>, confirmFlag: boolean) : Promise<JQuery<HTMLElement>> =>
+        this.validateForm(ctrl, this.validateFields(confirmFlag))
 }

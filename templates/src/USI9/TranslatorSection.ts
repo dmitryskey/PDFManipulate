@@ -140,8 +140,8 @@ export class USI9Translator extends USI9Section1 {
         return tabIndex
     }
 
-    protected validateFields (): string[] {
-        const errorMessages = super.validateFields()
+    protected validateFields (confirmFlag: boolean): string[] {
+        const errorMessages = super.validateFields(confirmFlag)
 
         const translator = [this._translatorNo, this._translatorYes]
         const statusSelected = translator.filter(status => status.prop('checked')).length > 0

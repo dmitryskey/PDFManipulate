@@ -225,8 +225,8 @@ export class USI9Section2 extends USI9Translator {
         return tabIndex
     }
 
-    protected validateFields (): string[] {
-        const errorMessages = super.validateFields()
+    protected validateFields (confirmFlag: boolean): string[] {
+        const errorMessages = super.validateFields(confirmFlag)
 
         // List A, B, C Fields
         const section2Fields = [
@@ -368,10 +368,10 @@ export class USI9Section2 extends USI9Translator {
                     this._listCIssuingAuthority.toggleClass(this.invalidFieldClass, true)
                 }
 
-                if (this._listCDoc.prop('ssncard') && !confirm(this._('section2.ssncardnotvalid'))) {
+                if (this._listCDoc.prop('ssncard') && !confirmFlag) {
                     errorMessages.push(this._('section2.ssncardnotvalidformat'))
                     this._listCDoc.toggleClass(this.invalidFieldClass, true)
-                } else if (this._listCDoc.prop('i551') && !confirm(this._('section2.expiredformI551confirmation'))) {
+                } else if (this._listCDoc.prop('i551') && !confirmFlag) {
                     errorMessages.push(this._('section2.expiredformI551notvalid'))
                     this._listCDoc.toggleClass(this.invalidFieldClass, true)
                 } else if (this._listCDocNumber.prop(this.validationExpressionProp) &&
@@ -1734,6 +1734,22 @@ export class USI9Section2 extends USI9Translator {
         this._listCDocExpDate
             .attr('readOnly', 'true')
             .datepicker('option', 'showOn', 'off').attr('autocomplete', 'disabled').val(this.na)
+    }
+
+    protected validateDocuments = (fn: (confirmFlag: boolean) => void) => {
+        $('#btnConfirm').off('click').click(() => fn(true))
+        $('#btnCancel').off('click').click(() => fn(false))
+
+        const listBval = (this._listBDoc.val() as string).trim()
+        if (this._listCDoc.prop('ssncard') && listBval !== this.na && listBval !== '') {
+            $('.modal-body').text(this._('section2.ssncardnotvalid'))
+            $('.modal').modal('show')
+        } else if (this._listCDoc.prop('i551') && listBval !== this.na && listBval !== '') {
+            $('.modal-body').text(this._('section2.expiredformI551confirmation'))
+            $('.modal').modal('show')
+        } else {
+            fn(false)
+        }
     }
     // endregion
 }

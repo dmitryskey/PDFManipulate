@@ -11,7 +11,6 @@ const jwt = require('jwt-simple'); // used to create, sign, and verify tokens
 const net = require('net');
 const log4js = require('log4js');
 const md5 = require('md5');
-const { exec } = require('child_process');
 const pdfApi = require('asposepdfcloud');
 const storageApi = require('asposestoragecloud');
 

@@ -70,13 +70,18 @@ define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
                 showMonthAfterYear: false,
                 yearSuffix: ''
             });
-            $('body').mouseup(e => {
-                const popover = $('.popover');
-                if (!popover.is(e.target) && popover.has(e.target).length === 0 && popover.prop(this.parentProp) &&
-                    popover.prop(this.parentProp) !== e.target) {
-                    $(popover.prop(this.parentProp)).popover('hide').removeProp(this.parentProp);
-                }
-            });
+            $('body').append(`
+        <div class="modal fade">
+          <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">         
+              <div class="modal-body" />
+              <div class="modal-footer">
+                <button id="btnConfirm" type="button" class="btn btn-secondary" data-dismiss="modal">${this._('confirm')}</button>
+                <button id="btnCancel" type="button" class="btn btn-secondary" data-dismiss="modal">${this._('cancel')}</button>
+              </div>       
+            </div>
+          </div>
+        </div>`);
         }
         _(t) {
             return this.webL10n ? this.webL10n.get(t).replace('#', '&#35;') : t;
@@ -127,22 +132,29 @@ define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
         }
         validateForm(ctrl, errorMessages) {
             ctrl.popover('dispose');
-            if (errorMessages.length > 0) {
-                let errorMessage = `${this._('error.header')}<br />`;
-                errorMessages.forEach(e => { errorMessage += ` - ${e}<br />`; });
-                ctrl.popover({
-                    html: true,
-                    title: this._('validation'),
-                    content: errorMessage,
-                    trigger: 'click',
-                    placement: 'bottom'
-                }).popover('show');
-                $('.popover').prop(this.parentProp, ctrl);
-                return false;
-            }
-            else {
-                return true;
-            }
+            return new Promise((resolve, reject) => {
+                if (errorMessages.length > 0) {
+                    let errorMessage = `${this._('error.header')}<br />`;
+                    errorMessages.forEach(e => { errorMessage += ` - ${e}<br />`; });
+                    ctrl.popover({
+                        html: true,
+                        title: this._('validation'),
+                        content: errorMessage,
+                        trigger: 'click',
+                        placement: 'bottom'
+                    });
+                    $('body').off('mouseup').mouseup(e => {
+                        if (!ctrl.popover().is(e.target) && ctrl.popover().has(e.target).length === 0 &&
+                            ctrl !== $(e.target)) {
+                            ctrl.popover('hide');
+                        }
+                    });
+                    reject(ctrl);
+                }
+                else {
+                    resolve(ctrl);
+                }
+            });
         }
     }
     exports.PDFForm = PDFForm;
@@ -412,12 +424,10 @@ define("USI9Supplement/USI9Supplement", ["require", "exports", "USI9Supplement/T
             this.toolbarButtons.forEach((e) => {
                 const eventFuncs = eventBus.get(e);
                 eventBus.remove(e);
-                eventBus.on(e, () => {
-                    if (this.validateForm($(`#${e}`), super.validateFields())) {
-                        this.prepareData();
-                        eventFuncs.forEach((f) => f());
-                    }
-                });
+                eventBus.on(e, () => this.validateForm($(`#${e}`), super.validateFields()).then(() => {
+                    this.prepareData();
+                    eventFuncs.forEach((f) => f());
+                }).catch((ctrl) => ctrl.popover('show')));
             });
             this.prepareFirstPage();
         }

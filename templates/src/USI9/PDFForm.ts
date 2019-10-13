@@ -83,14 +83,18 @@ export class PDFForm {
             yearSuffix: ''
         })
 
-        $('body').mouseup(e => {
-            const popover = $('.popover')
-
-            if (!popover.is(e.target) && popover.has(e.target).length === 0 && popover.prop(this.parentProp) &&
-                popover.prop(this.parentProp) !== e.target) {
-                $(popover.prop(this.parentProp)).popover('hide').removeProp(this.parentProp)
-            }
-        })
+        $('body').append(`
+        <div class="modal fade">
+          <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">         
+              <div class="modal-body" />
+              <div class="modal-footer">
+                <button id="btnConfirm" type="button" class="btn btn-secondary" data-dismiss="modal">${this._('confirm')}</button>
+                <button id="btnCancel" type="button" class="btn btn-secondary" data-dismiss="modal">${this._('cancel')}</button>
+              </div>       
+            </div>
+          </div>
+        </div>`)
     }
 
     protected selectCheckmark (ctrl: JQuery<HTMLElement>, arr: Array<JQuery<HTMLElement>>) {
@@ -101,19 +105,16 @@ export class PDFForm {
         }
     }
 
-    protected setCombolistValue (ctrl: JQuery<HTMLElement>, val: string) {
+    protected setCombolistValue = (ctrl: JQuery<HTMLElement>, val: string) =>
         ctrl.parent().children().filter('.combo-content').children()
             .filter(`[value='${val}']`).each((index, value) => value.onclick(null))
-    }
 
-    protected setCombolistText (ctrl: JQuery<HTMLElement>, val: string, txt: string) {
+    protected setCombolistText = (ctrl: JQuery<HTMLElement>, val: string, txt: string) =>
         ctrl.parent().children().filter('.combo-content').children()
             .filter(`[value='${val}']`).html(txt)
-    }
 
-    protected assignCombolistEventHandler (ctrl: JQuery<HTMLElement>, f: JQuery.EventHandler<HTMLElement>) {
+    protected assignCombolistEventHandler = (ctrl: JQuery<HTMLElement>, f: JQuery.EventHandler<HTMLElement>) =>
         ctrl.parent().children().filter('.combo-content').click(f)
-    }
 
     protected renderControl (
         ctrl: JQuery<HTMLElement>,
@@ -139,8 +140,14 @@ export class PDFForm {
                 trigger: 'click'
             })
             .click((e) => {
-                $(e.target).tooltip('hide')
-                $('.popover').css('max-width', `${maxWidth}%`).prop(this.parentProp, e.target)
+                const ctrl = $(e.target)
+                ctrl.tooltip('hide').popover().css('max-width', `${maxWidth}%`)
+                $('body').off('mouseup').mouseup(ev => {
+                    if (!ctrl.popover().is(ev.target) && ctrl.popover().has(ev.target).length === 0 &&
+                        ctrl !== $(ev.target)) {
+                        ctrl.popover('hide')
+                    }
+                })
             })
     }
 
@@ -149,24 +156,33 @@ export class PDFForm {
         return results === null ? null : decodeURI(results[1]) || 0
     }
 
-    protected validateForm (ctrl: JQuery<HTMLElement>, errorMessages: string[]) : boolean {
-        ctrl.popover('dispose')
-        if (errorMessages.length > 0) {
-            let errorMessage = `${this._('error.header')}<br />`
-            errorMessages.forEach(e => { errorMessage += ` - ${e}<br />` })
+    protected validateForm = (
+        ctrl: JQuery<HTMLElement>,
+        errorMessages : string[]) : Promise<JQuery<HTMLElement>> =>
+        new Promise((resolve, reject) => {
+            ctrl.popover('dispose')
+            if (errorMessages.length > 0) {
+                let errorMessage = `${this._('error.header')}<br />`
+                errorMessages.forEach(e => { errorMessage += ` - ${e}<br />` })
 
-            ctrl.popover({
-                html: true,
-                title: this._('validation'),
-                content: errorMessage,
-                trigger: 'click',
-                placement: 'bottom'
-            }).popover('show')
+                ctrl.popover({
+                    html: true,
+                    title: this._('validation'),
+                    content: errorMessage,
+                    trigger: 'click',
+                    placement: 'bottom'
+                })
 
-            $('.popover').prop(this.parentProp, ctrl)
-            return false
-        } else {
-            return true
-        }
-    }
+                $('body').off('mouseup').mouseup(e => {
+                    if (!ctrl.popover().is(e.target) && ctrl.popover().has(e.target).length === 0 &&
+                        ctrl !== $(e.target)) {
+                        ctrl.popover('hide')
+                    }
+                })
+
+                reject(ctrl)
+            } else {
+                resolve(ctrl)
+            }
+        })
 }

@@ -316,8 +316,8 @@ export class USI9Section3 extends USI9Section2 {
         return tabIndex
     }
 
-    protected validateFields (): string[] {
-        const errorMessages = super.validateFields()
+    protected validateFields (confirmFlag: boolean): string[] {
+        const errorMessages = super.validateFields(confirmFlag)
 
         const section3Fields = [this._newlastName, this._newfirstName, this._newmiddleInitial, this._rehireDate,
             this._docTitleSec3, this._docNumberSec3, this._expDateSec3, this._sgnEmployerSec3,

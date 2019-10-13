@@ -35,6 +35,35 @@ define("PDFForm", ["require", "exports"], function (require, exports) {
             this.backSpaceCode = 'Backspace';
             this.parentProp = 'parent';
             this.toolbarButtons = ['print', 'download'];
+            this.setCombolistValue = (ctrl, val) => ctrl.parent().children().filter('.combo-content').children()
+                .filter(`[value='${val}']`).each((index, value) => value.onclick(null));
+            this.setCombolistText = (ctrl, val, txt) => ctrl.parent().children().filter('.combo-content').children()
+                .filter(`[value='${val}']`).html(txt);
+            this.assignCombolistEventHandler = (ctrl, f) => ctrl.parent().children().filter('.combo-content').click(f);
+            this.validateForm = (ctrl, errorMessages) => new Promise((resolve, reject) => {
+                ctrl.popover('dispose');
+                if (errorMessages.length > 0) {
+                    let errorMessage = `${this._('error.header')}<br />`;
+                    errorMessages.forEach(e => { errorMessage += ` - ${e}<br />`; });
+                    ctrl.popover({
+                        html: true,
+                        title: this._('validation'),
+                        content: errorMessage,
+                        trigger: 'click',
+                        placement: 'bottom'
+                    });
+                    $('body').off('mouseup').mouseup(e => {
+                        if (!ctrl.popover().is(e.target) && ctrl.popover().has(e.target).length === 0 &&
+                            ctrl !== $(e.target)) {
+                            ctrl.popover('hide');
+                        }
+                    });
+                    reject(ctrl);
+                }
+                else {
+                    resolve(ctrl);
+                }
+            });
             this.webL10n = webL10n;
             this.na = this._('NA');
             const monthNames = [];
@@ -70,13 +99,18 @@ define("PDFForm", ["require", "exports"], function (require, exports) {
                 showMonthAfterYear: false,
                 yearSuffix: ''
             });
-            $('body').mouseup(e => {
-                const popover = $('.popover');
-                if (!popover.is(e.target) && popover.has(e.target).length === 0 && popover.prop(this.parentProp) &&
-                    popover.prop(this.parentProp) !== e.target) {
-                    $(popover.prop(this.parentProp)).popover('hide').removeProp(this.parentProp);
-                }
-            });
+            $('body').append(`
+        <div class="modal fade">
+          <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">         
+              <div class="modal-body" />
+              <div class="modal-footer">
+                <button id="btnConfirm" type="button" class="btn btn-secondary" data-dismiss="modal">${this._('confirm')}</button>
+                <button id="btnCancel" type="button" class="btn btn-secondary" data-dismiss="modal">${this._('cancel')}</button>
+              </div>       
+            </div>
+          </div>
+        </div>`);
         }
         _(t) {
             return this.webL10n ? this.webL10n.get(t).replace('#', '&#35;') : t;
@@ -87,17 +121,6 @@ define("PDFForm", ["require", "exports"], function (require, exports) {
                     a.prop('checked', false).parent().children('span').text('');
                 }
             }
-        }
-        setCombolistValue(ctrl, val) {
-            ctrl.parent().children().filter('.combo-content').children()
-                .filter(`[value='${val}']`).each((index, value) => value.onclick(null));
-        }
-        setCombolistText(ctrl, val, txt) {
-            ctrl.parent().children().filter('.combo-content').children()
-                .filter(`[value='${val}']`).html(txt);
-        }
-        assignCombolistEventHandler(ctrl, f) {
-            ctrl.parent().children().filter('.combo-content').click(f);
         }
         renderControl(ctrl, text, onFocus = true, placement = 'bottom') {
             ctrl.parent().children().filter('span').click(() => ctrl.popover('hide'));
@@ -117,32 +140,19 @@ define("PDFForm", ["require", "exports"], function (require, exports) {
                 trigger: 'click'
             })
                 .click((e) => {
-                $(e.target).tooltip('hide');
-                $('.popover').css('max-width', `${maxWidth}%`).prop(this.parentProp, e.target);
+                const ctrl = $(e.target);
+                ctrl.tooltip('hide').popover().css('max-width', `${maxWidth}%`);
+                $('body').off('mouseup').mouseup(ev => {
+                    if (!ctrl.popover().is(ev.target) && ctrl.popover().has(ev.target).length === 0 &&
+                        ctrl !== $(ev.target)) {
+                        ctrl.popover('hide');
+                    }
+                });
             });
         }
         urlParameter(name) {
             var results = new RegExp(`[?&]${name}=([^&#]*)`).exec(window.location.href);
             return results === null ? null : decodeURI(results[1]) || 0;
-        }
-        validateForm(ctrl, errorMessages) {
-            ctrl.popover('dispose');
-            if (errorMessages.length > 0) {
-                let errorMessage = `${this._('error.header')}<br />`;
-                errorMessages.forEach(e => { errorMessage += ` - ${e}<br />`; });
-                ctrl.popover({
-                    html: true,
-                    title: this._('validation'),
-                    content: errorMessage,
-                    trigger: 'click',
-                    placement: 'bottom'
-                }).popover('show');
-                $('.popover').prop(this.parentProp, ctrl);
-                return false;
-            }
-            else {
-                return true;
-            }
         }
     }
     exports.PDFForm = PDFForm;
@@ -306,7 +316,7 @@ define("Section1", ["require", "exports", "Fields"], function (require, exports,
             tabIndex = this.renderCitizenship(tabIndex, citizen, citizenHelp, national, nationalHelp, lpr, lprHelp, alien, alienHelp, uscisNumberHelp, lpruscisNumPrefix, lpruscisNum, lpruscisNumType, alienWorkAuthDate, alienuscisNumPrefix, alienuscisNum, alienuscisNumType, admissionNum, admissionNumHelp, passportNum, passportNumHelp, countryOfIssuance, countryOfIssuanceHelp, sgnEmployee, sgnEmployeeHelp, sgnEmployeeDate, sgnEmployeeDateHelp);
             return tabIndex;
         }
-        validateFields() {
+        validateFields(confirmFlag) {
             const errorMessages = [];
             [this._middleInitial, this._otherNames, this._apptNumber, this._email, this._phone]
                 .filter(f => f.val().trim() === '' || f.val().toUpperCase() === this.na)
@@ -461,8 +471,8 @@ define("TranslatorSection", ["require", "exports", "Section1"], function (requir
             this._translatorZipHelp = this.renderHelpIcon(translatorZipHelp, this._('translatorziphelp.caption'), this._('translatorziphelp.text'));
             return tabIndex;
         }
-        validateFields() {
-            const errorMessages = super.validateFields();
+        validateFields(confirmFlag) {
+            const errorMessages = super.validateFields(confirmFlag);
             const translator = [this._translatorNo, this._translatorYes];
             const statusSelected = translator.filter(status => status.prop('checked')).length > 0;
             if (!statusSelected) {
@@ -509,6 +519,22 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
             this.validationMessageProp = 'validationmessage';
             this.freeTextProp = 'freeText';
             this.requiredProp = 'required';
+            this.validateDocuments = (fn) => {
+                $('#btnConfirm').off('click').click(() => fn(true));
+                $('#btnCancel').off('click').click(() => fn(false));
+                const listBval = this._listBDoc.val().trim();
+                if (this._listCDoc.prop('ssncard') && listBval !== this.na && listBval !== '') {
+                    $('.modal-body').text(this._('section2.ssncardnotvalid'));
+                    $('.modal').modal('show');
+                }
+                else if (this._listCDoc.prop('i551') && listBval !== this.na && listBval !== '') {
+                    $('.modal-body').text(this._('section2.expiredformI551confirmation'));
+                    $('.modal').modal('show');
+                }
+                else {
+                    fn(false);
+                }
+            };
         }
         renderSection2(tabIndex, employeeInfoHelp, lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, immigrationStatus, immigrationStatusHelp, listADoc, listADocHelp, listAIssuingAuthority, listAIssuingAuthorityHelp, listADocNumber, listADocNumberHelp, listADocExpDate, listADocExpDateHelp, listADoc2, listADoc2Help, listAIssuingAuthority2, listAIssuingAuthority2Help, listADocNumber2, listADocNumber2Help, listADocExpDate2, listADocExpDate2Help, listADoc3, listADoc3Help, listAIssuingAuthority3, listAIssuingAuthority3Help, listADocNumber3, listADocNumber3Help, listADocExpDate3, listADocExpDate3Help, listBDoc, listBDocHelp, listBIssuingAuthority, listBIssuingAuthorityHelp, listBDocNumber, listBDocNumberHelp, listBDocExpDate, listBDocExpDateHelp, listCDoc, listCDocHelp, listCIssuingAuthority, listCIssuingAuthorityHelp, listCDocNumber, listCDocNumberHelp, listCDocExpDate, listCDocExpDateHelp, additionalInfo, additionalInfoHelp, hireDate, hireDateHelp, sgnEmployer, sgnEmployerHelp, employerSignDate, employerSignDateHelp, employerTitle, employerTitleHelp, employerLastName, employerLastNameHelp, employerFirstName, employerFirstNameHelp, employerName, employerNameHelp, employerAddress, employerAddressHelp, employerCity, employerCityHelp, employerState, employerStateHelp, employerZip, employerZipHelp) {
             $('a').prop('target', '_blank');
@@ -537,8 +563,8 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
             tabIndex = this.renderEmployerData(tabIndex, sgnEmployer, sgnEmployerHelp, employerSignDate, employerSignDateHelp, employerTitle, employerTitleHelp, employerLastName, employerLastNameHelp, employerFirstName, employerFirstNameHelp, employerName, employerNameHelp, employerAddress, employerAddressHelp, employerCity, employerCityHelp, employerState, employerStateHelp, employerZip, employerZipHelp);
             return tabIndex;
         }
-        validateFields() {
-            const errorMessages = super.validateFields();
+        validateFields(confirmFlag) {
+            const errorMessages = super.validateFields(confirmFlag);
             const section2Fields = [
                 this._listADoc,
                 this._listAIssuingAuthority,
@@ -665,11 +691,11 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
                         errorMessages.push(this._('section2.listcissuingauthority'));
                         this._listCIssuingAuthority.toggleClass(this.invalidFieldClass, true);
                     }
-                    if (this._listCDoc.prop('ssncard') && !confirm(this._('section2.ssncardnotvalid'))) {
+                    if (this._listCDoc.prop('ssncard') && !confirmFlag) {
                         errorMessages.push(this._('section2.ssncardnotvalidformat'));
                         this._listCDoc.toggleClass(this.invalidFieldClass, true);
                     }
-                    else if (this._listCDoc.prop('i551') && !confirm(this._('section2.expiredformI551confirmation'))) {
+                    else if (this._listCDoc.prop('i551') && !confirmFlag) {
                         errorMessages.push(this._('section2.expiredformI551notvalid'));
                         this._listCDoc.toggleClass(this.invalidFieldClass, true);
                     }
@@ -1799,8 +1825,8 @@ define("Section3", ["require", "exports", "Section2"], function (require, export
             this._employerNameSec3Help = this.renderHelpIcon(employerNameSec3Help, this._('employernamesec3help.caption'), this._('employernamesec3help.text'));
             return tabIndex;
         }
-        validateFields() {
-            const errorMessages = super.validateFields();
+        validateFields(confirmFlag) {
+            const errorMessages = super.validateFields(confirmFlag);
             const section3Fields = [this._newlastName, this._newfirstName, this._newmiddleInitial, this._rehireDate,
                 this._docTitleSec3, this._docNumberSec3, this._expDateSec3, this._sgnEmployerSec3,
                 this._signDateSec3, this._employerNameSec3];
@@ -1894,6 +1920,7 @@ define("USI9", ["require", "exports", "Section3"], function (require, exports, S
     class USI9 extends Section3_1.USI9Section3 {
         constructor(pdfApp, webL10n) {
             super(webL10n);
+            this.validateUSI9 = (ctrl, confirmFlag) => this.validateForm(ctrl, this.validateFields(confirmFlag));
             this.pdfApp = pdfApp;
         }
         prepareData() {
@@ -1930,18 +1957,16 @@ define("USI9", ["require", "exports", "Section3"], function (require, exports, S
             return tabIndex;
         }
         renderSections() {
+            this.prepareSecondPage(this.prepareFirstPage(100));
             const eventBus = this.pdfApp.eventBus;
             this.toolbarButtons.forEach((e) => {
                 const eventFuncs = eventBus.get(e);
                 eventBus.remove(e);
-                eventBus.on(e, () => {
-                    if (this.validateForm($(`#${e}`), super.validateFields())) {
-                        this.prepareData();
-                        eventFuncs.forEach((f) => f());
-                    }
-                });
+                eventBus.on(e, () => this.validateDocuments((confirmFlag) => this.validateUSI9($(`#${e}`), confirmFlag).then(() => {
+                    this.prepareData();
+                    eventFuncs.forEach((f) => f());
+                }).catch((ctrl) => ctrl.popover('show'))));
             });
-            this.prepareSecondPage(this.prepareFirstPage(100));
         }
     }
     exports.USI9 = USI9;

@@ -462,7 +462,7 @@ export class USI9Section1 extends USI9Fields {
         return tabIndex
     }
 
-    protected validateFields (): string[] {
+    protected validateFields (confirmFlag: boolean): string[] {
         const errorMessages: string[] = [];
 
         // Put N/A if required

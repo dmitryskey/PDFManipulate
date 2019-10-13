@@ -85,13 +85,13 @@ export class USI9Supplement extends USI9SupplementTranslator {
         this.toolbarButtons.forEach((e) => {
             const eventFuncs = eventBus.get(e)
             eventBus.remove(e)
-            eventBus.on(e, () => {
-                if (this.validateForm($(`#${e}`), super.validateFields())) {
+            eventBus.on(e, () =>
+                this.validateForm($(`#${e}`), super.validateFields()).then(() => {
                     this.prepareData()
 
                     eventFuncs.forEach((f: () => void) => f())
-                }
-            })
+                }).catch((ctrl: JQuery<HTMLElement>) => ctrl.popover('show'))
+            )
         })
 
         this.prepareFirstPage()
