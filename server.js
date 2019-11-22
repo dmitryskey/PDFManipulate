@@ -21,11 +21,11 @@ const sessionIsExpired = 'Session is expired for the token [%s]';
 
 const iTextSocket = 8086;
 
-let app = express();
+const app = express();
 
-let db = new sqlite3.Database('db/database.db');
+const db = new sqlite3.Database('db/database.db');
 
-let logger = log4js.getLogger();
+const logger = log4js.getLogger();
 logger.level = 'debug';
 
 app.post('/BeginSession', (req, res) => {

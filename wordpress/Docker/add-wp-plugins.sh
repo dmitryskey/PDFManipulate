@@ -9,11 +9,11 @@ themespath=$wpcontentpath/themes
 tmppluginzip=/tmp/wpplugin.zip
 
 echo "Downloading and installing WordPress plugins"
-wget -qO- $pluginurl/polylang.2.6.4.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $pluginspath && rm $tmppluginzip
+wget -qO- $pluginurl/polylang.2.6.7.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $pluginspath && rm $tmppluginzip
 wget -qO- $pluginurl/svg-support.2.3.15.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $pluginspath && rm $tmppluginzip
-wget -qO- $pluginurl/contact-form-7.5.1.4.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $pluginspath && rm $tmppluginzip
-wget -qO- $pluginurl/wp-mail-smtp.1.6.2.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $pluginspath && rm $tmppluginzip
-wget -qO- https://downloads.wordpress.org/theme/startup-blog.1.31.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $themespath && rm $tmppluginzip
+wget -qO- $pluginurl/contact-form-7.5.1.5.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $pluginspath && rm $tmppluginzip
+wget -qO- $pluginurl/wp-mail-smtp.1.7.1.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $pluginspath && rm $tmppluginzip
+wget -qO- https://downloads.wordpress.org/theme/startup-blog.1.32.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $themespath && rm $tmppluginzip
 
 rm -r $themespath/twenty* && rm -r $pluginspath/akismet && rm $pluginspath/hello.php
 
@@ -21,6 +21,7 @@ echo "Installing Smart-Forms-On-Demand plugin"
 tar -xzf /tmp/smartformsondemand.tgz -C /tmp && mv /tmp/build/smartformsondemand $pluginspath && rmdir /tmp/build && rm /tmp/smartformsondemand.tgz
 
 chown -R www-data:www-data $pluginspath/*
+chown -R www-data:www-data $themespath/*
 
 mv /tmp/wp-config.php $wwwpath
 
