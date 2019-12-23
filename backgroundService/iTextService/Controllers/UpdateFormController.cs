@@ -24,24 +24,26 @@ namespace iTextService.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Fields fields)
         {
+            Console.Out.WriteLine("File Name");
+
             try
             {
                 if (fields == null)
                 {
                     log.Error("Empty JSON object");
-                    return Ok(string.Empty);
+                    return BadRequest();
                 }
 
                 if (string.IsNullOrEmpty(fields.file))
                 {
                     log.Error("File name does not exist");
-                    return Ok(string.Empty);
+                    return BadRequest();
                 }
 
                 if (!System.IO.File.Exists(fields.file))
                 {
                     log.Error($"File {fields.file} is not found");
-                    return Ok(string.Empty);
+                    return BadRequest();
                 }
     
                 var ms = new MemoryStream();

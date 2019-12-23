@@ -35,6 +35,35 @@ define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
             this.backSpaceCode = 'Backspace';
             this.parentProp = 'parent';
             this.toolbarButtons = ['print', 'download'];
+            this.setCombolistValue = (ctrl, val) => ctrl.parent().children().filter('.combo-content').children()
+                .filter(`[value='${val}']`).each((index, value) => value.onclick(null));
+            this.setCombolistText = (ctrl, val, txt) => ctrl.parent().children().filter('.combo-content').children()
+                .filter(`[value='${val}']`).html(txt);
+            this.assignCombolistEventHandler = (ctrl, f) => ctrl.parent().children().filter('.combo-content').click(f);
+            this.validateForm = (ctrl, errorMessages) => new Promise((resolve, reject) => {
+                ctrl.popover('dispose');
+                if (errorMessages.length > 0) {
+                    let errorMessage = `${this._('error.header')}<br />`;
+                    errorMessages.forEach(e => { errorMessage += ` - ${e}<br />`; });
+                    ctrl.popover({
+                        html: true,
+                        title: this._('validation'),
+                        content: errorMessage,
+                        trigger: 'click',
+                        placement: 'bottom'
+                    });
+                    $('body').off('mouseup').mouseup(e => {
+                        if (!ctrl.popover().is(e.target) && ctrl.popover().has(e.target).length === 0 &&
+                            ctrl !== $(e.target)) {
+                            ctrl.popover('hide');
+                        }
+                    });
+                    reject(ctrl);
+                }
+                else {
+                    resolve(ctrl);
+                }
+            });
             this.webL10n = webL10n;
             this.na = this._('NA');
             const monthNames = [];
@@ -93,17 +122,6 @@ define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
                 }
             }
         }
-        setCombolistValue(ctrl, val) {
-            ctrl.parent().children().filter('.combo-content').children()
-                .filter(`[value='${val}']`).each((index, value) => value.onclick(null));
-        }
-        setCombolistText(ctrl, val, txt) {
-            ctrl.parent().children().filter('.combo-content').children()
-                .filter(`[value='${val}']`).html(txt);
-        }
-        assignCombolistEventHandler(ctrl, f) {
-            ctrl.parent().children().filter('.combo-content').click(f);
-        }
         renderControl(ctrl, text, onFocus = true, placement = 'bottom') {
             ctrl.parent().children().filter('span').click(() => ctrl.popover('hide'));
             return ctrl.popover({ html: true, content: text, trigger: onFocus ? 'focus' : 'hover', placement: placement });
@@ -122,39 +140,19 @@ define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
                 trigger: 'click'
             })
                 .click((e) => {
-                $(e.target).tooltip('hide');
-                $('.popover').css('max-width', `${maxWidth}%`).prop(this.parentProp, e.target);
+                const ctrl = $(e.target);
+                ctrl.tooltip('hide').popover().css('max-width', `${maxWidth}%`);
+                $('body').off('mouseup').mouseup(ev => {
+                    if (!ctrl.popover().is(ev.target) && ctrl.popover().has(ev.target).length === 0 &&
+                        ctrl !== $(ev.target)) {
+                        ctrl.popover('hide');
+                    }
+                });
             });
         }
         urlParameter(name) {
             var results = new RegExp(`[?&]${name}=([^&#]*)`).exec(window.location.href);
             return results === null ? null : decodeURI(results[1]) || 0;
-        }
-        validateForm(ctrl, errorMessages) {
-            ctrl.popover('dispose');
-            return new Promise((resolve, reject) => {
-                if (errorMessages.length > 0) {
-                    let errorMessage = `${this._('error.header')}<br />`;
-                    errorMessages.forEach(e => { errorMessage += ` - ${e}<br />`; });
-                    ctrl.popover({
-                        html: true,
-                        title: this._('validation'),
-                        content: errorMessage,
-                        trigger: 'click',
-                        placement: 'bottom'
-                    });
-                    $('body').off('mouseup').mouseup(e => {
-                        if (!ctrl.popover().is(e.target) && ctrl.popover().has(e.target).length === 0 &&
-                            ctrl !== $(e.target)) {
-                            ctrl.popover('hide');
-                        }
-                    });
-                    reject(ctrl);
-                }
-                else {
-                    resolve(ctrl);
-                }
-            });
         }
     }
     exports.PDFForm = PDFForm;

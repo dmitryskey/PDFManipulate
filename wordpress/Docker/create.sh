@@ -19,4 +19,4 @@ sudo docker exec -it smarti9 cp -r /tmp/build/smartformsondemand $pluginspath
 sudo docker exec -it smarti9 rm -r /tmp/build/
 sudo docker exec -it smarti9 rm /tmp/smartformsondemand.tgz
 
-sudo docker exec -it smarti9 $smartplugin/startservice.sh $smartplugin
+sudo docker exec -it smarti9 nohup $smartplugin/startservice.sh $smartplugin
