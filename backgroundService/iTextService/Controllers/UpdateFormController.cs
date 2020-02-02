@@ -22,8 +22,6 @@ namespace iTextService.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Fields fields)
         {
-            Console.Out.WriteLine("File Name");
-
             try
             {
                 if (fields == null)
@@ -131,9 +129,7 @@ namespace iTextService.Controllers
                 r.Close();
     
                 log.Info($"The form [{fields.file}] is generated");
-                var result = Ok(ms.ToArray());
-                result.ContentTypes.Add( "application/pdf");
-                return Ok(ms.ToArray());
+                return File(ms, "application/pdf");
             }
             catch (Exception ex)
             {
