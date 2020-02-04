@@ -9,8 +9,8 @@ themespath=$wpcontentpath/themes
 tmppluginzip=/tmp/wpplugin.zip
 
 echo "Downloading and installing WordPress plugins"
-wget -qO- $pluginurl/polylang.2.6.8.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $pluginspath && rm $tmppluginzip
-wget -qO- $pluginurl/svg-support.2.3.15.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $pluginspath && rm $tmppluginzip
+wget -qO- $pluginurl/polylang.2.6.9.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $pluginspath && rm $tmppluginzip
+wget -qO- $pluginurl/svg-support.2.3.17.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $pluginspath && rm $tmppluginzip
 wget -qO- $pluginurl/contact-form-7.5.1.6.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $pluginspath && rm $tmppluginzip
 wget -qO- $pluginurl/wp-mail-smtp.1.8.1.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $pluginspath && rm $tmppluginzip
 wget -qO- https://downloads.wordpress.org/theme/startup-blog.1.32.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $themespath && rm $tmppluginzip

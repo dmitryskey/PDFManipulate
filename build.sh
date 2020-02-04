@@ -4,9 +4,9 @@ iTextService=./backgroundService/iTextService
 
 rm -R -f $p && mkdir -p $p && mkdir -p $p/data && mkdir -p $p/db && chmod -R 777 $p
 
-#git submodule init && git submodule update && cd ./pdf.js && git checkout PDFManipulate && npm install && npm audit fix && gulp minified && cd ..
-#cp -R ./pdf.js/build/minified $p/pdf.js
-#find $p/pdf.js -name *.js.map -type f -delete && find $p/pdf.js -name *.pdf -type f -delete
+git submodule init && git submodule update && cd ./pdf.js && git checkout PDFManipulate && npm install && npm audit fix && gulp minified && cd ..
+cp -R ./pdf.js/build/minified $p/pdf.js
+find $p/pdf.js -name *.js.map -type f -delete && find $p/pdf.js -name *.pdf -type f -delete
 
 node ./node_modules/eslint/bin/eslint.js ./templates/src/USI9/*.ts ./templates/src/USI9Supplement/*.ts
 if [[ $? != 0 ]]; then exit $rc; fi
@@ -30,7 +30,7 @@ dotnet publish $iTextService/iTextService.csproj --self-contained -r linux-x64 -
 
 if [[ $? != 0 ]]; then exit $?; fi
 
-rm $iTextServiceFolder/*json && rm $iTextServiceFolder/*.pdb && rm $iTextServiceFolder/web.config
+rm -f $iTextServiceFolder/*json && rm -f $iTextServiceFolder/*.pdb && rm -f $iTextServiceFolder/web.config
 
 cp -R ./locale $p && cp -R ./templates $p && rm -R -f $p/templates/src
 cp ./wordpress/s* $p && tar -zcf $p.tgz $p 
