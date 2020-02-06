@@ -42,36 +42,37 @@ namespace iTextService.Controllers
                     return BadRequest();
                 }
     
-                var ms = new MemoryStream();
-                var r = new PdfReader(fields.file);
-                var d = new PdfDocument(r, new PdfWriter(ms));
-                var a = PdfAcroForm.GetAcroForm(d, true);
-
-                if (fields.entries != null)
+                using (var ms = new MemoryStream())
                 {
-                    // delete field by its name
-                    fields.entries
+                    var r = new PdfReader(fields.file);
+                    var d = new PdfDocument(r, new PdfWriter(ms));
+                    var a = PdfAcroForm.GetAcroForm(d, true);
+
+                    if (fields.entries != null)
+                    {
+                        // delete field by its name
+                        fields.entries
                         .FindAll(e => string.Compare(e.operation, "d", true) == 0 && a.GetField(e.name) != null)
                         .ForEach(e => a.RemoveField(e.name));
-
-                    // purge all fields that are not in the list
-                    a.GetFormFields().Where(p => !fields.entries.Exists(f => f.name == p.Key))
+    
+                        // purge all fields that are not in the list
+                        a.GetFormFields().Where(p => !fields.entries.Exists(f => f.name == p.Key))
                         .ToList().ForEach(p => a.RemoveField(p.Key));
 
-                    // set field value
-                    fields.entries
+                        // set field value
+                        fields.entries
                         .FindAll(e => string.Compare(e.operation, "s", true) == 0 && a.GetField(e.name) != null)
                         .ForEach(e =>
                         {
                             var f = a.GetField(e.name);
-
+    
                             if (f is PdfButtonFormField)
                             {
                                 // iText 7 always returns "3", we have to parse the appereance and set the correct value
                                 f.SetCheckType(f.GetCheckType());
                                 f.RegenerateField();
                             }
-
+    
                             var borderColor = f.GetBorderColor();
                             if (borderColor == null)
                             {
@@ -83,53 +84,54 @@ namespace iTextService.Controllers
                                 // we have to parse the appereance and set the correct value
                                 f.SetBorderColor(borderColor);
                             }
-
+    
                             if (f is PdfChoiceFormField)
                             {
                                 // workaround for the iText 7 issue when it draws the blue background
                                 var c = f as PdfChoiceFormField;
-
+    
                                 if (c.GetOptions().Count() > 0)
                                 {
                                     c.SetListSelected(new int[] {1});
                                 }
                             }
-
+    
                             f.SetValue(e.value);
                         });
-                }
-
-                if (string.Compare(fields.operation, "f", true) == 0)
-                {
-                    for (int p = 1; p <= d.GetNumberOfPages(); p++)
-                    {
-                        var pageDict = d.GetPage(p);
-                        var annots = pageDict.GetAnnotations();
-
-                        if (annots != null)
-                        {
-                            var newAnnots = new PdfArray();
-
-                            // Copy all non-links annotations
-                            annots.Where(annot => 
-                                annot.GetAppearanceDictionary() != null && 
-                                annot.GetAppearanceDictionary().GetAsName(PdfName.Subtype) != PdfName.Link &&
-                                annot.GetPdfObject() != null).ToList()
-                            .ForEach(annot => newAnnots.Add(annot.GetPdfObject()));
-
-                            // replace annotations with non-link ones (i.e. effectively remove links)
-                            pageDict.Put(PdfName.Annots, newAnnots);
-                        }
                     }
-
-                    a.FlattenFields();
-                }
-
-                d.Close();
-                r.Close();
     
-                log.Info($"The form [{fields.file}] is generated");
-                return File(ms, "application/pdf");
+                    if (string.Compare(fields.operation, "f", true) == 0)
+                    {
+                        for (int p = 1; p <= d.GetNumberOfPages(); p++)
+                        {
+                            var pageDict = d.GetPage(p);
+                            var annots = pageDict.GetAnnotations();
+    
+                            if (annots != null)
+                            {
+                                var newAnnots = new PdfArray();
+    
+                                // Copy all non-links annotations
+                                annots.Where(annot => 
+                                    annot.GetAppearanceDictionary() != null && 
+                                    annot.GetAppearanceDictionary().GetAsName(PdfName.Subtype) != PdfName.Link &&
+                                    annot.GetPdfObject() != null).ToList()
+                                .ForEach(annot => newAnnots.Add(annot.GetPdfObject()));
+    
+                                // replace annotations with non-link ones (i.e. effectively remove links)
+                                pageDict.Put(PdfName.Annots, newAnnots);
+                            }
+                        }
+    
+                        a.FlattenFields();
+                    }
+    
+                    d.Close();
+                    r.Close();
+        
+                    log.Info($"The form [{fields.file}] is generated");
+                    return File(ms.ToArrary(), "application/pdf");
+                }
             }
             catch (Exception ex)
             {
