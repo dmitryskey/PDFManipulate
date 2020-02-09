@@ -13,7 +13,7 @@ smartplugin=$pluginspath/smartformsondemand
 sudo docker restart smarti9
 
 echo "Install Smart-Forms-On-Demand plugin"
-sudo docker cp smartformsondemand.tgz smarti9:/tmp/
+sudo docker cp ../../build/smartformsondemand.tgz smarti9:/tmp/
 sudo docker exec -it smarti9 tar -xzf /tmp/smartformsondemand.tgz -C /tmp
 sudo docker exec -it smarti9 cp -r /tmp/build/smartformsondemand $pluginspath
 sudo docker exec -it smarti9 rm -r /tmp/build/
