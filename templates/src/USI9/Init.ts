@@ -10,6 +10,8 @@ const renderedPages = [false, false, false]
 let form: USI9 = null
 
 eventBus.on('textlayerrendered', (e: any) => {
+    $('a').attr('target', '_blank')
+
     renderedPages[e.pageNumber - 1] = true
 
     if (e.pageNumber === 1 && !renderedPages[1]) {

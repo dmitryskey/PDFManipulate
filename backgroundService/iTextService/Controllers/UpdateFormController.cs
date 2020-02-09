@@ -130,7 +130,7 @@ namespace iTextService.Controllers
                     r.Close();
 
                     log.Info($"The form [{fields.file}] is generated");
-                    return File(ms.ToArray(), "application/pdf");
+                    return Ok(ms.ToArray());
                 }
             }
             catch (Exception ex)
