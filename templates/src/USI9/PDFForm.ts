@@ -151,9 +151,9 @@ export class PDFForm {
             })
     }
 
-    protected urlParameter (name: string) {
+    protected urlParameter (name: string) : string {
         var results = new RegExp(`[?&]${name}=([^&#]*)`).exec(window.location.href)
-        return results === null ? null : decodeURI(results[1]) || 0
+        return results === null ? null : decodeURI(results[1]) || ''
     }
 
     protected validateForm = (

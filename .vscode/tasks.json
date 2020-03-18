@@ -2,8 +2,7 @@
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
     "version": "2.0.0",
-    "tasks": [
-        {
+    "tasks": [{
             "label": "watch",
             "type": "shell",
             "command": "${workspaceRoot}/node_modules/.bin/babel",
@@ -17,20 +16,26 @@
             ],
             "group": "build",
             "isBackground": true
-        },
-        {
-            "label": "USI9",
+        }, {
+            "label": "US I-9",
             "type": "typescript",
             "tsconfig": "templates/src/USI9/tsconfig.json",
             "group": {
                 "kind": "build",
                 "isDefault": true
             }
-        },
-        {
-            "label": "USI9Supplement",
+        }, {
+            "label": "US I-9 Supplement",
             "type": "typescript",
             "tsconfig": "templates/src/USI9Supplement/tsconfig.json",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }, {
+            "label": "PDF.JS App",
+            "type": "typescript",
+            "tsconfig": "templates/src/pdfjs.tsconfig.json",
             "group": {
                 "kind": "build",
                 "isDefault": true

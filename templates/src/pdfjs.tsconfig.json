@@ -1,0 +1,12 @@
+{
+  "files": [
+    "../../pdf.js/web/app.js"
+  ],
+  "compilerOptions": {
+    "declaration": true,
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "allowJs": true,
+    "outDir": "pdf.js"
+  }
+}
