@@ -142,7 +142,7 @@ export class PDFForm {
             .on('show.bs.popover', () => $('.popover').css('max-width', `${maxWidth}%`))
             .click(e => {
                 const ctrl = $(e.target)
-                ctrl.tooltip('hide').popover()
+                ctrl.tooltip('hide').popover('show')
                 $('body').off('mouseup').mouseup(ev => {
                     if (!ctrl.popover().is(ev.target) && ctrl.popover().has(ev.target).length === 0 &&
                         ctrl !== $(ev.target)) {

@@ -129,7 +129,7 @@ define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
         renderHelpIcon(ctrl, title, text, maxWidth = '30') {
             const tag = 'i';
             return ctrl.parent().find(tag).length > 0 ? ctrl : ctrl.hide().parent()
-                .hover((e) => $(e.target).css('cursor', 'pointer'))
+                .hover(e => $(e.target).css('cursor', 'pointer'))
                 .append(`<${tag} class='fa fa-question-circle helpIcon'
                 style='font-size:${Math.ceil(ctrl.parent().height())}px' />`)
                 .children(tag).tooltip({ title: title, placement: 'left' })
@@ -139,9 +139,10 @@ define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
                 content: decodeURIComponent(text),
                 trigger: 'click'
             })
-                .click((e) => {
+                .on('show.bs.popover', () => $('.popover').css('max-width', `${maxWidth}%`))
+                .click(e => {
                 const ctrl = $(e.target);
-                ctrl.tooltip('hide').popover().css('max-width', `${maxWidth}%`);
+                ctrl.tooltip('hide').popover('show');
                 $('body').off('mouseup').mouseup(ev => {
                     if (!ctrl.popover().is(ev.target) && ctrl.popover().has(ev.target).length === 0 &&
                         ctrl !== $(ev.target)) {
@@ -152,7 +153,7 @@ define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
         }
         urlParameter(name) {
             var results = new RegExp(`[?&]${name}=([^&#]*)`).exec(window.location.href);
-            return results === null ? null : decodeURI(results[1]) || 0;
+            return results === null ? null : decodeURI(results[1]) || '';
         }
     }
     exports.PDFForm = PDFForm;
