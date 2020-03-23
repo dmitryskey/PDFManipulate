@@ -129,7 +129,7 @@ export class PDFForm {
         : JQuery<HTMLElement> {
         const tag = 'i'
         return ctrl.parent().find(tag).length > 0 ? ctrl : ctrl.hide().parent()
-            .hover((e) => $(e.target).css('cursor', 'pointer'))
+            .hover(e => $(e.target).css('cursor', 'pointer'))
             .append(`<${tag} class='fa fa-question-circle helpIcon'
                 style='font-size:${Math.ceil(ctrl.parent().height())}px' />`)
             .children(tag).tooltip({ title: title, placement: 'left' })
@@ -139,9 +139,10 @@ export class PDFForm {
                 content: decodeURIComponent(text),
                 trigger: 'click'
             })
-            .click((e) => {
+            .on('show.bs.popover', () => $('.popover').css('max-width', `${maxWidth}%`))
+            .click(e => {
                 const ctrl = $(e.target)
-                ctrl.tooltip('hide').popover().css('max-width', `${maxWidth}%`)
+                ctrl.tooltip('hide').popover()
                 $('body').off('mouseup').mouseup(ev => {
                     if (!ctrl.popover().is(ev.target) && ctrl.popover().has(ev.target).length === 0 &&
                         ctrl !== $(ev.target)) {
