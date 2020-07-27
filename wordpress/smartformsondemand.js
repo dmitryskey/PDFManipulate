@@ -35,8 +35,8 @@ jQuery(document).ready(function() {
     }
 
     var locales = {
-        'en-US': 'a[href=\"https://www.uscis.gov/system/files_force/files/form/i-9-paper-version.pdf\"]',
-        'es-MX': 'a[href=\"https://www.uscis.gov/system/files_force/files/form/i-9-spanish.pdf\"]'
+        'en-US': 'a[href=\"https://www.uscis.gov/sites/default/files/document/forms/i-9-paper-version.pdf\"]',
+        'es-MX': 'a[href=\"https://www.uscis.gov/sites/default/files/document/forms/i-9-spanish.pdf\"]'
     };
 
     for (var locale in locales) {
@@ -51,8 +51,8 @@ jQuery(document).ready(function() {
     }
 
     locales = {
-        'en-US': 'a[href=\"https://www.uscis.gov/system/files_force/files/form/i-9supinstr.pdf\"]',
-        'es-MX': 'a[href=\"https://www.uscis.gov/system/files_force/files/form/i9-frm-supp1-spanish.pdf\"]'
+        'en-US': 'a[href=\"https://www.uscis.gov/sites/default/files/document/forms/i-9supinstr.pdf\"]',
+        'es-MX': 'a[href=\"https://www.uscis.gov/sites/default/files/document/forms/i9-frm-supp1-spanish.pdf\"]'
     };
 
     for (var locale in locales) {
