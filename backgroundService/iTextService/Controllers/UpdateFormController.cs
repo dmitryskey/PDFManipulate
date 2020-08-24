@@ -154,6 +154,7 @@ namespace iTextService.Controllers
             public List<FieldEntry> entries { get; set; }
         }
     }
+    
     public static class PdfFormFieldExtensions
     {
         public static Color GetBorderColor(this PdfFormField f)
