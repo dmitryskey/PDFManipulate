@@ -1,5 +1,8 @@
 import { USI9SupplementTranslator } from 'TranslatorSection'
-import { PDFViewerApplication } from './../../../pdf.js/web/app'
+// TS doesn't have conditional complilation. Uncomment this line during
+// the development in order to have strong type declaration.
+// import { PDFViewerApplication } from './../../../pdf.js/web/app'
+let PDFViewerApplication: any
 
 export class USI9Supplement extends USI9SupplementTranslator {
     private prepareData () {
