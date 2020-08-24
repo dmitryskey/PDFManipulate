@@ -396,7 +396,6 @@ define("USI9Supplement/USI9Supplement", ["require", "exports", "USI9Supplement/T
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.USI9Supplement = void 0;
-    let PDFViewerApplication;
     class USI9Supplement extends TranslatorSection_1.USI9SupplementTranslator {
         prepareData() {
             const service = PDFViewerApplication.transformationService;
@@ -435,7 +434,6 @@ define("USI9Supplement/USI9Supplement", ["require", "exports", "USI9Supplement/T
 define("USI9Supplement/Init", ["require", "exports", "USI9Supplement/USI9Supplement"], function (require, exports, USI9Supplement_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    let PDFViewerApplication;
     PDFViewerApplication.eventBus.on('textlayerrendered', () => {
         var form = new USI9Supplement_1.USI9Supplement(document.webL10n);
         form.renderSections();

@@ -1925,7 +1925,6 @@ define("USI9", ["require", "exports", "Section3"], function (require, exports, S
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.USI9 = void 0;
-    let PDFViewerApplication;
     class USI9 extends Section3_1.USI9Section3 {
         constructor() {
             super(...arguments);
@@ -1980,7 +1979,6 @@ define("USI9", ["require", "exports", "Section3"], function (require, exports, S
 define("Init", ["require", "exports", "USI9"], function (require, exports, USI9_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    let PDFViewerApplication;
     const pdfViewer = PDFViewerApplication.pdfViewer;
     const renderedPages = [false, false, false];
     let form = null;
