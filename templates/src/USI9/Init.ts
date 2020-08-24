@@ -1,15 +1,12 @@
 import { USI9 } from 'USI9'
+import { PDFViewerApplication } from './../../../pdf.js/web/app'
 
-// Global PDF.JS object references.
-declare let PDFViewerApplication: any
-
-const eventBus = PDFViewerApplication.eventBus
 const pdfViewer = PDFViewerApplication.pdfViewer
 
 const renderedPages = [false, false, false]
 let form: USI9 = null
 
-eventBus.on('textlayerrendered', (e: any) => {
+PDFViewerApplication.eventBus.on('textlayerrendered', (e: any) => {
     $('a').attr('target', '_blank')
 
     renderedPages[e.pageNumber - 1] = true
@@ -26,7 +23,7 @@ eventBus.on('textlayerrendered', (e: any) => {
     }
 
     if (renderedPages[0] && renderedPages[1] && form == null) {
-        form = new USI9(PDFViewerApplication, (document as any).webL10n)
+        form = new USI9((document as any).webL10n)
         form.renderSections()
     }
 })

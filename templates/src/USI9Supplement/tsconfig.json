@@ -13,6 +13,7 @@
         "outFile": "../../src/US I9 Supplement.js",
         "removeComments": true,
         "noImplicitAny": true,
+        "allowJs": true,
         "lib": [
             "dom",
             "es5",

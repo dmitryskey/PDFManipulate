@@ -1,25 +1,17 @@
 import { USI9SupplementTranslator } from 'TranslatorSection'
+import { PDFViewerApplication } from './../../../pdf.js/web/app'
 
 export class USI9Supplement extends USI9SupplementTranslator {
-    private pdfApp: any;
-
-    constructor (pdfApp: any, webL10n: any) {
-        super(webL10n)
-        this.pdfApp = pdfApp
-    }
-
     private prepareData () {
-        this.pdfApp.transformationService = '/?rest_route=/UpdateForm'
-        this.pdfApp.sessionID = this.urlParameter('session_id')
-        this.pdfApp.fieldsData = {
-            file: this.pdfApp.url,
-            operation: 'f',
-            entries: []
-        }
+        const service = PDFViewerApplication.transformationService
+        service.url = '/?rest_route=/UpdateForm'
+        service.session_id = this.urlParameter('session_id')
+        service.fields_data.file = PDFViewerApplication.url
+        service.fields_data.file.operation = 'f'
 
         $(`[${this.annotationName}]`).each((i, ctrl: HTMLInputElement) => {
             if (!ctrl.disabled && ctrl.value && ctrl.value !== '') {
-                this.pdfApp.fieldsData.entries.push({
+                service.fields_data.entries.push({
                     name: ctrl.getAttribute(this.annotationName),
                     value: ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value,
                     operation: 's'
@@ -80,7 +72,7 @@ export class USI9Supplement extends USI9SupplementTranslator {
     }
 
     public renderSections () {
-        const eventBus = this.pdfApp.eventBus
+        const eventBus = PDFViewerApplication.eventBus
 
         this.toolbarButtons.forEach((e) => {
             const eventFuncs = eventBus.get(e)

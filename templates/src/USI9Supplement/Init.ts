@@ -1,11 +1,7 @@
 import { USI9Supplement } from 'USI9Supplement'
+import { PDFViewerApplication } from './../../../pdf.js/web/app'
 
-// Global PDF.JS object references.
-declare var PDFViewerApplication: any
-
-const eventBus = PDFViewerApplication.eventBus
-
-eventBus.on('textlayerrendered', () => {
-    var form = new USI9Supplement(PDFViewerApplication, (document as any).webL10n)
+PDFViewerApplication.eventBus.on('textlayerrendered', () => {
+    var form = new USI9Supplement((document as any).webL10n)
     form.renderSections()
 })

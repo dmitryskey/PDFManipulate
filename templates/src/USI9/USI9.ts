@@ -1,21 +1,13 @@
 import { USI9Section3 } from 'Section3'
+import { PDFViewerApplication } from './../../../pdf.js/web/app'
 
 export class USI9 extends USI9Section3 {
-    private pdfApp: any;
-
-    constructor (pdfApp: any, webL10n: any) {
-        super(webL10n)
-        this.pdfApp = pdfApp
-    }
-
     private prepareData () {
-        this.pdfApp.transformationService = '/?rest_route=/UpdateForm'
-        this.pdfApp.sessionID = this.urlParameter('session_id')
-        this.pdfApp.fieldsData = {
-            file: this.pdfApp.url,
-            operation: 'f',
-            entries: []
-        }
+        const service = PDFViewerApplication.transformationService
+        service.url = '/?rest_route=/UpdateForm'
+        service.session_id = this.urlParameter('session_id')
+        service.fields_data.file = PDFViewerApplication.url
+        service.fields_data.file.operation = 'f'
 
         const readOnlyFieldsToFlat =
         ['LPRUSCISNumber', 'LPRUSCISNumberPrefix', 'AlienUSCISNumberPrefix',
@@ -26,7 +18,7 @@ export class USI9 extends USI9Section3 {
 
         $(`[${this.annotationName}]`).each((i, ctrl: HTMLInputElement) => {
             if ((!ctrl.disabled || readOnlyFieldsToFlat.indexOf(ctrl.getAttribute(this.annotationName)) > -1) && ctrl.value && ctrl.value !== '') {
-                this.pdfApp.fieldsData.entries.push({
+                service.fields_data.entries.push({
                     name: ctrl.getAttribute(this.annotationName),
                     value: ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value,
                     operation: 's'
@@ -234,7 +226,7 @@ export class USI9 extends USI9Section3 {
     public renderSections () {
         this.prepareSecondPage(this.prepareFirstPage(100))
 
-        const eventBus = this.pdfApp.eventBus
+        const eventBus = PDFViewerApplication.eventBus
 
         this.toolbarButtons.forEach((e) => {
             const eventFuncs = eventBus.get(e)
