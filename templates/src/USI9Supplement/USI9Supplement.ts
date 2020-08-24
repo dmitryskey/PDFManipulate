@@ -7,7 +7,7 @@ export class USI9Supplement extends USI9SupplementTranslator {
         service.url = '/?rest_route=/UpdateForm'
         service.session_id = this.urlParameter('session_id')
         service.fields_data.file = PDFViewerApplication.url
-        service.fields_data.file.operation = 'f'
+        service.fields_data.operation = 'f'
 
         $(`[${this.annotationName}]`).each((i, ctrl: HTMLInputElement) => {
             if (!ctrl.disabled && ctrl.value && ctrl.value !== '') {

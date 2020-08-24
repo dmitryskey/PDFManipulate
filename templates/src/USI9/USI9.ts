@@ -7,7 +7,7 @@ export class USI9 extends USI9Section3 {
         service.url = '/?rest_route=/UpdateForm'
         service.session_id = this.urlParameter('session_id')
         service.fields_data.file = PDFViewerApplication.url
-        service.fields_data.file.operation = 'f'
+        service.fields_data.operation = 'f'
 
         const readOnlyFieldsToFlat =
         ['LPRUSCISNumber', 'LPRUSCISNumberPrefix', 'AlienUSCISNumberPrefix',

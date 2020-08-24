@@ -47255,15 +47255,16 @@ define("pdf.js/web/app", ["require", "exports", "pdf.js/web/ui_utils", "pdf.js/w
         },
     };
     exports.DefaultExternalServices = DefaultExternalServices;
+    const PDFTransformationFields = {
+        file: '',
+        operation: '',
+        session_id: '',
+        entries: [],
+    };
     const PDFTransformationService = {
         url: '',
         session_id: '',
-        fieldsData = {
-            file: '',
-            operation: '',
-            session_id: '',
-            entries: []
-        }
+        fields_data,
     };
     let PDFViewerApplication = {
         initialBookmark: document.location.hash.substring(1),
@@ -49281,11 +49282,11 @@ define("templates/src/USI9Supplement/USI9Supplement", ["require", "exports", "te
             const service = app_1.PDFViewerApplication.transformationService;
             service.url = '/?rest_route=/UpdateForm';
             service.session_id = this.urlParameter('session_id');
-            service.fieldsData.file = app_1.PDFViewerApplication.url;
-            service.fieldsData.file.operation = 'f';
+            service.fields_data.file = app_1.PDFViewerApplication.url;
+            service.fields_data.operation = 'f';
             $(`[${this.annotationName}]`).each((i, ctrl) => {
                 if (!ctrl.disabled && ctrl.value && ctrl.value !== '') {
-                    service.fieldsData.entries.push({
+                    service.fields_data.entries.push({
                         name: ctrl.getAttribute(this.annotationName),
                         value: ctrl.type === 'checkbox' ? (ctrl.checked ? 'On' : 'Off') : ctrl.value,
                         operation: 's'
