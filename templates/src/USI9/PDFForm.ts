@@ -1,3 +1,5 @@
+import * as $ from 'jquery'
+
 export class PDFForm {
     protected nameFormat = /^[A-Za-z ']+$/;
     protected nameInitialFormat = /^[A-Za-z]{1}$/;
@@ -37,8 +39,8 @@ export class PDFForm {
 
     private webL10n: any;
 
-    protected _ (t: string): string {
-        return this.webL10n ? (this.webL10n.get(t) as string).replace('#', '&#35;') : t
+    protected _ (t: string, defaultValue : string = null): string {
+        return this.webL10n ? (this.webL10n.get(t) as string).replace('#', '&#35;') : (defaultValue ?? t)
     }
 
     constructor (webL10n: any) {
@@ -52,12 +54,12 @@ export class PDFForm {
         const dayNamesShort:string[] = []
         const dayNamesMin:string[] = []
 
-        $.each(JSON.parse(this._('monthNames')), (index, value) => {
+        $.each(JSON.parse(this._('monthNames', '{}')), (index, value) => {
             monthNamesShort.push(index as string)
             monthNames.push(value)
         })
 
-        $.each(JSON.parse(this._('dayNames')), (index, value) => {
+        $.each(JSON.parse(this._('dayNames', '{}')), (index, value) => {
             dayNamesMin.push(index as string)
             $.each(value, (i, v) => {
                 dayNamesShort.push(i as string)

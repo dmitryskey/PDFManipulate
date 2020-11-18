@@ -1,4 +1,6 @@
-import { USI9Section3 } from 'Section3'
+import * as $ from 'jquery'
+
+import { USI9Section3 } from './Section3'
 // TS doesn't have conditional compilation. Uncomment this line during
 // the development in order to have strong type declaration.
 // In the Release mode this statement should be commented out

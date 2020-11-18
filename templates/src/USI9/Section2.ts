@@ -1,4 +1,6 @@
-import { USI9Translator } from 'TranslatorSection'
+import * as $ from 'jquery'
+
+import { USI9Translator } from './TranslatorSection'
 
 export class USI9Section2 extends USI9Translator {
     private validationExpressionProp = 'validationexpression';

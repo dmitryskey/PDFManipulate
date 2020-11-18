@@ -1,4 +1,6 @@
-import { USI9Fields } from 'Fields'
+import * as $ from 'jquery'
+
+import { USI9Fields } from './Fields'
 
 export class USI9Section1 extends USI9Fields {
     private renderNameAndAddress (

@@ -1,4 +1,4 @@
-import { USI9Section1 } from 'Section1'
+import { USI9Section1 } from './Section1'
 
 export class USI9Translator extends USI9Section1 {
     protected renderTranslatorSection (

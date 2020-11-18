@@ -1,6 +1,6 @@
-import { PDFForm } from 'PDFForm'
+import { PDFForm } from './PDFForm'
 // eslint-disable-next-line no-unused-vars
-import { USI9Section2 } from 'Section2'
+import { USI9Section2 } from './Section2'
 
 export class USI9Fields extends PDFForm {
     // region "Section 1 Personal data Fields"

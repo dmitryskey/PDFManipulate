@@ -1,8 +1,8 @@
 import { USI9 } from '../templates/src/USI9/USI9'
-import * as jquery from "jquery";
+import * as $ from 'jquery';
 
 describe('US I-9', () => {
-    let form = new USI9(null, null);
+    let form = new USI9(null);
 
     form.renderSections();
 

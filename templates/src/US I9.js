@@ -1,9 +1,10 @@
-define("PDFForm", ["require", "exports"], function (require, exports) {
+define("PDFForm", ["require", "exports", "jquery"], function (require, exports, $) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.PDFForm = void 0;
     class PDFForm {
         constructor(webL10n) {
+            var _a, _b;
             this.nameFormat = /^[A-Za-z ']+$/;
             this.nameInitialFormat = /^[A-Za-z]{1}$/;
             this.stateFormat = /^[A-Z]{2,3}$/;
@@ -72,11 +73,11 @@ define("PDFForm", ["require", "exports"], function (require, exports) {
             const dayNames = [];
             const dayNamesShort = [];
             const dayNamesMin = [];
-            $.each(JSON.parse(this._('monthNames')), (index, value) => {
+            $.each(JSON.parse((_a = this._('monthNames')) !== null && _a !== void 0 ? _a : '{}'), (index, value) => {
                 monthNamesShort.push(index);
                 monthNames.push(value);
             });
-            $.each(JSON.parse(this._('dayNames')), (index, value) => {
+            $.each(JSON.parse((_b = this._('dayNames')) !== null && _b !== void 0 ? _b : '{}'), (index, value) => {
                 dayNamesMin.push(index);
                 $.each(value, (i, v) => {
                     dayNamesShort.push(i);
@@ -159,7 +160,7 @@ define("PDFForm", ["require", "exports"], function (require, exports) {
     }
     exports.PDFForm = PDFForm;
 });
-define("Section1", ["require", "exports", "Fields"], function (require, exports, Fields_1) {
+define("Section1", ["require", "exports", "jquery", "Fields"], function (require, exports, $, Fields_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.USI9Section1 = void 0;
@@ -513,7 +514,7 @@ define("TranslatorSection", ["require", "exports", "Section1"], function (requir
     }
     exports.USI9Translator = USI9Translator;
 });
-define("Section2", ["require", "exports", "TranslatorSection"], function (require, exports, TranslatorSection_1) {
+define("Section2", ["require", "exports", "jquery", "TranslatorSection"], function (require, exports, $, TranslatorSection_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.USI9Section2 = void 0;
@@ -1921,7 +1922,7 @@ define("Section3", ["require", "exports", "Section2"], function (require, export
     }
     exports.USI9Section3 = USI9Section3;
 });
-define("USI9", ["require", "exports", "Section3"], function (require, exports, Section3_1) {
+define("USI9", ["require", "exports", "jquery", "Section3"], function (require, exports, $, Section3_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.USI9 = void 0;
