@@ -1,4 +1,4 @@
-define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
+define("USI9/PDFForm", ["require", "exports", "jquery"], function (require, exports, $) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.PDFForm = void 0;
@@ -72,11 +72,11 @@ define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
             const dayNames = [];
             const dayNamesShort = [];
             const dayNamesMin = [];
-            $.each(JSON.parse(this._('monthNames')), (index, value) => {
+            $.each(JSON.parse(this._('monthNames', '{}')), (index, value) => {
                 monthNamesShort.push(index);
                 monthNames.push(value);
             });
-            $.each(JSON.parse(this._('dayNames')), (index, value) => {
+            $.each(JSON.parse(this._('dayNames', '{}')), (index, value) => {
                 dayNamesMin.push(index);
                 $.each(value, (i, v) => {
                     dayNamesShort.push(i);
@@ -113,8 +113,8 @@ define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
           </div>
         </div>`);
         }
-        _(t) {
-            return this.webL10n ? this.webL10n.get(t).replace('#', '&#35;') : t;
+        _(t, defaultValue = null) {
+            return this.webL10n ? this.webL10n.get(t).replace('#', '&#35;') : (defaultValue !== null && defaultValue !== void 0 ? defaultValue : t);
         }
         selectCheckmark(ctrl, arr) {
             for (var a of arr) {

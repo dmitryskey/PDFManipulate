@@ -30,10 +30,10 @@ namespace iTextService
         {
             var entry = Assembly.GetEntryAssembly();
             log4net.GlobalContext.Properties["LogFileName"] =
-                Directory.GetParent(Path.GetDirectoryName(entry.Location)).FullName;
+                Directory.GetParent(System.AppContext.BaseDirectory).FullName;
             XmlConfigurator.Configure(
                 log4net.LogManager.GetRepository(entry),
-                new FileInfo(Path.Combine(Path.GetDirectoryName(entry.Location), "log4net.config")));
+                new FileInfo(Path.Combine(System.AppContext.BaseDirectory, "log4net.config")));
 
             CreateWebHostBuilder(args).Build().Run();
         }

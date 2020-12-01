@@ -4,7 +4,6 @@ define("PDFForm", ["require", "exports", "jquery"], function (require, exports, 
     exports.PDFForm = void 0;
     class PDFForm {
         constructor(webL10n) {
-            var _a, _b;
             this.nameFormat = /^[A-Za-z ']+$/;
             this.nameInitialFormat = /^[A-Za-z]{1}$/;
             this.stateFormat = /^[A-Z]{2,3}$/;
@@ -73,11 +72,11 @@ define("PDFForm", ["require", "exports", "jquery"], function (require, exports, 
             const dayNames = [];
             const dayNamesShort = [];
             const dayNamesMin = [];
-            $.each(JSON.parse((_a = this._('monthNames')) !== null && _a !== void 0 ? _a : '{}'), (index, value) => {
+            $.each(JSON.parse(this._('monthNames', '{}')), (index, value) => {
                 monthNamesShort.push(index);
                 monthNames.push(value);
             });
-            $.each(JSON.parse((_b = this._('dayNames')) !== null && _b !== void 0 ? _b : '{}'), (index, value) => {
+            $.each(JSON.parse(this._('dayNames', '{}')), (index, value) => {
                 dayNamesMin.push(index);
                 $.each(value, (i, v) => {
                     dayNamesShort.push(i);
@@ -114,8 +113,8 @@ define("PDFForm", ["require", "exports", "jquery"], function (require, exports, 
           </div>
         </div>`);
         }
-        _(t) {
-            return this.webL10n ? this.webL10n.get(t).replace('#', '&#35;') : t;
+        _(t, defaultValue = null) {
+            return this.webL10n ? this.webL10n.get(t).replace('#', '&#35;') : (defaultValue !== null && defaultValue !== void 0 ? defaultValue : t);
         }
         selectCheckmark(ctrl, arr) {
             for (var a of arr) {

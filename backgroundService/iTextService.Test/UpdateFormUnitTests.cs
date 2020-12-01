@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using iTextService;
 using Newtonsoft.Json;
 using iTextService.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -18,11 +17,10 @@ namespace Test
         [Test]
         public void TestBlankValue([Values("", "{}", "{'file': ''}", "{'file': 'non-exists.pdf'}")] string val)
         {
-            var result = controller.Post(JsonConvert.DeserializeObject<UpdateFormController.Fields>(val)) as OkObjectResult;
+            var result = controller.Post(JsonConvert.DeserializeObject<UpdateFormController.Fields>(val)) as BadRequestResult;
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(200, result.StatusCode);
-            Assert.AreEqual(string.Empty, result.Value);
+            Assert.AreEqual(400, result.StatusCode);
         }
 
         [Test]
