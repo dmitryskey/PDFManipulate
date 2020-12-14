@@ -9,10 +9,12 @@ const git = require('gulp-git')
 const { exec } = require('child_process')
 const fs = require('fs')
 const fsExtra = require('fs-extra')
+const { task } = require('gulp')
 
 const p = 'build/smartformsondemand'
+const piTextService = `${p}/iTextService/linux-x64`
 const iTextService = 'backgroundService/iTextService'
-const iTextServiceFolder = `${p}/iTextService/linux-x64`
+const iTextServiceFolder = `build/iTextService/linux-x64`
 const templateSrc = 'templates/src'
 const pdfJS = 'pdf.js'
 
@@ -43,20 +45,20 @@ const lint = (formName, done) =>
   gulp.src([`${templateSrc}/${formName}/*.ts`]).pipe(eslint()).pipe(eslint.format()).pipe(eslint.results(results =>
       done(results.errorCount > 0 ? results : null)))
 
-const cleanFolder = (folder, filter, done) => fsExtra.ensureDir(folder)
-  .then(() => fs.promises.readdir(iTextServiceFolder)
-    .then(f => f.filter(f => filter.test(f))
-      .map(f => fs.promises.unlink(`${folder}/${f}`).catch(err => done(err))))
-  .catch(err => done(err)))
-
-gulp.task('build-backgroundservice', done =>
+gulp.task('build-background-service', done =>
   run(`dotnet publish ${iTextService}/iTextService.csproj --self-contained -r linux-x64 -o ${iTextServiceFolder} -c Release -p:PublishSingleFile=true -p:PublishTrimmed=true`, done))
 
-gulp.task('clean-extra-backgroundservice-files', done => cleanFolder(iTextServiceFolder, /.*\.(pdb|json)/, done))
+gulp.task('clean-extra-background-service-files', done => fsExtra.ensureDir(iTextServiceFolder)
+  .then(() => fs.promises.readdir(iTextServiceFolder)
+    .then(f => f.filter(f => /.*\.(pdb|json)/.test(f))
+      .map(f => fs.promises.unlink(`${iTextServiceFolder}/${f}`).catch(err => done(err))))
+  .catch(err => done(err))))
 
-gulp.task('test-backgroundservice', () => gulp.src('**/*.Test.csproj', { read: false }).pipe(test()))
+gulp.task('test-background-service', () => gulp.src('**/*.Test.csproj', { read: false }).pipe(test()))
 
-gulp.task('clean-backgroundservice', () => gulp.src('**/*.csproj', { read: false }).pipe(clean()))
+gulp.task('clean-background-service', () => gulp.src('**/*.csproj', { read: false }).pipe(clean()))
+
+gulp.task('background-service', gulp.series('test-background-service', 'build-background-service', 'clean-extra-background-service-files'))
 
 gulp.task('compile-usi9', done => compile('US I9', done))
 
@@ -82,20 +84,21 @@ gulp.task('pdf.js', done =>
   run('git submodule init', done, done => run('git submodule update', done, done =>
     git.checkout('PDFManipulate', { cwd: pdfJS }, err => {
       if (!err) {
-        run('npm install && npm audit fix', done, done => run('gulp minified', done, done =>
+        run('npm install', done, done => run('gulp minified', done, done =>
           git.reset('HEAD', { cwd: 'pdf.js', args: '--hard' }, err => done(err)), pdfJS),
           pdfJS);
       } else {
         done(err);
-      }
-    }))))
+      }}))))
 
-gulp.task('prepare', async done =>
-  fs.promises.rmdir('build', { recursive: true })
-    .then(() => fs.promises.mkdir('build')
-      .then(() => fs.promises.mkdir(p)
-        .then(() => fs.promises.mkdir(`${p}/data`)
-          .then(() => fs.promises.mkdir(`${p}/db`)
+gulp.task('clean-build', done => fsExtra.remove('build').then(() => done()).catch(err => done(err)))
+
+gulp.task('prepare-build', done =>
+  fsExtra.remove(p)
+    .then(() => fs.promises.mkdir(p)
+      .then(() => fs.promises.mkdir(`${p}/data`)
+        .then(() => fs.promises.mkdir(`${p}/db`)
+          .then(() => fsExtra.copy(iTextServiceFolder, piTextService)
             .then(() => fsExtra.copy('pdf.js/build/minified', `${p}/pdf.js`)
               .then(() => fsExtra.readdir(`${p}/pdf.js`)
                 .then(f => f.forEach(g => fsExtra.readdir(`${p}/pdf.js/${g}`)
@@ -116,9 +119,9 @@ gulp.task('prepare', async done =>
                     .catch(err => done(err)))
                   .catch(err => done(err))))
                 .catch(err => done(err)))
-              .catch(err => done(err)))              
-            .catch(err => done(err))
-          .catch(err => done(err)))
-        .catch(err => done(err))))
-      .catch(err =>  done(err))
+              .catch(err => done(err)))
+            .catch(err => done(err)))
+          .catch(err => done(err))
+        .catch(err => done(err)))    
+      .catch(err => done(err)))
     .catch(err => done(err))))
