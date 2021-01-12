@@ -107,7 +107,7 @@ gulp.task('prepare-build', done =>
                         .then(() => fs.promises.readdir('templates')
                           .then(f => Promise.all(f.filter(f => /forms|lib/.test(f)).map(f => fsExtra.copy(`templates/${f}`, `${p}/templates/${f}`)))
                             .then(() => fs.promises.readdir('wordpress', { withFileTypes : true })
-                              .then(f => Promise.all(f.filter(f => !f.isDirectory()).map(f => fsExtra.copy(`wordpress/${f.name}`, `${p}/wordpress/${f.name}`)))
+                              .then(f => Promise.all(f.filter(f => !f.isDirectory()).map(f => fsExtra.copy(`wordpress/${f.name}`, `${p}/${f.name}`)))
                                 .then(() => { gulp.src(`${p}/**/*`).pipe(tar('smartformsondemand.tar')).pipe(gzip()).pipe(gulp.dest('build')); done(); })
                                 .catch(err => done(err)))
                               .catch(err => done(err)))

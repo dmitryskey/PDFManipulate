@@ -29,7 +29,7 @@ define('DB_USER', 'wordpress@smarti9');
 define('DB_PASSWORD', 'Spark384');
 
 /** MySQL hostname */
-define('DB_HOST', 'smarti9.mariadb.database.azure.com');
+define('DB_HOST', 'smarti9.southcentralus.database.azure.com');
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
@@ -83,7 +83,7 @@ define('WP_DEBUG', false);
 define('WP_ALLOW_MULTISITE', true);
 define('MULTISITE', true);
 define('SUBDOMAIN_INSTALL', false);
-define('DOMAIN_CURRENT_SITE', 'smarti9.org');
+define('DOMAIN_CURRENT_SITE', 'smarti9.southcentralus.database.azure.com');
 define('PATH_CURRENT_SITE', '/');
 define('SITE_ID_CURRENT_SITE', 1);
 define('BLOG_ID_CURRENT_SITE', 1);

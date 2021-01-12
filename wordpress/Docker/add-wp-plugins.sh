@@ -13,12 +13,12 @@ wget -qO- $pluginurl/polylang.2.8.4.zip -O $tmppluginzip && unzip -q $tmppluginz
 wget -qO- $pluginurl/svg-support.2.3.18.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $pluginspath && rm $tmppluginzip
 wget -qO- $pluginurl/contact-form-7.5.3.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $pluginspath && rm $tmppluginzip
 wget -qO- $pluginurl/wp-mail-smtp.2.5.1.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $pluginspath && rm $tmppluginzip
-wget -qO- https://downloads.wordpress.org/theme/startup-blog.1.35.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $themespath && rm $tmppluginzip
+wget -qO- https://downloads.wordpress.org/theme/startup-blog.1.36.zip -O $tmppluginzip && unzip -q $tmppluginzip -d $themespath && rm $tmppluginzip
 
 rm -r $themespath/twenty* && rm -r $pluginspath/akismet && rm $pluginspath/hello.php
 
 echo "Installing Smart-Forms-On-Demand plugin"
-tar -xzf /tmp/smartformsondemand.tgz -C /tmp && mv /tmp/build/smartformsondemand $pluginspath && rmdir /tmp/build && rm /tmp/smartformsondemand.tgz
+tar -xzf /tmp/smartformsondemand.tar.gz -C /tmp && mv /tmp/build/smartformsondemand $pluginspath && rmdir /tmp/build && rm /tmp/smartformsondemand.tar.gz
 
 chown -R www-data:www-data $pluginspath/*
 chown -R www-data:www-data $themespath/*

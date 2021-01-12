@@ -16,6 +16,6 @@ RUN apt-get update \
 EXPOSE 80 443 2222
 
 COPY add-wp-plugins.sh /usr/local/bin
-COPY smartformsondemand.tgz /tmp
+COPY smartformsondemand.tar.gz /tmp
 COPY Smart-Forms-On-Demand.svg /tmp
 COPY wp-config.php /tmp
