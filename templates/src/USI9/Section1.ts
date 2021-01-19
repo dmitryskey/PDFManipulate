@@ -1,5 +1,3 @@
-import * as $ from 'jquery'
-
 import { USI9Fields } from './Fields'
 
 export class USI9Section1 extends USI9Fields {
@@ -24,7 +22,7 @@ export class USI9Section1 extends USI9Fields {
         zip: JQuery<HTMLElement>,
         zipHelp: JQuery<HTMLElement>) {
         this._lastName = this.renderControl(lastName, this._('lastnamehelp.tooltip'))
-            .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
             .attr('tabindex', tabIndex++)
 
         this._lastNameHelp = this.renderHelpIcon(
@@ -34,7 +32,7 @@ export class USI9Section1 extends USI9Fields {
         )
 
         this._firstName = this.renderControl(firstName, this._('firstnamehelp.tooltip'))
-            .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
             .attr('tabindex', tabIndex++)
 
         this._firstNameHelp = this.renderHelpIcon(
@@ -45,7 +43,7 @@ export class USI9Section1 extends USI9Fields {
 
         // N/A option
         this._middleInitial = this.renderControl(middleInitial, this._('middleinitialhelp.tooltip'))
-            .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
             .attr('tabindex', tabIndex++)
 
         this._middleInitialHelp = this.renderHelpIcon(
@@ -55,7 +53,7 @@ export class USI9Section1 extends USI9Fields {
         )
 
         this._otherNames = this.renderControl(otherNames, this._('othernameshelp.tooltip'))
-            .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
             .attr('tabindex', tabIndex++)
 
         this._otherNamesHelp = this.renderHelpIcon(
@@ -92,14 +90,13 @@ export class USI9Section1 extends USI9Fields {
         )
 
         this._state = this.renderControl(state, this._('statehelp.tooltip'), true, 'left')
-            .focus(e => {
+            .on('focus', e => {
                 $(e.target).tooltip('hide')
 
                 const nonUSCountries = ['CAN', 'MEX']
 
                 const zipCode = nonUSCountries.indexOf((e.currentTarget as HTMLInputElement).value) < 0
-                this._zip.unbind('keypress')
-                this._zip.keypress(e => {
+                this._zip.off('keypress').on('keypress', e => {
                     return ((nonUSCountries.indexOf(this._state.val() as string) < 0
                         ? this.zipFormat : this.postalFormat).test(e.key) || e.key === this.backSpaceCode)
                 })
@@ -118,7 +115,7 @@ export class USI9Section1 extends USI9Fields {
         )
 
         this._zip = this.renderControl(zip, this._('ziphelp.tooltip'))
-            .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
             .attr('tabindex', tabIndex++)
 
         this._zipHelp = this.renderHelpIcon(
@@ -135,23 +132,31 @@ export class USI9Section1 extends USI9Fields {
         for (let i = 0; i < ssn.length - 1; i++) {
             this.renderControl(this._ssn[i], this._('ssnhelp.tooltip'))
                 .attr(this.annotationNext, (this._ssn[i + 1]).attr(this.annotationName))
-                .keypress(e => {
+                .on('keypress', e => {
                     if (this.numberFormat.test(e.key)) {
-                        $(`['${this.annotationName}'='${$(e.target).attr(this.annotationNext)}']`).focus()
+                        $(`[${this.annotationName}='${$(e.target).attr(this.annotationNext)}']`).focus()
                         return true
                     } else {
                         return e.key === this.backSpaceCode
                     }
-                }).keydown((e) => {
-                    if (e.keyCode === 8) {
-                        $(`['${this.annotationNext}'='${$(e.target).attr(this.annotationName)}']`).focus()
+                })
+                .on('keyup', e => {
+                    if (e.key === this.backSpaceCode) {
+                        $(`[${this.annotationNext}='${$(e.target).attr(this.annotationName)}']`).focus()
+                        $(e.target).val('')
                     }
                 })
                 .attr('tabindex', tabIndex++)
         }
 
         this.renderControl(this._ssn[ssn.length - 1], this._('ssnhelp.tooltip'))
-            .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keyup', e => {
+                if (e.key === this.backSpaceCode) {
+                    $(`[${this.annotationNext}='${$(e.target).attr(this.annotationName)}']`).focus()
+                    $(e.target).val('')
+                }
+            })
             .attr('tabindex', tabIndex++)
 
         return tabIndex
@@ -212,7 +217,7 @@ export class USI9Section1 extends USI9Fields {
         )
 
         this._phone = this.renderControl(phone, this._('phonehelp.tooltip'))
-            .keypress(e => this.phoneFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.phoneFormat.test(e.key) || e.key === this.backSpaceCode)
             .attr('tabindex', tabIndex++)
 
         this._phoneHelp = this.renderHelpIcon(
@@ -297,7 +302,7 @@ export class USI9Section1 extends USI9Fields {
         this._lpruscisNumPrefix = lpruscisNumPrefix
 
         this._lpruscisNum = this.renderControl(lpruscisNum, this._('uscisnumber.tooltip'))
-            .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
             .attr('tabindex', tabIndex++)
 
         this._lpruscisNumType = this.renderControl(lpruscisNumType, this._('uscisnumbertype.tooltip'), true, 'left')
@@ -308,14 +313,13 @@ export class USI9Section1 extends USI9Fields {
 
         this._alienWorkAuthDate = this.renderControl(alienWorkAuthDate, this._('alienworkauthdate.tooltip'), true, 'right')
             .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
-            .unbind('keypress')
-            .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+            .off('keypress').on('keypress', e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
             .attr('tabindex', tabIndex++)
 
         this._alienuscisNumPrefix = alienuscisNumPrefix
 
         this._alienuscisNum = this.renderControl(alienuscisNum, this._('uscisnumber.tooltip'), true, 'right')
-            .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
             .attr('tabindex', tabIndex++)
 
         this._alienuscisNumType = this.renderControl(alienuscisNumType, this._('uscisnumbertype.tooltip'), true, 'right')
@@ -325,7 +329,7 @@ export class USI9Section1 extends USI9Fields {
             this._alienuscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : ''))
 
         this._admissionNum = this.renderControl(admissionNum, this._('admissionnumber.tooltip'), true, 'right')
-            .keypress(e => this.alphaNumericFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.alphaNumericFormat.test(e.key) || e.key === this.backSpaceCode)
             .attr('tabindex', tabIndex++)
 
         this._admissionNumHelp = this.renderHelpIcon(

@@ -51,7 +51,7 @@ export class USI9SupplementTranslator extends USI9SupplementFields {
         $('a').prop('target', '_blank')
 
         this._lastName = this.renderControl(lastName, this._('lastnamehelp.tooltip'))
-            .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
 
         this._lastNameHelp = this.renderHelpIcon(
             lastNameHelp,
@@ -60,7 +60,7 @@ export class USI9SupplementTranslator extends USI9SupplementFields {
         )
 
         this._firstName = this.renderControl(firstName, this._('firstnamehelp.tooltip'))
-            .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
 
         this._firstNameHelp = this.renderHelpIcon(
             firstNameHelp,
@@ -70,7 +70,7 @@ export class USI9SupplementTranslator extends USI9SupplementFields {
 
         // N/A option
         this._middleInitial = this.renderControl(middleInitial, this._('middleinitialhelp.tooltip'))
-            .keypress(e =>
+            .on('keypress', e =>
                 this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
 
         this._middleInitialHelp = this.renderHelpIcon(
@@ -97,7 +97,7 @@ export class USI9SupplementTranslator extends USI9SupplementFields {
         )
 
         this._translatorLastName = this.renderControl(translatorLastName, this._('translatorlastname.tooltip'))
-            .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
 
         this._translatorLastNameHelp = this.renderHelpIcon(
             translatorLastNameHelp,
@@ -106,7 +106,7 @@ export class USI9SupplementTranslator extends USI9SupplementFields {
         )
 
         this._translatorFirstName = this.renderControl(translatorFirstName, this._('translatorfirstname.tooltip'))
-            .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
 
         this._translatorFirstNameHelp = this.renderHelpIcon(
             translatorFirstNameHelp,
@@ -140,7 +140,7 @@ export class USI9SupplementTranslator extends USI9SupplementFields {
         )
 
         this._translatorZip = this.renderControl(translatorZip, this._('translatorzip.tooltip'))
-            .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
 
         this._translatorZipHelp = this.renderHelpIcon(
             translatorZipHelp,
@@ -153,10 +153,10 @@ export class USI9SupplementTranslator extends USI9SupplementFields {
             .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled')
 
         this._translatorLastName2 = this.renderControl(translatorLastName2, this._('translatorlastname.tooltip'))
-            .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
 
         this._translatorFirstName2 = this.renderControl(translatorFirstName2, this._('translatorfirstname.tooltip'))
-            .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
 
         this._translatorAddress2 = this.renderControl(translatorAddress2, this._('translatoraddress.tooltip'))
 
@@ -166,17 +166,17 @@ export class USI9SupplementTranslator extends USI9SupplementFields {
         this.setCombolistText(this._translatorState2, ' ', this.blankItem)
 
         this._translatorZip2 = this.renderControl(translatorZip2, this._('translatorzip.tooltip'))
-            .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
 
         this._sgnTranslator3 = this.renderControl(sgnTranslator3, this._('sgntranslator.tooltip'))
         this._translatorDate3 = this.renderControl(translatorDate3, this._('translatordate.tooltip'), true, 'left')
             .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled')
 
         this._translatorLastName3 = this.renderControl(translatorLastName3, this._('translatorlastname.tooltip'))
-            .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
 
         this._translatorFirstName3 = this.renderControl(translatorFirstName3, this._('translatorfirstname.tooltip'))
-            .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
 
         this._translatorAddress3 = this.renderControl(translatorAddress3, this._('translatoraddress.tooltip'))
 
@@ -186,17 +186,17 @@ export class USI9SupplementTranslator extends USI9SupplementFields {
         this.setCombolistText(this._translatorState3, ' ', this.blankItem)
 
         this._translatorZip3 = this.renderControl(translatorZip3, this._('translatorzip.tooltip'))
-            .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
 
         this._sgnTranslator4 = this.renderControl(sgnTranslator4, this._('sgntranslator.tooltip'))
         this._translatorDate4 = this.renderControl(translatorDate4, this._('translatordate.tooltip'), true, 'left')
             .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled')
 
         this._translatorLastName4 = this.renderControl(translatorLastName4, this._('translatorlastname.tooltip'))
-            .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
 
         this._translatorFirstName4 = this.renderControl(translatorFirstName4, this._('translatorfirstname.tooltip'))
-            .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
 
         this._translatorAddress4 = this.renderControl(translatorAddress4, this._('translatoraddress.tooltip'))
 
@@ -206,7 +206,7 @@ export class USI9SupplementTranslator extends USI9SupplementFields {
         this.setCombolistText(this._translatorState4, ' ', this.blankItem)
 
         this._translatorZip4 = this.renderControl(translatorZip4, this._('translatorzip.tooltip'))
-            .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
     }
 
     protected validateFields (): string[] {

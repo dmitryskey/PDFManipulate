@@ -6,7 +6,15 @@ import { USI9Supplement } from 'USI9Supplement'
 // import { PDFViewerApplication } from './../../../pdf.js/web/app'
 declare let PDFViewerApplication: any
 
-PDFViewerApplication.eventBus.on('textlayerrendered', () => {
-    var form = new USI9Supplement((document as any).webL10n)
-    form.renderSections()
-})
+const initializationFunction = () => {
+    if (PDFViewerApplication.eventBus) {
+        PDFViewerApplication.eventBus.on('textlayerrendered', () => {
+            var form = new USI9Supplement((document as any).webL10n)
+            form.renderSections()
+        })
+    } else {
+        setTimeout(initializationFunction, 100)
+    }
+}
+
+setTimeout(initializationFunction, 100)

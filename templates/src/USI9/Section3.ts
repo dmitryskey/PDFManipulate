@@ -26,7 +26,7 @@ export class USI9Section3 extends USI9Section2 {
         const spaceSymbol = this.space
         const citizenships = [this._citizen, this._national, this._lpr, this._alien]
 
-        this._citizen.click(() => {
+        this._citizen.on('click', () => {
             this.selectCheckmark(this._citizen, citizenships)
             this.processLPR(this._citizen.prop('checked'))
             this.processAlien(this._citizen.prop('checked'))
@@ -38,7 +38,7 @@ export class USI9Section3 extends USI9Section2 {
             }
         })
 
-        this._national.click(() => {
+        this._national.on('click', () => {
             this.selectCheckmark(this._national, citizenships)
             this.processLPR(this._national.prop('checked'))
             this.processAlien(this._national.prop('checked'))
@@ -50,7 +50,7 @@ export class USI9Section3 extends USI9Section2 {
             }
         })
 
-        this._lpr.click(() => {
+        this._lpr.on('click', () => {
             this.selectCheckmark(this._lpr, citizenships)
             this.processAlien(this._lpr.prop('checked'))
             this._lpruscisNum.val('')
@@ -71,7 +71,7 @@ export class USI9Section3 extends USI9Section2 {
             }
         })
 
-        this._alien.click(() => {
+        this._alien.on('click', () => {
             this.selectCheckmark(this._alien, citizenships)
             this.processLPR(this._alien.prop('checked'))
             this._alienWorkAuthDate.val('')
@@ -109,7 +109,7 @@ export class USI9Section3 extends USI9Section2 {
             }
         })
 
-        this._alienuscisNum.change(() => {
+        this._alienuscisNum.on('change', () => {
             if (!this.EmptyOrNA(this._alienuscisNum)) {
                 if (this.EmptyOrNA(this._alienuscisNumType)) {
                     this.filterCombolist(
@@ -131,7 +131,7 @@ export class USI9Section3 extends USI9Section2 {
             }
         })
 
-        this._admissionNum.change(() => {
+        this._admissionNum.on('change', () => {
             if (!this.EmptyOrNA(this._admissionNum)) {
                 this._alienuscisNum.val(this.na)
                 this._alienuscisNumPrefix.val('')
@@ -148,7 +148,7 @@ export class USI9Section3 extends USI9Section2 {
             }
         })
 
-        this._passportNum.change(() => {
+        this._passportNum.on('change', () => {
             if (!this.EmptyOrNA(this._passportNum)) {
                 this._alienuscisNum.val(this.na)
                 this._alienuscisNumPrefix.val('')
@@ -175,7 +175,7 @@ export class USI9Section3 extends USI9Section2 {
         this.processAlien(false)
 
         this._newlastName = this.renderControl(lastName, this._('newlastname.tooltip'))
-            .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
             .attr('tabindex', tabIndex++)
 
         this._newlastNameHelp = this.renderHelpIcon(
@@ -185,7 +185,7 @@ export class USI9Section3 extends USI9Section2 {
         )
 
         this._newfirstName = this.renderControl(firstName, this._('newfirstname.tooltip'))
-            .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
             .attr('tabindex', tabIndex++)
 
         this._newfirstNameHelp = this.renderHelpIcon(
@@ -195,7 +195,7 @@ export class USI9Section3 extends USI9Section2 {
         )
 
         this._newmiddleInitial = this.renderControl(middleInitial, this._('newmiddleinitial.tooltip'))
-            .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
             .attr('tabindex', tabIndex++)
 
         this._newmiddleInitialHelp = this.renderHelpIcon(
@@ -205,8 +205,8 @@ export class USI9Section3 extends USI9Section2 {
         )
 
         this._rehireDate = this.renderControl(rehireDate, this._('rehiredate.tooltip'), true, 'left')
-            .datepicker().attr('autocomplete', 'disabled').unbind('keypress')
-            .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+            .datepicker().attr('autocomplete', 'disabled').off('keypress')
+            .on('keypress', e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
             .attr('tabindex', tabIndex++)
 
         this._rehireDateHelp = this.renderHelpIcon(
@@ -269,8 +269,8 @@ export class USI9Section3 extends USI9Section2 {
         )
 
         this._expDateSec3 = this.renderControl(expDateSec3, this._('expdatesec3.tooltip'), true, 'left')
-            .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled').unbind('keypress')
-            .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+            .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled').off('keypress')
+            .on('keypress', e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
             .attr('tabindex', tabIndex++)
 
         this._expDateSec3Help = this.renderHelpIcon(
@@ -293,8 +293,8 @@ export class USI9Section3 extends USI9Section2 {
             .attr(this.annotationRequired, 'true')
         // work around for the Chrome auto-fill bug
             .attr('readonly', 'true')
-            .focus(() => this._signDateSec3.removeAttr('readonly'))
-            .blur(() => this._signDateSec3.attr('readonly', 'true'))
+            .on('focus', () => this._signDateSec3.removeAttr('readonly'))
+            .on('blur', () => this._signDateSec3.attr('readonly', 'true'))
             .attr('tabindex', tabIndex++)
 
         this._signDateSec3Help = this.renderHelpIcon(

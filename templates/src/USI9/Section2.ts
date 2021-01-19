@@ -1,5 +1,3 @@
-import * as $ from 'jquery'
-
 import { USI9Translator } from './TranslatorSection'
 
 export class USI9Section2 extends USI9Translator {
@@ -1019,7 +1017,7 @@ export class USI9Section2 extends USI9Translator {
                 .datepicker('option', 'maxDate', null)
                 .datepicker('option', 'showOn', 'focus')
                 .attr('autocomplete', 'disabled').val('')
-                .unbind('keypress')
+                .off('keypress')
                 .prop(this.requiredProp, true).prop(this.freeTextProp, true)
         } else if (code === '10') {
             // 10 - Receipt: Form I-94/I-94A w/I-551 stamp, photo
@@ -1031,7 +1029,7 @@ export class USI9Section2 extends USI9Translator {
             fieldValidationMessage = this._('section2.admissionnumber')
 
             this._listADocExpDate
-                .unbind('keypress')
+                .off('keypress')
                 .prop(this.freeTextProp, true)
         } else if (code === '12') {
             // 12 - Receipt replacement Perm. Res. Card (Form I-551)
@@ -1042,7 +1040,7 @@ export class USI9Section2 extends USI9Translator {
             fieldValidationMessage = this._('section2.cardformat')
 
             this._listADocExpDate
-                .unbind('keypress')
+                .off('keypress')
                 .prop(this.freeTextProp, true)
         } else if (code === '6') {
             // Alien authorized to work
@@ -1123,7 +1121,7 @@ export class USI9Section2 extends USI9Translator {
                 .datepicker('option', 'maxDate', null)
                 .datepicker('option', 'showOn', 'focus')
                 .attr('autocomplete', 'disabled').val('')
-                .unbind('keypress')
+                .off('keypress')
                 .prop(this.requiredProp, true).prop(this.freeTextProp, true)
 
             this.filterCombolist(
@@ -1166,7 +1164,7 @@ export class USI9Section2 extends USI9Translator {
                 .datepicker('option', 'maxDate', null)
                 .datepicker('option', 'showOn', 'focus')
                 .attr('autocomplete', 'disabled').val('')
-                .unbind('keypress')
+                .off('keypress')
                 .prop(this.requiredProp, true).prop(this.freeTextProp, true)
         } else if (code === '9') {
             // 9 - RMI Passport with Form I-94
@@ -1197,7 +1195,7 @@ export class USI9Section2 extends USI9Translator {
                 .datepicker('option', 'maxDate', null)
                 .datepicker('option', 'showOn', 'focus')
                 .attr('autocomplete', 'disabled').val('')
-                .unbind('keypress')
+                .off('keypress')
                 .prop(this.requiredProp, true).prop(this.freeTextProp, true)
         } else if (code === '11') {
             // 11 - Receipt: Form I-94/I-94A w/refugee stamp
@@ -1237,12 +1235,12 @@ export class USI9Section2 extends USI9Translator {
 
         this._listADocNumber
             .prop('maxLength', numberMaxLength)
-            .keypress(e => fieldFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => fieldFormat.test(e.key) || e.key === this.backSpaceCode)
 
-        this._listADocExpDate.unbind('keypress')
+        this._listADocExpDate.off('keypress')
         if (!this._listADocExpDate.prop(this.freeTextProp)) {
             this._listADocExpDate
-                .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+                .on('keypress', e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
         }
 
         this._listADocNumber.prop(this.validationExpressionProp, fieldValidationExpression)
@@ -1337,7 +1335,7 @@ export class USI9Section2 extends USI9Translator {
         this._listADocNumber2
             .prop('maxLength', numberMaxLength)
             .prop(this.requiredProp, true)
-            .keypress(e => fieldFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => fieldFormat.test(e.key) || e.key === this.backSpaceCode)
     }
 
     private listADocTitle3 (code: string) {
@@ -1393,7 +1391,7 @@ export class USI9Section2 extends USI9Translator {
         let issuingAuthList: { [index: string]: string; }
         let issuingAuth: string = null
 
-        this._listBDocNumber.prop('maxLength', '100').unbind('keypress')
+        this._listBDocNumber.prop('maxLength', '100').off('keypress')
 
         this._listBIssuingAuthority.prop(this.requiredProp, true)
         this._listBDocNumber.prop(this.requiredProp, true)
@@ -1406,8 +1404,8 @@ export class USI9Section2 extends USI9Translator {
             this._listBDocExpDate
                 .removeAttr('readOnly')
                 .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'disabled').val('')
-                .unbind('keypress')
-                .keypress((e : JQuery.KeyPressEvent<HTMLElement>) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+                .off('keypress')
+                .on('keypress', (e : JQuery.KeyPressEvent<HTMLElement>) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
         }
 
         if (['1', '2', '21', '22'].indexOf(code) >= 0) {
@@ -1422,8 +1420,8 @@ export class USI9Section2 extends USI9Translator {
 
             this._listBDocNumber
                 .prop('maxLength', numberMaxLength)
-                .unbind('keypress')
-                .keypress(e => fieldFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+                .off('keypress')
+                .on('keypress', e => fieldFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
 
             fieldValidationExpression = this.driverLicenseNumberFormat
             fieldValidationMessage = this._('section2.listbnumberformat')
@@ -1533,8 +1531,8 @@ export class USI9Section2 extends USI9Translator {
             .datepicker('option', 'maxDate', null)
             .datepicker('option', 'showOn', 'focus')
             .attr('autocomplete', 'disabled')
-            .unbind('keypress')
-            .keypress((e : JQuery.KeyPressEvent<HTMLElement>) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+            .off('keypress')
+            .on('keypress', (e : JQuery.KeyPressEvent<HTMLElement>) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
             .val('')
 
         this._listCDoc.prop('ssncard', false).prop('i551', false)
@@ -1585,7 +1583,7 @@ export class USI9Section2 extends USI9Translator {
 
             this._listCIssuingAuthority
                 .removeAttr('readOnly')
-                .keypress(e => {
+                .on('keypress', e => {
                     const val = this._listCIssuingAuthority.val() as string
 
                     if (val.length >= name.length) {
@@ -1594,11 +1592,10 @@ export class USI9Section2 extends USI9Translator {
 
                     return true
                 })
-                .keyup(e => {
+                .on('keyup', () => {
                     const val = this._listCIssuingAuthority.val() as string
 
-                    if (val.length <= name.length ||
-                (val.length === name.length + 1 && val.substr(0, name.length) !== name)) {
+                    if (val.length <= name.length || (val.length === name.length + 1 && val.substr(0, name.length) !== name)) {
                         this._listCIssuingAuthority.val(name)
                     }
                 })
@@ -1627,7 +1624,7 @@ export class USI9Section2 extends USI9Translator {
         this._listCDocNumber
             .prop('maxLength', numberMaxLength)
             .removeAttr('readOnly').val('')
-            .keypress(e => fieldFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => fieldFormat.test(e.key) || e.key === this.backSpaceCode)
 
         this.filterCombolist(
             this._listCIssuingAuthority,

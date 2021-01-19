@@ -1,5 +1,3 @@
-import * as $ from 'jquery'
-
 export class PDFForm {
     protected nameFormat = /^[A-Za-z ']+$/;
     protected nameInitialFormat = /^[A-Za-z]{1}$/;
@@ -29,7 +27,7 @@ export class PDFForm {
     protected annotationName = 'annotation-name';
     protected annotationRequired = 'annotation-required';
     protected annotationNext = 'annotation-next';
-    protected na:string;
+    protected na: string;
     protected space = ' ';
     protected blankItem = '&nbsp;';
     protected backSpaceCode = 'Backspace';
@@ -142,10 +140,10 @@ export class PDFForm {
                 trigger: 'click'
             })
             .on('show.bs.popover', () => $('.popover').css('max-width', `${maxWidth}%`))
-            .click(e => {
+            .on('click', e => {
                 const ctrl = $(e.target)
                 ctrl.tooltip('hide').popover('show')
-                $('body').off('mouseup').mouseup(ev => {
+                $('body').off('mouseup').on('mouseup', ev => {
                     if (!ctrl.popover().is(ev.target) && ctrl.popover().has(ev.target).length === 0 &&
                         ctrl !== $(ev.target)) {
                         ctrl.popover('hide')
@@ -176,7 +174,7 @@ export class PDFForm {
                     placement: 'bottom'
                 })
 
-                $('body').off('mouseup').mouseup(e => {
+                $('body').off('mouseup').on('mouseup', e => {
                     if (!ctrl.popover().is(e.target) && ctrl.popover().has(e.target).length === 0 &&
                         ctrl !== $(e.target)) {
                         ctrl.popover('hide')

@@ -25,7 +25,7 @@ export class USI9Translator extends USI9Section1 {
         var translator = [translatorNo, translatorYes]
 
         this._translatorNo = this.renderControl(translatorNo, this._('translator.tooltip'), false)
-            .click(() => {
+            .on('click', () => {
                 this.selectCheckmark(this._translatorNo, translator)
 
                 this._sgnTranslator.val('').prop('disabled', true)
@@ -40,7 +40,7 @@ export class USI9Translator extends USI9Section1 {
             .attr('tabindex', tabIndex++)
 
         this._translatorYes = this.renderControl(translatorYes, this._('translator.tooltip'), false)
-            .click(() => {
+            .on('click', () => {
                 this.selectCheckmark(this._translatorYes, translator)
 
                 this._sgnTranslator.prop('disabled', false)
@@ -80,7 +80,7 @@ export class USI9Translator extends USI9Section1 {
         )
 
         this._translatorLastName = this.renderControl(translatorLastName, this._('translatorlastname.tooltip'))
-            .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
             .attr('tabindex', tabIndex++)
 
         this._translatorLastNameHelp = this.renderHelpIcon(
@@ -90,7 +90,7 @@ export class USI9Translator extends USI9Section1 {
         )
 
         this._translatorFirstName = this.renderControl(translatorFirstName, this._('translatorfirstname.tooltip'))
-            .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
             .attr('tabindex', tabIndex++)
 
         this._translatorFirstNameHelp = this.renderHelpIcon(
@@ -128,7 +128,7 @@ export class USI9Translator extends USI9Section1 {
         )
 
         this._translatorZip = this.renderControl(translatorZip, this._('translatorzip.tooltip'))
-            .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
+            .on('keypress', e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
             .attr('tabindex', tabIndex++)
 
         this._translatorZipHelp = this.renderHelpIcon(

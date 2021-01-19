@@ -1,4 +1,4 @@
-define("PDFForm", ["require", "exports", "jquery"], function (require, exports, $) {
+define("PDFForm", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.PDFForm = void 0;
@@ -53,7 +53,7 @@ define("PDFForm", ["require", "exports", "jquery"], function (require, exports, 
                         trigger: 'click',
                         placement: 'bottom'
                     });
-                    $('body').off('mouseup').mouseup(e => {
+                    $('body').off('mouseup').on('mouseup', e => {
                         if (!ctrl.popover().is(e.target) && ctrl.popover().has(e.target).length === 0 &&
                             ctrl !== $(e.target)) {
                             ctrl.popover('hide');
@@ -141,10 +141,10 @@ define("PDFForm", ["require", "exports", "jquery"], function (require, exports, 
                 trigger: 'click'
             })
                 .on('show.bs.popover', () => $('.popover').css('max-width', `${maxWidth}%`))
-                .click(e => {
+                .on('click', e => {
                 const ctrl = $(e.target);
                 ctrl.tooltip('hide').popover('show');
-                $('body').off('mouseup').mouseup(ev => {
+                $('body').off('mouseup').on('mouseup', ev => {
                     if (!ctrl.popover().is(ev.target) && ctrl.popover().has(ev.target).length === 0 &&
                         ctrl !== $(ev.target)) {
                         ctrl.popover('hide');
@@ -159,26 +159,26 @@ define("PDFForm", ["require", "exports", "jquery"], function (require, exports, 
     }
     exports.PDFForm = PDFForm;
 });
-define("Section1", ["require", "exports", "jquery", "Fields"], function (require, exports, $, Fields_1) {
+define("Section1", ["require", "exports", "Fields"], function (require, exports, Fields_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.USI9Section1 = void 0;
     class USI9Section1 extends Fields_1.USI9Fields {
         renderNameAndAddress(tabIndex, lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, otherNames, otherNamesHelp, address, addressHelp, apptNumber, apptNumberHelp, city, cityHelp, state, stateHelp, zip, zipHelp) {
             this._lastName = this.renderControl(lastName, this._('lastnamehelp.tooltip'))
-                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+                .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
                 .attr('tabindex', tabIndex++);
             this._lastNameHelp = this.renderHelpIcon(lastNameHelp, this._('lastnamehelp.caption'), this._('lastnamehelp.text'));
             this._firstName = this.renderControl(firstName, this._('firstnamehelp.tooltip'))
-                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+                .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
                 .attr('tabindex', tabIndex++);
             this._firstNameHelp = this.renderHelpIcon(firstNameHelp, this._('firstnamehelp.caption'), this._('firstnamehelp.text'));
             this._middleInitial = this.renderControl(middleInitial, this._('middleinitialhelp.tooltip'))
-                .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+                .on('keypress', e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
                 .attr('tabindex', tabIndex++);
             this._middleInitialHelp = this.renderHelpIcon(middleInitialHelp, this._('middleinitialhelp.caption'), this._('middleinitialhelp.text'));
             this._otherNames = this.renderControl(otherNames, this._('othernameshelp.tooltip'))
-                .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+                .on('keypress', e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
                 .attr('tabindex', tabIndex++);
             this._otherNamesHelp = this.renderHelpIcon(otherNamesHelp, this._('othernameshelp.caption'), this._('othernameshelp.text'));
             this._address = this.renderControl(address, this._('addresshelp.tooltip'))
@@ -191,12 +191,11 @@ define("Section1", ["require", "exports", "jquery", "Fields"], function (require
                 .attr('tabindex', tabIndex++);
             this._cityHelp = this.renderHelpIcon(cityHelp, this._('cityhelp.caption'), this._('cityhelp.text'));
             this._state = this.renderControl(state, this._('statehelp.tooltip'), true, 'left')
-                .focus(e => {
+                .on('focus', e => {
                 $(e.target).tooltip('hide');
                 const nonUSCountries = ['CAN', 'MEX'];
                 const zipCode = nonUSCountries.indexOf(e.currentTarget.value) < 0;
-                this._zip.unbind('keypress');
-                this._zip.keypress(e => {
+                this._zip.off('keypress').on('keypress', e => {
                     return ((nonUSCountries.indexOf(this._state.val()) < 0
                         ? this.zipFormat : this.postalFormat).test(e.key) || e.key === this.backSpaceCode);
                 });
@@ -207,7 +206,7 @@ define("Section1", ["require", "exports", "jquery", "Fields"], function (require
             this.setCombolistText(this._state, this.space, this.blankItem);
             this._stateHelp = this.renderHelpIcon(stateHelp, this._('statehelp.caption'), this._('statehelp.text'));
             this._zip = this.renderControl(zip, this._('ziphelp.tooltip'))
-                .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
+                .on('keypress', e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
                 .attr('tabindex', tabIndex++);
             this._zipHelp = this.renderHelpIcon(zipHelp, this._('ziphelp.caption'), this._('ziphelp.text'));
             return tabIndex;
@@ -217,23 +216,31 @@ define("Section1", ["require", "exports", "jquery", "Fields"], function (require
             for (let i = 0; i < ssn.length - 1; i++) {
                 this.renderControl(this._ssn[i], this._('ssnhelp.tooltip'))
                     .attr(this.annotationNext, (this._ssn[i + 1]).attr(this.annotationName))
-                    .keypress(e => {
+                    .on('keypress', e => {
                     if (this.numberFormat.test(e.key)) {
-                        $(`['${this.annotationName}'='${$(e.target).attr(this.annotationNext)}']`).focus();
+                        $(`[${this.annotationName}='${$(e.target).attr(this.annotationNext)}']`).focus();
                         return true;
                     }
                     else {
                         return e.key === this.backSpaceCode;
                     }
-                }).keydown((e) => {
-                    if (e.keyCode === 8) {
-                        $(`['${this.annotationNext}'='${$(e.target).attr(this.annotationName)}']`).focus();
+                })
+                    .on('keyup', e => {
+                    if (e.key === this.backSpaceCode) {
+                        $(`[${this.annotationNext}='${$(e.target).attr(this.annotationName)}']`).focus();
+                        $(e.target).val('');
                     }
                 })
                     .attr('tabindex', tabIndex++);
             }
             this.renderControl(this._ssn[ssn.length - 1], this._('ssnhelp.tooltip'))
-                .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
+                .on('keypress', e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
+                .on('keyup', e => {
+                if (e.key === this.backSpaceCode) {
+                    $(`[${this.annotationNext}='${$(e.target).attr(this.annotationName)}']`).focus();
+                    $(e.target).val('');
+                }
+            })
                 .attr('tabindex', tabIndex++);
             return tabIndex;
         }
@@ -255,7 +262,7 @@ define("Section1", ["require", "exports", "jquery", "Fields"], function (require
                 .attr('tabindex', tabIndex++);
             this._emailHelp = this.renderHelpIcon(emailHelp, this._('emailhelp.caption'), this._('emailhelp.text'));
             this._phone = this.renderControl(phone, this._('phonehelp.tooltip'))
-                .keypress(e => this.phoneFormat.test(e.key) || e.key === this.backSpaceCode)
+                .on('keypress', e => this.phoneFormat.test(e.key) || e.key === this.backSpaceCode)
                 .attr('tabindex', tabIndex++);
             this._phoneHelp = this.renderHelpIcon(phoneHelp, this._('phonehelp.caption'), this._('phonehelp.text'));
             return tabIndex;
@@ -276,25 +283,24 @@ define("Section1", ["require", "exports", "jquery", "Fields"], function (require
             this._uscisNumberHelp = this.renderHelpIcon(uscisNumberHelp, this._('uscisnumberhelp.caption'), this._('uscisnumberhelp.text'));
             this._lpruscisNumPrefix = lpruscisNumPrefix;
             this._lpruscisNum = this.renderControl(lpruscisNum, this._('uscisnumber.tooltip'))
-                .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
+                .on('keypress', e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
                 .attr('tabindex', tabIndex++);
             this._lpruscisNumType = this.renderControl(lpruscisNumType, this._('uscisnumbertype.tooltip'), true, 'left')
                 .attr('tabindex', tabIndex++);
             this.assignCombolistEventHandler(this._lpruscisNumType, e => this._lpruscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : ''));
             this._alienWorkAuthDate = this.renderControl(alienWorkAuthDate, this._('alienworkauthdate.tooltip'), true, 'right')
                 .datepicker({ changeMonth: true, changeYear: true, minDate: new Date() }).attr('autocomplete', 'disabled')
-                .unbind('keypress')
-                .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+                .off('keypress').on('keypress', e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
                 .attr('tabindex', tabIndex++);
             this._alienuscisNumPrefix = alienuscisNumPrefix;
             this._alienuscisNum = this.renderControl(alienuscisNum, this._('uscisnumber.tooltip'), true, 'right')
-                .keypress(e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
+                .on('keypress', e => this.numberFormat.test(e.key) || e.key === this.backSpaceCode)
                 .attr('tabindex', tabIndex++);
             this._alienuscisNumType = this.renderControl(alienuscisNumType, this._('uscisnumbertype.tooltip'), true, 'right')
                 .attr('tabindex', tabIndex++);
             this.assignCombolistEventHandler(this._alienuscisNumType, e => this._alienuscisNumPrefix.val(e.target.getAttribute('value') === 'A' ? 'A' : ''));
             this._admissionNum = this.renderControl(admissionNum, this._('admissionnumber.tooltip'), true, 'right')
-                .keypress(e => this.alphaNumericFormat.test(e.key) || e.key === this.backSpaceCode)
+                .on('keypress', e => this.alphaNumericFormat.test(e.key) || e.key === this.backSpaceCode)
                 .attr('tabindex', tabIndex++);
             this._admissionNumHelp = this.renderHelpIcon(admissionNumHelp, this._('admissionnumberhelp.caption'), this._('admissionnumberhelp.text'));
             this._passportNum = this.renderControl(passportNum, this._('passportnumber.tooltip'), true, 'right')
@@ -418,7 +424,7 @@ define("TranslatorSection", ["require", "exports", "Section1"], function (requir
         renderTranslatorSection(tabIndex, translatorNo, translatorYes, translatorHelp, sgnTranslator, sgnTranslatorHelp, translatorDate, translatorDateHelp, translatorLastName, translatorLastNameHelp, translatorFirstName, translatorFirstNameHelp, translatorAddress, translatorAddressHelp, translatorCity, translatorCityHelp, translatorState, translatorStateHelp, translatorZip, translatorZipHelp) {
             var translator = [translatorNo, translatorYes];
             this._translatorNo = this.renderControl(translatorNo, this._('translator.tooltip'), false)
-                .click(() => {
+                .on('click', () => {
                 this.selectCheckmark(this._translatorNo, translator);
                 this._sgnTranslator.val('').prop('disabled', true);
                 this._translatorDate.val('').prop('disabled', true);
@@ -431,7 +437,7 @@ define("TranslatorSection", ["require", "exports", "Section1"], function (requir
             })
                 .attr('tabindex', tabIndex++);
             this._translatorYes = this.renderControl(translatorYes, this._('translator.tooltip'), false)
-                .click(() => {
+                .on('click', () => {
                 this.selectCheckmark(this._translatorYes, translator);
                 this._sgnTranslator.prop('disabled', false);
                 this._translatorDate.prop('disabled', false);
@@ -452,11 +458,11 @@ define("TranslatorSection", ["require", "exports", "Section1"], function (requir
                 .attr('tabindex', tabIndex++);
             this._translatorDateHelp = this.renderHelpIcon(translatorDateHelp, this._('translatordatehelp.caption'), this._('translatordatehelp.text'));
             this._translatorLastName = this.renderControl(translatorLastName, this._('translatorlastname.tooltip'))
-                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+                .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
                 .attr('tabindex', tabIndex++);
             this._translatorLastNameHelp = this.renderHelpIcon(translatorLastNameHelp, this._('translatorlastnamehelp.caption'), this._('translatorlastnamehelp.text'));
             this._translatorFirstName = this.renderControl(translatorFirstName, this._('translatorfirstname.tooltip'))
-                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
+                .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode)
                 .attr('tabindex', tabIndex++);
             this._translatorFirstNameHelp = this.renderHelpIcon(translatorFirstNameHelp, this._('translatorfirstnamehelp.caption'), this._('translatorfirstnamehelp.text'));
             this._translatorAddress = this.renderControl(translatorAddress, this._('translatoraddress.tooltip'))
@@ -470,7 +476,7 @@ define("TranslatorSection", ["require", "exports", "Section1"], function (requir
             this.setCombolistText(this._translatorState, ' ', this.blankItem);
             this._translatorStateHelp = this.renderHelpIcon(translatorStateHelp, this._('translatorstatehelp.caption'), this._('translatorstatehelp.text'));
             this._translatorZip = this.renderControl(translatorZip, this._('translatorzip.tooltip'))
-                .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
+                .on('keypress', e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode)
                 .attr('tabindex', tabIndex++);
             this._translatorZipHelp = this.renderHelpIcon(translatorZipHelp, this._('translatorziphelp.caption'), this._('translatorziphelp.text'));
             return tabIndex;
@@ -513,7 +519,7 @@ define("TranslatorSection", ["require", "exports", "Section1"], function (requir
     }
     exports.USI9Translator = USI9Translator;
 });
-define("Section2", ["require", "exports", "jquery", "TranslatorSection"], function (require, exports, $, TranslatorSection_1) {
+define("Section2", ["require", "exports", "TranslatorSection"], function (require, exports, TranslatorSection_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.USI9Section2 = void 0;
@@ -1050,7 +1056,7 @@ define("Section2", ["require", "exports", "jquery", "TranslatorSection"], functi
                     .datepicker('option', 'maxDate', null)
                     .datepicker('option', 'showOn', 'focus')
                     .attr('autocomplete', 'disabled').val('')
-                    .unbind('keypress')
+                    .off('keypress')
                     .prop(this.requiredProp, true).prop(this.freeTextProp, true);
             }
             else if (code === '10') {
@@ -1061,7 +1067,7 @@ define("Section2", ["require", "exports", "jquery", "TranslatorSection"], functi
                 fieldValidationExpression = this.admissionNumberFormat;
                 fieldValidationMessage = this._('section2.admissionnumber');
                 this._listADocExpDate
-                    .unbind('keypress')
+                    .off('keypress')
                     .prop(this.freeTextProp, true);
             }
             else if (code === '12') {
@@ -1071,7 +1077,7 @@ define("Section2", ["require", "exports", "jquery", "TranslatorSection"], functi
                 fieldValidationExpression = this.cardNumberFormat;
                 fieldValidationMessage = this._('section2.cardformat');
                 this._listADocExpDate
-                    .unbind('keypress')
+                    .off('keypress')
                     .prop(this.freeTextProp, true);
             }
             else if (code === '6') {
@@ -1120,7 +1126,7 @@ define("Section2", ["require", "exports", "jquery", "TranslatorSection"], functi
                     .datepicker('option', 'maxDate', null)
                     .datepicker('option', 'showOn', 'focus')
                     .attr('autocomplete', 'disabled').val('')
-                    .unbind('keypress')
+                    .off('keypress')
                     .prop(this.requiredProp, true).prop(this.freeTextProp, true);
                 this.filterCombolist(this._listADoc3, { 0: this.na, 1: this._('formI20'), 2: this._('formDS2019') }, '0', this, this.processListABC);
                 this.filterCombolist(this._listAIssuingAuthority3, { 0: this.na }, '0', this, this.processListABC);
@@ -1142,7 +1148,7 @@ define("Section2", ["require", "exports", "jquery", "TranslatorSection"], functi
                     .datepicker('option', 'maxDate', null)
                     .datepicker('option', 'showOn', 'focus')
                     .attr('autocomplete', 'disabled').val('')
-                    .unbind('keypress')
+                    .off('keypress')
                     .prop(this.requiredProp, true).prop(this.freeTextProp, true);
             }
             else if (code === '9') {
@@ -1159,7 +1165,7 @@ define("Section2", ["require", "exports", "jquery", "TranslatorSection"], functi
                     .datepicker('option', 'maxDate', null)
                     .datepicker('option', 'showOn', 'focus')
                     .attr('autocomplete', 'disabled').val('')
-                    .unbind('keypress')
+                    .off('keypress')
                     .prop(this.requiredProp, true).prop(this.freeTextProp, true);
             }
             else if (code === '11') {
@@ -1196,11 +1202,11 @@ define("Section2", ["require", "exports", "jquery", "TranslatorSection"], functi
             }
             this._listADocNumber
                 .prop('maxLength', numberMaxLength)
-                .keypress(e => fieldFormat.test(e.key) || e.key === this.backSpaceCode);
-            this._listADocExpDate.unbind('keypress');
+                .on('keypress', e => fieldFormat.test(e.key) || e.key === this.backSpaceCode);
+            this._listADocExpDate.off('keypress');
             if (!this._listADocExpDate.prop(this.freeTextProp)) {
                 this._listADocExpDate
-                    .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
+                    .on('keypress', e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
             }
             this._listADocNumber.prop(this.validationExpressionProp, fieldValidationExpression);
             this._listADocNumber.prop(this.validationMessageProp, fieldValidationMessage);
@@ -1255,7 +1261,7 @@ define("Section2", ["require", "exports", "jquery", "TranslatorSection"], functi
             this._listADocNumber2
                 .prop('maxLength', numberMaxLength)
                 .prop(this.requiredProp, true)
-                .keypress(e => fieldFormat.test(e.key) || e.key === this.backSpaceCode);
+                .on('keypress', e => fieldFormat.test(e.key) || e.key === this.backSpaceCode);
         }
         listADocTitle3(code) {
             const ICE = 'ICE';
@@ -1292,7 +1298,7 @@ define("Section2", ["require", "exports", "jquery", "TranslatorSection"], functi
             let fieldValidationMessage = null;
             let issuingAuthList;
             let issuingAuth = null;
-            this._listBDocNumber.prop('maxLength', '100').unbind('keypress');
+            this._listBDocNumber.prop('maxLength', '100').off('keypress');
             this._listBIssuingAuthority.prop(this.requiredProp, true);
             this._listBDocNumber.prop(this.requiredProp, true);
             this._listBDocExpDate.prop(this.requiredProp, true);
@@ -1301,8 +1307,8 @@ define("Section2", ["require", "exports", "jquery", "TranslatorSection"], functi
                 this._listBDocExpDate
                     .removeAttr('readOnly')
                     .datepicker('option', 'showOn', 'focus').attr('autocomplete', 'disabled').val('')
-                    .unbind('keypress')
-                    .keypress((e) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
+                    .off('keypress')
+                    .on('keypress', (e) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
             }
             if (['1', '2', '21', '22'].indexOf(code) >= 0) {
                 issuingAuthList = JSON.parse(this._('usstates'));
@@ -1310,8 +1316,8 @@ define("Section2", ["require", "exports", "jquery", "TranslatorSection"], functi
                 numberMaxLength = 14;
                 this._listBDocNumber
                     .prop('maxLength', numberMaxLength)
-                    .unbind('keypress')
-                    .keypress(e => fieldFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
+                    .off('keypress')
+                    .on('keypress', e => fieldFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
                 fieldValidationExpression = this.driverLicenseNumberFormat;
                 fieldValidationMessage = this._('section2.listbnumberformat');
             }
@@ -1373,8 +1379,8 @@ define("Section2", ["require", "exports", "jquery", "TranslatorSection"], functi
                 .datepicker('option', 'maxDate', null)
                 .datepicker('option', 'showOn', 'focus')
                 .attr('autocomplete', 'disabled')
-                .unbind('keypress')
-                .keypress((e) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+                .off('keypress')
+                .on('keypress', (e) => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
                 .val('');
             this._listCDoc.prop('ssncard', false).prop('i551', false);
             if (code === '1') {
@@ -1409,17 +1415,16 @@ define("Section2", ["require", "exports", "jquery", "TranslatorSection"], functi
                 issuingAuth = '0';
                 this._listCIssuingAuthority
                     .removeAttr('readOnly')
-                    .keypress(e => {
+                    .on('keypress', e => {
                     const val = this._listCIssuingAuthority.val();
                     if (val.length >= name.length) {
                         return val.substr(0, name.length) === name;
                     }
                     return true;
                 })
-                    .keyup(e => {
+                    .on('keyup', () => {
                     const val = this._listCIssuingAuthority.val();
-                    if (val.length <= name.length ||
-                        (val.length === name.length + 1 && val.substr(0, name.length) !== name)) {
+                    if (val.length <= name.length || (val.length === name.length + 1 && val.substr(0, name.length) !== name)) {
                         this._listCIssuingAuthority.val(name);
                     }
                 });
@@ -1445,7 +1450,7 @@ define("Section2", ["require", "exports", "jquery", "TranslatorSection"], functi
             this._listCDocNumber
                 .prop('maxLength', numberMaxLength)
                 .removeAttr('readOnly').val('')
-                .keypress(e => fieldFormat.test(e.key) || e.key === this.backSpaceCode);
+                .on('keypress', e => fieldFormat.test(e.key) || e.key === this.backSpaceCode);
             this.filterCombolist(this._listCIssuingAuthority, $.extend({ spaceSymbol: this.blankItem }, issuingAuthList), issuingAuth, this, this.processListABC);
             this._listCDocNumber
                 .prop(this.validationExpressionProp, fieldValidationExpression)
@@ -1650,7 +1655,7 @@ define("Section3", ["require", "exports", "Section2"], function (require, export
         renderSection3(tabIndex, lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, rehireDate, rehireDateHelp, docTitleSec3, docTitleSec3Help, docNumberSec3, docNumberSec3Help, expDateSec3, expDateSec3Help, sgnEmployerSec3, sgnEmployerSec3Help, signDateSec3, signDateSec3Help, employerNameSec3, employerNameSec3Help) {
             const spaceSymbol = this.space;
             const citizenships = [this._citizen, this._national, this._lpr, this._alien];
-            this._citizen.click(() => {
+            this._citizen.on('click', () => {
                 this.selectCheckmark(this._citizen, citizenships);
                 this.processLPR(this._citizen.prop('checked'));
                 this.processAlien(this._citizen.prop('checked'));
@@ -1659,7 +1664,7 @@ define("Section3", ["require", "exports", "Section2"], function (require, export
                     this.fillListABC('1');
                 }
             });
-            this._national.click(() => {
+            this._national.on('click', () => {
                 this.selectCheckmark(this._national, citizenships);
                 this.processLPR(this._national.prop('checked'));
                 this.processAlien(this._national.prop('checked'));
@@ -1668,7 +1673,7 @@ define("Section3", ["require", "exports", "Section2"], function (require, export
                     this.fillListABC('2');
                 }
             });
-            this._lpr.click(() => {
+            this._lpr.on('click', () => {
                 this.selectCheckmark(this._lpr, citizenships);
                 this.processAlien(this._lpr.prop('checked'));
                 this._lpruscisNum.val('');
@@ -1681,7 +1686,7 @@ define("Section3", ["require", "exports", "Section2"], function (require, export
                     this.fillListABC('3');
                 }
             });
-            this._alien.click(() => {
+            this._alien.on('click', () => {
                 this.selectCheckmark(this._alien, citizenships);
                 this.processLPR(this._alien.prop('checked'));
                 this._alienWorkAuthDate.val('');
@@ -1703,7 +1708,7 @@ define("Section3", ["require", "exports", "Section2"], function (require, export
                     this.fillListABC('4');
                 }
             });
-            this._alienuscisNum.change(() => {
+            this._alienuscisNum.on('change', () => {
                 if (!this.EmptyOrNA(this._alienuscisNum)) {
                     if (this.EmptyOrNA(this._alienuscisNumType)) {
                         this.filterCombolist(this._alienuscisNumType, { A: this._('aliennumber'), U: this._('uscisnumber') }, null, this, this.processListABC);
@@ -1719,7 +1724,7 @@ define("Section3", ["require", "exports", "Section2"], function (require, export
                     this.filterCombolist(this._countryOfIssuance, {}, null, this, this.processListABC);
                 }
             });
-            this._admissionNum.change(() => {
+            this._admissionNum.on('change', () => {
                 if (!this.EmptyOrNA(this._admissionNum)) {
                     this._alienuscisNum.val(this.na);
                     this._alienuscisNumPrefix.val('');
@@ -1735,7 +1740,7 @@ define("Section3", ["require", "exports", "Section2"], function (require, export
                     this.filterCombolist(this._countryOfIssuance, {}, null, this, this.processListABC);
                 }
             });
-            this._passportNum.change(() => {
+            this._passportNum.on('change', () => {
                 if (!this.EmptyOrNA(this._passportNum)) {
                     this._alienuscisNum.val(this.na);
                     this._alienuscisNumPrefix.val('');
@@ -1754,20 +1759,20 @@ define("Section3", ["require", "exports", "Section2"], function (require, export
             this.processLPR(false);
             this.processAlien(false);
             this._newlastName = this.renderControl(lastName, this._('newlastname.tooltip'))
-                .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+                .on('keypress', e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
                 .attr('tabindex', tabIndex++);
             this._newlastNameHelp = this.renderHelpIcon(lastNameHelp, this._('newlastnamehelp.caption'), this._('newlastnamehelp.text'));
             this._newfirstName = this.renderControl(firstName, this._('newfirstname.tooltip'))
-                .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+                .on('keypress', e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
                 .attr('tabindex', tabIndex++);
             this._newfirstNameHelp = this.renderHelpIcon(firstNameHelp, this._('newfirstnamehelp.caption'), this._('newfirstnamehelp.text'));
             this._newmiddleInitial = this.renderControl(middleInitial, this._('newmiddleinitial.tooltip'))
-                .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+                .on('keypress', e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
                 .attr('tabindex', tabIndex++);
             this._newmiddleInitialHelp = this.renderHelpIcon(middleInitialHelp, this._('newmiddleinitialhelp.caption'), this._('newmiddleinitialhelp.text'));
             this._rehireDate = this.renderControl(rehireDate, this._('rehiredate.tooltip'), true, 'left')
-                .datepicker().attr('autocomplete', 'disabled').unbind('keypress')
-                .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+                .datepicker().attr('autocomplete', 'disabled').off('keypress')
+                .on('keypress', e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
                 .attr('tabindex', tabIndex++);
             this._rehireDateHelp = this.renderHelpIcon(rehireDateHelp, this._('rehiredatehelp.caption'), this._('rehiredatehelp.text'));
             this._docTitleSec3 = this.renderControl(docTitleSec3, this._('doctitlesec3.tooltip'), true, 'right')
@@ -1811,8 +1816,8 @@ define("Section3", ["require", "exports", "Section2"], function (require, export
                 .attr('tabindex', tabIndex++);
             this._docNumberSec3Help = this.renderHelpIcon(docNumberSec3Help, this._('docnumbersec3help.caption'), this._('docnumbersec3help.text'));
             this._expDateSec3 = this.renderControl(expDateSec3, this._('expdatesec3.tooltip'), true, 'left')
-                .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled').unbind('keypress')
-                .keypress(e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
+                .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled').off('keypress')
+                .on('keypress', e => /[\d/]/g.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode)
                 .attr('tabindex', tabIndex++);
             this._expDateSec3Help = this.renderHelpIcon(expDateSec3Help, this._('expdatesec3help.caption'), this._('expdatesec3help.text'));
             this._sgnEmployerSec3 = this.renderControl(sgnEmployerSec3, this._('sgnemployersec3.tooltip'))
@@ -1822,8 +1827,8 @@ define("Section3", ["require", "exports", "Section2"], function (require, export
                 .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled')
                 .attr(this.annotationRequired, 'true')
                 .attr('readonly', 'true')
-                .focus(() => this._signDateSec3.removeAttr('readonly'))
-                .blur(() => this._signDateSec3.attr('readonly', 'true'))
+                .on('focus', () => this._signDateSec3.removeAttr('readonly'))
+                .on('blur', () => this._signDateSec3.attr('readonly', 'true'))
                 .attr('tabindex', tabIndex++);
             this._signDateSec3Help = this.renderHelpIcon(signDateSec3Help, this._('employersigndatesec3help.caption'), this._('employersigndatesec3help.text'));
             this._employerNameSec3 = this.renderControl(employerNameSec3, this._('employernamesec3.tooltip'))
@@ -1921,7 +1926,7 @@ define("Section3", ["require", "exports", "Section2"], function (require, export
     }
     exports.USI9Section3 = USI9Section3;
 });
-define("USI9", ["require", "exports", "jquery", "Section3"], function (require, exports, $, Section3_1) {
+define("USI9", ["require", "exports", "Section3"], function (require, exports, Section3_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.USI9 = void 0;
@@ -1964,7 +1969,7 @@ define("USI9", ["require", "exports", "jquery", "Section3"], function (require, 
         renderSections() {
             this.prepareSecondPage(this.prepareFirstPage(100));
             const eventBus = PDFViewerApplication.eventBus;
-            this.toolbarButtons.forEach((e) => {
+            this.toolbarButtons.forEach(e => {
                 const eventFuncs = eventBus.get(e);
                 eventBus.remove(e);
                 eventBus.on(e, () => this.validateDocuments((confirmFlag) => this.validateUSI9($(`#${e}`), confirmFlag).then(() => {
@@ -1982,20 +1987,28 @@ define("Init", ["require", "exports", "USI9"], function (require, exports, USI9_
     const pdfViewer = PDFViewerApplication.pdfViewer;
     const renderedPages = [false, false, false];
     let form = null;
-    PDFViewerApplication.eventBus.on('textlayerrendered', (e) => {
-        $('a').attr('target', '_blank');
-        renderedPages[e.pageNumber - 1] = true;
-        if (e.pageNumber === 1 && !renderedPages[1]) {
-            pdfViewer.getPageView(1);
-            return;
+    const initializationFunction = () => {
+        if (PDFViewerApplication.eventBus) {
+            PDFViewerApplication.eventBus.on('textlayerrendered', e => {
+                $('a').attr('target', '_blank');
+                renderedPages[e.pageNumber - 1] = true;
+                if (e.pageNumber === 1 && !renderedPages[1]) {
+                    pdfViewer.getPageView(1);
+                    return;
+                }
+                if (e.pageNumber >= 2 && !renderedPages[0]) {
+                    pdfViewer.getPageView(0);
+                    return;
+                }
+                if (renderedPages[0] && renderedPages[1] && form == null) {
+                    form = new USI9_1.USI9(document.webL10n);
+                    form.renderSections();
+                }
+            });
         }
-        if (e.pageNumber >= 2 && !renderedPages[0]) {
-            pdfViewer.getPageView(0);
-            return;
+        else {
+            setTimeout(initializationFunction, 100);
         }
-        if (renderedPages[0] && renderedPages[1] && form == null) {
-            form = new USI9_1.USI9(document.webL10n);
-            form.renderSections();
-        }
-    });
+    };
+    setTimeout(initializationFunction, 100);
 });

@@ -17,5 +17,5 @@ EXPOSE 80 443 2222
 
 COPY add-wp-plugins.sh /usr/local/bin
 COPY smartformsondemand.tar.gz /tmp
-COPY Smart-Forms-On-Demand.svg /tmp
+ADD logos /tmp
 COPY wp-config.php /tmp

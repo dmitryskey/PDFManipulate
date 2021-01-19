@@ -175,9 +175,9 @@ add_action('rest_api_init', function ($server) {
                     if (!copy($pluginPath . 'templates' . DIRECTORY_SEPARATOR . 'forms' . DIRECTORY_SEPARATOR .
                        $data['locale'] . DIRECTORY_SEPARATOR . $data['templateid'] . '.pdf',
                        $pluginPath . 'data' . DIRECTORY_SEPARATOR . $pdf)) {
-                        $errors = error_get_last();
-                        error_log('Smart-Forms-On-Demand: ' . $errors['type'] . ', ' . $errors['message']);
-                        return '{"editorUrl": ""}';
+                           $errors = error_get_last();
+                           error_log('Smart-Forms-On-Demand: ' . $errors['type'] . ', ' . $errors['message']);
+                           return '{"editorUrl": ""}';
                     }
                 }
 

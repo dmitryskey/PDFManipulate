@@ -19,7 +19,7 @@ function updateDocUrl(locale, url, template) {
     });
 }
 
-jQuery(document).ready(function() {
+jQuery(function() {
     // Check if browser is IE version < 10
     var updateUrl = true;
     var uAgent = navigator.userAgent;

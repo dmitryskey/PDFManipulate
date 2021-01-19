@@ -1,5 +1,3 @@
-import * as $ from 'jquery'
-
 import { USI9Section3 } from './Section3'
 // TS doesn't have conditional compilation. Uncomment this line during
 // the development in order to have strong type declaration.
@@ -235,7 +233,7 @@ export class USI9 extends USI9Section3 {
 
         const eventBus = PDFViewerApplication.eventBus
 
-        this.toolbarButtons.forEach((e) => {
+        this.toolbarButtons.forEach(e => {
             const eventFuncs = eventBus.get(e)
             eventBus.remove(e)
             eventBus.on(e, () =>
