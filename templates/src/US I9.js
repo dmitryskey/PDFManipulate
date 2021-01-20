@@ -1988,8 +1988,8 @@ define("Init", ["require", "exports", "USI9"], function (require, exports, USI9_
     const renderedPages = [false, false, false];
     let form = null;
     const initializationFunction = () => {
-        if (PDFViewerApplication.eventBus) {
-            PDFViewerApplication.eventBus.on('textlayerrendered', e => {
+        if (PDFViewerApplication.eventBus && pdfViewer.getPageView && document.webL10n) {
+            PDFViewerApplication.eventBus.on('textlayerrendered', (e) => {
                 $('a').attr('target', '_blank');
                 renderedPages[e.pageNumber - 1] = true;
                 if (e.pageNumber === 1 && !renderedPages[1]) {

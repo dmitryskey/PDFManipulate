@@ -12,7 +12,7 @@ const renderedPages = [false, false, false]
 let form: USI9 = null
 
 const initializationFunction = () => {
-    if (PDFViewerApplication.eventBus) {
+    if (PDFViewerApplication.eventBus && pdfViewer.getPageView && (document as any).webL10n) {
         PDFViewerApplication.eventBus.on('textlayerrendered', (e: any) => {
             $('a').attr('target', '_blank')
 

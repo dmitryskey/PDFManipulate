@@ -1,4 +1,4 @@
-define("USI9/PDFForm", ["require", "exports", "jquery"], function (require, exports, $) {
+define("USI9/PDFForm", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.PDFForm = void 0;
@@ -53,7 +53,7 @@ define("USI9/PDFForm", ["require", "exports", "jquery"], function (require, expo
                         trigger: 'click',
                         placement: 'bottom'
                     });
-                    $('body').off('mouseup').mouseup(e => {
+                    $('body').off('mouseup').on('mouseup', e => {
                         if (!ctrl.popover().is(e.target) && ctrl.popover().has(e.target).length === 0 &&
                             ctrl !== $(e.target)) {
                             ctrl.popover('hide');
@@ -141,10 +141,10 @@ define("USI9/PDFForm", ["require", "exports", "jquery"], function (require, expo
                 trigger: 'click'
             })
                 .on('show.bs.popover', () => $('.popover').css('max-width', `${maxWidth}%`))
-                .click(e => {
+                .on('click', e => {
                 const ctrl = $(e.target);
                 ctrl.tooltip('hide').popover('show');
-                $('body').off('mouseup').mouseup(ev => {
+                $('body').off('mouseup').on('mouseup', ev => {
                     if (!ctrl.popover().is(ev.target) && ctrl.popover().has(ev.target).length === 0 &&
                         ctrl !== $(ev.target)) {
                         ctrl.popover('hide');
@@ -254,13 +254,13 @@ define("USI9Supplement/TranslatorSection", ["require", "exports", "USI9Supplemen
         renderTranslatorSection(lastName, lastNameHelp, firstName, firstNameHelp, middleInitial, middleInitialHelp, sgnTranslator, sgnTranslatorHelp, translatorDate, translatorDateHelp, translatorLastName, translatorLastNameHelp, translatorFirstName, translatorFirstNameHelp, translatorAddress, translatorAddressHelp, translatorCity, translatorCityHelp, translatorState, translatorStateHelp, translatorZip, translatorZipHelp, sgnTranslator2, translatorDate2, translatorLastName2, translatorFirstName2, translatorAddress2, translatorCity2, translatorState2, translatorZip2, sgnTranslator3, translatorDate3, translatorLastName3, translatorFirstName3, translatorAddress3, translatorCity3, translatorState3, translatorZip3, sgnTranslator4, translatorDate4, translatorLastName4, translatorFirstName4, translatorAddress4, translatorCity4, translatorState4, translatorZip4) {
             $('a').prop('target', '_blank');
             this._lastName = this.renderControl(lastName, this._('lastnamehelp.tooltip'))
-                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
+                .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
             this._lastNameHelp = this.renderHelpIcon(lastNameHelp, this._('lastnamehelp.caption'), this._('lastnamehelp.text'));
             this._firstName = this.renderControl(firstName, this._('firstnamehelp.tooltip'))
-                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
+                .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
             this._firstNameHelp = this.renderHelpIcon(firstNameHelp, this._('firstnamehelp.caption'), this._('firstnamehelp.text'));
             this._middleInitial = this.renderControl(middleInitial, this._('middleinitialhelp.tooltip'))
-                .keypress(e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
+                .on('keypress', e => this.nameFormat.test(e.key) || this.NAFormat.test(e.key) || e.key === this.backSpaceCode);
             this._middleInitialHelp = this.renderHelpIcon(middleInitialHelp, this._('middleinitialhelp.caption'), this._('middleinitialhelp.text'));
             this._sgnTranslator = this.renderControl(sgnTranslator, this._('sgntranslator.tooltip'));
             this._sgnTranslatorHelp = this.renderHelpIcon(sgnTranslatorHelp, this._('sgntranslatorhelp.caption'), this._('sgntranslatorhelp.text'));
@@ -268,10 +268,10 @@ define("USI9Supplement/TranslatorSection", ["require", "exports", "USI9Supplemen
                 .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
             this._translatorDateHelp = this.renderHelpIcon(translatorDateHelp, this._('translatordatehelp.caption'), this._('translatordatehelp.text'));
             this._translatorLastName = this.renderControl(translatorLastName, this._('translatorlastname.tooltip'))
-                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
+                .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
             this._translatorLastNameHelp = this.renderHelpIcon(translatorLastNameHelp, this._('translatorlastnamehelp.caption'), this._('translatorlastnamehelp.text'));
             this._translatorFirstName = this.renderControl(translatorFirstName, this._('translatorfirstname.tooltip'))
-                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
+                .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
             this._translatorFirstNameHelp = this.renderHelpIcon(translatorFirstNameHelp, this._('translatorfirstnamehelp.caption'), this._('translatorfirstnamehelp.text'));
             this._translatorAddress = this.renderControl(translatorAddress, this._('translatoraddress.tooltip'));
             this._translatorAddressHelp = this.renderHelpIcon(translatorAddressHelp, this._('translatoraddresshelp.caption'), this._('translatoraddresshelp.text'));
@@ -281,47 +281,47 @@ define("USI9Supplement/TranslatorSection", ["require", "exports", "USI9Supplemen
             this.setCombolistText(this._translatorState, ' ', this.blankItem);
             this._translatorStateHelp = this.renderHelpIcon(translatorStateHelp, this._('translatorstatehelp.caption'), this._('translatorstatehelp.text'));
             this._translatorZip = this.renderControl(translatorZip, this._('translatorzip.tooltip'))
-                .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode);
+                .on('keypress', e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode);
             this._translatorZipHelp = this.renderHelpIcon(translatorZipHelp, this._('translatorziphelp.caption'), this._('translatorziphelp.text'));
             this._sgnTranslator2 = this.renderControl(sgnTranslator2, this._('sgntranslator.tooltip'));
             this._translatorDate2 = this.renderControl(translatorDate2, this._('translatordate.tooltip'), true, 'left')
                 .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
             this._translatorLastName2 = this.renderControl(translatorLastName2, this._('translatorlastname.tooltip'))
-                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
+                .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
             this._translatorFirstName2 = this.renderControl(translatorFirstName2, this._('translatorfirstname.tooltip'))
-                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
+                .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
             this._translatorAddress2 = this.renderControl(translatorAddress2, this._('translatoraddress.tooltip'));
             this._translatorCity2 = this.renderControl(translatorCity2, this._('translatorcity.tooltip'));
             this._translatorState2 = this.renderControl(translatorState2, this._('translatorstate.tooltip'), true, 'left');
             this.setCombolistText(this._translatorState2, ' ', this.blankItem);
             this._translatorZip2 = this.renderControl(translatorZip2, this._('translatorzip.tooltip'))
-                .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode);
+                .on('keypress', e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode);
             this._sgnTranslator3 = this.renderControl(sgnTranslator3, this._('sgntranslator.tooltip'));
             this._translatorDate3 = this.renderControl(translatorDate3, this._('translatordate.tooltip'), true, 'left')
                 .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
             this._translatorLastName3 = this.renderControl(translatorLastName3, this._('translatorlastname.tooltip'))
-                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
+                .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
             this._translatorFirstName3 = this.renderControl(translatorFirstName3, this._('translatorfirstname.tooltip'))
-                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
+                .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
             this._translatorAddress3 = this.renderControl(translatorAddress3, this._('translatoraddress.tooltip'));
             this._translatorCity3 = this.renderControl(translatorCity3, this._('translatorcity.tooltip'));
             this._translatorState3 = this.renderControl(translatorState3, this._('translatorstate.tooltip'), true, 'left');
             this.setCombolistText(this._translatorState3, ' ', this.blankItem);
             this._translatorZip3 = this.renderControl(translatorZip3, this._('translatorzip.tooltip'))
-                .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode);
+                .on('keypress', e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode);
             this._sgnTranslator4 = this.renderControl(sgnTranslator4, this._('sgntranslator.tooltip'));
             this._translatorDate4 = this.renderControl(translatorDate4, this._('translatordate.tooltip'), true, 'left')
                 .datepicker({ minDate: new Date() }).attr('autocomplete', 'disabled');
             this._translatorLastName4 = this.renderControl(translatorLastName4, this._('translatorlastname.tooltip'))
-                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
+                .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
             this._translatorFirstName4 = this.renderControl(translatorFirstName4, this._('translatorfirstname.tooltip'))
-                .keypress(e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
+                .on('keypress', e => this.nameFormat.test(e.key) || e.key === this.backSpaceCode);
             this._translatorAddress4 = this.renderControl(translatorAddress4, this._('translatoraddress.tooltip'));
             this._translatorCity4 = this.renderControl(translatorCity4, this._('translatorcity.tooltip'));
             this._translatorState4 = this.renderControl(translatorState4, this._('translatorstate.tooltip'), true, 'left');
             this.setCombolistText(this._translatorState4, ' ', this.blankItem);
             this._translatorZip4 = this.renderControl(translatorZip4, this._('translatorzip.tooltip'))
-                .keypress(e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode);
+                .on('keypress', e => this.zipFormat.test(e.key) || e.key === this.backSpaceCode);
         }
         validateFields() {
             const errorMessages = [];
@@ -434,8 +434,16 @@ define("USI9Supplement/USI9Supplement", ["require", "exports", "USI9Supplement/T
 define("USI9Supplement/Init", ["require", "exports", "USI9Supplement/USI9Supplement"], function (require, exports, USI9Supplement_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    PDFViewerApplication.eventBus.on('textlayerrendered', () => {
-        var form = new USI9Supplement_1.USI9Supplement(document.webL10n);
-        form.renderSections();
-    });
+    const initializationFunction = () => {
+        if (PDFViewerApplication.eventBus && document.webL10n) {
+            PDFViewerApplication.eventBus.on('textlayerrendered', () => {
+                var form = new USI9Supplement_1.USI9Supplement(document.webL10n);
+                form.renderSections();
+            });
+        }
+        else {
+            setTimeout(initializationFunction, 100);
+        }
+    };
+    setTimeout(initializationFunction, 100);
 });

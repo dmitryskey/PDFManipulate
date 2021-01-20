@@ -7,7 +7,7 @@ import { USI9Supplement } from 'USI9Supplement'
 declare let PDFViewerApplication: any
 
 const initializationFunction = () => {
-    if (PDFViewerApplication.eventBus) {
+    if (PDFViewerApplication.eventBus && (document as any).webL10n) {
         PDFViewerApplication.eventBus.on('textlayerrendered', () => {
             var form = new USI9Supplement((document as any).webL10n)
             form.renderSections()
