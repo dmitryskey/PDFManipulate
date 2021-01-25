@@ -423,7 +423,7 @@ define("USI9Supplement/USI9Supplement", ["require", "exports", "USI9Supplement/T
                 eventBus.remove(e);
                 eventBus.on(e, () => this.validateForm($(`#${e}`), super.validateFields()).then(() => {
                     this.prepareData();
-                    eventFuncs.forEach((f) => f());
+                    eventFuncs.forEach((f) => f.listener());
                 }).catch((ctrl) => ctrl.popover('show')));
             });
             this.prepareFirstPage();

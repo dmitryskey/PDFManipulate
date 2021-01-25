@@ -6,14 +6,15 @@ import { USI9 } from 'USI9'
 // import { PDFViewerApplication } from './../../../pdf.js/web/app'
 declare let PDFViewerApplication: any
 
-const pdfViewer = PDFViewerApplication.pdfViewer
-
 const renderedPages = [false, false, false]
 let form: USI9 = null
 
 const initializationFunction = () => {
-    if (PDFViewerApplication.eventBus && pdfViewer.getPageView && (document as any).webL10n) {
+    if (PDFViewerApplication.eventBus && PDFViewerApplication.pdfViewer &&
+        PDFViewerApplication.pdfViewer.getPageView && (document as any).webL10n) {
         PDFViewerApplication.eventBus.on('textlayerrendered', (e: any) => {
+            const pdfViewer = PDFViewerApplication.pdfViewer
+
             $('a').attr('target', '_blank')
 
             renderedPages[e.pageNumber - 1] = true

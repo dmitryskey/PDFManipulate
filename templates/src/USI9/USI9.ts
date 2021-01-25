@@ -241,7 +241,7 @@ export class USI9 extends USI9Section3 {
                     this.validateUSI9($(`#${e}`), confirmFlag).then(() => {
                         this.prepareData()
 
-                        eventFuncs.forEach((f: () => void) => f())
+                        eventFuncs.forEach((f: { listener: () => void }) => f.listener())
                     }).catch((ctrl: JQuery<HTMLElement>) => ctrl.popover('show'))
                 )
             )

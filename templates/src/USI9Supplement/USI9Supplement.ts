@@ -86,7 +86,7 @@ export class USI9Supplement extends USI9SupplementTranslator {
                 this.validateForm($(`#${e}`), super.validateFields()).then(() => {
                     this.prepareData()
 
-                    eventFuncs.forEach((f: () => void) => f())
+                    eventFuncs.forEach((f: { listener: () => void }) => f.listener())
                 }).catch((ctrl: JQuery<HTMLElement>) => ctrl.popover('show'))
             )
         })

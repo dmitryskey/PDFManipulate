@@ -1974,7 +1974,7 @@ define("USI9", ["require", "exports", "Section3"], function (require, exports, S
                 eventBus.remove(e);
                 eventBus.on(e, () => this.validateDocuments((confirmFlag) => this.validateUSI9($(`#${e}`), confirmFlag).then(() => {
                     this.prepareData();
-                    eventFuncs.forEach((f) => f());
+                    eventFuncs.forEach((f) => f.listener());
                 }).catch((ctrl) => ctrl.popover('show'))));
             });
         }
@@ -1984,12 +1984,13 @@ define("USI9", ["require", "exports", "Section3"], function (require, exports, S
 define("Init", ["require", "exports", "USI9"], function (require, exports, USI9_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    const pdfViewer = PDFViewerApplication.pdfViewer;
     const renderedPages = [false, false, false];
     let form = null;
     const initializationFunction = () => {
-        if (PDFViewerApplication.eventBus && pdfViewer.getPageView && document.webL10n) {
+        if (PDFViewerApplication.eventBus && PDFViewerApplication.pdfViewer &&
+            PDFViewerApplication.pdfViewer.getPageView && document.webL10n) {
             PDFViewerApplication.eventBus.on('textlayerrendered', (e) => {
+                const pdfViewer = PDFViewerApplication.pdfViewer;
                 $('a').attr('target', '_blank');
                 renderedPages[e.pageNumber - 1] = true;
                 if (e.pageNumber === 1 && !renderedPages[1]) {
