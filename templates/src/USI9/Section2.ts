@@ -973,9 +973,9 @@ export class USI9Section2 extends USI9Translator {
             issuingAuthList = { USCIS: this._(USCIS), DOJINS: this._(DOJINS) }
             issuingAuth = USCIS
             numberMaxLength = 13
-            fieldFormat = this.numberWithDashesFormat
+            fieldFormat = this.alphaNumericWithDashesFormat
             fieldValidationExpression = this.greenCardNumberFormat
-            fieldValidationMessage = this._('section2.cardformat')
+            fieldValidationMessage = this._('section2.greencardformat')
 
             this._listADocExpDate.datepicker('option', 'maxDate', tenYearsFromNow)
         } else if (code === '4') {

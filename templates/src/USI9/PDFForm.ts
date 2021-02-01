@@ -11,14 +11,14 @@ export class PDFForm {
     protected dateFormat = /^[0-9]{2}[/]{1}[0-9]{2}[/]{1}[0-9]{4}$/;
     protected numberFormat = /^[0-9]{1}$/;
     protected alphaNumericFormat = /^[0-9a-zA-Z]{1}$/;
-    protected numberWithDashesFormat = /^[0-9]{1}|-{1}$/;
+    protected alphaNumericWithDashesFormat = /^[a-zA-Z0-9]{1}|-{1}$/;
     protected emailFormat = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     protected phoneFormat = /^[0-9/NA-]+$/;
     protected phoneNumber = /^[0-9]{3}-{1}[0-9]{3}-{1}[0-9]{4}$/;
     protected uscisNumberFormat = /^[0-9]{7,9}$/;
     protected admissionNumberFormat = /^[0-9]{9}[a-zA-Z]{1}[0-9]{1}$|^[0-9]{11}$/;
     protected usPassportNumberFormat = /^[a-zA-Z0-9]{6,9}$/;
-    protected greenCardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$|[0-9]{7,9}|[0-9]{3}-{0,1}[0-9]{3}-{0,1}[0-9]{3}$/;
+    protected greenCardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$|^[0-9]{7,9}$|^[0-9]{3}-{0,1}[0-9]{3}-{0,1}[0-9]{3}$/;
     protected cardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$/;
     protected passportNumberFormat = /^[a-zA-Z0-9]{6,12}$/;
     protected driverLicenseNumberFormat = /^[a-zA-Z0-9]{8,14}$/;
