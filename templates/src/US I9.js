@@ -16,14 +16,14 @@ define("PDFForm", ["require", "exports"], function (require, exports) {
             this.dateFormat = /^[0-9]{2}[/]{1}[0-9]{2}[/]{1}[0-9]{4}$/;
             this.numberFormat = /^[0-9]{1}$/;
             this.alphaNumericFormat = /^[0-9a-zA-Z]{1}$/;
-            this.numberWithDashesFormat = /^[0-9]{1}|-{1}$/;
+            this.alphaNumericWithDashesFormat = /^[a-zA-Z0-9]{1}|-{1}$/;
             this.emailFormat = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             this.phoneFormat = /^[0-9/NA-]+$/;
             this.phoneNumber = /^[0-9]{3}-{1}[0-9]{3}-{1}[0-9]{4}$/;
             this.uscisNumberFormat = /^[0-9]{7,9}$/;
             this.admissionNumberFormat = /^[0-9]{9}[a-zA-Z]{1}[0-9]{1}$|^[0-9]{11}$/;
             this.usPassportNumberFormat = /^[a-zA-Z0-9]{6,9}$/;
-            this.greenCardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$|[0-9]{7,9}|[0-9]{3}-{0,1}[0-9]{3}-{0,1}[0-9]{3}$/;
+            this.greenCardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$|^[0-9]{7,9}$|^[0-9]{3}-{0,1}[0-9]{3}-{0,1}[0-9]{3}$/;
             this.cardNumberFormat = /^[A-Za-z]{3}[0-9]{10}$/;
             this.passportNumberFormat = /^[a-zA-Z0-9]{6,12}$/;
             this.driverLicenseNumberFormat = /^[a-zA-Z0-9]{8,14}$/;
@@ -1028,9 +1028,9 @@ define("Section2", ["require", "exports", "TranslatorSection"], function (requir
                 issuingAuthList = { USCIS: this._(USCIS), DOJINS: this._(DOJINS) };
                 issuingAuth = USCIS;
                 numberMaxLength = 13;
-                fieldFormat = this.numberWithDashesFormat;
+                fieldFormat = this.alphaNumericWithDashesFormat;
                 fieldValidationExpression = this.greenCardNumberFormat;
-                fieldValidationMessage = this._('section2.cardformat');
+                fieldValidationMessage = this._('section2.greencardformat');
                 this._listADocExpDate.datepicker('option', 'maxDate', tenYearsFromNow);
             }
             else if (code === '4') {
